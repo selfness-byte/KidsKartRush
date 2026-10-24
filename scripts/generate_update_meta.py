@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.5.2.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.5.3.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,19 +15,19 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.2.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.3.apk"
     notes = (
-        "• [짧고 강렬한 '슈웅~!' 슈퍼부스터] 🚀 슈퍼부스터 지속시간을 짧고 경쾌하게 단축하고, 누르는 순간 앞으로 튀어나가는 폭발적 초반 가속감 적용!\n"
-        "• ['슈우웅~!' 제트 터보 효과음] 🔊 부스터 버튼을 누를 때 바람을 가르는 에어로다이나믹 스윕 + 트윈 터보 제트 휘슬 사운드('슈우웅~!')로 업그레이드\n"
-        "• [하이퍼 워프 화면 속도감 연출] ⚡ 부스터 발동 시 3D 카메라 광각 FOV 워프(줌 아웃) + 3D 소닉 충격파 링 + 소실점 방사형 워프 라인 + 초음속 제트 불꽃 연출\n"
-        "• [정통 3D 원근 & 얼굴 사진 스튜디오] 📸 정통 1/Z 3D 원근 트랙, 내 캐릭터 및 모든 라이벌 머리 사진 업로드, 1:1 직관적 핸들 조작 지원!"
+        "• [선명하고 큼직한 얼굴 사진 (빅헤드 SD 포트레이트)] 📸 사진 촬영/업로드 시 얼굴 자동 인식 클로즈업(320px 고화질) 및 인게임 카트 위 얼굴 액자 크기를 2배 이상 키워 내 캐릭터와 라이벌 모두 누구인지 한눈에 알아보도록 개선!\n"
+        "• [다이나믹 굴절코스 & 코너 갈매기 유도 표지판] 🛣️ 8개 전 코스에 S자 연속 굴절 시케인·90도 직각 코너·헤어핀 구간과 코너 방향 유도 표지판(Chevron Sign) 추가!\n"
+        "• [드리프트 되듯이 미끄러지는 슬라이딩 효과] 🏎️💨 코너에서 차체가 사선으로 미끄러져 들어가는 리얼 슬립 물리, 아스팔트 2줄 타이어 스키드마크 자국 & 하얀 타이어 연기 연출!\n"
+        "• [부스터 밸런스 조절] 🚀 과도했던 자동 부스터 및 대시패드 빈도를 줄이고, 코너 드리프트로 게이지를 모아 직접 터뜨리는 손맛 강화!"
     )
 
     update_payload = {
         "appName": "키즈 카트 러쉬! (Kids Kart Rush+)",
         "packageId": "com.mj.kidskart",
-        "versionCode": 8,
-        "versionName": "1.5.2",
+        "versionCode": 9,
+        "versionName": "1.5.3",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -54,17 +54,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "키즈 카트 러쉬!",
-                "latest_version": "1.5.2",
-                "version_code": 8,
+                "latest_version": "1.5.3",
+                "version_code": 9,
                 "force_update": False,
-                "release_notes": "짧고 강렬한 슈퍼부스터 & 누를 때 '슈우웅~!' 제트 터보 사운드 + 3D 카메라 FOV 광각 워프·소닉 충격파 링 화면 속도감 극대화.",
+                "release_notes": "한눈에 알아보는 대형 고화질 얼굴 사진(빅헤드 SD 포트레이트), S자·헤어핀 굴절코스 추가, 코너에서 드리프트 되듯 미끄러지는 슬라이딩 물리·타이어 스키드마크 및 부스터 빈도 최적화.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.5.2 (build 8), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.5.3 (build 9), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
