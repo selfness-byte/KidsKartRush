@@ -982,7 +982,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.5.4</span>
+      <span class="lobby-badge" id="verBadge">v1.5.5</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
@@ -2052,12 +2052,6 @@
   const TRACKS = [
     {
       id: 0,
-      name: '마리오 버섯 왕국',
-      skyTop: '#1e88e5',
-      skyBottom: '#b3e5fc',
-      grass1: '#43a047',
-      grass2: '#66bb6a',
-      id: 0,
       name: '마리오 서킷',
       skyTop: '#29b6f6',
       skyBottom: '#e1f5fe',
@@ -2773,11 +2767,16 @@
         seg.items.push({ type: 'coin', x: lane, takenTimer: 0 });
       }
 
-      if (i % 3 === 0) {
-        seg.scenery.push({ side: -1, offset: -1.48 - (i % 3) * 0.22, variant: i % 3 });
-        seg.scenery.push({ side: 1, offset: 1.48 + ((i + 1) % 3) * 0.22, variant: (i + 1) % 3 });
+      // 풍성하고 입체적인 2겹(근경 + 중원경) 트랙 주변 배경 오브젝트 배치 (빠르게 스쳐 지나가는 역동적 주행감!)
+      if (i % 2 === 0) {
+        seg.scenery.push({ side: -1, offset: -1.42 - (i % 3) * 0.18, variant: i % 4, scaleMult: 1.0 });
+        seg.scenery.push({ side: 1, offset: 1.42 + ((i + 1) % 3) * 0.18, variant: (i + 1) % 4, scaleMult: 1.0 });
+        if (i % 4 === 0) {
+          seg.scenery.push({ side: -1, offset: -2.28 - (i % 2) * 0.35, variant: (i + 2) % 4, scaleMult: 1.38 });
+          seg.scenery.push({ side: 1, offset: 2.28 + ((i + 1) % 2) * 0.35, variant: (i + 3) % 4, scaleMult: 1.38 });
+        }
       }
-      if (i % 70 === 0) {
+      if (i % 55 === 0) {
         seg.arch = i === 0 ? 'start' : 'checkpoint';
       }
 
@@ -3620,6 +3619,26 @@
       }
     }
 
+    // 고속 주행 시 타이어 뒤쪽 아스팔트 바람 먼지 & 연석(Curb)/오프로드 주행 시 역동적인 노면 파편 파티클 생성!
+    if (speedRatio > 0.52 && state.playerY <= 4 && Math.random() < (isBoosting ? 0.92 : 0.58)) {
+      const kartX = canvas.width * 0.5 + state.screenXOffset;
+      const kartY = canvas.height * 0.81;
+      const onKerb = Math.abs(state.playerX) > 0.76 && Math.abs(state.playerX) <= 0.88;
+      const pCol = offRoad
+        ? (state.selectedTrack === 1 ? 'rgba(121, 85, 72, 0.78)' : (state.selectedTrack === 6 ? 'rgba(255, 87, 34, 0.82)' : 'rgba(102, 187, 106, 0.75)'))
+        : (onKerb ? 'rgba(255, 234, 0, 0.80)' : (isBoosting ? 'rgba(0, 229, 255, 0.68)' : 'rgba(255, 255, 255, 0.42)'));
+      const side = Math.random() < 0.5 ? -52 : 52;
+      state.particles.push({
+        x: kartX + side + (Math.random() - 0.5) * 16,
+        y: kartY + 8 + (Math.random() - 0.5) * 6,
+        vx: -state.velX * 85 + side * 1.4 + (Math.random() - 0.5) * 70,
+        vy: 35 + Math.random() * 95,
+        size: (offRoad || onKerb) ? (6 + Math.random() * 7) : (4 + Math.random() * 5),
+        color: pCol,
+        life: 0.22 + Math.random() * 0.16
+      });
+    }
+
     // 9. N2O 게이지 충전 (직선 가만히 주행 시 자동 충전 0! 오직 코너 드리프트/슬라이딩과 코인으로만 부스터 획득!)
     const chargeRate = isSliding ? 28 : 0;
     state.n2oGauge = Math.min(100, state.n2oGauge + chargeRate * dt);
@@ -3953,34 +3972,51 @@
     const H = canvas.height;
     const track = TRACKS[state.selectedTrack];
 
-    // 지평선을 화면 상단 34%에 배치하여 66%의 깊고 시원한 3D 입체 트랙 공간 확보
-    const horizonY = Math.floor(H * 0.34);
-    const kartGroundY = H * 0.81;
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
-    skyGrad.addColorStop(0, track.skyTop);
-    skyGrad.addColorStop(1, track.skyBottom);
-    ctx.fillStyle = skyGrad;
-    ctx.fillRect(0, 0, W, horizonY);
-
-    drawHorizonScenery(ctx, W, horizonY, track, timeMs);
-
-    ctx.fillStyle = track.grass1;
-    ctx.fillRect(0, horizonY, W, H - horizonY);
-
     if (state.segments.length === 0) return;
 
     const drawDistance = 96;
     const baseIndex = Math.floor(state.posZ / SEG_LEN);
     const basePercent = (state.posZ % SEG_LEN) / SEG_LEN;
 
-    // 내 차가 밟고 있는 도로 높이(baseRoadY)와 기울기(baseSlope)를 보간하여 타이어 접지 유지 + 전방 3D 고저차 원근감 극대화!
+    // 내 차가 밟고 있는 도로 높이(baseRoadY)와 경사(roadSlope)를 보간하여 고저차 피칭 & 지평선 역동성 구현!
     const seg0 = state.segments[baseIndex % state.segments.length];
     const seg1 = state.segments[(baseIndex + 1) % state.segments.length];
     const baseRoadY = seg0.y + (seg1.y - seg0.y) * basePercent;
+    const roadSlope = (seg1.y - seg0.y);
+
+    const speedRatio = state.speed / Math.max(1, state.maxSpeed);
+    const boostVis = state.boostVisual || 0;
+
+    // 연석(Curb) 밟기 & 고속 부스터 주행 시 노면 진동(Rumble)과 경사 피칭이 반영된 다이나믹 지평선!
+    const onKerbRumble = (Math.abs(state.playerX) > 0.76 && state.playerY <= 2)
+      ? Math.sin(timeMs * 0.085) * 3.2 * speedRatio
+      : Math.sin(timeMs * 0.045) * (0.9 + boostVis * 2.2) * speedRatio;
+    const horizonY = Math.floor(H * 0.34 + Math.max(-28, Math.min(28, roadSlope * 0.42)) - boostVis * 10 + onKerbRumble);
+    const kartGroundY = H * 0.81;
+
+    // 코너 조향 및 드리프트 슬라이딩 시 화면 전체가 코너 안쪽으로 기울어지는 3D 다이나믹 카메라 뱅크 롤(Camera Bank Tilt)!
+    const camRoll = (-state.smoothSteer * 0.036 - (state.driftAngle || 0) * 0.030) * Math.min(1.15, speedRatio + 0.15);
+
+    ctx.save();
+    if (Math.abs(camRoll) > 0.001) {
+      ctx.translate(W * 0.5, H * 0.55);
+      ctx.rotate(camRoll);
+      ctx.scale(1.045, 1.045);
+      ctx.translate(-W * 0.5, -H * 0.55);
+    }
+
+    const skyGrad = ctx.createLinearGradient(0, -40, 0, horizonY);
+    skyGrad.addColorStop(0, track.skyTop);
+    skyGrad.addColorStop(1, track.skyBottom);
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(-60, -60, W + 120, horizonY + 65);
+
+    drawHorizonScenery(ctx, W, horizonY, track, timeMs);
+
+    ctx.fillStyle = track.grass1;
+    ctx.fillRect(-60, horizonY, W + 120, H - horizonY + 80);
 
     // 정통 3D 핀홀 카메라 파라미터 + 슈퍼부스터 다이나믹 FOV 워프(화각 확장):
-    // 부스터 발동 시 focalLen이 205 -> 151로 즉시 넓어지며 도로와 지평선이 '슈웅!' 빨려 들어오는 광각 하이퍼 워프 연출!
-    const boostVis = state.boostVisual || 0;
     const camDistBehind = 205;
     const focalLen = 205 - boostVis * 54;
     const camHeight = (kartGroundY - horizonY) / (focalLen / camDistBehind);
@@ -4031,17 +4067,32 @@
       if (p2.y >= p1.y) continue;
 
       const stripe = (p2.seg.index % 2) === 0;
+      const fastStripe = (p2.seg.index % 4) < 2;
 
-      // 1) 좌우 지형(잔디/설원/해변/용암) 원근 스트라이프
+      // 1) 좌우 지형(잔디/설원/해변/용암) 원근 스트라이프 + 코스 외곽 지형 디테일 벨트(강물/꽃밭/모래톱/용암천)
       ctx.fillStyle = stripe ? track.grass1 : track.grass2;
-      ctx.fillRect(0, p2.y, W, Math.max(1, p1.y - p2.y + 1.2));
+      ctx.fillRect(-60, p2.y, W + 120, Math.max(1, p1.y - p2.y + 1.4));
+
+      // 트랙 바깥쪽이 단조롭지 않도록 양옆 외곽 지형 장식 띠(Outer Terrain Accent Strip) 렌더링!
+      const outerTerrainCol = track.sceneryType === 'beach'
+        ? (stripe ? '#00acc1' : '#26c6da')
+        : (track.sceneryType === 'castle'
+          ? (stripe ? '#ff3d00' : '#dd2c00')
+          : (track.sceneryType === 'snow'
+            ? (stripe ? '#b3e5fc' : '#81d4fa')
+            : (track.sceneryType === 'rainbow'
+              ? (stripe ? 'rgba(0, 229, 255, 0.22)' : 'rgba(224, 64, 251, 0.22)')
+              : (stripe ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.07)'))));
+      ctx.fillStyle = outerTerrainCol;
+      drawTrapezoid(ctx, p1.x - p1.w * 1.95, p1.y, p1.w * 0.48, p2.x - p2.w * 1.95, p2.y, p2.w * 0.48);
+      drawTrapezoid(ctx, p1.x + p1.w * 1.95, p1.y, p1.w * 0.48, p2.x + p2.w * 1.95, p2.y, p2.w * 0.48);
 
       // 2) 도로 외곽 3D 입체 갓길 그림자 & 두꺼운 연석(Curb) 베벨
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.28)';
-      drawTrapezoid(ctx, p1.x, p1.y, p1.w * 1.20, p2.x, p2.y, p2.w * 1.20);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.32)';
+      drawTrapezoid(ctx, p1.x, p1.y, p1.w * 1.22, p2.x, p2.y, p2.w * 1.22);
 
-      const k1 = p1.w * 1.14;
-      const k2 = p2.w * 1.14;
+      const k1 = p1.w * 1.15;
+      const k2 = p2.w * 1.15;
       ctx.fillStyle = stripe ? track.kerb1 : track.kerb2;
       drawTrapezoid(ctx, p1.x, p1.y, k1, p2.x, p2.y, k2);
 
@@ -4056,50 +4107,58 @@
         drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
       }
 
+      // 3-B) 달리는 속도감을 극대화하는 노면 고속 러쉬 트랙 결(Asphalt Speed Grain Strips)
+      if (!fastStripe && p2.n < 52) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.065)';
+        drawTrapezoid(ctx, p1.x - p1.w * 0.24, p1.y, p1.w * 0.14, p2.x - p2.w * 0.24, p2.y, p2.w * 0.14);
+        drawTrapezoid(ctx, p1.x + p1.w * 0.24, p1.y, p1.w * 0.14, p2.x + p2.w * 0.24, p2.y, p2.w * 0.14);
+      }
+
       // 4) 도로 양옆 엣지 화이트 실선 (소실점으로 모이는 뚜렷한 원근 가이드라인!)
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-      drawTrapezoid(ctx, p1.x - p1.w * 0.96, p1.y, p1.w * 0.024, p2.x - p2.w * 0.96, p2.y, p2.w * 0.024);
-      drawTrapezoid(ctx, p1.x + p1.w * 0.96, p1.y, p1.w * 0.024, p2.x + p2.w * 0.96, p2.y, p2.w * 0.024);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+      drawTrapezoid(ctx, p1.x - p1.w * 0.96, p1.y, p1.w * 0.026, p2.x - p2.w * 0.96, p2.y, p2.w * 0.026);
+      drawTrapezoid(ctx, p1.x + p1.w * 0.96, p1.y, p1.w * 0.026, p2.x + p2.w * 0.96, p2.y, p2.w * 0.026);
 
       // 5) 코스 테마별 특색 있는 노면 디테일
       if (track.sceneryType === 'candy' && stripe) {
         ctx.fillStyle = 'rgba(255, 193, 227, 0.25)';
         drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.72, p2.x, p2.y, p2.w * 0.72);
       } else if (track.sceneryType === 'snow') {
-        ctx.fillStyle = stripe ? 'rgba(255, 255, 255, 0.32)' : 'rgba(179, 229, 252, 0.18)';
+        ctx.fillStyle = stripe ? 'rgba(255, 255, 255, 0.34)' : 'rgba(179, 229, 252, 0.20)';
         drawTrapezoid(ctx, p1.x - p1.w * 0.45, p1.y, p1.w * 0.12, p2.x - p2.w * 0.45, p2.y, p2.w * 0.12);
         drawTrapezoid(ctx, p1.x + p1.w * 0.45, p1.y, p1.w * 0.12, p2.x + p2.w * 0.45, p2.y, p2.w * 0.12);
       } else if (track.sceneryType === 'dino' && p2.seg.index % 3 === 0) {
         ctx.fillStyle = 'rgba(62, 39, 35, 0.35)';
         drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.94, p2.x, p2.y, p2.w * 0.94);
       } else if (track.sceneryType === 'castle' && stripe) {
-        ctx.fillStyle = 'rgba(255, 109, 0, 0.32)';
+        ctx.fillStyle = 'rgba(255, 109, 0, 0.35)';
         drawTrapezoid(ctx, p1.x - p1.w * 0.88, p1.y, p1.w * 0.06, p2.x - p2.w * 0.88, p2.y, p2.w * 0.06);
         drawTrapezoid(ctx, p1.x + p1.w * 0.88, p1.y, p1.w * 0.06, p2.x + p2.w * 0.88, p2.y, p2.w * 0.06);
       } else if (track.sceneryType === 'sakura' && stripe) {
-        ctx.fillStyle = 'rgba(248, 187, 208, 0.28)';
+        ctx.fillStyle = 'rgba(248, 187, 208, 0.30)';
         drawTrapezoid(ctx, p1.x - p1.w * 0.82, p1.y, p1.w * 0.08, p2.x - p2.w * 0.82, p2.y, p2.w * 0.08);
         drawTrapezoid(ctx, p1.x + p1.w * 0.82, p1.y, p1.w * 0.08, p2.x + p2.w * 0.82, p2.y, p2.w * 0.08);
       }
 
       // 6) 원근감을 극대화하는 3차선 레이싱 점선
       if (stripe) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.024, p2.x, p2.y, p2.w * 0.024);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.50)';
-        drawTrapezoid(ctx, p1.x - p1.w * 0.46, p1.y, p1.w * 0.016, p2.x - p2.w * 0.46, p2.y, p2.w * 0.016);
-        drawTrapezoid(ctx, p1.x + p1.w * 0.46, p1.y, p1.w * 0.016, p2.x + p2.w * 0.46, p2.y, p2.w * 0.016);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.86)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.026, p2.x, p2.y, p2.w * 0.026);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.56)';
+        drawTrapezoid(ctx, p1.x - p1.w * 0.46, p1.y, p1.w * 0.018, p2.x - p2.w * 0.46, p2.y, p2.w * 0.018);
+        drawTrapezoid(ctx, p1.x + p1.w * 0.46, p1.y, p1.w * 0.018, p2.x + p2.w * 0.46, p2.y, p2.w * 0.018);
       }
 
       // 7) 노면 위 원근 스피드 셰브론(화살표 마크) & 부스터 발동 시 아스팔트 초고속 잔상 스트리크
-      if (p2.seg.index % 4 === 0 && p2.n < 45) {
-        ctx.fillStyle = boostVis > 0.1 ? 'rgba(0, 229, 255, 0.68)' : 'rgba(0, 229, 255, 0.36)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.15, p2.x, p2.y, p2.w * 0.03);
+      if (p2.seg.index % 3 === 0 && p2.n < 48) {
+        ctx.fillStyle = boostVis > 0.1 ? 'rgba(0, 229, 255, 0.72)' : 'rgba(0, 229, 255, 0.42)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.16, p2.x, p2.y, p2.w * 0.032);
       }
-      if (boostVis > 0.08 && p2.n < 36 && (p2.seg.index % 2 === 0)) {
-        ctx.fillStyle = `rgba(128, 216, 255, ${(boostVis * 0.42).toFixed(2)})`;
-        drawTrapezoid(ctx, p1.x - p1.w * 0.72, p1.y, p1.w * 0.022, p2.x - p2.w * 0.72, p2.y, p2.w * 0.022);
-        drawTrapezoid(ctx, p1.x + p1.w * 0.72, p1.y, p1.w * 0.022, p2.x + p2.w * 0.72, p2.y, p2.w * 0.022);
+      if ((boostVis > 0.06 || speedRatio > 0.68) && p2.n < 38 && (p2.seg.index % 2 === 0)) {
+        const streakAlpha = boostVis > 0.06 ? (boostVis * 0.46) : ((speedRatio - 0.65) * 0.45);
+        ctx.fillStyle = `rgba(128, 216, 255, ${Math.min(0.5, streakAlpha).toFixed(2)})`;
+        drawTrapezoid(ctx, p1.x - p1.w * 0.72, p1.y, p1.w * 0.024, p2.x - p2.w * 0.72, p2.y, p2.w * 0.024);
+        drawTrapezoid(ctx, p1.x + p1.w * 0.72, p1.y, p1.w * 0.024, p2.x + p2.w * 0.72, p2.y, p2.w * 0.024);
       }
       if (p2.seg.index === 0) {
         ctx.fillStyle = '#ffffff';
@@ -4107,8 +4166,8 @@
       }
 
       // 8) 원거리 대기 원근감(Atmospheric Depth Fog): 지평선 쪽으로 갈수록 하늘빛 안개가 은은하게 섞여 깊이감 형성!
-      if (p2.n > 42) {
-        const fogRatio = Math.min(0.68, ((p2.n - 42) / (drawDistance - 42)) * 0.68);
+      if (p2.n > 44) {
+        const fogRatio = Math.min(0.62, ((p2.n - 44) / (drawDistance - 44)) * 0.62);
         ctx.save();
         ctx.globalAlpha = fogRatio;
         ctx.fillStyle = track.skyBottom;
@@ -4123,14 +4182,13 @@
     horizonMist.addColorStop(0.5, track.skyBottom);
     horizonMist.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.save();
-    ctx.globalAlpha = 0.55;
+    ctx.globalAlpha = 0.48;
     ctx.fillStyle = horizonMist;
-    ctx.fillRect(0, horizonY - 12, W, 38);
+    ctx.fillRect(-60, horizonY - 12, W + 120, 38);
     ctx.restore();
 
     // 임의의 상대 거리 relZ를 60fps 연속 1/Z 원근 좌표로 변환하는 정밀 보간 함수
     function projectContinuousRelZ(relZ) {
-      // projected 배열은 n = -1(index 0)부터 시작하므로 floatIdx = (relZ / SEG_LEN + basePercent) + 1
       const floatIdx = (relZ / SEG_LEN + basePercent) + 1;
       const idx = Math.min(projected.length - 2, Math.max(0, Math.floor(floatIdx)));
       const frac = Math.max(0, Math.min(1, floatIdx - idx));
@@ -4149,24 +4207,24 @@
       if (p.n < 0 || p.y < horizonY) continue;
 
       // 도로 양옆 3D 원근 반사봉(Delinator Posts)으로 거리감·입체감 강화
-      if (p.seg.index % 2 === 0 && p.w > 14) {
-        const postH = p.w * 0.11;
-        const postW = Math.max(2, p.w * 0.025);
+      if (p.seg.index % 2 === 0 && p.w > 12) {
+        const postH = p.w * 0.12;
+        const postW = Math.max(2.2, p.w * 0.026);
         [-1.18, 1.18].forEach(side => {
           const px = p.x + side * p.w;
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(px - postW * 0.5, p.y - postH, postW, postH);
           ctx.fillStyle = (p.seg.index % 4 === 0) ? '#ff1744' : '#00e5ff';
-          ctx.fillRect(px - postW * 0.5, p.y - postH * 0.85, postW, postH * 0.35);
+          ctx.fillRect(px - postW * 0.5, p.y - postH * 0.85, postW, postH * 0.38);
         });
       }
 
       // 급커브 굴절 구간 바깥쪽 3D 갈매기 코너 유도 표지판(Chevron Sign) 렌더링
-      if (p.seg.chevronSign && p.w > 18 && p.n < 62) {
+      if (p.seg.chevronSign && p.w > 16 && p.n < 64) {
         const signSide = p.seg.chevronSign; // -1(왼쪽 바깥) or +1(오른쪽 바깥)
         const sx = p.x + signSide * p.w * 1.28;
-        const signW = Math.max(8, p.w * 0.13);
-        const signH = Math.max(8, p.w * 0.11);
+        const signW = Math.max(8, p.w * 0.14);
+        const signH = Math.max(8, p.w * 0.12);
         const poleH = Math.max(6, p.w * 0.09);
         ctx.save();
         ctx.fillStyle = '#455a64';
@@ -4200,26 +4258,26 @@
 
       p.seg.scenery.forEach(sc => {
         const sx = p.x + sc.offset * p.w;
-        drawRoadsideProp(ctx, sx, p.y, p.w * 0.42, track.sceneryType, sc.variant, timeMs);
+        drawRoadsideProp(ctx, sx, p.y, p.w * 0.45 * (sc.scaleMult || 1.0), track.sceneryType, sc.variant, timeMs);
       });
 
       p.seg.items.forEach(it => {
         if (it.takenTimer && it.takenTimer > 0) return;
         const ix = p.x + it.x * p.w * 0.78;
         if (it.type === 'itemBox') {
-          drawItemCube(ctx, ix, p.y, p.w * 0.092, timeMs);
+          drawItemCube(ctx, ix, p.y, p.w * 0.098, timeMs);
         } else if (it.type === 'jumpRamp') {
           drawJumpRamp(ctx, ix, p.y, p.w * 0.30, timeMs);
         } else if (it.type === 'dashPad') {
-          drawDashPad(ctx, ix, p.y, p.w * 0.14, timeMs);
+          drawDashPad(ctx, ix, p.y, p.w * 0.15, timeMs);
         } else if (it.type === 'coin') {
-          drawGoldCoin(ctx, ix, p.y, p.w * 0.068, timeMs);
+          drawGoldCoin(ctx, ix, p.y, p.w * 0.072, timeMs);
         } else if (it.type === 'pipe') {
-          drawMarioPipe(ctx, ix, p.y, p.w * 0.105);
+          drawMarioPipe(ctx, ix, p.y, p.w * 0.11, timeMs);
         } else if (it.type === 'banana') {
-          drawBananaPeel(ctx, ix, p.y, p.w * 0.075, timeMs);
+          drawBananaPeel(ctx, ix, p.y, p.w * 0.082, timeMs);
         } else if (it.type === 'oilSlick' || it.type === 'crab' || it.type === 'iceBlock' || it.type === 'yoshiEgg' || it.type === 'thwomp') {
-          drawMarioGimmick(ctx, it.type, ix, p.y, p.w * 0.115, it.phase || 0, timeMs);
+          drawMarioGimmick(ctx, it.type, ix, p.y, p.w * 0.12, it.phase || 0, timeMs);
         }
       });
     }
@@ -4273,7 +4331,6 @@
       if (pt.y < horizonY - 5) return;
       const rx = pt.x + r.x * pt.w * 0.78;
       const shrinkScale = r.shrinkTimer > 0 ? 0.56 : 1.0;
-      // 멀리 있는 차는 지평선 점처럼 작아지고, 가까워질수록 내 차 크기(1.22)와 동일하게 커지는 리얼 3D 원근 스케일!
       const kScale = Math.min(1.32, Math.max(0.05, (pt.w / roadBaseW) * 1.20)) * shrinkScale;
       const jumpLift = r.y * kScale * 0.42;
 
@@ -4284,6 +4341,7 @@
         drifting: r.drifting || r.spinTimer > 0,
         driftStage: r.drifting ? 2 : 0,
         spinning: r.spinTimer > 0,
+        speedRatio: r.speed / Math.max(1, state.maxSpeed),
         star: false,
         bullet: false,
         ufo: false,
@@ -4292,6 +4350,8 @@
       });
     });
 
+    ctx.restore(); // 카메라 뱅크 롤 복원
+
     if (state.lightningTimer > 3.8) {
       ctx.save();
       ctx.fillStyle = 'rgba(255, 234, 0, 0.35)';
@@ -4299,20 +4359,21 @@
       ctx.restore();
     }
 
-    const speedRatio = state.speed / Math.max(1, state.maxSpeed);
-    if (boostVis > 0.03 || state.starTimer > 0 || state.bulletTimer > 0 || speedRatio > 0.76) {
+    // 평상시 고속 주행(speedRatio > 0.45)부터 바람을 가르는 스피드 라인이 자연스럽게 살아나고, 부스터 시 폭발적으로 증폭!
+    if (boostVis > 0.03 || state.starTimer > 0 || state.bulletTimer > 0 || speedRatio > 0.45) {
       const intensity = (boostVis > 0.05 || state.starTimer > 0 || state.bulletTimer > 0)
-        ? Math.max(0.65, boostVis)
-        : Math.min(0.55, (speedRatio - 0.75) * 2.2);
+        ? Math.max(0.72, boostVis)
+        : Math.min(0.62, (speedRatio - 0.42) * 1.15);
       drawSpeedLines(ctx, W, H, timeMs, intensity, boostVis, horizonY);
     }
 
-    // 플레이어 주인공 카트 렌더링 (kartGroundY = H * 0.81 위치에 타이어가 정확히 접지!)
+    // 플레이어 주인공 카트 렌더링 (kartGroundY = H * 0.81 위치에 타이어가 정확히 접지 + 다이나믹 서스펜션 바운스!)
     const playerRacer = RACERS[state.selectedRacer];
     const kartX = W * 0.5 + state.screenXOffset;
     const jumpOffset = -state.playerY * 0.48;
     const ufoLift = state.ufoTimer > 0 ? -32 : 0;
-    const kartY = kartGroundY + jumpOffset + ufoLift;
+    const suspBounce = state.playerY <= 2 ? Math.sin(timeMs * 0.048) * (1.4 + boostVis * 1.8) * speedRatio : 0;
+    const kartY = kartGroundY + jumpOffset + ufoLift + suspBounce;
     const megaScale = state.megaTimer > 0 ? 1.54 : 1.22;
 
     // 부스터 버튼을 누르는 순간 카트 주변으로 퍼져나가는 3D 소닉붐 충격파 링(Sonic Shockwave Ring)!
@@ -4343,6 +4404,7 @@
       driftStage: state.driftStage,
       spinning: state.spinTimer > 0,
       trickRot: state.trickRot,
+      speedRatio,
       star: state.starTimer > 0,
       bullet: state.bulletTimer > 0,
       ufo: state.ufoTimer > 0 && state.bulletTimer <= 0,
@@ -4393,31 +4455,104 @@
   function drawHorizonScenery(c, W, horizonY, track, timeMs) {
     const type = track.sceneryType;
     const skyYaw = state.skyYaw || 0;
-    if (type === 'rainbow') {
-      c.fillStyle = '#ffffff';
-      for (let i = 0; i < 32; i++) {
-        const sx = ((i * 97 + Math.floor(timeMs * 0.018) + skyYaw * 0.15) % W + W) % W;
-        const sy = (i * 43) % (horizonY - 15);
-        const r = (i % 3) + 1.4;
+    const tSec = (timeMs || 0) * 0.001;
+
+    c.save();
+    // 0) 하늘 태양/달 & 회전하는 햇살 광선(Sunburst Rays)으로 생동감 있는 하늘 연출
+    const sunX = (((W * 0.78 + skyYaw * 0.14) % (W + 160)) + (W + 160)) % (W + 160) - 80;
+    const sunY = horizonY * 0.30;
+    if (type !== 'rainbow' && type !== 'castle') {
+      c.save();
+      c.translate(sunX, sunY);
+      c.rotate(tSec * 0.18);
+      for (let r = 0; r < 12; r++) {
+        c.rotate(Math.PI / 6);
+        const rayGrad = c.createLinearGradient(0, 0, 0, 135);
+        rayGrad.addColorStop(0, 'rgba(255, 255, 255, 0.28)');
+        rayGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        c.fillStyle = rayGrad;
         c.beginPath();
-        c.arc(sx, sy, r, 0, Math.PI * 2);
+        c.moveTo(-10, 0);
+        c.lineTo(10, 0);
+        c.lineTo(24, 135);
+        c.lineTo(-24, 135);
+        c.closePath();
         c.fill();
       }
-      c.save();
-      c.translate(((W * 0.78 + skyYaw * 0.25) % W + W) % W, horizonY * 0.36);
-      c.fillStyle = '#ff80ab';
+      c.fillStyle = '#fff59d';
       c.beginPath();
       c.arc(0, 0, 28, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = '#ffffff';
+      c.beginPath();
+      c.arc(-6, -6, 12, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
+    }
+
+    // 1) 코스별 특수 하늘 효과 (무지개 은하수·유성우, 아이스 오로라, 벚꽃 보케, 쿠파 화산재·번개)
+    if (type === 'rainbow') {
+      // 은하수 성운 오라
+      const nebGrad = c.createRadialGradient(W * 0.45, horizonY * 0.42, 10, W * 0.45, horizonY * 0.42, W * 0.48);
+      nebGrad.addColorStop(0, 'rgba(224, 64, 251, 0.38)');
+      nebGrad.addColorStop(0.5, 'rgba(0, 229, 255, 0.22)');
+      nebGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      c.fillStyle = nebGrad;
+      c.fillRect(-40, -40, W + 80, horizonY + 40);
+
+      c.fillStyle = '#ffffff';
+      for (let i = 0; i < 42; i++) {
+        const sx = ((i * 97 + Math.floor(timeMs * 0.018) + skyYaw * 0.15) % W + W) % W;
+        const sy = (i * 43) % (horizonY - 12);
+        const r = (i % 3) + 1.2 + Math.sin(tSec * 4 + i) * 0.6;
+        c.beginPath();
+        c.arc(sx, sy, Math.max(0.6, r), 0, Math.PI * 2);
+        c.fill();
+      }
+      // 떨어지는 별똥별 (Shooting Stars)
+      for (let s = 0; s < 3; s++) {
+        const prog = ((tSec * 0.65 + s * 0.37) % 1);
+        const stX = ((W * (0.2 + s * 0.3) - prog * 260 + skyYaw * 0.2) % W + W) % W;
+        const stY = prog * (horizonY * 0.75);
+        c.strokeStyle = 'rgba(0, 229, 255, 0.78)';
+        c.lineWidth = 2.5;
+        c.beginPath();
+        c.moveTo(stX, stY);
+        c.lineTo(stX + 38, stY - 18);
+        c.stroke();
+      }
+      // 고리 달린 토성 & 초승달
+      c.save();
+      c.translate(sunX, horizonY * 0.36);
+      c.fillStyle = '#ff80ab';
+      c.beginPath();
+      c.arc(0, 0, 30, 0, Math.PI * 2);
       c.fill();
       c.strokeStyle = '#ffea00';
       c.lineWidth = 6;
       c.beginPath();
-      c.ellipse(0, 0, 48, 12, -0.25, 0, Math.PI * 2);
+      c.ellipse(0, 0, 54, 14, -0.25, 0, Math.PI * 2);
       c.stroke();
       c.restore();
     } else if (type === 'snow') {
-      c.fillStyle = 'rgba(255, 255, 255, 0.88)';
-      for (let i = 0; i < 26; i++) {
+      // 바닐라 아이스 레이크: 하늘에 일렁이는 에메랄드·시안 오로라(Aurora Borealis) 커튼!
+      for (let band = 0; band < 2; band++) {
+        const aurGrad = c.createLinearGradient(0, 12 + band * 22, 0, horizonY * 0.72);
+        aurGrad.addColorStop(0, band === 0 ? 'rgba(0, 230, 118, 0.34)' : 'rgba(0, 229, 255, 0.30)');
+        aurGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        c.fillStyle = aurGrad;
+        c.beginPath();
+        c.moveTo(-40, horizonY * 0.72);
+        for (let ax = -40; ax <= W + 40; ax += 45) {
+          const ay = 22 + band * 24 + Math.sin(ax * 0.012 + tSec * 1.8 + band) * 16;
+          c.lineTo(ax, ay);
+        }
+        c.lineTo(W + 40, horizonY * 0.72);
+        c.closePath();
+        c.fill();
+      }
+      c.fillStyle = 'rgba(255, 255, 255, 0.90)';
+      for (let i = 0; i < 28; i++) {
         const sx = (i * 83 + Math.sin(timeMs * 0.002 + i) * 25 + skyYaw * 0.2) % W;
         const sy = (i * 37 + timeMs * 0.04) % horizonY;
         c.beginPath();
@@ -4426,92 +4561,275 @@
       }
     } else if (type === 'sakura') {
       c.fillStyle = '#f8bbd0';
-      for (let i = 0; i < 24; i++) {
-        const sx = ((i * 89 + timeMs * 0.03 + skyYaw * 0.2) % W + W) % W;
-        const sy = (i * 41 + timeMs * 0.025) % horizonY;
+      for (let i = 0; i < 28; i++) {
+        const sx = ((i * 89 + timeMs * 0.035 + skyYaw * 0.22) % W + W) % W;
+        const sy = (i * 41 + timeMs * 0.028) % horizonY;
         c.beginPath();
-        c.ellipse(sx, sy, 5, 3, (timeMs * 0.003 + i), 0, Math.PI * 2);
+        c.ellipse(sx, sy, 5.5, 3.2, (timeMs * 0.003 + i), 0, Math.PI * 2);
         c.fill();
       }
     } else if (type === 'castle') {
-      c.fillStyle = '#ffea00';
+      // 쿠파 성: 붉은 블러드문 & 솟구치는 용암 불티
+      c.fillStyle = '#ffab00';
       c.beginPath();
-      c.arc(((W * 0.82 + skyYaw * 0.2) % W + W) % W, horizonY * 0.32, 30, 0, Math.PI * 2);
+      c.arc(sunX, horizonY * 0.32, 34, 0, Math.PI * 2);
       c.fill();
-      c.fillStyle = 'rgba(255, 110, 64, 0.75)';
-      for (let i = 0; i < 18; i++) {
-        const sx = ((i * 107 + timeMs * 0.02 + skyYaw * 0.3) % W + W) % W;
-        const sy = horizonY - ((i * 29 + timeMs * 0.04) % horizonY);
+      c.fillStyle = 'rgba(255, 110, 64, 0.82)';
+      for (let i = 0; i < 24; i++) {
+        const sx = ((i * 107 + timeMs * 0.025 + skyYaw * 0.3) % W + W) % W;
+        const sy = horizonY - ((i * 29 + timeMs * 0.05) % horizonY);
         c.beginPath();
-        c.arc(sx, sy, 2.5, 0, Math.PI * 2);
+        c.arc(sx, sy, 2.8, 0, Math.PI * 2);
         c.fill();
       }
     }
 
-    const grad = c.createRadialGradient(W * 0.5, horizonY + 40, 80, W * 0.5, horizonY + 40, 290);
-    grad.addColorStop(0, 'rgba(255,255,255,0)');
-    grad.addColorStop(0.65, 'rgba(255,234,0,0.22)');
-    grad.addColorStop(0.82, 'rgba(255,64,129,0.22)');
-    grad.addColorStop(1, 'rgba(0,229,255,0)');
-    c.fillStyle = grad;
-    c.fillRect(0, 0, W, horizonY);
-
-    // 아기자기한 스마일 뭉게구름 (시차 이동 적용)
-    if (type !== 'castle') {
-      for (let i = 0; i < 5; i++) {
-        const span = W + 240;
-        const cx = (((i * 290 + timeMs * 0.02 + skyYaw * 0.25) % span) + span) % span - 120;
-        const cy = 38 + (i % 2) * 32;
-        c.fillStyle = type === 'candy' ? 'rgba(255, 240, 245, 0.92)' : 'rgba(255, 255, 255, 0.90)';
-        c.beginPath();
-        c.arc(cx, cy, 24, 0, Math.PI * 2);
-        c.arc(cx + 22, cy - 8, 30, 0, Math.PI * 2);
-        c.arc(cx + 46, cy, 22, 0, Math.PI * 2);
-        c.fill();
-        c.fillStyle = '#37474f';
-        c.beginPath();
-        c.arc(cx + 16, cy - 6, 2.6, 0, Math.PI * 2);
-        c.arc(cx + 28, cy - 6, 2.6, 0, Math.PI * 2);
-        c.fill();
-        c.fillStyle = 'rgba(255, 128, 171, 0.65)';
-        c.beginPath();
-        c.arc(cx + 11, cy - 2, 3.5, 0, Math.PI * 2);
-        c.arc(cx + 33, cy - 2, 3.5, 0, Math.PI * 2);
-        c.fill();
-      }
-    }
-
-    // 1층 원경 산맥 (느린 시차 0.4x & 반투명 대기 원근감)
+    // 2) 1층 원경 산맥 & 수평선 바다 (느린 시차 0.35x)
+    const farSpan = W + 420;
     c.save();
-    c.globalAlpha = 0.55;
-    c.fillStyle = track.grass1;
-    const farSpan = W + 360;
+    c.globalAlpha = 0.62;
+    c.fillStyle = type === 'beach' ? '#00838f' : (type === 'castle' ? '#4e1409' : track.grass1);
     for (let i = 0; i < 6; i++) {
-      const hx = (((i * (farSpan / 5) + skyYaw * 0.42) % farSpan) + farSpan) % farSpan - 180;
+      const hx = (((i * (farSpan / 5) + skyYaw * 0.35) % farSpan) + farSpan) % farSpan - 210;
+      const peakH = 98 + (i % 3) * 26;
       c.beginPath();
-      c.moveTo(hx - 190, horizonY + 8);
-      c.lineTo(hx, horizonY - 95 - (i % 2) * 28);
-      c.lineTo(hx + 190, horizonY + 8);
+      c.moveTo(hx - 210, horizonY + 10);
+      c.lineTo(hx, horizonY - peakH);
+      c.lineTo(hx + 210, horizonY + 10);
       c.closePath();
       c.fill();
+      // 산봉우리 만년설 / 용암 화구 하이라이트
+      if (type === 'snow' || type === 'mario' || type === 'dino' || type === 'castle') {
+        c.fillStyle = type === 'castle' ? '#ff3d00' : '#ffffff';
+        c.beginPath();
+        c.moveTo(hx, horizonY - peakH);
+        c.lineTo(hx + 46, horizonY - peakH * 0.68);
+        c.lineTo(hx, horizonY - peakH * 0.74);
+        c.lineTo(hx - 46, horizonY - peakH * 0.68);
+        c.closePath();
+        c.fill();
+        c.fillStyle = type === 'beach' ? '#00838f' : (type === 'castle' ? '#4e1409' : track.grass1);
+      }
     }
     c.restore();
 
-    // 2층 중경 언덕/산 실루엣 (빠른 시차 0.85x)
+    // 3) 2층 중경 테마 언덕 & 점박이 마리오 구름 언덕 (시차 0.65x)
     c.fillStyle = track.grass2;
     for (let i = 0; i < 7; i++) {
-      const hx = (((i * (farSpan / 6) + skyYaw * 0.85) % farSpan) + farSpan) % farSpan - 180;
+      const hx = (((i * (farSpan / 6) + skyYaw * 0.65) % farSpan) + farSpan) % farSpan - 210;
       c.beginPath();
       if (type === 'snow' || type === 'castle' || type === 'dino') {
-        c.moveTo(hx - 150, horizonY + 10);
-        c.lineTo(hx, horizonY - 64 - (i % 2) * 22);
-        c.lineTo(hx + 150, horizonY + 10);
+        c.moveTo(hx - 155, horizonY + 12);
+        c.lineTo(hx, horizonY - 68 - (i % 2) * 24);
+        c.lineTo(hx + 155, horizonY + 12);
         c.closePath();
       } else {
-        c.arc(hx, horizonY + 32, 145, Math.PI, 0);
+        c.arc(hx, horizonY + 30, 148, Math.PI, 0);
       }
       c.fill();
+
+      // 마리오 서킷 / 요시 밸리 특유의 언덕 위 밝은 원형 무늬 디테일
+      if (type === 'mario' || type === 'candy' || type === 'sakura') {
+        c.fillStyle = type === 'candy' ? 'rgba(255, 234, 0, 0.35)' : 'rgba(255, 255, 255, 0.24)';
+        c.beginPath();
+        c.arc(hx - 35, horizonY - 52, 16, 0, Math.PI * 2);
+        c.arc(hx + 28, horizonY - 68, 20, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = track.grass2;
+      }
     }
+
+    // 4) [핵심!] 8대 마리오 카트 코스별 시그니처 대형 파노라마 랜드마크 (시차 0.50x)
+    for (let k = 0; k < 2; k++) {
+      const lx = (((k * (farSpan * 0.5) + 180 + skyYaw * 0.52) % farSpan) + farSpan) % farSpan - 180;
+      const ly = horizonY;
+      c.save();
+      if (type === 'mario') {
+        // 피치 성(Peach's Castle): 하얀 성벽 + 빨간 고깔 지붕 3탑 + 스테인드글라스 창문 + 황금 깃발
+        c.fillStyle = '#fff8e1';
+        c.strokeStyle = '#d7ccc8';
+        c.lineWidth = 2;
+        c.fillRect(lx - 54, ly - 68, 108, 68);
+        c.fillRect(lx - 26, ly - 108, 52, 42);
+        c.fillRect(lx - 66, ly - 82, 24, 82);
+        c.fillRect(lx + 42, ly - 82, 24, 82);
+        c.fillStyle = '#ff1744';
+        [[-54, -82, 20, 32], [54, -82, 20, 32], [0, -108, 34, 44]].forEach(([rx, ry, rw, rh]) => {
+          c.beginPath();
+          c.moveTo(lx + rx - rw, ly + ry);
+          c.lineTo(lx + rx, ly + ry - rh);
+          c.lineTo(lx + rx + rw, ly + ry);
+          c.closePath();
+          c.fill();
+        });
+        c.fillStyle = '#ffea00';
+        c.beginPath();
+        c.arc(lx, ly - 84, 11, 0, Math.PI * 2);
+        c.fill();
+        // 공중에 떠 있는 황금 ? 블록 3개
+        [-130, -98, -66].forEach((bx, bIdx) => {
+          const by = ly - 76 - Math.sin(tSec * 3.5 + bIdx) * 5;
+          c.fillStyle = '#ffca28';
+          c.strokeStyle = '#ffffff';
+          c.lineWidth = 2;
+          c.fillRect(lx + bx, by, 22, 22);
+          c.strokeRect(lx + bx, by, 22, 22);
+        });
+      } else if (type === 'candy') {
+        // 도넛 평원·초코섬: 거대한 핑크 아이싱 도넛 산 아치 & 막대사탕 풍차
+        c.strokeStyle = '#d7ccc8';
+        c.lineWidth = 26;
+        c.beginPath();
+        c.arc(lx, ly - 8, 58, Math.PI, 0);
+        c.stroke();
+        c.strokeStyle = '#ff4081';
+        c.lineWidth = 18;
+        c.beginPath();
+        c.arc(lx, ly - 8, 58, Math.PI * 1.05, Math.PI * 1.95);
+        c.stroke();
+      } else if (type === 'beach') {
+        // 엉금엉금 비치: 해안 빨간 줄무늬 등대(Lighthouse) + 하얀 요트 범선 + 점프하는 돌고래
+        c.fillStyle = '#ffffff';
+        c.fillRect(lx - 14, ly - 96, 28, 96);
+        c.fillStyle = '#ff1744';
+        c.fillRect(lx - 14, ly - 80, 28, 20);
+        c.fillRect(lx - 14, ly - 44, 28, 20);
+        c.fillStyle = '#ffea00';
+        c.beginPath();
+        c.arc(lx, ly - 102, 12, 0, Math.PI * 2);
+        c.fill();
+        // 바다 위 하얀 요트
+        const boatX = lx + 115 + Math.sin(tSec * 1.4 + k) * 24;
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.moveTo(boatX, ly - 6);
+        c.lineTo(boatX, ly - 54);
+        c.lineTo(boatX + 32, ly - 12);
+        c.closePath();
+        c.fill();
+      } else if (type === 'snow') {
+        // 바닐라 아이스 레이크: 반짝이는 얼음 크리스탈 궁전 첨탑
+        c.fillStyle = 'rgba(128, 216, 255, 0.85)';
+        c.strokeStyle = '#ffffff';
+        c.lineWidth = 2;
+        [[-36, 65], [0, 105], [36, 65]].forEach(([ox, h]) => {
+          c.beginPath();
+          c.moveTo(lx + ox - 18, ly);
+          c.lineTo(lx + ox, ly - h);
+          c.lineTo(lx + ox + 18, ly);
+          c.closePath();
+          c.fill();
+          c.stroke();
+        });
+      } else if (type === 'dino') {
+        // 요시 밸리·디노 정글: 분화하는 화산 & 거대한 목 긴 브라키오사우루스 공룡 실루엣!
+        c.fillStyle = '#4e342e';
+        c.beginPath();
+        c.moveTo(lx - 95, ly + 4);
+        c.lineTo(lx - 24, ly - 98);
+        c.lineTo(lx + 24, ly - 98);
+        c.lineTo(lx + 95, ly + 4);
+        c.closePath();
+        c.fill();
+        c.fillStyle = '#ff3d00';
+        c.beginPath();
+        c.ellipse(lx, ly - 98, 24, 7, 0, 0, Math.PI * 2);
+        c.fill();
+        // 목 긴 공룡 실루엣
+        const dx = lx + 135;
+        c.fillStyle = '#1b5e20';
+        c.beginPath();
+        c.ellipse(dx, ly - 18, 34, 20, 0, 0, Math.PI * 2);
+        c.fill();
+        c.lineWidth = 12;
+        c.strokeStyle = '#1b5e20';
+        c.lineCap = 'round';
+        c.beginPath();
+        c.moveTo(dx + 18, ly - 24);
+        c.quadraticCurveTo(dx + 32, ly - 65, dx + 46, ly - 82);
+        c.stroke();
+      } else if (type === 'sakura') {
+        // 피치 로얄 가든: 회전하는 초대형 로얄 대관람차(Ferris Wheel) & 가든 성곽
+        const fwY = ly - 68;
+        c.strokeStyle = '#ffffff';
+        c.lineWidth = 3;
+        c.beginPath();
+        c.arc(lx, fwY, 52, 0, Math.PI * 2);
+        c.stroke();
+        for (let a = 0; a < 8; a++) {
+          const ang = tSec * 0.45 + (a * Math.PI) / 4;
+          const gx = lx + Math.cos(ang) * 52;
+          const gy = fwY + Math.sin(ang) * 52;
+          c.strokeStyle = 'rgba(255,255,255,0.6)';
+          c.beginPath();
+          c.moveTo(lx, fwY);
+          c.lineTo(gx, gy);
+          c.stroke();
+          c.fillStyle = a % 2 === 0 ? '#ff4081' : '#ffea00';
+          c.beginPath();
+          c.arc(gx, gy, 6.5, 0, Math.PI * 2);
+          c.fill();
+        }
+      } else if (type === 'castle') {
+        // 쿠파 성: 뿔 달린 거대 쿠파 성채 & 붉은 용암 폭포 줄기
+        c.fillStyle = '#263238';
+        c.fillRect(lx - 64, ly - 88, 128, 88);
+        c.fillRect(lx - 82, ly - 112, 32, 112);
+        c.fillRect(lx + 50, ly - 112, 32, 112);
+        c.fillStyle = '#ff3d00';
+        c.fillRect(lx - 14, ly - 52, 28, 52);
+        c.fillStyle = '#ffea00';
+        c.beginPath();
+        c.arc(lx - 26, ly - 68, 7, 0, Math.PI * 2);
+        c.arc(lx + 26, ly - 68, 7, 0, Math.PI * 2);
+        c.fill();
+      }
+      c.restore();
+    }
+
+    // 5) 하늘 위를 유유히 떠다니는 마리오 카트 레이싱 비행선(Blimp) & 알록달록 열기구(Hot Air Balloons) + 뭉게구름
+    if (type !== 'castle') {
+      const span = W + 260;
+      for (let i = 0; i < 5; i++) {
+        const cx = (((i * 270 + timeMs * 0.022 + skyYaw * 0.28) % span) + span) % span - 130;
+        const cy = 36 + (i % 2) * 30;
+        c.fillStyle = type === 'candy' ? 'rgba(255, 240, 245, 0.92)' : 'rgba(255, 255, 255, 0.90)';
+        c.beginPath();
+        c.arc(cx, cy, 22, 0, Math.PI * 2);
+        c.arc(cx + 20, cy - 8, 28, 0, Math.PI * 2);
+        c.arc(cx + 42, cy, 20, 0, Math.PI * 2);
+        c.fill();
+
+        // 구름 사이사이 알록달록 열기구 배치
+        if (i % 2 === 0) {
+          const bx = cx + 95;
+          const by = cy + 8 + Math.sin(tSec * 2.2 + i) * 7;
+          c.fillStyle = i === 0 ? '#ff4081' : (i === 2 ? '#00e5ff' : '#ffea00');
+          c.strokeStyle = '#ffffff';
+          c.lineWidth = 2;
+          c.beginPath();
+          c.arc(bx, by, 15, 0, Math.PI * 2);
+          c.fill();
+          c.stroke();
+          c.fillStyle = '#8d6e63';
+          c.fillRect(bx - 5, by + 17, 10, 6);
+        }
+      }
+
+      // 대형 레이싱 비행선 (Blimp)
+      const blimpX = (((W * 0.32 + timeMs * 0.032 + skyYaw * 0.22) % (W + 240)) + (W + 240)) % (W + 240) - 120;
+      const blimpY = 28 + Math.sin(tSec * 1.8) * 5;
+      c.fillStyle = '#ffffff';
+      c.strokeStyle = '#ff1744';
+      c.lineWidth = 3;
+      c.beginPath();
+      c.ellipse(blimpX, blimpY, 38, 16, 0, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+      c.fillStyle = '#ffea00';
+      c.fillRect(blimpX - 24, blimpY - 4, 48, 8);
+    }
+    c.restore();
   }
 
   function drawArchGate(c, x, y, w) {
@@ -4561,8 +4879,28 @@
   function drawRoadsideProp(c, x, y, size, type, variant, timeMs) {
     if (size < 6) return;
     c.save();
+    // variant === 2 또는 3일 때는 트랙 양옆에서 펄럭이는 레이싱 응원 깃발 & 스타디움 조명탑을 함께 배치하여 주행 역동성 극대화!
+    if (variant === 2) {
+      const wave = Math.sin((timeMs || 0) * 0.012 + x * 0.05) * size * 0.12;
+      c.fillStyle = '#eceff1';
+      c.fillRect(x - size * 0.05, y - size * 1.05, size * 0.10, size * 1.05);
+      c.fillStyle = (Math.floor(x) % 2 === 0) ? '#ff1744' : '#00e5ff';
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = Math.max(1.2, size * 0.05);
+      c.beginPath();
+      c.moveTo(x, y - size * 1.02);
+      c.lineTo(x + size * 0.58, y - size * 0.84 + wave);
+      c.lineTo(x, y - size * 0.64);
+      c.closePath();
+      c.fill();
+      c.stroke();
+      c.restore();
+      return;
+    }
+
+    const v = variant % 2;
     if (type === 'mario') {
-      if (variant === 0) {
+      if (v === 0) {
         // 아기자기한 웃는 얼굴의 슈퍼마리오 버섯 나무
         c.fillStyle = '#fff8e1';
         c.strokeStyle = '#ffffff';
@@ -4601,8 +4939,8 @@
         c.fill();
       }
     } else if (type === 'candy') {
-      if (variant === 0) {
-        // 슈가 캔디 랜드: 롤리팝 막대사탕 나무
+      if (v === 0) {
+        // 도넛 평원·초코섬: 롤리팝 막대사탕 나무
         c.fillStyle = '#ffffff';
         c.fillRect(x - size * 0.07, y - size * 0.85, size * 0.14, size * 0.85);
         c.fillStyle = '#ff4081';
@@ -4637,8 +4975,8 @@
         c.fill();
       }
     } else if (type === 'beach') {
-      if (variant === 0) {
-        // 돌핀 비치 아일랜드: 야자수 나무와 코코넛
+      if (v === 0) {
+        // 엉금엉금 비치: 야자수 나무와 코코넛
         c.fillStyle = '#8d6e63';
         c.fillRect(x - size * 0.1, y - size * 0.95, size * 0.2, size * 0.95);
         c.fillStyle = '#00e676';
@@ -4661,8 +4999,8 @@
         c.stroke();
       }
     } else if (type === 'snow') {
-      if (variant === 0) {
-        // 펭귄 아이스 밸리: 빨간 목도리를 한 귀여운 눈사람
+      if (v === 0) {
+        // 바닐라 아이스 레이크: 빨간 목도리를 한 귀여운 눈사람
         c.fillStyle = '#ffffff';
         c.strokeStyle = '#80d8ff';
         c.lineWidth = Math.max(1.5, size * 0.05);
@@ -4671,7 +5009,6 @@
         c.arc(x, y - size * 0.82, size * 0.26, 0, Math.PI * 2);
         c.fill();
         c.stroke();
-        // 빨간 목도리 & 모자
         c.fillStyle = '#ff1744';
         c.fillRect(x - size * 0.24, y - size * 0.62, size * 0.48, size * 0.1);
         c.fillRect(x - size * 0.2, y - size * 1.18, size * 0.4, size * 0.16);
@@ -4693,20 +5030,16 @@
         c.fill();
       }
     } else if (type === 'dino') {
-      if (variant === 0) {
-        // 요시 공룡 정글: 초록 점박이 요시 알
-        c.fillStyle = '#ffffff';
-        c.strokeStyle = '#66bb6a';
-        c.lineWidth = Math.max(2, size * 0.07);
-        c.beginPath();
-        c.ellipse(x, y - size * 0.48, size * 0.38, size * 0.48, 0, 0, Math.PI * 2);
-        c.fill();
-        c.stroke();
+      if (v === 0) {
+        // 요시 밸리: 고대 정글 토템 기둥 & 열대 양치식물
+        c.fillStyle = '#6d4c41';
+        c.strokeStyle = '#ffea00';
+        c.lineWidth = Math.max(1.5, size * 0.06);
+        c.fillRect(x - size * 0.22, y - size * 0.92, size * 0.44, size * 0.92);
+        c.strokeRect(x - size * 0.22, y - size * 0.92, size * 0.44, size * 0.92);
         c.fillStyle = '#00e676';
         c.beginPath();
-        c.arc(x - size * 0.12, y - size * 0.55, size * 0.11, 0, Math.PI * 2);
-        c.arc(x + size * 0.14, y - size * 0.38, size * 0.09, 0, Math.PI * 2);
-        c.arc(x, y - size * 0.72, size * 0.08, 0, Math.PI * 2);
+        c.arc(x, y - size * 1.02, size * 0.28, 0, Math.PI * 2);
         c.fill();
       } else {
         // 정글 거대 열대 야자수
@@ -4718,8 +5051,8 @@
         c.fill();
       }
     } else if (type === 'sakura') {
-      if (variant === 0) {
-        // 벚꽃 스프링 가든: 풍성한 분홍 벚꽃 나무
+      if (v === 0) {
+        // 피치 로얄 가든: 풍성한 분홍 벚꽃 나무
         c.fillStyle = '#6d4c41';
         c.fillRect(x - size * 0.13, y - size * 0.72, size * 0.26, size * 0.72);
         c.fillStyle = '#f48fb1';
@@ -4745,8 +5078,8 @@
         c.stroke();
       }
     } else if (type === 'rainbow') {
-      // 레인보우 스타 로드: 반짝이는 황금 스타 링 기둥
-      c.strokeStyle = variant % 2 === 0 ? '#ffea00' : '#00e5ff';
+      // 무지개 로드: 반짝이는 황금 스타 링 기둥
+      c.strokeStyle = v === 0 ? '#ffea00' : '#00e5ff';
       c.lineWidth = Math.max(2.5, size * 0.12);
       c.beginPath();
       c.arc(x, y - size * 0.75, size * 0.48, 0, Math.PI * 2);
@@ -4756,7 +5089,7 @@
       c.arc(x, y - size * 0.75, size * 0.18, 0, Math.PI * 2);
       c.fill();
     } else if (type === 'castle') {
-      // 쿠파 용암 캐슬: 타오르는 불꽃 성벽 기둥
+      // 쿠파 성: 타오르는 불꽃 성벽 기둥
       c.fillStyle = '#455a64';
       c.fillRect(x - size * 0.22, y - size * 0.8, size * 0.44, size * 0.8);
       c.fillStyle = (Math.floor(timeMs * 0.01) + variant) % 2 === 0 ? '#ffea00' : '#ff3d00';
@@ -4767,70 +5100,149 @@
     c.restore();
   }
 
-  // 아기자기하고 흔들림 없이 깔끔한 파스텔 3D 선물상자 아이템 큐브
-  function drawItemCube(c, x, y, size, _timeMs) {
-    if (size < 4) return;
-    const floatY = y - size * 0.78;
+  // ==================== [핵심!] 아이템(Good) vs 장애물(Hazard) 시각 구분 전용 이펙트 헬퍼 ====================
+  // 1) 먹으면 좋은 아이템 전용: 시안·황금 빛기둥 & 바닥 네온 링 & 반짝이 별 오라
+  function drawCollectibleAura(c, x, y, size, timeMs, ringColor = '#00e5ff') {
+    if (size < 4.5) return;
+    const pulse = (Math.sin((timeMs || 0) * 0.009) + 1) * 0.5;
     c.save();
-    // 아이템 바닥 접지 그림자
-    c.fillStyle = 'rgba(15, 23, 42, 0.28)';
-    c.beginPath();
-    c.ellipse(x, y - size * 0.05, size * 0.65, size * 0.20, 0, 0, Math.PI * 2);
-    c.fill();
+    // 위로 솟아오르는 아이템 빛기둥 (Light Pillar)
+    const pillarGrad = c.createLinearGradient(x, y, x, y - size * 2.2);
+    pillarGrad.addColorStop(0, ringColor === '#00e5ff' ? 'rgba(0, 229, 255, 0.34)' : 'rgba(255, 234, 0, 0.34)');
+    pillarGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    c.fillStyle = pillarGrad;
+    c.fillRect(x - size * 0.62, y - size * 2.1, size * 1.24, size * 2.1);
 
-    c.translate(x, floatY);
-
-    const g = c.createLinearGradient(-size * 0.65, -size * 0.65, size * 0.65, size * 0.65);
-    g.addColorStop(0, '#ff80ab');
-    g.addColorStop(0.5, '#ffea00');
-    g.addColorStop(1, '#80d8ff');
-    c.fillStyle = g;
-    c.strokeStyle = '#ffffff';
+    // 바닥 시안·황금 이중 발광 링 (먹는 아이템임을 한눈에 표시!)
+    c.fillStyle = 'rgba(0, 229, 255, 0.24)';
+    c.strokeStyle = ringColor;
     c.lineWidth = Math.max(1.5, size * 0.11);
     c.beginPath();
-    c.roundRect(-size * 0.62, -size * 0.62, size * 1.24, size * 1.24, size * 0.28);
+    c.ellipse(x, y - size * 0.03, size * (0.76 + pulse * 0.10), size * 0.24, 0, 0, Math.PI * 2);
     c.fill();
     c.stroke();
 
-    // 선물상자 십자 리본 끈
-    c.fillStyle = 'rgba(255, 255, 255, 0.85)';
-    c.fillRect(-size * 0.13, -size * 0.60, size * 0.26, size * 1.20);
-    c.fillRect(-size * 0.60, -size * 0.13, size * 1.20, size * 0.26);
-
-    // 상단 귀여운 핑크 리본 매듭
-    c.fillStyle = '#ff4081';
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1, size * 0.06);
+    c.lineWidth = Math.max(1, size * 0.05);
     c.beginPath();
-    c.ellipse(-size * 0.22, -size * 0.68, size * 0.22, size * 0.13, -0.3, 0, Math.PI * 2);
-    c.ellipse(size * 0.22, -size * 0.68, size * 0.22, size * 0.13, 0.3, 0, Math.PI * 2);
-    c.fill();
-    c.stroke();
-
-    // 정중앙 귀여운 황금 별 엠블럼
-    c.fillStyle = '#ffea00';
-    c.strokeStyle = '#f57f17';
-    c.lineWidth = Math.max(1, size * 0.06);
-    c.beginPath();
-    c.arc(0, 0, size * 0.24, 0, Math.PI * 2);
-    c.fill();
+    c.ellipse(x, y - size * 0.03, size * 0.52, size * 0.15, 0, 0, Math.PI * 2);
     c.stroke();
     c.restore();
   }
 
-  // 마리오 카트 무지개 점프대 (아기자기한 비율로 도로에 밀착)
+  // 2) 피해야 하는 장애물 전용: 바닥 빨간색·노란색 위험 경고 존(Red Danger Zone)
+  function drawHazardWarningZone(c, x, y, size, timeMs, rxMult = 0.88) {
+    if (size < 4.5) return;
+    const pulse = (Math.sin((timeMs || 0) * 0.015) + 1) * 0.5;
+    const rx = size * rxMult * (0.95 + pulse * 0.12);
+    const ry = rx * 0.30;
+    c.save();
+    // 강렬한 레드 위험 바닥 글로우
+    c.fillStyle = `rgba(255, 23, 68, ${(0.34 + pulse * 0.22).toFixed(2)})`;
+    c.beginPath();
+    c.ellipse(x, y, rx * 1.12, ry * 1.15, 0, 0, Math.PI * 2);
+    c.fill();
+
+    // 빨강-노랑 위험 점선 테두리 (Hazard Caution Ring)
+    c.strokeStyle = '#ff1744';
+    c.lineWidth = Math.max(2, size * 0.13);
+    c.beginPath();
+    c.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    c.stroke();
+
+    c.strokeStyle = '#ffea00';
+    c.lineWidth = Math.max(1.5, size * 0.09);
+    c.setLineDash([Math.max(3, size * 0.22), Math.max(3, size * 0.22)]);
+    c.beginPath();
+    c.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    c.stroke();
+    c.setLineDash([]);
+    c.restore();
+  }
+
+  // 3) 피해야 하는 장애물 머리 위: 빨간 삼각형 '!' 위험 경고 배지 (멀리서도 0.1초 만에 장애물 식별!)
+  function drawHazardAlertBadge(c, x, topY, size, timeMs) {
+    if (size < 6.5) return;
+    const bounce = Math.sin((timeMs || 0) * 0.016) * size * 0.12;
+    const by = topY - size * 0.36 + bounce;
+    const bw = Math.max(7, size * 0.42);
+    c.save();
+    c.fillStyle = '#ff1744';
+    c.strokeStyle = '#ffea00';
+    c.lineWidth = Math.max(1.4, size * 0.07);
+    c.lineJoin = 'round';
+    c.beginPath();
+    c.moveTo(x, by - bw * 1.05);
+    c.lineTo(x + bw * 0.68, by);
+    c.lineTo(x - bw * 0.68, by);
+    c.closePath();
+    c.fill();
+    c.stroke();
+
+    // 삼각형 중앙 하얀 느낌표(!)
+    c.fillStyle = '#ffffff';
+    const barW = Math.max(1.6, bw * 0.18);
+    c.fillRect(x - barW * 0.5, by - bw * 0.72, barW, bw * 0.38);
+    c.beginPath();
+    c.arc(x, by - bw * 0.18, barW * 0.62, 0, Math.PI * 2);
+    c.fill();
+    c.restore();
+  }
+
+  // [아이템 1] 마리오 카트 시그니처 무지개 프리즘 '?' 아이템 박스 (황금·시안 빛기둥 + 공중 부유 + '?' 마크)
+  function drawItemCube(c, x, y, size, timeMs) {
+    if (size < 4) return;
+    drawCollectibleAura(c, x, y, size, timeMs, '#00e5ff');
+    const bob = Math.sin((timeMs || 0) * 0.008) * size * 0.12;
+    const floatY = y - size * 0.92 + bob;
+    c.save();
+    c.translate(x, floatY);
+
+    const g = c.createLinearGradient(-size * 0.65, -size * 0.65, size * 0.65, size * 0.65);
+    g.addColorStop(0, '#00e5ff');
+    g.addColorStop(0.35, '#ffea00');
+    g.addColorStop(0.70, '#ff4081');
+    g.addColorStop(1, '#7c4dff');
+    c.fillStyle = g;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(1.8, size * 0.12);
+    c.beginPath();
+    c.roundRect(-size * 0.62, -size * 0.62, size * 1.24, size * 1.24, size * 0.24);
+    c.fill();
+    c.stroke();
+
+    // 내부 황금 테두리
+    c.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+    c.lineWidth = Math.max(1, size * 0.05);
+    c.strokeRect(-size * 0.46, -size * 0.46, size * 0.92, size * 0.92);
+
+    // 정중앙 큼직한 '?' 마크 (누가 봐도 먹는 아이템 박스!)
+    if (size > 6) {
+      c.fillStyle = '#ffffff';
+      c.strokeStyle = '#0f172a';
+      c.lineWidth = Math.max(1.5, size * 0.10);
+      c.font = `900 ${Math.round(size * 0.88)}px sans-serif`;
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      c.strokeText('?', 0, size * 0.04);
+      c.fillText('?', 0, size * 0.04);
+    }
+    c.restore();
+  }
+
+  // [아이템 2] 마리오 카트 무지개 점프대 (시안·골드 상승 화살표)
   function drawJumpRamp(c, x, y, w, timeMs) {
     if (w < 8) return;
     const h = w * 0.24;
     c.save();
     const grad = c.createLinearGradient(x - w, y, x + w, y - h);
-    grad.addColorStop(0, '#ff4081');
-    grad.addColorStop(0.35, '#ffea00');
-    grad.addColorStop(0.7, '#00e676');
-    grad.addColorStop(1, '#00e5ff');
+    grad.addColorStop(0, '#00e5ff');
+    grad.addColorStop(0.35, '#00e676');
+    grad.addColorStop(0.7, '#ffea00');
+    grad.addColorStop(1, '#ff4081');
     c.fillStyle = grad;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.5, w * 0.03);
+    c.lineWidth = Math.max(1.8, w * 0.035);
     c.beginPath();
     c.moveTo(x - w, y);
     c.lineTo(x + w, y);
@@ -4840,7 +5252,7 @@
     c.fill();
     c.stroke();
 
-    if (w > 18) {
+    if (w > 16) {
       const pulse = (Math.floor(timeMs * 0.012) % 2 === 0) ? '#ffffff' : '#fff59d';
       c.strokeStyle = pulse;
       c.lineWidth = Math.max(2, w * 0.045);
@@ -4857,53 +5269,55 @@
     c.restore();
   }
 
-  // 슈퍼마리오 초록 토관 (아기자기한 크기 + 바닥 그림자)
-  function drawMarioPipe(c, x, y, size) {
+  // [장애물 1] 바리케이드 위험 빗금이 감긴 장애물 토관 (바닥 빨간 위험 존 + 머리 위 '!' 경고 배지)
+  function drawMarioPipe(c, x, y, size, timeMs = 0) {
     if (size < 5) return;
+    drawHazardWarningZone(c, x, y, size, timeMs, 0.85);
     c.save();
-    const w = size * 0.90;
-    const h = size * 1.05;
-    c.fillStyle = 'rgba(15, 23, 42, 0.30)';
-    c.beginPath();
-    c.ellipse(x, y, w * 0.55, size * 0.18, 0, 0, Math.PI * 2);
-    c.fill();
+    const w = size * 0.92;
+    const h = size * 1.08;
 
     const pg = c.createLinearGradient(x - w * 0.5, y - h, x + w * 0.5, y);
     pg.addColorStop(0, '#69f0ae');
-    pg.addColorStop(0.45, '#00e676');
-    pg.addColorStop(1, '#00a152');
+    pg.addColorStop(0.45, '#00c853');
+    pg.addColorStop(1, '#1b5e20');
     c.fillStyle = pg;
-    c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.2, size * 0.08);
+    c.strokeStyle = '#11171a';
+    c.lineWidth = Math.max(1.4, size * 0.09);
     c.beginPath();
-    c.roundRect(x - w * 0.42, y - h, w * 0.84, h, size * 0.1);
+    c.roundRect(x - w * 0.42, y - h, w * 0.84, h, size * 0.08);
     c.fill();
     c.stroke();
     c.beginPath();
-    c.roundRect(x - w * 0.52, y - h, w * 1.04, h * 0.3, size * 0.12);
+    c.roundRect(x - w * 0.52, y - h, w * 1.04, h * 0.30, size * 0.10);
     c.fill();
     c.stroke();
+
+    // 장애물임을 명확히 알리는 검정·노랑 위험 경고 띠 (Hazard Caution Band)
+    c.fillStyle = '#ffea00';
+    c.fillRect(x - w * 0.40, y - h * 0.52, w * 0.80, h * 0.22);
+    c.fillStyle = '#11171a';
+    c.fillRect(x - w * 0.26, y - h * 0.52, w * 0.16, h * 0.22);
+    c.fillRect(x + w * 0.10, y - h * 0.52, w * 0.16, h * 0.22);
     c.restore();
+
+    drawHazardAlertBadge(c, x, y - h, size, timeMs);
   }
 
-  // 아기자기한 웃는 바나나 (흔들림 없이 도로에 안착)
-  function drawBananaPeel(c, x, y, size, _timeMs) {
+  // [장애물 2] 미끄럼 함정 바나나 (바닥 빨간 위험 존 + 심술궂은 눈 + 머리 위 '!' 경고 배지)
+  function drawBananaPeel(c, x, y, size, timeMs = 0) {
     if (size < 4) return;
+    drawHazardWarningZone(c, x, y, size, timeMs, 0.80);
     c.save();
-    c.fillStyle = 'rgba(15, 23, 42, 0.26)';
-    c.beginPath();
-    c.ellipse(x, y, size * 0.58, size * 0.18, 0, 0, Math.PI * 2);
-    c.fill();
-
     c.translate(x, y - size * 0.38);
 
     const bg = c.createRadialGradient(-size * 0.15, -size * 0.25, size * 0.05, 0, 0, size * 0.72);
     bg.addColorStop(0, '#ffff8d');
     bg.addColorStop(0.6, '#ffea00');
-    bg.addColorStop(1, '#fbc02d');
+    bg.addColorStop(1, '#f57f17');
     c.fillStyle = bg;
-    c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.5, size * 0.1);
+    c.strokeStyle = '#d50000';
+    c.lineWidth = Math.max(1.5, size * 0.10);
     c.beginPath();
     c.moveTo(0, -size * 0.72);
     c.quadraticCurveTo(size * 0.58, -size * 0.15, size * 0.52, size * 0.38);
@@ -4913,50 +5327,46 @@
     c.stroke();
 
     if (size > 8) {
-      c.fillStyle = '#263238';
+      // 심술궂은 화난 눈매
+      c.fillStyle = '#d50000';
       c.beginPath();
-      c.arc(-size * 0.14, -size * 0.1, size * 0.075, 0, Math.PI * 2);
-      c.arc(size * 0.14, -size * 0.1, size * 0.075, 0, Math.PI * 2);
+      c.arc(-size * 0.14, -size * 0.1, size * 0.085, 0, Math.PI * 2);
+      c.arc(size * 0.14, -size * 0.1, size * 0.085, 0, Math.PI * 2);
       c.fill();
     }
     c.restore();
+    drawHazardAlertBadge(c, x, y - size * 1.05, size, timeMs);
   }
 
-  // 슈퍼마리오 카트 코스별 시그니처 장애물 기믹 5종 (오일/진흙 웅덩이, 꽃게, 얼음 블록, 요시 알, 쿵쿵이 바위)
+  // [장애물 3~7] 슈퍼마리오 카트 코스별 시그니처 장애물 기믹 5종 (모두 빨간 위험 경고 링 + '!' 경고 배지 탑재!)
   function drawMarioGimmick(c, type, x, y, size, phase, timeMs) {
     if (size < 4) return;
     c.save();
     if (type === 'oilSlick') {
-      // 마리오 서킷 오일 / 도넛 평원 초코 진흙 웅덩이
+      // 마리오 서킷 오일 / 도넛 평원 초코 진흙 웅덩이 (빨간 위험 경고 테두리)
+      drawHazardWarningZone(c, x, y, size, timeMs, 1.02);
       const isChoco = state.selectedTrack === 1;
-      c.fillStyle = isChoco ? 'rgba(78, 52, 46, 0.88)' : 'rgba(20, 26, 36, 0.85)';
-      c.strokeStyle = isChoco ? '#8d6e63' : '#546e7a';
-      c.lineWidth = Math.max(1.2, size * 0.08);
+      c.fillStyle = isChoco ? 'rgba(62, 39, 35, 0.92)' : 'rgba(15, 23, 42, 0.92)';
+      c.strokeStyle = '#ff1744';
+      c.lineWidth = Math.max(1.5, size * 0.09);
       c.beginPath();
-      c.ellipse(x, y - size * 0.05, size * 0.92, size * 0.28, 0, 0, Math.PI * 2);
+      c.ellipse(x, y - size * 0.04, size * 0.88, size * 0.26, 0, 0, Math.PI * 2);
       c.fill();
       c.stroke();
-      c.fillStyle = isChoco ? 'rgba(141, 110, 99, 0.55)' : 'rgba(128, 216, 255, 0.28)';
-      c.beginPath();
-      c.ellipse(x - size * 0.22, y - size * 0.09, size * 0.34, size * 0.10, -0.2, 0, Math.PI * 2);
-      c.fill();
+      drawHazardAlertBadge(c, x, y - size * 0.35, size * 0.85, timeMs);
     } else if (type === 'crab') {
-      // 엉금엉금 비치 빨간 꽃게 (Sidestepper)
-      c.fillStyle = 'rgba(15, 23, 42, 0.26)';
-      c.beginPath();
-      c.ellipse(x, y, size * 0.65, size * 0.18, 0, 0, Math.PI * 2);
-      c.fill();
-      c.fillStyle = '#ff5252';
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = Math.max(1.2, size * 0.08);
+      // 엉금엉금 비치 빨간 꽃게 장애물
+      drawHazardWarningZone(c, x, y, size, timeMs, 0.88);
+      c.fillStyle = '#d50000';
+      c.strokeStyle = '#ffea00';
+      c.lineWidth = Math.max(1.4, size * 0.09);
       c.beginPath();
       c.ellipse(x, y - size * 0.38, size * 0.58, size * 0.38, 0, 0, Math.PI * 2);
       c.fill();
       c.stroke();
-      // 집게발 2개 & 눈
       [-1, 1].forEach(dir => {
         c.beginPath();
-        c.arc(x + dir * size * 0.58, y - size * 0.68, size * 0.20, 0, Math.PI * 2);
+        c.arc(x + dir * size * 0.58, y - size * 0.68, size * 0.22, 0, Math.PI * 2);
         c.fill();
         c.stroke();
         c.fillStyle = '#ffffff';
@@ -4967,74 +5377,91 @@
         c.beginPath();
         c.arc(x + dir * size * 0.22, y - size * 0.68, size * 0.06, 0, Math.PI * 2);
         c.fill();
-        c.fillStyle = '#ff5252';
+        c.fillStyle = '#d50000';
       });
+      drawHazardAlertBadge(c, x, y - size * 0.96, size, timeMs);
     } else if (type === 'iceBlock') {
-      // 바닐라 아이스 레이크 반투명 얼음 블록
+      // 바닐라 아이스 레이크 날카로운 가시 얼음 블록 장애물
+      drawHazardWarningZone(c, x, y, size, timeMs, 0.88);
       const w = size * 0.96;
-      c.fillStyle = 'rgba(128, 216, 255, 0.85)';
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = Math.max(1.5, size * 0.10);
+      c.fillStyle = 'rgba(41, 182, 246, 0.88)';
+      c.strokeStyle = '#ff1744';
+      c.lineWidth = Math.max(1.6, size * 0.10);
       c.beginPath();
-      c.roundRect(x - w * 0.5, y - w * 0.92, w, w * 0.92, size * 0.15);
+      c.roundRect(x - w * 0.5, y - w * 0.92, w, w * 0.92, size * 0.12);
       c.fill();
       c.stroke();
-      c.fillStyle = 'rgba(255, 255, 255, 0.55)';
-      c.beginPath();
-      c.moveTo(x - w * 0.32, y - w * 0.78);
-      c.lineTo(x + w * 0.12, y - w * 0.78);
-      c.lineTo(x - w * 0.18, y - w * 0.25);
-      c.closePath();
-      c.fill();
+      // 성난 눈매
+      if (size > 7) {
+        c.fillStyle = '#ffea00';
+        c.beginPath();
+        c.arc(x - w * 0.18, y - w * 0.52, size * 0.09, 0, Math.PI * 2);
+        c.arc(x + w * 0.18, y - w * 0.52, size * 0.09, 0, Math.PI * 2);
+        c.fill();
+      }
+      drawHazardAlertBadge(c, x, y - w * 0.98, size, timeMs);
     } else if (type === 'yoshiEgg') {
-      // 요시 밸리 구르는 거대 요시 알
-      c.fillStyle = 'rgba(15, 23, 42, 0.28)';
+      // 요시 밸리 구르는 가시 바위 알(Spiked Hazard Egg) — 아이템으로 착각하지 않도록 뾰족한 가시와 붉은 경고 오라 적용!
+      drawHazardWarningZone(c, x, y, size, timeMs, 0.88);
+      const cy = y - size * 0.58;
+      // 바깥쪽 뾰족한 가시(Spikes) 6개
+      c.fillStyle = '#ffea00';
+      c.strokeStyle = '#d50000';
+      c.lineWidth = Math.max(1.2, size * 0.06);
+      for (let a = 0; a < 6; a++) {
+        const ang = (a * Math.PI) / 3 + ((timeMs || 0) * 0.005);
+        const sx1 = x + Math.cos(ang) * size * 0.42;
+        const sy1 = cy + Math.sin(ang) * size * 0.46;
+        const sx2 = x + Math.cos(ang) * size * 0.72;
+        const sy2 = cy + Math.sin(ang) * size * 0.74;
+        c.beginPath();
+        c.moveTo(sx1 - size * 0.10, sy1);
+        c.lineTo(sx2, sy2);
+        c.lineTo(sx1 + size * 0.10, sy1);
+        c.closePath();
+        c.fill();
+        c.stroke();
+      }
+      c.fillStyle = '#37474f';
+      c.strokeStyle = '#ff1744';
+      c.lineWidth = Math.max(1.6, size * 0.10);
       c.beginPath();
-      c.ellipse(x, y, size * 0.55, size * 0.18, 0, 0, Math.PI * 2);
-      c.fill();
-      c.fillStyle = '#ffffff';
-      c.strokeStyle = '#00c853';
-      c.lineWidth = Math.max(1.5, size * 0.09);
-      c.beginPath();
-      c.ellipse(x, y - size * 0.58, size * 0.50, size * 0.62, 0, 0, Math.PI * 2);
+      c.ellipse(x, cy, size * 0.48, size * 0.56, 0, 0, Math.PI * 2);
       c.fill();
       c.stroke();
-      c.fillStyle = '#00e676';
+      c.fillStyle = '#ff5252';
       c.beginPath();
-      c.arc(x - size * 0.16, y - size * 0.65, size * 0.15, 0, Math.PI * 2);
-      c.arc(x + size * 0.18, y - size * 0.44, size * 0.13, 0, Math.PI * 2);
-      c.arc(x + size * 0.04, y - size * 0.88, size * 0.11, 0, Math.PI * 2);
+      c.arc(x - size * 0.16, cy - size * 0.06, size * 0.12, 0, Math.PI * 2);
+      c.arc(x + size * 0.16, cy - size * 0.06, size * 0.12, 0, Math.PI * 2);
       c.fill();
+      drawHazardAlertBadge(c, x, y - size * 1.25, size, timeMs);
     } else if (type === 'thwomp') {
-      // 쿠파 성 / 무지개 로드 쿵쿵이 바위 (Thwomp) - 위아래로 움직이며 내려찍음!
+      // 쿠파 성 / 무지개 로드 쿵쿵이 바위 (Thwomp) - 바닥 빨간 추락 위험 존 + 가시 바위!
+      drawHazardWarningZone(c, x, y, size, timeMs, 0.96);
       const lift = Math.max(0, Math.sin((timeMs || 0) * 0.0026 + phase)) * size * 1.15;
-      c.fillStyle = 'rgba(15, 23, 42, 0.38)';
-      c.beginPath();
-      c.ellipse(x, y, size * 0.72, size * 0.20, 0, 0, Math.PI * 2);
-      c.fill();
 
       const ty = y - lift;
       const w = size * 1.12;
       const h = size * 1.18;
       const isRainbow = state.selectedTrack === 7;
-      c.fillStyle = isRainbow ? '#7c4dff' : '#546e7a';
-      c.strokeStyle = isRainbow ? '#00e5ff' : '#cfd8dc';
-      c.lineWidth = Math.max(1.8, size * 0.10);
+      c.fillStyle = isRainbow ? '#4a148c' : '#263238';
+      c.strokeStyle = '#ff1744';
+      c.lineWidth = Math.max(2.0, size * 0.11);
       c.beginPath();
-      c.roundRect(x - w * 0.5, ty - h, w, h, size * 0.16);
+      c.roundRect(x - w * 0.5, ty - h, w, h, size * 0.14);
       c.fill();
       c.stroke();
 
       if (size > 8) {
-        // 쿵쿵이 특유의 화난 눈썹과 눈
-        c.fillStyle = '#ffea00';
+        c.fillStyle = '#ff1744';
         c.beginPath();
-        c.arc(x - w * 0.20, ty - h * 0.58, size * 0.11, 0, Math.PI * 2);
-        c.arc(x + w * 0.20, ty - h * 0.58, size * 0.11, 0, Math.PI * 2);
+        c.arc(x - w * 0.20, ty - h * 0.58, size * 0.12, 0, Math.PI * 2);
+        c.arc(x + w * 0.20, ty - h * 0.58, size * 0.12, 0, Math.PI * 2);
         c.fill();
         c.fillStyle = '#ffffff';
         c.fillRect(x - w * 0.28, ty - h * 0.32, w * 0.56, h * 0.16);
       }
+      drawHazardAlertBadge(c, x, ty - h, size, timeMs);
     }
     c.restore();
   }
@@ -5072,35 +5499,50 @@
     c.restore();
   }
 
+  // [아이템 3] 별빛 대시 부스터 패드 (에메랄드·시안 가속 오라)
   function drawDashPad(c, x, y, size, timeMs) {
     if (size < 5) return;
     c.save();
     const glow = (Math.sin(timeMs * 0.018) + 1) * 0.5;
-    c.fillStyle = glow > 0.5 ? '#00e5ff' : '#ffea00';
-    c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.2, size * 0.08);
+    c.fillStyle = 'rgba(0, 230, 118, 0.28)';
     c.beginPath();
-    c.moveTo(x, y - size * 0.48);
-    c.lineTo(x + size * 0.68, y);
-    c.lineTo(x, y - size * 0.14);
-    c.lineTo(x - size * 0.68, y);
+    c.ellipse(x, y - size * 0.12, size * 0.85, size * 0.26, 0, 0, Math.PI * 2);
+    c.fill();
+
+    c.fillStyle = glow > 0.5 ? '#00e5ff' : '#00e676';
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(1.4, size * 0.09);
+    c.beginPath();
+    c.moveTo(x, y - size * 0.54);
+    c.lineTo(x + size * 0.72, y);
+    c.lineTo(x, y - size * 0.16);
+    c.lineTo(x - size * 0.72, y);
     c.closePath();
     c.fill();
     c.stroke();
     c.restore();
   }
 
-  // 아기자기한 스마일 황금 별 코인 (흔들림 최소화)
-  function drawGoldCoin(c, x, y, size, _timeMs) {
+  // [아이템 4] 3D 회전 황금 별 코인 (바닥 황금·에메랄드 링 + 3D 스핀 애니메이션)
+  function drawGoldCoin(c, x, y, size, timeMs = 0) {
     if (size < 3.5) return;
-    const cy = y - size * 0.62;
+    const bob = Math.sin(timeMs * 0.009 + x * 0.02) * size * 0.10;
+    const cy = y - size * 0.72 + bob;
+    const spinScaleX = Math.max(0.32, Math.abs(Math.cos(timeMs * 0.0055 + x * 0.01)));
     c.save();
-    c.fillStyle = 'rgba(15, 23, 42, 0.24)';
+    // 먹으면 좋은 아이템을 뜻하는 밝은 골드·시안 바닥 링
+    c.fillStyle = 'rgba(255, 234, 0, 0.25)';
+    c.strokeStyle = '#00e676';
+    c.lineWidth = Math.max(1.2, size * 0.09);
     c.beginPath();
-    c.ellipse(x, y, size * 0.46, size * 0.15, 0, 0, Math.PI * 2);
+    c.ellipse(x, y, size * 0.58, size * 0.18, 0, 0, Math.PI * 2);
     c.fill();
+    c.stroke();
 
-    const cg = c.createRadialGradient(x - size * 0.16, cy - size * 0.16, size * 0.08, x, cy, size * 0.58);
+    c.translate(x, cy);
+    c.scale(spinScaleX, 1);
+
+    const cg = c.createRadialGradient(-size * 0.16, -size * 0.16, size * 0.08, 0, 0, size * 0.58);
     cg.addColorStop(0, '#ffffff');
     cg.addColorStop(0.35, '#ffee58');
     cg.addColorStop(1, '#f57f17');
@@ -5108,14 +5550,13 @@
     c.strokeStyle = '#ffffff';
     c.lineWidth = Math.max(1.4, size * 0.12);
     c.beginPath();
-    c.arc(x, cy, size * 0.54, 0, Math.PI * 2);
+    c.arc(0, 0, size * 0.56, 0, Math.PI * 2);
     c.fill();
     c.stroke();
 
-    if (size > 7) {
-      c.fillStyle = '#5d4037';
-      c.fillRect(x - size * 0.16, cy - size * 0.15, size * 0.08, size * 0.26);
-      c.fillRect(x + size * 0.08, cy - size * 0.15, size * 0.08, size * 0.26);
+    if (size > 6) {
+      c.fillStyle = '#f57f17';
+      c.fillRect(-size * 0.10, -size * 0.26, size * 0.20, size * 0.52);
     }
     c.restore();
   }
@@ -5274,10 +5715,11 @@
     const spinAngle = opts.spinning ? Math.sin((opts.timeMs || 0) * 0.035) * 1.4 : 0;
     const trickAngle = opts.trickRot || 0;
 
-    // 드리프트/코너 슬라이딩 시 카트 앞코는 안쪽을 향하고 뒷바퀴는 바깥쪽으로 미끄러지는 리얼 3D 사선 드리프트 요잉!
-    const yaw = steer * 8.5 + driftAngle * 17.5;
-    if (spinAngle !== 0 || trickAngle !== 0 || Math.abs(driftAngle) > 0.05) {
-      c.rotate(spinAngle + trickAngle + driftAngle * 0.09);
+    // 드리프트/코너 슬라이딩 시 카트 앞코는 안쪽을 향하고 뒷바퀴는 바깥쪽으로 미끄러지는 리얼 3D 사선 드리프트 요잉 + 차체 롤링!
+    const yaw = steer * 9.5 + driftAngle * 18.5;
+    const bodyRoll = steer * 0.055 + driftAngle * 0.105;
+    if (spinAngle !== 0 || trickAngle !== 0 || Math.abs(bodyRoll) > 0.005) {
+      c.rotate(spinAngle + trickAngle + bodyRoll);
     }
 
     // 하늘 고래 로켓(Bullet) 변신 모드
@@ -5589,6 +6031,24 @@
         c.fillStyle = '#ffffff';
         c.beginPath();
         c.arc(sx + rearX, 12, sparkR * 0.45, 0, Math.PI * 2);
+        c.fill();
+      });
+    } else if ((opts.speedRatio || 0) > 0.58) {
+      // 일반 고속 주행 시에도 배기구에서 리드미컬하게 튀는 V8 애프터파이어 불꽃 & 스포일러 슬립스트림 바람결!
+      const pop = Math.max(0, Math.sin((opts.timeMs || 0) * 0.065));
+      const miniFlame = 14 + pop * 16 * (opts.speedRatio || 0.7);
+      [-22, 22].forEach(ox => {
+        const mx = ox + rearX;
+        const fg = c.createLinearGradient(mx, 2, mx, miniFlame);
+        fg.addColorStop(0, '#ffffff');
+        fg.addColorStop(0.45, '#ffea00');
+        fg.addColorStop(1, 'rgba(255, 87, 34, 0)');
+        c.fillStyle = fg;
+        c.beginPath();
+        c.moveTo(mx - 6, 2);
+        c.lineTo(mx + 6, 2);
+        c.lineTo(mx - yaw * 0.1, miniFlame);
+        c.closePath();
         c.fill();
       });
     }

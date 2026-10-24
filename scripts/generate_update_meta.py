@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.5.4.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.5.5.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,18 +15,18 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.4.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.5.apk"
     notes = (
-        "• [부스터 남발 방지 & 코너 리스크·오프로드 페널티 강화] 🚀 직선 자동 충전을 제거해 코너 드리프트·코인으로만 N2O를 모으도록 개선! 드리프트 없이 급코너에서 부스터를 켜면 원심력으로 코스 밖 오프로드/가드레일에 밀려 속도가 급감하고 부스터가 즉시 해제됩니다.\n"
-        "• [슈퍼마리오 카트 명작 8대 코스 & 전용 기믹 완벽 반영] 🍄 마리오 서킷(토관·오일슬릭), 도넛 평원·초코섬(진흙 늪), 엉금엉금 비치(횡이동 꽃게), 바닐라 아이스 레이크(얼음 블록·빙판), 요시 밸리(구르는 거대 알), 피치 로얄 가든(미로 화단), 쿠파 성(내려찍는 쿵쿵이 바위), 무지개 로드(우주 쿵쿵이·무가드레일) 탑재!\n"
-        "• [라이벌 AI 레이싱 경쟁력 대폭 강화] 🏎️ 결승선 앞 라이벌 감속 핸디캡을 폐지하고 코너 탈출 미니터보와 추격 부스터를 구사하도록 개편하여 정교한 드리프트와 코스 공략이 필수!"
+        "• [장애물 vs 아이템 시각 구분 100% 명확화] ⚠️ 피해야 하는 모든 장애물(토관·바나나·오일·꽃게·얼음블록·가시바위알·쿵쿵이) 바닥에 빨간·노란 위험 경고 존(Red Danger Zone)과 머리 위 빨간 삼각형 '!' 경고 표지판을 띄우고, 먹는 아이템(무지개 '?' 박스·3D 회전 코인)은 시안·황금 빛기둥 오라로 한눈에 구분!\n"
+        "• [8대 코스 다층 파노라마 랜드마크 배경 대폭 강화] 🏰 피치 성·거대 도넛산·해안 등대와 요트·오로라와 얼음궁전·화산과 브라키오 공룡·대관람차·쿠파 마왕성·은하수 유성우 및 하늘의 레이싱 비행선·열기구·2겹 응원 깃발 추가!\n"
+        "• [역동적인 3D 코너 카메라 뱅크 롤 & 서스펜션 주행감] 🏎️💨 코너를 돌 때 화면과 지평선이 코너 안쪽으로 기울어지는 3D 카메라 롤링, 고저차 피칭, 연석 진동, 고속 배기 백파이어 불꽃 및 타이어 노면 먼지 이펙트 탑재!"
     )
 
     update_payload = {
         "appName": "키즈 카트 러쉬! (Kids Kart Rush+)",
         "packageId": "com.mj.kidskart",
-        "versionCode": 10,
-        "versionName": "1.5.4",
+        "versionCode": 11,
+        "versionName": "1.5.5",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -53,17 +53,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "키즈 카트 러쉬!",
-                "latest_version": "1.5.4",
-                "version_code": 10,
+                "latest_version": "1.5.5",
+                "version_code": 11,
                 "force_update": False,
-                "release_notes": "드리프트 전용 부스터 충전·코너 부스터 오프로드 이탈 페널티로 부스터 남발 방지, 슈퍼마리오 카트 8대 코스 및 전용 기믹(쿵쿵이·거대 요시알·꽃게·얼음블록·진흙늪) 탑재, 라이벌 AI 코너 미니터보 경쟁력 강화.",
+                "release_notes": "장애물(빨간 위험 경고 링 & '!' 배지)과 아이템(시안·황금 빛기둥 & '?' 큐브) 완벽 시각 구분, 8대 코스별 대형 랜드마크·비행선·열기구 다층 배경, 코너 3D 카메라 뱅크 롤링 및 역동적 주행 연출 강화.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.5.4 (build 10), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.5.5 (build 11), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
