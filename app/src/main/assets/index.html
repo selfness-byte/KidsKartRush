@@ -982,7 +982,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.5.3</span>
+      <span class="lobby-badge" id="verBadge">v1.5.4</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
@@ -1050,64 +1050,64 @@
       </div>
     </div>
 
-    <!-- 트랙 선택 (8대 다채로운 테마 코스!) -->
+    <!-- 트랙 선택 (마리오 카트 명작 8대 코스!) -->
     <div class="panel-card">
-      <div class="panel-title">🗺️ 8가지 테마 레이싱 코스</div>
+      <div class="panel-title">🗺️ 마리오 카트 8대 시그니처 코스</div>
       <div class="track-list" id="trackList">
         <div class="track-card selected" data-track="0">
           <div class="track-icon">🍄</div>
           <div class="track-info">
-            <div class="track-name">마리오 버섯 왕국</div>
-            <div class="track-sub">점박이 버섯·초록 언덕</div>
+            <div class="track-name">마리오 서킷</div>
+            <div class="track-sub">S자 시케인·토관 슬라럼·헤어핀</div>
           </div>
         </div>
         <div class="track-card" data-track="1">
-          <div class="track-icon">🍭</div>
+          <div class="track-icon">🍩</div>
           <div class="track-info">
-            <div class="track-name">슈가 캔디 랜드</div>
-            <div class="track-sub">막대사탕·아이스크림 길</div>
+            <div class="track-name">도넛 평원·초코섬</div>
+            <div class="track-sub">초코 진흙 웅덩이·연속 굴절</div>
           </div>
         </div>
         <div class="track-card" data-track="2">
           <div class="track-icon">🏖️</div>
           <div class="track-info">
-            <div class="track-name">돌핀 비치 아일랜드</div>
-            <div class="track-sub">푸른 바다·야자수 해변</div>
+            <div class="track-name">엉금엉금 비치</div>
+            <div class="track-sub">해안 절벽 코너·해변 물웅덩이</div>
           </div>
         </div>
         <div class="track-card" data-track="3">
-          <div class="track-icon">❄️</div>
+          <div class="track-icon">⛄</div>
           <div class="track-info">
-            <div class="track-name">펭귄 아이스 밸리</div>
-            <div class="track-sub">눈사람·얼음 결정 슬로프</div>
+            <div class="track-name">바닐라 아이스 레이크</div>
+            <div class="track-sub">미끄러운 빙판·얼음 블록 슬라럼</div>
           </div>
         </div>
         <div class="track-card" data-track="4">
           <div class="track-icon">🦕</div>
           <div class="track-info">
-            <div class="track-name">요시 공룡 정글</div>
-            <div class="track-sub">공룡알·점프 언덕 숲길</div>
+            <div class="track-name">요시 밸리·디노 정글</div>
+            <div class="track-sub">협곡 헤어핀·거대 요시알 주의</div>
           </div>
         </div>
         <div class="track-card" data-track="5">
           <div class="track-icon">🌸</div>
           <div class="track-info">
-            <div class="track-name">벚꽃 스프링 가든</div>
-            <div class="track-sub">핑크 벚꽃잎·풍차 정원</div>
+            <div class="track-name">피치 로얄 가든</div>
+            <div class="track-sub">직각 정원 미로 시케인·대점프</div>
           </div>
         </div>
         <div class="track-card" data-track="6">
           <div class="track-icon">🌋</div>
           <div class="track-info">
-            <div class="track-name">쿠파 용암 캐슬</div>
-            <div class="track-sub">불꽃 성곽·용암 다리 점프</div>
+            <div class="track-name">쿠파 성 (Bowser Castle)</div>
+            <div class="track-sub">90도 석조 코너·쿵쿵이 바위</div>
           </div>
         </div>
         <div class="track-card" data-track="7">
           <div class="track-icon">🌈</div>
           <div class="track-info">
-            <div class="track-name">레인보우 스타 로드</div>
-            <div class="track-sub">무지개 우주·별빛 트랙</div>
+            <div class="track-name">무지개 로드 (Rainbow)</div>
+            <div class="track-sub">우주 급커브 웨이브·스타 쿵쿵이</div>
           </div>
         </div>
       </div>
@@ -2057,6 +2057,12 @@
       skyBottom: '#b3e5fc',
       grass1: '#43a047',
       grass2: '#66bb6a',
+      id: 0,
+      name: '마리오 서킷',
+      skyTop: '#29b6f6',
+      skyBottom: '#e1f5fe',
+      grass1: '#43a047',
+      grass2: '#66bb6a',
       road1: '#546e7a',
       road2: '#455a64',
       kerb1: '#ff1744',
@@ -2065,20 +2071,20 @@
     },
     {
       id: 1,
-      name: '슈가 캔디 랜드',
-      skyTop: '#ec407a',
-      skyBottom: '#fce4ec',
-      grass1: '#f48fb1',
-      grass2: '#f8bbd0',
-      road1: '#6d4c41',
-      road2: '#5d4037',
-      kerb1: '#ff4081',
-      kerb2: '#fff9c4',
+      name: '도넛 평원·초코섬',
+      skyTop: '#f57c00',
+      skyBottom: '#fff3e0',
+      grass1: '#8d6e63',
+      grass2: '#a1887f',
+      road1: '#5d4037',
+      road2: '#4e342e',
+      kerb1: '#ffca28',
+      kerb2: '#6d4c41',
       sceneryType: 'candy'
     },
     {
       id: 2,
-      name: '돌핀 비치 아일랜드',
+      name: '엉금엉금 비치',
       skyTop: '#00acc1',
       skyBottom: '#e0f7fa',
       grass1: '#26c6da',
@@ -2091,7 +2097,7 @@
     },
     {
       id: 3,
-      name: '펭귄 아이스 밸리',
+      name: '바닐라 아이스 레이크',
       skyTop: '#1565c0',
       skyBottom: '#e3f2fd',
       grass1: '#e1f5fe',
@@ -2104,7 +2110,7 @@
     },
     {
       id: 4,
-      name: '요시 공룡 정글',
+      name: '요시 밸리·디노 정글',
       skyTop: '#00897b',
       skyBottom: '#b2dfdb',
       grass1: '#2e7d32',
@@ -2117,7 +2123,7 @@
     },
     {
       id: 5,
-      name: '벚꽃 스프링 가든',
+      name: '피치 로얄 가든',
       skyTop: '#f06292',
       skyBottom: '#fff3e0',
       grass1: '#66bb6a',
@@ -2130,7 +2136,7 @@
     },
     {
       id: 6,
-      name: '쿠파 용암 캐슬',
+      name: '쿠파 성',
       skyTop: '#3e1008',
       skyBottom: '#bf360c',
       grass1: '#b71c1c',
@@ -2143,7 +2149,7 @@
     },
     {
       id: 7,
-      name: '레인보우 스타 로드',
+      name: '무지개 로드',
       skyTop: '#070b24',
       skyBottom: '#311b92',
       grass1: '#1a103c',
@@ -2730,22 +2736,39 @@
         seg.items.push({ type: 'coin', x: -0.46, takenTimer: 0 });
         seg.items.push({ type: 'coin', x: 0.46, takenTimer: 0 });
       }
-      // 3) 별빛 대시 부스터 패드 (Dash Pad) - 부스터가 남발되지 않도록 한 바퀴에 딱 3곳만 배치!
-      else if (i > 45 && i % 130 === 65) {
-        const side = (i % 260 === 65) ? -0.34 : 0.34;
+      // 3) 별빛 대시 부스터 패드 (Dash Pad) - 부스터 남발 방지를 위해 한 바퀴에 딱 2곳(긴 직선 구간)만 배치!
+      else if (i > 60 && i % 185 === 95) {
+        const side = (i % 370 === 95) ? -0.36 : 0.36;
         seg.items.push({ type: 'dashPad', x: side, takenTimer: 0 });
       }
-      // 4) 아기자기한 초록 토관 & 바나나 기믹
-      else if (i > 35 && i % 48 === 24) {
-        const pipeX = (i % 96 === 24) ? -0.68 : 0.68;
-        seg.items.push({ type: 'pipe', x: pipeX, takenTimer: 0 });
-      }
-      else if (i > 28 && i % 44 === 11) {
-        const banX = Math.sin(i * 0.7) * 0.48;
-        seg.items.push({ type: 'banana', x: banX, takenTimer: 0 });
+      // 4) 슈퍼마리오 카트 코스별 시그니처 기믹 & 장애물 배치!
+      else if (i > 30 && i % 28 === 14) {
+        const sideX = Math.sin(i * 0.85 + trackId) * 0.52;
+        if (trackId === 0) {
+          // 마리오 서킷: 초록 토관 슬라럼 & 서킷 오일 웅덩이
+          seg.items.push({ type: (i % 56 === 14) ? 'pipe' : 'oilSlick', x: sideX, takenTimer: 0 });
+        } else if (trackId === 1) {
+          // 도넛 평원·초코섬: 끈적한 초코 진흙 웅덩이 & 바나나
+          seg.items.push({ type: 'oilSlick', x: sideX * 0.85, takenTimer: 0 });
+        } else if (trackId === 2) {
+          // 엉금엉금 비치: 좌우로 옆걸음질 치는 해변 꽃게(crab)
+          seg.items.push({ type: 'crab', x: sideX, baseX: sideX, phase: i * 0.4, takenTimer: 0 });
+        } else if (trackId === 3) {
+          // 바닐라 아이스 레이크: 부딪히면 튕겨나는 얼음 블록(iceBlock)
+          seg.items.push({ type: 'iceBlock', x: sideX, takenTimer: 0 });
+        } else if (trackId === 4) {
+          // 요시 밸리·디노 정글: 도로 위를 데구르르 굴러다니는 거대 요시 알(yoshiEgg)
+          seg.items.push({ type: 'yoshiEgg', x: sideX, baseX: sideX, phase: i * 0.5, takenTimer: 0 });
+        } else if (trackId === 5) {
+          // 피치 로얄 가든: 정원 미로 시케인 토관 화단 & 바나나
+          seg.items.push({ type: (i % 56 === 14) ? 'pipe' : 'banana', x: (i % 56 === 14) ? (i % 112 === 14 ? -0.42 : 0.42) : sideX, takenTimer: 0 });
+        } else if (trackId === 6 || trackId === 7) {
+          // 쿠파 성 & 무지개 로드: 위아래로 쿵쾅거리며 내려찍는 마리오카트 명물 쿵쿵이(thwomp)!
+          seg.items.push({ type: 'thwomp', x: sideX * 0.75, phase: i * 0.65, takenTimer: 0 });
+        }
       }
       // 5) 별 코인 라인
-      else if (i > 8 && i % 7 === 0) {
+      else if (i > 8 && i % 8 === 0) {
         const lane = Math.sin(i * 0.22 + trackId) * 0.50;
         seg.items.push({ type: 'coin', x: lane, takenTimer: 0 });
       }
@@ -2895,19 +2918,18 @@
 
   function triggerBoost() {
     if (state.mode !== 'racing') return;
-    // 부스터가 너무 자주 남발되지 않도록, 보유 부스터가 있거나 N2O 게이지가 75% 이상 찼을 때만 발동!
-    if (state.boostCount <= 0 && state.n2oGauge < 75) {
+    // 부스터만 눌러서 쉽게 이기지 못하도록, 코너 드리프트와 코인으로 100% 모아 획득한 부스터 토큰(boostCount > 0)이 있을 때만 발동!
+    if (state.boostCount <= 0) {
       sfx.playHop();
       return;
     }
-    if (state.boostCount > 0) state.boostCount--;
-    else state.n2oGauge = Math.max(0, state.n2oGauge - 75);
+    state.boostCount--;
 
     sfx.playBoost(true);
     vibrateDevice(75);
-    state.boostTimer = 1.05;
+    state.boostTimer = 0.92;
     spawnBoostShockwave(true);
-    spawnBoostParticles(26);
+    spawnBoostParticles(24);
     updateBoostUI();
   }
   boostBtn.addEventListener('touchstart', (e) => { e.preventDefault(); triggerBoost(); }, { passive: false });
@@ -3008,25 +3030,30 @@
     if (e) e.preventDefault();
     if (!state.driftActive) return;
     const stage = state.driftStage;
+    const chargedTime = state.driftChargeTime;
     state.driftActive = false;
     state.driftChargeTime = 0;
     state.driftStage = 0;
     driftBtn.classList.remove('pressed');
     driftStageBadge.style.display = 'none';
 
-    const gainGauge = stage === 3 ? 65 : (stage === 2 ? 48 : 34);
+    // 단순 짧은 탭 드리프트로는 부스터가 남발되지 않고, 실제 코너에서 충분히 미끄러진 2단(주황)·3단(보라) 미니터보만 가속 발동!
+    const gainGauge = stage === 3 ? 45 : (stage === 2 ? 28 : (chargedTime > 0.35 ? 12 : 4));
     state.n2oGauge = Math.min(100, state.n2oGauge + gainGauge);
-    if (state.n2oGauge >= 100 && state.boostCount < 2) {
-      state.boostCount++;
-      state.n2oGauge = 28;
+    if (state.n2oGauge >= 100 && state.boostCount < 1) {
+      state.boostCount = 1;
+      state.n2oGauge = 0;
+      sfx.playCoin();
     }
 
-    const boostDur = stage === 3 ? 1.25 : (stage === 2 ? 0.95 : 0.70);
-    state.boostTimer = Math.max(state.boostTimer, boostDur);
-    spawnBoostShockwave(stage >= 2);
-    sfx.playBoost(stage >= 2);
-    showFloatingText('', stage === 3 ? '#e040fb' : '#00e5ff');
-    spawnBoostParticles(stage * 10);
+    if (stage >= 2) {
+      const boostDur = stage === 3 ? 0.82 : 0.50;
+      state.boostTimer = Math.max(state.boostTimer, boostDur);
+      spawnBoostShockwave(stage === 3);
+      sfx.playBoost(stage === 3);
+      showFloatingText('', stage === 3 ? '#e040fb' : '#00e5ff');
+      spawnBoostParticles(stage * 8);
+    }
     updateBoostUI();
   }
   driftBtn.addEventListener('touchstart', startDrift, { passive: false });
@@ -3084,7 +3111,7 @@
   function updateBoostUI() {
     n2oGaugeFill.style.width = `${Math.round(state.n2oGauge)}%`;
     itemSlot2.textContent = state.boostCount > 0 ? '🔥' : '⚡';
-    if (state.boostCount > 0 || state.n2oGauge >= 50) {
+    if (state.boostCount > 0) {
       boostBtn.classList.add('ready');
     } else {
       boostBtn.classList.remove('ready');
@@ -3248,8 +3275,8 @@
     state.driftChargeTime = 0;
     state.driftStage = 0;
 
-    state.n2oGauge = 25;
-    state.boostCount = 1;
+    state.n2oGauge = 35;
+    state.boostCount = 0;
     state.boostTimer = 0;
     state.boostVisual = 0;
     state.boostFlash = 0;
@@ -3431,13 +3458,12 @@
 
     if (isSliding) {
       state.driftChargeTime += dt * (1 + Math.abs(state.smoothSteer) * 0.85);
-      if (state.driftChargeTime > 1.35) state.driftStage = 3;
-      else if (state.driftChargeTime > 0.62) state.driftStage = 2;
+      if (state.driftChargeTime > 1.50) state.driftStage = 3;
+      else if (state.driftChargeTime > 0.72) state.driftStage = 2;
       else state.driftStage = 1;
     } else if (!state.driftActive && state.driftChargeTime > 0) {
-      // 코너 자동 슬립 종료 시 N2O 게이지 보너스 충전 (부스터 과다 방지를 위해 자동 부스터 발동은 생략)
-      if (state.driftChargeTime > 0.55) {
-        state.n2oGauge = Math.min(100, state.n2oGauge + 26);
+      if (state.driftChargeTime > 0.70) {
+        state.n2oGauge = Math.min(100, state.n2oGauge + 18);
       }
       state.driftChargeTime = 0;
       state.driftStage = 0;
@@ -3462,25 +3488,29 @@
       }
     }
 
-    // 짧고 강렬한 슈퍼부스터 폭발 가속 배율 (누르는 순간 '슈웅!' 앞으로 튀어나가는 체감 극대화)
+    // 부스터만 쓰면 무조건 이기지 못하도록 밸런스 조정 + 오프로드(잔디/진흙/모래/용암 갓길) 이탈 시 강력한 감속 페널티 적용!
     let boostMult = 1.0;
-    if (state.bulletTimer > 0) boostMult = 1.88;
-    else if (state.starTimer > 0) boostMult = 1.72;
-    else if (state.megaTimer > 0) boostMult = 1.64;
+    if (state.bulletTimer > 0) boostMult = 1.78;
+    else if (state.starTimer > 0) boostMult = 1.56;
+    else if (state.megaTimer > 0) boostMult = 1.48;
     else if (state.boostTimer > 0) {
-      boostMult = state.boostTimer > 0.55 ? 1.82 : 1.58;
+      boostMult = state.boostTimer > 0.50 ? 1.54 : 1.38;
     }
-    if (state.spinTimer > 0) boostMult = 0.52;
+    if (state.spinTimer > 0) boostMult = 0.45;
 
-    const offRoad = Math.abs(state.playerX) > 0.96 && !isBoosting;
-    const terrainMult = offRoad ? 0.86 : 1.0;
+    // 마리오 카트 전통 오프로드 갓길 감속(|playerX| > 0.85): 무적/버섯 상태가 아니면 부스터 중이라도 잔디/진흙에서 속도가 크게 떨어지고 부스터가 소모됨!
+    const offRoad = Math.abs(state.playerX) > 0.85 && !isInvincible;
+    if (offRoad && state.boostTimer > 0) {
+      state.boostTimer = Math.max(0, state.boostTimer - dt * 2.2);
+    }
+    const terrainMult = offRoad ? 0.56 : 1.0;
 
     const targetSpeed = state.maxSpeed * boostMult * terrainMult;
-    const accelRate = isBoosting ? 15.5 : 6.2;
+    const accelRate = isBoosting ? 14.0 : 6.0;
     state.speed += (targetSpeed - state.speed) * Math.min(1, dt * accelRate);
 
-    // 시원한 고속 주행감 + 부스터 시 체감 전진 속도 추가 부스트!
-    const moveDist = state.speed * (4.6 + (state.boostVisual || 0) * 0.85) * dt;
+    // 시원한 고속 주행감 + 부스터 시 체감 전진 속도 부스트
+    const moveDist = state.speed * (4.6 + (state.boostVisual || 0) * 0.65) * dt;
     state.posZ += moveDist;
 
     // 6. 점프(Hop) & 무지개 점프대 공중 물리 (착지 시 중복 부스터 제거하여 부스터 과다 방지!)
@@ -3507,7 +3537,7 @@
       dt
     );
 
-    // 8. 드리프트 되듯이 미끄러지는(Sliding Drift) 횡방향 관성 물리 & 차체 사선 슬립각 보간!
+    // 8. 드리프트 되듯이 미끄러지는(Sliding Drift) 횡방향 관성 물리 & 코너에서 무작정 부스터 사용 시 원심력 이탈 리스크!
     const slideDir = state.driftActive
       ? (state.driftDir || Math.sign(state.smoothSteer || 1))
       : Math.sign(state.smoothSteer || currentSeg.curve || 1);
@@ -3517,14 +3547,17 @@
     state.driftAngle = (state.driftAngle || 0) + (targetDriftAngle - (state.driftAngle || 0)) * Math.min(1, dt * (isSliding ? 7.5 : 9.0));
     if (Math.abs(state.driftAngle) < 0.01 && !isSliding) state.driftAngle = 0;
 
-    // 굴절 코너에서 바깥쪽으로 미끄러지는 원심 슬립 + 핸들 조향으로 코너 안쪽을 파고드는 드리프트 슬라이딩 관성!
-    const curveSlideForce = -(currentSeg.curve * 0.22) * (state.speed / Math.max(1, state.maxSpeed));
+    // 급커브에서 부스터를 켜고 달리면 원심력이 크게 증가하여, 드리프트로 코너를 공략하지 않으면 바깥 갓길/벽으로 밀려남!
+    const speedRatio = state.speed / Math.max(1, state.maxSpeed);
+    const boostCornerPush = (state.boostTimer > 0 && !isSliding) ? 1.42 : 1.0;
+    const curveSlideForce = -(currentSeg.curve * 0.26 * boostCornerPush) * Math.pow(speedRatio, 1.35);
     const steerForce = isSliding
-      ? (state.smoothSteer * 1.68 + slideDir * 0.22)
+      ? (state.smoothSteer * 1.72 + slideDir * 0.24)
       : (state.smoothSteer * 1.42);
     const desiredVelX = steerForce + (state.bulletTimer > 0 ? 0 : curveSlideForce);
-    // 미끄러질 때는 낮은 그립 계수(4.6)를 적용해 실제로 얼음/아스팔트 위를 슥~ 미끄러져 도는 관성 표현!
-    const gripFactor = isSliding ? 4.6 : 9.5;
+    // 바닐라 아이스 레이크(track 3)는 빙판 슬라이딩 그립, 일반 코스는 드리프트 시 슬라이딩 관성 적용!
+    const baseGrip = state.selectedTrack === 3 ? 3.4 : 4.5;
+    const gripFactor = isSliding ? baseGrip : (state.selectedTrack === 3 ? 6.2 : 9.2);
     state.velX += (desiredVelX - state.velX) * Math.min(1, dt * gripFactor);
     state.playerX += state.velX * dt;
 
@@ -3533,13 +3566,21 @@
     state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 7.5);
 
     // 원경 산맥/구름 3D 시차(Parallax) 회전값 누적
-    state.skyYaw = ((state.skyYaw || 0) - currentSeg.curve * (state.speed / Math.max(1, state.maxSpeed)) * 185 * dt);
+    state.skyYaw = ((state.skyYaw || 0) - currentSeg.curve * speedRatio * 185 * dt);
     if (state.bulletTimer > 0) {
       state.playerX += (0 - state.playerX) * 6.5 * dt;
-    } else if (Math.abs(state.playerX) > 0.88 && Math.sign(state.smoothSteer) !== Math.sign(state.playerX)) {
-      state.playerX *= (1 - 1.8 * dt);
     }
-    state.playerX = Math.max(-1.02, Math.min(1.02, state.playerX));
+
+    // 코스 외곽 가드레일/성벽 충돌 페널티 (코너에서 무작정 부스터 쓰다 외벽 충돌 시 부스터 해제 & 감속!)
+    if (Math.abs(state.playerX) >= 1.08) {
+      state.playerX = Math.sign(state.playerX) * 1.06;
+      state.velX = -Math.sign(state.playerX) * 0.75;
+      if (!isInvincible) {
+        state.boostTimer = 0;
+        state.speed *= 0.72;
+        vibrateDevice(45);
+      }
+    }
 
     // 미끄러지는 동안 도로 위 2줄 타이어 스키드마크(Skid Marks) 기록 & 하얀 타이어 마찰 연기 생성!
     if (Math.abs(state.driftAngle) > 0.20 && state.playerY <= 4) {
@@ -3579,13 +3620,13 @@
       }
     }
 
-    // 9. N2O 게이지 충전 (평소 자동 충전을 6.5/s로 대폭 낮추고, 드리프트/슬라이딩 시 42/s로 빠르게 차오르도록 개선!)
-    const chargeRate = isSliding ? 42 : 6.5;
+    // 9. N2O 게이지 충전 (직선 가만히 주행 시 자동 충전 0! 오직 코너 드리프트/슬라이딩과 코인으로만 부스터 획득!)
+    const chargeRate = isSliding ? 28 : 0;
     state.n2oGauge = Math.min(100, state.n2oGauge + chargeRate * dt);
     if (state.n2oGauge >= 100) {
-      if (state.boostCount < 2) {
-        state.boostCount++;
-        state.n2oGauge = 15;
+      if (state.boostCount < 1) {
+        state.boostCount = 1;
+        state.n2oGauge = 0;
         sfx.playCoin();
       } else {
         state.n2oGauge = 100;
@@ -3596,7 +3637,8 @@
     }
     updateBoostUI();
 
-    // 10. 트랙 위 기믹 상호작용 (적절한 크기로 줄어든 아이템에 맞춘 정교한 충돌 판정)
+    // 10. 마리오 카트 코스별 시그니처 기믹 & 아이템 상호작용!
+    const nowSec = performance.now() * 0.001;
     for (let offset = 0; offset <= 2; offset++) {
       const s = state.segments[(segIdx + offset) % state.segments.length];
       s.items.forEach(it => {
@@ -3604,7 +3646,12 @@
           it.takenTimer = Math.max(0, it.takenTimer - dt);
           return;
         }
-        const hitWidth = it.type === 'jumpRamp' ? 0.36 : (it.type === 'itemBox' ? 0.26 : 0.24);
+        // 움직이는 마리오 카트 기믹 위치 업데이트 (꽃게 옆걸음, 요시 알 구르기)
+        if (it.type === 'crab' || it.type === 'yoshiEgg') {
+          it.x = (it.baseX || 0) + Math.sin(nowSec * 2.2 + (it.phase || 0)) * 0.42;
+        }
+
+        const hitWidth = it.type === 'jumpRamp' ? 0.36 : (it.type === 'itemBox' ? 0.26 : (it.type === 'thwomp' ? 0.30 : 0.24));
         if (Math.abs(state.playerX - it.x) < hitWidth) {
           if (it.type === 'itemBox') {
             it.takenTimer = 3.5;
@@ -3614,31 +3661,59 @@
           } else if (it.type === 'jumpRamp') {
             it.takenTimer = 1.2;
             state.velY = 440;
-            state.boostTimer = Math.max(state.boostTimer, 1.05);
+            state.boostTimer = Math.max(state.boostTimer, 0.85);
             spawnBoostShockwave(false);
             sfx.playHop();
             sfx.playBoost(false);
             vibrateDevice(65);
-            spawnBoostParticles(20);
+            spawnBoostParticles(18);
           } else if (it.type === 'dashPad') {
             it.takenTimer = 1.4;
-            state.boostTimer = Math.max(state.boostTimer, 0.95);
+            state.boostTimer = Math.max(state.boostTimer, 0.88);
             spawnBoostShockwave(true);
             sfx.playBoost(true);
             vibrateDevice(50);
-            spawnBoostParticles(22);
+            spawnBoostParticles(20);
           } else if (it.type === 'coin') {
             it.takenTimer = 4.5;
             state.coins++;
-            state.n2oGauge = Math.min(100, state.n2oGauge + 15);
+            state.n2oGauge = Math.min(100, state.n2oGauge + 10);
             sfx.playCoin();
             showFloatingText('', '#ffd54f');
-          } else if ((it.type === 'banana' || it.type === 'pipe') && state.playerY < 24) {
+          } else if (it.type === 'oilSlick' && state.playerY < 16) {
+            // 마리오 서킷 오일 / 도넛 평원 초코 진흙 웅덩이: 밟으면 미끄러지며 감속!
+            it.takenTimer = 2.0;
+            if (!isInvincible && state.shieldTimer <= 0) {
+              state.boostTimer = 0;
+              state.speed *= 0.65;
+              state.driftAngle = (Math.random() < 0.5 ? -1 : 1) * 0.95;
+              sfx.playHop();
+              vibrateDevice(45);
+            }
+          } else if (it.type === 'thwomp') {
+            // 쿠파 성 / 무지개 로드 쿵쿵이(Thwomp): 아래로 내려찍힌 상태일 때 부딪히면 스핀 & 감속!
+            const thwompHeight = Math.max(0, Math.sin(nowSec * 2.6 + (it.phase || 0))) * 75;
+            if (thwompHeight < 28 && state.playerY < 35) {
+              it.takenTimer = 2.2;
+              if (isInvincible || state.shieldTimer > 0) {
+                sfx.playShellHit();
+                spawnBoostParticles(14);
+              } else {
+                state.boostTimer = 0;
+                state.speed *= 0.45;
+                state.spinTimer = 0.75;
+                sfx.playShellHit();
+                vibrateDevice(80);
+              }
+            }
+          } else if ((it.type === 'banana' || it.type === 'pipe' || it.type === 'crab' || it.type === 'iceBlock' || it.type === 'yoshiEgg') && state.playerY < 24) {
             it.takenTimer = 3.0;
             if (isInvincible || state.shieldTimer > 0) {
               sfx.playShellHit();
               spawnBoostParticles(12);
             } else {
+              state.boostTimer = 0;
+              state.speed *= 0.58;
               state.spinTimer = 0.65;
               sfx.playHop();
               vibrateDevice(55);
@@ -3678,9 +3753,8 @@
       if (proj.life <= 0) state.projectiles.splice(i, 1);
     }
 
-    // 12. 5대의 라이벌 AI 차량 물리 (매끄러운 레이싱 라인과 흔들림 없는 조향)
+    // 12. 5대의 라이벌 AI 차량 물리 (결승선 봐주기 핸디캡 제거 & 코너 탈출 미니터보·대시 경쟁력 강화!)
     const totalRaceDist = state.trackLength * state.totalLaps;
-    const raceProgressRatio = state.posZ / totalRaceDist;
     let aheadCount = 0;
     let rearChallenger = null;
     let closestRearDist = -9999;
@@ -3697,17 +3771,19 @@
 
       r.surgePhase += dt * r.surgeFreq;
       const surgeWave = Math.sin(r.surgePhase);
-      const finishHandicap = raceProgressRatio > 0.85 ? -120 : 0;
-      const desiredRelZ = r.baseBandOffset + surgeWave * 350 + finishHandicap;
+      // 결승선 근처 봐주기(finishHandicap)를 제거하고 선두 그룹 라이벌이 끝까지 치열하게 레이스하도록 설정!
+      const desiredRelZ = (r.baseBandOffset + 85) + surgeWave * 360;
       const actualRelZ = r.z - state.posZ;
       const gapError = desiredRelZ - actualRelZ;
 
-      const curveFactor = Math.abs(rCurSeg.curve) > 1.5 ? 0.95 : 1.0;
-      let rivalTargetSpeed = state.maxSpeed * curveFactor * (1.01 + surgeWave * 0.13) + Math.max(-75, Math.min(115, gapError * 0.30));
+      const curveFactor = Math.abs(rCurSeg.curve) > 2.2 ? 0.94 : 1.0;
+      const skillMult = 1.03 + idx * 0.022;
+      let rivalTargetSpeed = state.maxSpeed * curveFactor * (skillMult + surgeWave * 0.14) + Math.max(-70, Math.min(145, gapError * 0.36));
 
-      if ((surgeWave > 0.25 || gapError > 120) && r.spinTimer <= 0 && r.shrinkTimer <= 0) {
-        r.boostVisualTimer = 0.4;
-        rivalTargetSpeed += 26;
+      // 라이벌도 코너 탈출 시 드리프트 미니터보 & 뒤처졌을 때 슈퍼부스터를 적극 사용해 플레이어와 박진감 넘치게 승부!
+      if ((surgeWave > 0.22 || gapError > 95 || (r.drifting && Math.abs(rLookSeg.curve) < 1.0)) && r.spinTimer <= 0 && r.shrinkTimer <= 0) {
+        r.boostVisualTimer = 0.55;
+        rivalTargetSpeed += 38;
       }
 
       if (r.spinTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.28;
@@ -4142,6 +4218,8 @@
           drawMarioPipe(ctx, ix, p.y, p.w * 0.105);
         } else if (it.type === 'banana') {
           drawBananaPeel(ctx, ix, p.y, p.w * 0.075, timeMs);
+        } else if (it.type === 'oilSlick' || it.type === 'crab' || it.type === 'iceBlock' || it.type === 'yoshiEgg' || it.type === 'thwomp') {
+          drawMarioGimmick(ctx, it.type, ix, p.y, p.w * 0.115, it.phase || 0, timeMs);
         }
       });
     }
@@ -4840,6 +4918,123 @@
       c.arc(-size * 0.14, -size * 0.1, size * 0.075, 0, Math.PI * 2);
       c.arc(size * 0.14, -size * 0.1, size * 0.075, 0, Math.PI * 2);
       c.fill();
+    }
+    c.restore();
+  }
+
+  // 슈퍼마리오 카트 코스별 시그니처 장애물 기믹 5종 (오일/진흙 웅덩이, 꽃게, 얼음 블록, 요시 알, 쿵쿵이 바위)
+  function drawMarioGimmick(c, type, x, y, size, phase, timeMs) {
+    if (size < 4) return;
+    c.save();
+    if (type === 'oilSlick') {
+      // 마리오 서킷 오일 / 도넛 평원 초코 진흙 웅덩이
+      const isChoco = state.selectedTrack === 1;
+      c.fillStyle = isChoco ? 'rgba(78, 52, 46, 0.88)' : 'rgba(20, 26, 36, 0.85)';
+      c.strokeStyle = isChoco ? '#8d6e63' : '#546e7a';
+      c.lineWidth = Math.max(1.2, size * 0.08);
+      c.beginPath();
+      c.ellipse(x, y - size * 0.05, size * 0.92, size * 0.28, 0, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+      c.fillStyle = isChoco ? 'rgba(141, 110, 99, 0.55)' : 'rgba(128, 216, 255, 0.28)';
+      c.beginPath();
+      c.ellipse(x - size * 0.22, y - size * 0.09, size * 0.34, size * 0.10, -0.2, 0, Math.PI * 2);
+      c.fill();
+    } else if (type === 'crab') {
+      // 엉금엉금 비치 빨간 꽃게 (Sidestepper)
+      c.fillStyle = 'rgba(15, 23, 42, 0.26)';
+      c.beginPath();
+      c.ellipse(x, y, size * 0.65, size * 0.18, 0, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = '#ff5252';
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = Math.max(1.2, size * 0.08);
+      c.beginPath();
+      c.ellipse(x, y - size * 0.38, size * 0.58, size * 0.38, 0, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+      // 집게발 2개 & 눈
+      [-1, 1].forEach(dir => {
+        c.beginPath();
+        c.arc(x + dir * size * 0.58, y - size * 0.68, size * 0.20, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.arc(x + dir * size * 0.22, y - size * 0.68, size * 0.13, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#11171a';
+        c.beginPath();
+        c.arc(x + dir * size * 0.22, y - size * 0.68, size * 0.06, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#ff5252';
+      });
+    } else if (type === 'iceBlock') {
+      // 바닐라 아이스 레이크 반투명 얼음 블록
+      const w = size * 0.96;
+      c.fillStyle = 'rgba(128, 216, 255, 0.85)';
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = Math.max(1.5, size * 0.10);
+      c.beginPath();
+      c.roundRect(x - w * 0.5, y - w * 0.92, w, w * 0.92, size * 0.15);
+      c.fill();
+      c.stroke();
+      c.fillStyle = 'rgba(255, 255, 255, 0.55)';
+      c.beginPath();
+      c.moveTo(x - w * 0.32, y - w * 0.78);
+      c.lineTo(x + w * 0.12, y - w * 0.78);
+      c.lineTo(x - w * 0.18, y - w * 0.25);
+      c.closePath();
+      c.fill();
+    } else if (type === 'yoshiEgg') {
+      // 요시 밸리 구르는 거대 요시 알
+      c.fillStyle = 'rgba(15, 23, 42, 0.28)';
+      c.beginPath();
+      c.ellipse(x, y, size * 0.55, size * 0.18, 0, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = '#ffffff';
+      c.strokeStyle = '#00c853';
+      c.lineWidth = Math.max(1.5, size * 0.09);
+      c.beginPath();
+      c.ellipse(x, y - size * 0.58, size * 0.50, size * 0.62, 0, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+      c.fillStyle = '#00e676';
+      c.beginPath();
+      c.arc(x - size * 0.16, y - size * 0.65, size * 0.15, 0, Math.PI * 2);
+      c.arc(x + size * 0.18, y - size * 0.44, size * 0.13, 0, Math.PI * 2);
+      c.arc(x + size * 0.04, y - size * 0.88, size * 0.11, 0, Math.PI * 2);
+      c.fill();
+    } else if (type === 'thwomp') {
+      // 쿠파 성 / 무지개 로드 쿵쿵이 바위 (Thwomp) - 위아래로 움직이며 내려찍음!
+      const lift = Math.max(0, Math.sin((timeMs || 0) * 0.0026 + phase)) * size * 1.15;
+      c.fillStyle = 'rgba(15, 23, 42, 0.38)';
+      c.beginPath();
+      c.ellipse(x, y, size * 0.72, size * 0.20, 0, 0, Math.PI * 2);
+      c.fill();
+
+      const ty = y - lift;
+      const w = size * 1.12;
+      const h = size * 1.18;
+      const isRainbow = state.selectedTrack === 7;
+      c.fillStyle = isRainbow ? '#7c4dff' : '#546e7a';
+      c.strokeStyle = isRainbow ? '#00e5ff' : '#cfd8dc';
+      c.lineWidth = Math.max(1.8, size * 0.10);
+      c.beginPath();
+      c.roundRect(x - w * 0.5, ty - h, w, h, size * 0.16);
+      c.fill();
+      c.stroke();
+
+      if (size > 8) {
+        // 쿵쿵이 특유의 화난 눈썹과 눈
+        c.fillStyle = '#ffea00';
+        c.beginPath();
+        c.arc(x - w * 0.20, ty - h * 0.58, size * 0.11, 0, Math.PI * 2);
+        c.arc(x + w * 0.20, ty - h * 0.58, size * 0.11, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#ffffff';
+        c.fillRect(x - w * 0.28, ty - h * 0.32, w * 0.56, h * 0.16);
+      }
     }
     c.restore();
   }
