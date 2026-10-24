@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.5.1.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.5.2.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,19 +15,19 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.1.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.2.apk"
     notes = (
-        "• [정통 3D 1/Z 원근감 극대화] 🛣️ 화면 하단 광폭 전경 도로에서 지평선 소실점까지 깊게 뻗어 나가는 정통 3D 핀홀 카메라 원근 투영(1/Z Perspective) 적용!\n"
-        "• [입체 깊이 디테일] ✨ 도로 양옆 3D 반사봉(Delinator Posts), 입체 연석 베벨, 원거리 대기 원근 안개(Depth Fog), 코너 회전 시 2층 산맥·구름 시차(Parallax) 이동 적용\n"
-        "• [리얼 원근 스케일링] 🏎️ 멀리 있는 라이벌 카트·아이템·가로수가 지평선 점 크기에서 내 차 크기까지 정확한 3D 거리 비율로 커지도록 개선\n"
-        "• [얼굴 사진 & 1:1 직관 조작] 📸 내 캐릭터 및 모든 라이벌 머리 얼굴 사진 업로드, 지면 밀착형 흔들림 없는 카트, 1:1 직관적 핸들 조향 지원!"
+        "• [짧고 강렬한 '슈웅~!' 슈퍼부스터] 🚀 슈퍼부스터 지속시간을 짧고 경쾌하게 단축하고, 누르는 순간 앞으로 튀어나가는 폭발적 초반 가속감 적용!\n"
+        "• ['슈우웅~!' 제트 터보 효과음] 🔊 부스터 버튼을 누를 때 바람을 가르는 에어로다이나믹 스윕 + 트윈 터보 제트 휘슬 사운드('슈우웅~!')로 업그레이드\n"
+        "• [하이퍼 워프 화면 속도감 연출] ⚡ 부스터 발동 시 3D 카메라 광각 FOV 워프(줌 아웃) + 3D 소닉 충격파 링 + 소실점 방사형 워프 라인 + 초음속 제트 불꽃 연출\n"
+        "• [정통 3D 원근 & 얼굴 사진 스튜디오] 📸 정통 1/Z 3D 원근 트랙, 내 캐릭터 및 모든 라이벌 머리 사진 업로드, 1:1 직관적 핸들 조작 지원!"
     )
 
     update_payload = {
         "appName": "키즈 카트 러쉬! (Kids Kart Rush+)",
         "packageId": "com.mj.kidskart",
-        "versionCode": 7,
-        "versionName": "1.5.1",
+        "versionCode": 8,
+        "versionName": "1.5.2",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -54,17 +54,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "키즈 카트 러쉬!",
-                "latest_version": "1.5.1",
-                "version_code": 7,
+                "latest_version": "1.5.2",
+                "version_code": 8,
                 "force_update": False,
-                "release_notes": "정통 3D 핀홀 카메라 1/Z 원근 투영(깊은 소실점·대기 원근감·3D 반사봉·2층 산맥 시차), 모든 레이서 머리 얼굴 사진 업로드, 지면 밀착 3D 카트 및 1:1 직관적 핸들 조작.",
+                "release_notes": "짧고 강렬한 슈퍼부스터 & 누를 때 '슈우웅~!' 제트 터보 사운드 + 3D 카메라 FOV 광각 워프·소닉 충격파 링 화면 속도감 극대화.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.5.1 (build 7), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.5.2 (build 8), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()

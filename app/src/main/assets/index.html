@@ -982,7 +982,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.5.1</span>
+      <span class="lobby-badge" id="verBadge">v1.5.2</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
@@ -1685,88 +1685,56 @@
       this.engineRunning = false;
     }
 
-    // 3. 묵직하고 두꺼운 중저음 슈퍼 부스터 사운드 ("구아아아앙~ 우우우웅!! 쾅!")
+    // 3. 짧고 경쾌하며 강렬하게 '슈우웅~!' 바람을 가르는 제트 터보 부스터 사운드
     playBoost(isSuper = true) {
       if (this.muted || this.appPaused) return;
       try {
         this.init();
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
-        const dur = isSuper ? 1.15 : 0.72;
+        const dur = isSuper ? 0.62 : 0.44;
 
-        // (A) 초저역 서브베이스 임팩트 & 묵직한 지속 럼블 (36Hz ~ 92Hz)
-        const subOsc = this.ctx.createOscillator();
-        const subGain = this.ctx.createGain();
-        subOsc.type = 'triangle';
-        subOsc.frequency.setValueAtTime(92, now);
-        subOsc.frequency.exponentialRampToValueAtTime(38, now + 0.18);
-        subOsc.frequency.linearRampToValueAtTime(52, now + dur * 0.75);
-        subOsc.frequency.exponentialRampToValueAtTime(32, now + dur);
+        // (A) '슈우웅~!' 고속 에어로다이나믹 바람 가르는 밴드패스 스윕 (핵심 속도감 사운드!)
+        const wBuf = this.noiseBuffer || this.brownNoiseBuffer;
+        if (wBuf) {
+          const whoosh = this.ctx.createBufferSource();
+          whoosh.buffer = wBuf;
 
-        subGain.gain.setValueAtTime(0.01, now);
-        subGain.gain.linearRampToValueAtTime(isSuper ? 0.42 : 0.28, now + 0.04);
-        subGain.gain.setValueAtTime(isSuper ? 0.34 : 0.20, now + dur * 0.55);
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+          const bpFilter = this.ctx.createBiquadFilter();
+          bpFilter.type = 'bandpass';
+          bpFilter.Q.setValueAtTime(isSuper ? 3.2 : 2.6, now);
+          bpFilter.frequency.setValueAtTime(280, now);
+          bpFilter.frequency.exponentialRampToValueAtTime(isSuper ? 1950 : 1400, now + 0.14);
+          bpFilter.frequency.exponentialRampToValueAtTime(isSuper ? 520 : 400, now + dur);
 
-        subOsc.connect(subGain);
-        subGain.connect(this.ctx.destination);
-        subOsc.start(now);
-        subOsc.stop(now + dur + 0.02);
+          const whooshGain = this.ctx.createGain();
+          whooshGain.gain.setValueAtTime(0.01, now);
+          whooshGain.gain.linearRampToValueAtTime(isSuper ? 0.48 : 0.34, now + 0.035);
+          whooshGain.gain.exponentialRampToValueAtTime(0.002, now + dur);
 
-        // (B) 듀얼 디튠 중저음 V8 트윈터보 배기 포효 (WaveShaper 오버드라이브 + 로우패스 380Hz)
-        const growl1 = this.ctx.createOscillator();
-        const growl2 = this.ctx.createOscillator();
-        const shaper = this.ctx.createWaveShaper();
-        const lowFilter = this.ctx.createBiquadFilter();
-        const growlGain = this.ctx.createGain();
+          whoosh.connect(bpFilter);
+          bpFilter.connect(whooshGain);
+          whooshGain.connect(this.ctx.destination);
+          whoosh.start(now);
+          whoosh.stop(now + dur + 0.02);
+        }
 
-        growl1.type = 'sawtooth';
-        growl2.type = 'sawtooth';
-        if (this.distCurve) shaper.curve = this.distCurve;
-
-        growl1.frequency.setValueAtTime(54, now);
-        growl1.frequency.exponentialRampToValueAtTime(118, now + 0.28);
-        growl1.frequency.exponentialRampToValueAtTime(78, now + dur);
-
-        growl2.frequency.setValueAtTime(81, now);
-        growl2.frequency.exponentialRampToValueAtTime(176, now + 0.28);
-        growl2.frequency.exponentialRampToValueAtTime(116, now + dur);
-
-        lowFilter.type = 'lowpass';
-        lowFilter.Q.value = 3.2;
-        lowFilter.frequency.setValueAtTime(240, now);
-        lowFilter.frequency.exponentialRampToValueAtTime(520, now + 0.25);
-        lowFilter.frequency.exponentialRampToValueAtTime(260, now + dur);
-
-        growlGain.gain.setValueAtTime(0.01, now);
-        growlGain.gain.linearRampToValueAtTime(isSuper ? 0.26 : 0.17, now + 0.05);
-        growlGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
-
-        growl1.connect(shaper);
-        growl2.connect(shaper);
-        shaper.connect(lowFilter);
-        lowFilter.connect(growlGain);
-        growlGain.connect(this.ctx.destination);
-
-        growl1.start(now);
-        growl2.start(now);
-        growl1.stop(now + dur + 0.02);
-        growl2.stop(now + dur + 0.02);
-
-        // (C) 두꺼운 저중음 제트 애프터버너 공기압 노이즈 (브라운 노이즈 + Lowpass 360Hz)
+        // (B) 두툼한 공기 압력감을 더하는 와이드 로우패스 제트 분사음
         const nBuf = this.brownNoiseBuffer || this.noiseBuffer;
         if (nBuf) {
           const jet = this.ctx.createBufferSource();
           jet.buffer = nBuf;
           const jetFilter = this.ctx.createBiquadFilter();
           jetFilter.type = 'lowpass';
-          jetFilter.Q.value = 2.4;
-          jetFilter.frequency.setValueAtTime(480, now);
-          jetFilter.frequency.exponentialRampToValueAtTime(220, now + dur);
+          jetFilter.Q.value = 2.2;
+          jetFilter.frequency.setValueAtTime(360, now);
+          jetFilter.frequency.exponentialRampToValueAtTime(isSuper ? 2100 : 1450, now + 0.13);
+          jetFilter.frequency.exponentialRampToValueAtTime(320, now + dur);
 
           const jetGain = this.ctx.createGain();
-          jetGain.gain.setValueAtTime(isSuper ? 0.34 : 0.22, now);
-          jetGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+          jetGain.gain.setValueAtTime(0.01, now);
+          jetGain.gain.linearRampToValueAtTime(isSuper ? 0.36 : 0.24, now + 0.035);
+          jetGain.gain.exponentialRampToValueAtTime(0.002, now + dur);
 
           jet.connect(jetFilter);
           jetFilter.connect(jetGain);
@@ -1774,6 +1742,40 @@
           jet.start(now);
           jet.stop(now + dur + 0.02);
         }
+
+        // (C) '슈웅~!' 피치가 짜릿하게 솟구쳤다 흐르는 트윈 터보 제트 휘슬 신스
+        const whistleOsc = this.ctx.createOscillator();
+        const whistleGain = this.ctx.createGain();
+        whistleOsc.type = 'sine';
+        whistleOsc.frequency.setValueAtTime(240, now);
+        whistleOsc.frequency.exponentialRampToValueAtTime(isSuper ? 880 : 650, now + 0.15);
+        whistleOsc.frequency.exponentialRampToValueAtTime(330, now + dur);
+
+        whistleGain.gain.setValueAtTime(0.005, now);
+        whistleGain.gain.linearRampToValueAtTime(isSuper ? 0.20 : 0.13, now + 0.03);
+        whistleGain.gain.exponentialRampToValueAtTime(0.002, now + dur);
+
+        whistleOsc.connect(whistleGain);
+        whistleGain.connect(this.ctx.destination);
+        whistleOsc.start(now);
+        whistleOsc.stop(now + dur + 0.02);
+
+        // (D) 묵직한 초기 점화 서브베이스 펀치 (초반 0.34초 임팩트 받침)
+        const subOsc = this.ctx.createOscillator();
+        const subGain = this.ctx.createGain();
+        subOsc.type = 'triangle';
+        subOsc.frequency.setValueAtTime(isSuper ? 96 : 82, now);
+        subOsc.frequency.exponentialRampToValueAtTime(168, now + 0.11);
+        subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.34);
+
+        subGain.gain.setValueAtTime(0.01, now);
+        subGain.gain.linearRampToValueAtTime(isSuper ? 0.32 : 0.22, now + 0.025);
+        subGain.gain.exponentialRampToValueAtTime(0.002, now + 0.36);
+
+        subOsc.connect(subGain);
+        subGain.connect(this.ctx.destination);
+        subOsc.start(now);
+        subOsc.stop(now + 0.38);
       } catch (_) {}
     }
 
@@ -2199,6 +2201,8 @@
     n2oGauge: 65,
     boostCount: 1,
     boostTimer: 0,
+    boostVisual: 0,
+    boostFlash: 0,
     starTimer: 0,
     megaTimer: 0,
     bulletTimer: 0,
@@ -2220,6 +2224,7 @@
     rivals: [],
     projectiles: [],
     particles: [],
+    shockwaves: [],
     confetti: [],
     floatingTexts: []
   };
@@ -2815,20 +2820,35 @@
   hornBtn.addEventListener('touchstart', (e) => { e.preventDefault(); triggerHorn(e); }, { passive: false });
   hornBtn.addEventListener('click', triggerHorn);
 
+  function spawnBoostShockwave(isSuper = true) {
+    state.boostFlash = isSuper ? 1.0 : 0.65;
+    state.boostVisual = Math.max(state.boostVisual || 0, isSuper ? 1.0 : 0.78);
+    if (!state.shockwaves) state.shockwaves = [];
+    state.shockwaves.push({
+      rx: 28,
+      ry: 10,
+      maxRx: isSuper ? 260 : 185,
+      alpha: 0.95,
+      color: isSuper ? '#00e5ff' : '#ffee58'
+    });
+  }
+
   function triggerBoost() {
     if (state.mode !== 'racing') return;
     sfx.playBoost(true);
-    vibrateDevice(85);
+    vibrateDevice(75);
 
-    if (state.boostCount > 0 || state.n2oGauge >= 45) {
+    // 슈퍼부스터 지속시간을 짧고 강렬하게(1.10초 / 미니 0.72초) 단축하고 누르는 즉시 '슈웅!' 폭발적 가속!
+    if (state.boostCount > 0 || state.n2oGauge >= 40) {
       if (state.boostCount > 0) state.boostCount--;
-      else state.n2oGauge = Math.max(0, state.n2oGauge - 45);
-      state.boostTimer = 3.2;
-      if (Math.random() < 0.45) speakKR('슈퍼 부스터 발동!', false);
+      else state.n2oGauge = Math.max(0, state.n2oGauge - 40);
+      state.boostTimer = 1.10;
+      spawnBoostShockwave(true);
     } else {
-      state.boostTimer = Math.max(state.boostTimer, 1.5);
+      state.boostTimer = Math.max(state.boostTimer, 0.72);
+      spawnBoostShockwave(false);
     }
-    spawnBoostParticles(24);
+    spawnBoostParticles(28);
     updateBoostUI();
   }
   boostBtn.addEventListener('touchstart', (e) => { e.preventDefault(); triggerBoost(); }, { passive: false });
@@ -2850,7 +2870,8 @@
       sfx.playHop();
       sfx.playBoost(false);
       if (state.playerY <= 2) state.velY = 280;
-      state.boostTimer = Math.max(state.boostTimer, 1.05);
+      state.boostTimer = Math.max(state.boostTimer, 0.68);
+      spawnBoostShockwave(false);
       showFloatingText('', '#80d8ff');
       return;
     }
@@ -2862,22 +2883,26 @@
     speakKR(item.voice, true);
 
     if (item.id === 'star') {
-      state.starTimer = 5.5;
-      state.boostTimer = 5.5;
+      state.starTimer = 5.0;
+      state.boostTimer = 1.45;
+      spawnBoostShockwave(true);
       sfx.playBoost(true);
     } else if (item.id === 'mushroom') {
-      state.megaTimer = 5.0;
-      state.boostTimer = 4.2;
+      state.megaTimer = 4.5;
+      state.boostTimer = 1.35;
       if (state.playerY <= 2) state.velY = 230;
+      spawnBoostShockwave(true);
       sfx.playBoost(true);
     } else if (item.id === 'bullet') {
-      state.bulletTimer = 4.5;
-      state.ufoTimer = 4.5;
-      state.boostTimer = 4.5;
+      state.bulletTimer = 4.2;
+      state.ufoTimer = 4.2;
+      state.boostTimer = 1.5;
+      spawnBoostShockwave(true);
       sfx.playBoost(true);
     } else if (item.id === 'shell') {
       sfx.playShellShoot();
-      state.boostTimer = Math.max(state.boostTimer, 1.5);
+      state.boostTimer = Math.max(state.boostTimer, 0.85);
+      spawnBoostShockwave(false);
       state.projectiles.push({
         type: 'shell',
         z: state.posZ + 70,
@@ -2887,7 +2912,8 @@
       });
     } else if (item.id === 'lightning') {
       state.lightningTimer = 4.5;
-      state.boostTimer = 2.6;
+      state.boostTimer = 1.2;
+      spawnBoostShockwave(true);
       sfx.playShellHit();
       state.rivals.forEach(r => {
         r.shrinkTimer = 5.0;
@@ -2895,7 +2921,8 @@
       });
     } else if (item.id === 'banana') {
       sfx.playBoost(false);
-      state.boostTimer = Math.max(state.boostTimer, 2.2);
+      state.boostTimer = Math.max(state.boostTimer, 0.90);
+      spawnBoostShockwave(false);
       const dropSegIdx = Math.floor(Math.max(0, state.posZ - 90) / SEG_LEN) % state.segments.length;
       state.segments[dropSegIdx].items.push({ type: 'banana', x: state.playerX, takenTimer: 0 });
       state.rivals.forEach(r => {
@@ -2943,8 +2970,9 @@
       state.n2oGauge = 28;
     }
 
-    const boostDur = stage === 3 ? 2.5 : (stage === 2 ? 1.85 : 1.3);
+    const boostDur = stage === 3 ? 1.25 : (stage === 2 ? 0.95 : 0.70);
     state.boostTimer = Math.max(state.boostTimer, boostDur);
+    spawnBoostShockwave(stage >= 2);
     sfx.playBoost(stage >= 2);
     showFloatingText('', stage === 3 ? '#e040fb' : '#00e5ff');
     spawnBoostParticles(stage * 10);
@@ -2966,8 +2994,9 @@
     if (!state.startBoostWindow) return;
     state.startBoostWindow = false;
     startBoostBtn.style.display = 'none';
-    state.boostTimer = 2.8;
+    state.boostTimer = 1.30;
     state.velY = 200;
+    spawnBoostShockwave(true);
     sfx.playBoost(true);
     vibrateDevice(90);
     speakKR('우와! 로켓 스타트 성공!', true);
@@ -3169,6 +3198,8 @@
     state.n2oGauge = 70;
     state.boostCount = 1;
     state.boostTimer = 0;
+    state.boostVisual = 0;
+    state.boostFlash = 0;
     state.starTimer = 0;
     state.megaTimer = 0;
     state.bulletTimer = 0;
@@ -3182,6 +3213,7 @@
     state.rank = 4;
     state.projectiles = [];
     state.particles = [];
+    state.shockwaves = [];
     state.floatingTexts = [];
     rearAlertBar.style.display = 'none';
     driftStageBadge.style.display = 'none';
@@ -3322,7 +3354,7 @@
     state.wheelAngleDeg = state.smoothSteer * 75;
     wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
 
-    // 4. 타이머 업데이트
+    // 4. 타이머 업데이트 & 슈퍼부스터 화면 워프/충격파 이펙트 보간
     if (state.boostTimer > 0) state.boostTimer = Math.max(0, state.boostTimer - dt);
     if (state.starTimer > 0) state.starTimer = Math.max(0, state.starTimer - dt);
     if (state.megaTimer > 0) state.megaTimer = Math.max(0, state.megaTimer - dt);
@@ -3331,6 +3363,7 @@
     if (state.shieldTimer > 0) state.shieldTimer = Math.max(0, state.shieldTimer - dt);
     if (state.lightningTimer > 0) state.lightningTimer = Math.max(0, state.lightningTimer - dt);
     if (state.spinTimer > 0) state.spinTimer = Math.max(0, state.spinTimer - dt);
+    if (state.boostFlash > 0) state.boostFlash = Math.max(0, state.boostFlash - dt * 3.4);
 
     // 5. 3단 드리프트 스파크 게이지 충전
     if (state.driftActive) {
@@ -3342,21 +3375,42 @@
 
     const isInvincible = state.starTimer > 0 || state.megaTimer > 0 || state.bulletTimer > 0;
     const isBoosting = state.boostTimer > 0 || isInvincible;
+
+    // 부스터 화면 워프 강도(boostVisual: 0 ~ 1) - 누를 때 즉시 1.0으로 솟구치고 끝날 때 매끄럽게 복귀!
+    const targetBoostVis = isBoosting ? 1.0 : 0.0;
+    const visRate = isBoosting ? 18.0 : 4.2;
+    state.boostVisual = (state.boostVisual || 0) + (targetBoostVis - (state.boostVisual || 0)) * Math.min(1, dt * visRate);
+    if (state.boostVisual < 0.005 && !isBoosting) state.boostVisual = 0;
+
+    if (state.shockwaves && state.shockwaves.length > 0) {
+      for (let i = state.shockwaves.length - 1; i >= 0; i--) {
+        const sw = state.shockwaves[i];
+        sw.rx += (sw.maxRx - sw.rx) * Math.min(1, dt * 9.5) + 220 * dt;
+        sw.ry = sw.rx * 0.36;
+        sw.alpha -= dt * 2.4;
+        if (sw.alpha <= 0) state.shockwaves.splice(i, 1);
+      }
+    }
+
+    // 짧고 강렬한 슈퍼부스터 폭발 가속 배율 (누르는 순간 '슈웅!' 앞으로 튀어나가는 체감 극대화)
     let boostMult = 1.0;
-    if (state.bulletTimer > 0) boostMult = 1.62;
-    else if (state.starTimer > 0) boostMult = 1.48;
-    else if (state.megaTimer > 0) boostMult = 1.42;
-    else if (state.boostTimer > 0) boostMult = 1.38;
+    if (state.bulletTimer > 0) boostMult = 1.88;
+    else if (state.starTimer > 0) boostMult = 1.72;
+    else if (state.megaTimer > 0) boostMult = 1.64;
+    else if (state.boostTimer > 0) {
+      boostMult = state.boostTimer > 0.55 ? 1.82 : 1.58;
+    }
     if (state.spinTimer > 0) boostMult = 0.52;
 
     const offRoad = Math.abs(state.playerX) > 0.96 && !isBoosting;
     const terrainMult = offRoad ? 0.86 : 1.0;
 
     const targetSpeed = state.maxSpeed * boostMult * terrainMult;
-    state.speed += (targetSpeed - state.speed) * Math.min(1, dt * 6.0);
+    const accelRate = isBoosting ? 15.5 : 6.2;
+    state.speed += (targetSpeed - state.speed) * Math.min(1, dt * accelRate);
 
-    // 시원한 고속 주행감을 위해 전진 거리 배율 상향 (4.6x)
-    const moveDist = state.speed * 4.6 * dt;
+    // 시원한 고속 주행감 + 부스터 시 체감 전진 속도 추가 부스트!
+    const moveDist = state.speed * (4.6 + (state.boostVisual || 0) * 0.85) * dt;
     state.posZ += moveDist;
 
     // 6. 점프(Hop) & 무지개 점프대 공중 물리 및 착지 부스터!
@@ -3372,7 +3426,8 @@
         state.velY = 0;
         state.trickRot = 0;
         if (landedFromHighJump) {
-          state.boostTimer = Math.max(state.boostTimer, 1.8);
+          state.boostTimer = Math.max(state.boostTimer, 0.95);
+          spawnBoostShockwave(false);
           sfx.playBoost(false);
           vibrateDevice(55);
           spawnBoostParticles(18);
@@ -3450,17 +3505,19 @@
           } else if (it.type === 'jumpRamp') {
             it.takenTimer = 1.2;
             state.velY = 440;
-            state.boostTimer = Math.max(state.boostTimer, 2.0);
+            state.boostTimer = Math.max(state.boostTimer, 1.05);
+            spawnBoostShockwave(false);
             sfx.playHop();
             sfx.playBoost(false);
             vibrateDevice(65);
             spawnBoostParticles(20);
           } else if (it.type === 'dashPad') {
             it.takenTimer = 1.4;
-            state.boostTimer = Math.max(state.boostTimer, 1.8);
-            sfx.playBoost(false);
+            state.boostTimer = Math.max(state.boostTimer, 0.95);
+            spawnBoostShockwave(true);
+            sfx.playBoost(true);
             vibrateDevice(50);
-            spawnBoostParticles(16);
+            spawnBoostParticles(22);
           } else if (it.type === 'coin') {
             it.takenTimer = 4.5;
             state.coins++;
@@ -3736,13 +3793,13 @@
     const seg1 = state.segments[(baseIndex + 1) % state.segments.length];
     const baseRoadY = seg0.y + (seg1.y - seg0.y) * basePercent;
 
-    // 정통 3D 핀홀 카메라 파라미터: 카메라가 내 카트 뒤쪽(camDistBehind = 205)에 위치하여
-    // relZ = 0(내 타이어 위치)에서 scale = 1.0, 전방으로 갈수록 205 / (205 + relZ) 비율로 정확한 1/Z 원근 수렴!
-    const isHighBoost = state.boostTimer > 0 || state.starTimer > 0 || state.bulletTimer > 0;
+    // 정통 3D 핀홀 카메라 파라미터 + 슈퍼부스터 다이나믹 FOV 워프(화각 확장):
+    // 부스터 발동 시 focalLen이 205 -> 151로 즉시 넓어지며 도로와 지평선이 '슈웅!' 빨려 들어오는 광각 하이퍼 워프 연출!
+    const boostVis = state.boostVisual || 0;
     const camDistBehind = 205;
-    const focalLen = isHighBoost ? 182 : 205;
+    const focalLen = 205 - boostVis * 54;
     const camHeight = (kartGroundY - horizonY) / (focalLen / camDistBehind);
-    const roadBaseW = Math.min(W * 0.54, H * 0.98);
+    const roadBaseW = Math.min(W * 0.54, H * 0.98) * (1 + boostVis * 0.08);
 
     let dx = -(seg0.curve * basePercent * 2.2);
     let x = -dx * basePercent;
@@ -3849,10 +3906,15 @@
         drawTrapezoid(ctx, p1.x + p1.w * 0.46, p1.y, p1.w * 0.016, p2.x + p2.w * 0.46, p2.y, p2.w * 0.016);
       }
 
-      // 7) 노면 위 원근 스피드 셰브론(화살표 마크)
+      // 7) 노면 위 원근 스피드 셰브론(화살표 마크) & 부스터 발동 시 아스팔트 초고속 잔상 스트리크
       if (p2.seg.index % 4 === 0 && p2.n < 45) {
-        ctx.fillStyle = 'rgba(0, 229, 255, 0.36)';
+        ctx.fillStyle = boostVis > 0.1 ? 'rgba(0, 229, 255, 0.68)' : 'rgba(0, 229, 255, 0.36)';
         drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.15, p2.x, p2.y, p2.w * 0.03);
+      }
+      if (boostVis > 0.08 && p2.n < 36 && (p2.seg.index % 2 === 0)) {
+        ctx.fillStyle = `rgba(128, 216, 255, ${(boostVis * 0.42).toFixed(2)})`;
+        drawTrapezoid(ctx, p1.x - p1.w * 0.72, p1.y, p1.w * 0.022, p2.x - p2.w * 0.72, p2.y, p2.w * 0.022);
+        drawTrapezoid(ctx, p1.x + p1.w * 0.72, p1.y, p1.w * 0.022, p2.x + p2.w * 0.72, p2.y, p2.w * 0.022);
       }
       if (p2.seg.index === 0) {
         ctx.fillStyle = '#ffffff';
@@ -3988,11 +4050,11 @@
     }
 
     const speedRatio = state.speed / Math.max(1, state.maxSpeed);
-    if (state.boostTimer > 0 || state.starTimer > 0 || state.bulletTimer > 0 || speedRatio > 0.78) {
-      const intensity = (state.boostTimer > 0 || state.starTimer > 0 || state.bulletTimer > 0)
-        ? 1.0
-        : Math.min(0.65, (speedRatio - 0.75) * 2.2);
-      drawSpeedLines(ctx, W, H, timeMs, intensity);
+    if (boostVis > 0.03 || state.starTimer > 0 || state.bulletTimer > 0 || speedRatio > 0.76) {
+      const intensity = (boostVis > 0.05 || state.starTimer > 0 || state.bulletTimer > 0)
+        ? Math.max(0.65, boostVis)
+        : Math.min(0.55, (speedRatio - 0.75) * 2.2);
+      drawSpeedLines(ctx, W, H, timeMs, intensity, boostVis, horizonY);
     }
 
     // 플레이어 주인공 카트 렌더링 (kartGroundY = H * 0.81 위치에 타이어가 정확히 접지!)
@@ -4002,6 +4064,26 @@
     const ufoLift = state.ufoTimer > 0 ? -32 : 0;
     const kartY = kartGroundY + jumpOffset + ufoLift;
     const megaScale = state.megaTimer > 0 ? 1.54 : 1.22;
+
+    // 부스터 버튼을 누르는 순간 카트 주변으로 퍼져나가는 3D 소닉붐 충격파 링(Sonic Shockwave Ring)!
+    if (state.shockwaves && state.shockwaves.length > 0) {
+      state.shockwaves.forEach(sw => {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, Math.min(1, sw.alpha));
+        ctx.strokeStyle = sw.color;
+        ctx.lineWidth = 6 * sw.alpha + 2;
+        ctx.beginPath();
+        ctx.ellipse(kartX, kartY - 18, sw.rx, sw.ry, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5 * sw.alpha + 1;
+        ctx.beginPath();
+        ctx.ellipse(kartX, kartY - 18, sw.rx * 0.86, sw.ry * 0.86, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
 
     drawKartCharacter(ctx, kartX, kartY, megaScale, playerRacer, {
       steer: state.smoothSteer,
@@ -4670,18 +4752,57 @@
     c.restore();
   }
 
-  function drawSpeedLines(c, W, H, timeMs, intensity = 1.0) {
+  function drawSpeedLines(c, W, H, timeMs, intensity = 1.0, boostVis = 0, horizonY = H * 0.34) {
     c.save();
-    c.globalAlpha = Math.max(0.15, Math.min(1.0, intensity));
-    c.strokeStyle = state.starTimer > 0 ? 'rgba(255, 234, 0, 0.62)' : 'rgba(255, 255, 255, 0.52)';
-    c.lineWidth = 3.5;
-    for (let i = 0; i < 16; i++) {
-      const angle = (i / 16) * Math.PI * 2 + ((timeMs * 0.004) % (Math.PI * 2));
-      const r1 = Math.min(W, H) * 0.38;
-      const r2 = Math.max(W, H) * 0.74;
+    const vx = W * 0.5;
+    const vy = horizonY + 18;
+
+    // 1) 부스터 발동 시 화면 가장자리 하이퍼 스피드 시안/블루 워프 글로우 & 초기 점화 플래시
+    if (boostVis > 0.05) {
+      const vig = c.createRadialGradient(vx, H * 0.5, Math.min(W, H) * 0.28, vx, H * 0.5, Math.max(W, H) * 0.72);
+      vig.addColorStop(0, 'rgba(0, 229, 255, 0)');
+      vig.addColorStop(0.68, `rgba(0, 229, 255, ${(boostVis * 0.14).toFixed(3)})`);
+      vig.addColorStop(1, `rgba(41, 121, 255, ${(boostVis * 0.36).toFixed(3)})`);
+      c.fillStyle = vig;
+      c.fillRect(0, 0, W, H);
+    }
+    if (state.boostFlash > 0.02) {
+      c.fillStyle = `rgba(224, 247, 250, ${(state.boostFlash * 0.24).toFixed(3)})`;
+      c.fillRect(0, 0, W, H);
+    }
+
+    // 2) 소실점(vx, vy)에서 화면 바깥으로 '슈웅!' 뻗어나가는 다층 방사형 하이퍼 워프 스피드 라인
+    const lineCount = boostVis > 0.15 ? 30 : 16;
+    const maxR = Math.max(W, H) * 0.85;
+    for (let i = 0; i < lineCount; i++) {
+      const seed = i * 1.618;
+      const angle = (i / lineCount) * Math.PI * 2 + Math.sin(seed) * 0.08;
+      const cycle = ((timeMs * (boostVis > 0.15 ? 0.0055 : 0.003) + i * 0.19) % 1);
+      const innerMin = boostVis > 0.15 ? Math.min(W, H) * 0.18 : Math.min(W, H) * 0.36;
+      const r1 = innerMin + cycle * (maxR - innerMin) * 0.52;
+      const streakLen = (boostVis > 0.15 ? 210 : 110) * (0.6 + cycle * 0.9);
+      const r2 = r1 + streakLen;
+
+      const x1 = vx + Math.cos(angle) * r1;
+      const y1 = vy + Math.sin(angle) * r1 * 0.78;
+      const x2 = vx + Math.cos(angle) * r2;
+      const y2 = vy + Math.sin(angle) * r2 * 0.78;
+
+      const lineGrad = c.createLinearGradient(x1, y1, x2, y2);
+      const col = state.starTimer > 0
+        ? RAINBOW_COLORS[i % RAINBOW_COLORS.length]
+        : (boostVis > 0.15 ? (i % 3 === 0 ? '#00e5ff' : (i % 3 === 1 ? '#ffffff' : '#ffee58')) : '#ffffff');
+      lineGrad.addColorStop(0, 'rgba(255,255,255,0)');
+      lineGrad.addColorStop(0.35, col);
+      lineGrad.addColorStop(1, '#ffffff');
+
+      c.globalAlpha = Math.max(0.18, Math.min(0.95, intensity * (0.45 + boostVis * 0.5)));
+      c.strokeStyle = lineGrad;
+      c.lineWidth = boostVis > 0.15 ? (2.5 + (i % 3) * 1.6) : 2.5;
+      c.lineCap = 'round';
       c.beginPath();
-      c.moveTo(W * 0.5 + Math.cos(angle) * r1, H * 0.48 + Math.sin(angle) * r1);
-      c.lineTo(W * 0.5 + Math.cos(angle) * r2, H * 0.48 + Math.sin(angle) * r2);
+      c.moveTo(x1, y1);
+      c.lineTo(x2, y2);
       c.stroke();
     }
     c.restore();
@@ -5043,23 +5164,50 @@
       c.fill();
     });
 
-    // 9. 슈퍼 부스터 제트 불꽃 vs 드리프트 스파크
+    // 9. 슈퍼 부스터 초음속 애프터버너 제트 불꽃 + 스포일러 윙팁 소닉 바람 궤적 vs 드리프트 스파크
     if (opts.boosting || opts.star) {
-      const flameLen = 38 + Math.sin((opts.timeMs || 0) * 0.06) * 10;
+      const pulse = Math.sin((opts.timeMs || 0) * 0.09);
+      const flameLen = 64 + pulse * 14;
       [-22, 22].forEach(ox => {
         const mx = ox + rearX;
+        // 외곽 시안/블루 초음속 플라즈마 제트 콘
         const fg = c.createLinearGradient(mx, 2, mx, flameLen);
         fg.addColorStop(0, '#ffffff');
-        fg.addColorStop(0.32, opts.star ? '#ffea00' : '#00e5ff');
-        fg.addColorStop(0.72, '#ff1744');
-        fg.addColorStop(1, 'rgba(255, 23, 68, 0)');
+        fg.addColorStop(0.25, opts.star ? '#ffea00' : '#00e5ff');
+        fg.addColorStop(0.62, opts.star ? '#ff4081' : '#2979ff');
+        fg.addColorStop(1, 'rgba(41, 121, 255, 0)');
         c.fillStyle = fg;
         c.beginPath();
-        c.moveTo(mx - 12, 2);
-        c.lineTo(mx + 12, 2);
-        c.lineTo(mx - yaw * 0.2, flameLen);
+        c.moveTo(mx - 15, 2);
+        c.lineTo(mx + 15, 2);
+        c.lineTo(mx - yaw * 0.22, flameLen);
         c.closePath();
         c.fill();
+
+        // 내부 화이트-골드 고열 코어 다이아몬드 불꽃
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.moveTo(mx - 7, 2);
+        c.lineTo(mx + 7, 2);
+        c.lineTo(mx - yaw * 0.12, flameLen * 0.55);
+        c.closePath();
+        c.fill();
+      });
+
+      // 리어 스포일러 양 끝단에서 뒤로 '슈웅~!' 뿜어져 나오는 소닉 와류(Wingtip Wind Trails)
+      [-50, 50].forEach(wx => {
+        const sx = wx + wingX;
+        const wg = c.createLinearGradient(sx, -40, sx, 42);
+        wg.addColorStop(0, 'rgba(255, 255, 255, 0.92)');
+        wg.addColorStop(0.45, 'rgba(0, 229, 255, 0.65)');
+        wg.addColorStop(1, 'rgba(0, 229, 255, 0)');
+        c.strokeStyle = wg;
+        c.lineWidth = 4.5;
+        c.lineCap = 'round';
+        c.beginPath();
+        c.moveTo(sx, -40);
+        c.quadraticCurveTo(sx + (wx > 0 ? 10 : -10), 0, sx - yaw * 0.3, 44 + pulse * 8);
+        c.stroke();
       });
     } else if (opts.drifting) {
       const stageCol = opts.driftStage === 3 ? '#e040fb' : (opts.driftStage === 2 ? '#ff9100' : '#00e5ff');
