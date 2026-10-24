@@ -30,7 +30,7 @@
     display: block;
   }
 
-  /* ==================== 로비 화면 (카트라이더 러쉬플러스 스타일) ==================== */
+  /* ==================== 로비 화면 (귀엽고 말랑말랑한 마리오·카트 토이 캡슐 스타일) ==================== */
   #lobbyScreen {
     position: absolute;
     inset: 0;
@@ -38,20 +38,23 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 14px 22px;
-    background: linear-gradient(160deg, rgba(14,42,92,0.88) 0%, rgba(25,118,210,0.75) 50%, rgba(13,27,42,0.92) 100%);
+    background:
+      radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.35) 0%, transparent 28%),
+      radial-gradient(circle at 82% 15%, rgba(255, 234, 0, 0.28) 0%, transparent 30%),
+      linear-gradient(165deg, #29b6f6 0%, #4fc3f7 42%, #81d4fa 75%, #b3e5fc 100%);
     z-index: 30;
-    color: #fff;
+    color: #263238;
   }
   .lobby-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(0, 0, 0, 0.38);
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    border-radius: 20px;
-    padding: 8px 16px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
-    gap: 8px;
+    background: rgba(255, 255, 255, 0.90);
+    border: 4px solid #ffffff;
+    border-radius: 999px;
+    padding: 8px 20px;
+    box-shadow: 0 7px 0 rgba(2, 136, 209, 0.28), 0 12px 24px rgba(0,0,0,0.16);
+    gap: 10px;
   }
   .lobby-title {
     display: flex;
@@ -59,80 +62,88 @@
     gap: 10px;
   }
   .lobby-badge {
-    background: linear-gradient(135deg, #ff3d00, #ff9100);
-    padding: 5px 11px;
-    border-radius: 12px;
+    background: linear-gradient(135deg, #ff4081, #ff9100);
+    color: #fff;
+    padding: 5px 13px;
+    border-radius: 999px;
+    border: 2.5px solid #fff;
     font-weight: 900;
     font-size: 14px;
-    letter-spacing: -0.3px;
-    box-shadow: 0 3px 8px rgba(255,61,0,0.5);
+    box-shadow: 0 4px 0 rgba(216, 27, 96, 0.35);
   }
   .lobby-title h1 {
-    font-size: 24px;
+    font-size: 25px;
     font-weight: 900;
-    color: #fff;
-    text-shadow: 0 3px 0 #0d47a1, 0 5px 12px rgba(0,0,0,0.5);
+    color: #0277bd;
+    text-shadow: 0 2px 0 #ffffff, 0 4px 8px rgba(2, 119, 189, 0.18);
+    letter-spacing: -0.5px;
   }
   .assist-pills {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
     flex-wrap: wrap;
   }
   .pill-btn {
-    border: 2px solid rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.15);
-    color: #fff;
-    font-weight: 800;
-    font-size: 13px;
-    padding: 7px 11px;
+    border: 3px solid #ffffff;
+    background: linear-gradient(180deg, #b3e5fc, #81d4fa);
+    color: #01579b;
+    font-weight: 900;
+    font-size: 13.5px;
+    padding: 7px 14px;
     border-radius: 999px;
     cursor: pointer;
-    transition: transform 0.12s, background 0.15s;
+    box-shadow: 0 4px 0 rgba(2, 136, 209, 0.3), inset 0 2px 0 rgba(255,255,255,0.8);
+    transition: transform 0.12s;
   }
   .pill-btn.active {
-    background: linear-gradient(135deg, #00e676, #00bfa5);
-    color: #042b1c;
-    border-color: #b9f6ca;
-    box-shadow: 0 0 12px rgba(0,230,118,0.6);
+    background: linear-gradient(180deg, #69f0ae, #00e676);
+    color: #004d40;
+    border-color: #ffffff;
+    box-shadow: 0 4px 0 #00a152, inset 0 2px 0 rgba(255,255,255,0.85);
   }
   .pill-btn.update-btn {
-    background: linear-gradient(135deg, #40c4ff, #0288d1);
-    border-color: #b3e5fc;
+    background: linear-gradient(180deg, #ff80ab, #ff4081);
+    border-color: #ffffff;
     color: #fff;
+    box-shadow: 0 4px 0 #c51162, inset 0 2px 0 rgba(255,255,255,0.6);
   }
   .pill-btn:active {
-    transform: scale(0.94);
+    transform: translateY(3px);
   }
 
   .lobby-body {
     display: grid;
-    grid-template-columns: 1.1fr 1fr 1.1fr;
-    gap: 16px;
+    grid-template-columns: 1.12fr 0.96fr 1.12fr;
+    gap: 14px;
     align-items: stretch;
     flex: 1;
     margin: 12px 0;
     min-height: 0;
   }
   .panel-card {
-    background: rgba(10, 25, 49, 0.76);
-    border: 2px solid rgba(100, 181, 246, 0.4);
-    border-radius: 22px;
+    background: rgba(255, 253, 248, 0.92);
+    border: 4px solid #ffffff;
+    border-radius: 28px;
     padding: 12px 14px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 24px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 0 rgba(2, 136, 209, 0.24), 0 14px 28px rgba(0,0,0,0.14);
   }
   .panel-title {
     font-size: 17px;
     font-weight: 900;
-    color: #ffd54f;
+    color: #e65100;
+    background: #fff3e0;
+    border: 2px solid #ffe0b2;
+    border-radius: 999px;
+    padding: 5px 14px;
     margin-bottom: 8px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   }
   .racer-grid {
     display: grid;
@@ -141,10 +152,10 @@
     flex: 1;
   }
   .racer-card {
-    border-radius: 16px;
-    border: 3px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.08);
-    padding: 8px;
+    border-radius: 20px;
+    border: 3.5px solid #e1f5fe;
+    background: linear-gradient(180deg, #ffffff 0%, #f1f8fe 100%);
+    padding: 7px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -152,27 +163,29 @@
     cursor: pointer;
     transition: all 0.15s;
     text-align: center;
+    box-shadow: 0 4px 0 #b3e5fc;
   }
   .racer-card.selected {
-    border-color: #ffea00;
-    background: linear-gradient(145deg, rgba(255,234,0,0.28), rgba(255,145,0,0.25));
-    box-shadow: 0 0 16px rgba(255,234,0,0.55);
+    border-color: #ff9100;
+    background: linear-gradient(180deg, #fffde7 0%, #ffe082 100%);
+    box-shadow: 0 5px 0 #fb8c00, 0 0 16px rgba(255, 193, 7, 0.55);
     transform: translateY(-2px);
   }
   .racer-emoji {
     font-size: 30px;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
+    filter: drop-shadow(0 3px 3px rgba(0,0,0,0.12));
   }
   .racer-name {
     font-size: 15px;
     font-weight: 900;
-    color: #fff;
+    color: #263238;
   }
   .racer-desc {
     font-size: 11px;
-    color: #b3e5fc;
+    color: #0277bd;
     margin-top: 2px;
-    font-weight: 700;
+    font-weight: 800;
   }
 
   /* 중앙 프리뷰 스테이지 */
@@ -182,11 +195,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    background: radial-gradient(circle at 50% 65%, rgba(41,182,246,0.38) 0%, rgba(10,25,49,0.55) 75%);
-    border: 2px solid rgba(129, 212, 250, 0.45);
-    border-radius: 24px;
+    background: radial-gradient(circle at 50% 58%, #ffffff 0%, #e1f5fe 65%, #b3e5fc 100%);
+    border: 4px solid #ffffff;
+    border-radius: 30px;
     padding: 12px;
     overflow: hidden;
+    box-shadow: 0 8px 0 rgba(2, 136, 209, 0.24), 0 14px 28px rgba(0,0,0,0.14);
   }
   #previewCanvas {
     width: 100%;
@@ -202,110 +216,117 @@
   }
   .speed-btn {
     flex: 1;
-    padding: 8px 4px;
-    border-radius: 13px;
-    border: 2px solid rgba(255,255,255,0.25);
-    background: rgba(0,0,0,0.35);
-    color: #fff;
+    padding: 7px 4px;
+    border-radius: 16px;
+    border: 3px solid #b3e5fc;
+    background: #ffffff;
+    color: #0277bd;
     font-weight: 900;
     font-size: 13px;
     cursor: pointer;
     text-align: center;
+    box-shadow: 0 4px 0 #81d4fa;
   }
   .speed-btn.selected {
-    background: linear-gradient(135deg, #ffca28, #ff6f00);
-    color: #1a0f00;
-    border-color: #fff8e1;
-    box-shadow: 0 0 12px rgba(255,202,40,0.65);
+    background: linear-gradient(180deg, #ffeb3b, #ff9800);
+    color: #3e2723;
+    border-color: #ffffff;
+    box-shadow: 0 4px 0 #e65100;
   }
 
   /* 우측 트랙 선택 */
   .track-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 7px;
     flex: 1;
   }
   .track-card {
     flex: 1;
-    border-radius: 16px;
-    border: 3px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.08);
-    padding: 8px 12px;
+    border-radius: 18px;
+    border: 3px solid #e1f5fe;
+    background: linear-gradient(180deg, #ffffff 0%, #f5fafe 100%);
+    padding: 6px 11px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     cursor: pointer;
     transition: all 0.15s;
+    box-shadow: 0 4px 0 #b3e5fc;
   }
   .track-card.selected {
-    border-color: #00e5ff;
-    background: linear-gradient(135deg, rgba(0,229,255,0.26), rgba(41,121,255,0.26));
-    box-shadow: 0 0 16px rgba(0,229,255,0.5);
+    border-color: #ff4081;
+    background: linear-gradient(180deg, #fff0f6 0%, #ffc1e3 100%);
+    box-shadow: 0 4px 0 #ec407a;
+    transform: translateY(-1px);
   }
   .track-icon {
-    font-size: 32px;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: rgba(0,0,0,0.3);
+    font-size: 28px;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: #e1f5fe;
+    border: 2px solid #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
   }
   .track-info {
     flex: 1;
   }
   .track-name {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 900;
+    color: #263238;
   }
   .track-sub {
-    font-size: 12px;
-    color: #e1f5fe;
-    margin-top: 2px;
-    font-weight: 700;
+    font-size: 11.5px;
+    color: #0277bd;
+    margin-top: 1px;
+    font-weight: 800;
   }
 
   .lobby-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 14px;
   }
   .lobby-tip {
-    background: rgba(0,0,0,0.45);
-    border: 2px solid rgba(255,255,255,0.2);
-    border-radius: 16px;
-    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 3.5px solid #ffffff;
+    border-radius: 999px;
+    padding: 10px 20px;
     font-size: 15px;
-    font-weight: 800;
-    color: #fff9c4;
+    font-weight: 900;
+    color: #01579b;
     flex: 1;
+    box-shadow: 0 6px 0 rgba(2, 136, 209, 0.22);
   }
   .start-race-btn {
-    background: linear-gradient(180deg, #ffea00 0%, #ff9100 50%, #ff3d00 100%);
-    border: 4px solid #fff;
-    border-radius: 24px;
-    padding: 14px 38px;
-    font-size: 26px;
+    background: linear-gradient(180deg, #ffeb3b 0%, #ff9800 48%, #ff3d00 100%);
+    border: 4px solid #ffffff;
+    border-radius: 999px;
+    padding: 13px 38px;
+    font-size: 25px;
     font-weight: 900;
     color: #fff;
-    text-shadow: 0 2px 0 #b71c1c, 0 4px 10px rgba(0,0,0,0.5);
-    box-shadow: 0 8px 0 #bf360c, 0 12px 28px rgba(255,61,0,0.65);
+    text-shadow: 0 2px 0 #bf360c;
+    box-shadow: 0 8px 0 #d84315, 0 14px 26px rgba(255, 61, 0, 0.45), inset 0 3px 0 rgba(255,255,255,0.65);
     cursor: pointer;
     animation: pulseBtn 1.3s infinite ease-in-out;
   }
   .start-race-btn:active {
     transform: translateY(4px);
-    box-shadow: 0 4px 0 #bf360c;
+    box-shadow: 0 4px 0 #d84315;
   }
   @keyframes pulseBtn {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.04); }
   }
 
-  /* ==================== 인게임 HUD & 컨트롤러 ==================== */
+  /* ==================== 인게임 귀여운 토이 캡슐 HUD & 컨트롤러 ==================== */
   #hudLayer {
     position: absolute;
     inset: 0;
@@ -327,122 +348,105 @@
   .hud-left-group {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     pointer-events: auto;
   }
   .rank-box {
-    background: linear-gradient(145deg, rgba(13,27,42,0.88), rgba(27,38,59,0.88));
-    border: 3px solid #ffd54f;
-    border-radius: 20px;
-    padding: 6px 16px;
+    background: linear-gradient(180deg, #fffde7 0%, #ffd54f 100%);
+    border: 4px solid #ffffff;
+    border-radius: 26px;
+    padding: 5px 16px;
     display: flex;
     align-items: baseline;
-    gap: 6px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+    gap: 5px;
+    box-shadow: 0 6px 0 #f57f17, 0 10px 18px rgba(0,0,0,0.28);
   }
   .rank-num {
-    font-size: 38px;
+    font-size: 36px;
     font-weight: 900;
-    color: #ffea00;
-    text-shadow: 0 3px 0 #e65100;
+    color: #d50000;
+    text-shadow: 0 2px 0 #ffffff;
     line-height: 1;
   }
   .rank-label {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 900;
-    color: #fff;
+    color: #5d4037;
   }
   .lap-box {
-    background: rgba(13,27,42,0.82);
-    border: 2px solid rgba(255,255,255,0.35);
-    border-radius: 16px;
-    padding: 8px 14px;
-    color: #fff;
+    background: rgba(255, 255, 255, 0.92);
+    border: 3.5px solid #ffffff;
+    border-radius: 999px;
+    padding: 8px 16px;
+    color: #0277bd;
     font-weight: 900;
-    font-size: 17px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    font-size: 16px;
+    box-shadow: 0 5px 0 rgba(2, 136, 209, 0.35), 0 8px 16px rgba(0,0,0,0.2);
   }
   .item-slots {
     display: flex;
     gap: 8px;
   }
   .item-slot {
+    position: relative;
     width: 58px;
     height: 58px;
-    border-radius: 16px;
-    background: radial-gradient(circle, rgba(64,196,255,0.45) 0%, rgba(13,27,42,0.88) 85%);
-    border: 3px solid #80d8ff;
+    border-radius: 20px;
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, #b3e5fc 65%, #4fc3f7 100%);
+    border: 4px solid #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    font-size: 31px;
+    box-shadow: 0 6px 0 #0288d1, 0 10px 18px rgba(0,0,0,0.25);
   }
 
-  /* 중앙 상단 진행도 바 (라이벌 마커 포함) */
+  /* 중앙 상단 캔디 진행도 바 */
   .hud-center-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex: 1;
-    max-width: 430px;
-    margin: 0 12px;
+    max-width: 410px;
+    margin: 4px 12px 0;
   }
   .progress-track {
     width: 100%;
-    height: 22px;
-    background: rgba(0,0,0,0.6);
-    border: 2px solid rgba(255,255,255,0.5);
+    height: 24px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 4px solid #ffffff;
     border-radius: 999px;
     position: relative;
     overflow: visible;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.18);
   }
   .progress-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #00e676, #ffea00, #ff3d00);
+    background: linear-gradient(90deg, #69f0ae, #ffea00, #ff4081);
     border-radius: 999px;
     transition: width 0.1s linear;
   }
   .progress-kart-icon {
     position: absolute;
-    top: -10px;
+    top: -11px;
     left: 0%;
     transform: translateX(-50%);
     font-size: 26px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.7));
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.35));
     z-index: 3;
   }
   .rival-dot {
     position: absolute;
-    top: 3px;
-    width: 12px;
-    height: 12px;
+    top: 2px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
-    border: 2px solid #fff;
+    border: 2.5px solid #fff;
     transform: translateX(-50%);
     z-index: 2;
-  }
-  #turnPrompt {
-    background: rgba(0, 0, 0, 0.72);
-    border: 3px solid #ffea00;
-    border-radius: 999px;
-    padding: 6px 20px;
-    color: #fff;
-    font-size: 20px;
-    font-weight: 900;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    transform: scale(0.9);
-    transition: opacity 0.18s, transform 0.18s;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.7);
-  }
-  #turnPrompt.show {
-    opacity: 1;
-    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.25);
   }
 
   .hud-right-group {
@@ -452,30 +456,32 @@
     pointer-events: auto;
   }
   .mini-hud-btn {
-    background: rgba(13,27,42,0.82);
-    border: 2px solid rgba(255,255,255,0.4);
-    border-radius: 14px;
-    padding: 8px 12px;
-    color: #fff;
+    background: rgba(255, 255, 255, 0.92);
+    border: 3px solid #ffffff;
+    border-radius: 999px;
+    padding: 8px 14px;
+    color: #01579b;
     font-weight: 900;
-    font-size: 14px;
+    font-size: 13.5px;
     cursor: pointer;
+    box-shadow: 0 5px 0 rgba(2, 136, 209, 0.3), 0 8px 14px rgba(0,0,0,0.2);
   }
   .mini-hud-btn.active {
-    background: #00c853;
-    border-color: #b9f6ca;
-    color: #00251a;
+    background: linear-gradient(180deg, #b9f6ca, #69f0ae);
+    border-color: #ffffff;
+    color: #004d40;
+    box-shadow: 0 5px 0 #00bfa5;
   }
 
   #centerBanner {
     position: absolute;
-    top: 34%;
+    top: 32%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 54px;
+    font-size: 50px;
     font-weight: 900;
-    color: #ffea00;
-    text-shadow: 0 5px 0 #d50000, 0 10px 25px rgba(0,0,0,0.75);
+    color: #fff;
+    text-shadow: 0 4px 0 #ff4081, 0 8px 20px rgba(0,0,0,0.45);
     text-align: center;
     pointer-events: none;
     white-space: nowrap;
@@ -487,125 +493,127 @@
     bottom: 26%;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #00e5ff, #2979ff);
+    background: linear-gradient(180deg, #ffeb3b, #ff4081);
     border: 4px solid #fff;
     border-radius: 999px;
     padding: 14px 34px;
-    font-size: 26px;
+    font-size: 25px;
     font-weight: 900;
     color: #fff;
-    box-shadow: 0 0 30px rgba(0,229,255,0.95);
+    text-shadow: 0 2px 0 #c51162;
+    box-shadow: 0 7px 0 #ad1457, 0 0 28px rgba(255, 64, 129, 0.85);
     pointer-events: auto;
     display: none;
     cursor: pointer;
     animation: pulseBtn 0.45s infinite alternate;
   }
 
-  /* 하단 후방 추월 경보 미러 (마리오 카트 스타일 후방 레이더) */
+  /* 하단 후방 추월 경보 미러 (귀여운 캡슐 알림) */
   #rearAlertBar {
     position: absolute;
-    bottom: 84px;
+    bottom: 88px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, rgba(213, 0, 0, 0.92), rgba(255, 109, 0, 0.92));
-    border: 3px solid #ffea00;
+    background: linear-gradient(180deg, #fff8e1, #ffe082);
+    border: 3.5px solid #ff5252;
     border-radius: 999px;
     padding: 5px 18px;
-    color: #fff;
-    font-size: 16px;
+    color: #c62828;
+    font-size: 15px;
     font-weight: 900;
     display: none;
     align-items: center;
-    gap: 8px;
-    box-shadow: 0 0 20px rgba(255, 23, 68, 0.85);
+    gap: 6px;
+    box-shadow: 0 5px 0 rgba(211, 47, 47, 0.35), 0 8px 16px rgba(0,0,0,0.22);
     z-index: 18;
-    animation: pulseBtn 0.35s infinite alternate;
+    animation: pulseBtn 0.4s infinite alternate;
     white-space: nowrap;
   }
 
   /* 드리프트 미니터보 단계 표시 배지 */
   #driftStageBadge {
     position: absolute;
-    bottom: 122px;
+    bottom: 126px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(13, 27, 42, 0.88);
-    border: 2.5px solid #00e5ff;
+    background: rgba(255, 255, 255, 0.94);
+    border: 3.5px solid #00e5ff;
     border-radius: 999px;
     padding: 4px 16px;
-    color: #00e5ff;
-    font-size: 15px;
+    color: #0277bd;
+    font-size: 14.5px;
     font-weight: 900;
     display: none;
     z-index: 18;
-    box-shadow: 0 0 16px rgba(0, 229, 255, 0.65);
+    box-shadow: 0 5px 0 rgba(0, 184, 212, 0.35);
   }
 
-  /* 하단 중앙 속도계 & 기어 단수 표시 */
+  /* 하단 중앙 귀여운 장난감 계기판 */
   .speedometer-box {
     position: absolute;
-    bottom: 14px;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(10, 22, 40, 0.86);
-    border: 2px solid rgba(128, 216, 255, 0.55);
-    border-radius: 22px;
-    padding: 8px 22px;
+    background: rgba(255, 255, 255, 0.93);
+    border: 4px solid #ffffff;
+    border-radius: 28px;
+    padding: 7px 22px 9px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 220px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    min-width: 215px;
+    box-shadow: 0 6px 0 rgba(2, 136, 209, 0.32), 0 10px 22px rgba(0,0,0,0.25);
   }
   .speed-value-row {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: 7px;
   }
   #gearBadge {
-    background: #ff9100;
-    color: #111;
+    background: linear-gradient(180deg, #ff80ab, #ff4081);
+    color: #fff;
     font-weight: 900;
-    font-size: 14px;
-    padding: 2px 7px;
-    border-radius: 8px;
+    font-size: 13px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    box-shadow: 0 2px 0 #c51162;
   }
   #speedText {
-    font-size: 34px;
+    font-size: 32px;
     font-weight: 900;
-    color: #fff;
+    color: #01579b;
     font-variant-numeric: tabular-nums;
-    text-shadow: 0 0 10px rgba(0,229,255,0.8);
+    line-height: 1;
   }
   .speed-unit {
-    font-size: 14px;
-    font-weight: 800;
-    color: #80d8ff;
+    font-size: 13px;
+    font-weight: 900;
+    color: #0288d1;
   }
   .n2o-gauge-wrap {
-    width: 175px;
+    width: 172px;
     height: 13px;
-    background: rgba(255,255,255,0.16);
+    background: #e1f5fe;
     border-radius: 999px;
     overflow: hidden;
-    margin-top: 4px;
-    border: 1px solid rgba(255,255,255,0.35);
+    margin-top: 5px;
+    border: 2px solid #81d4fa;
   }
   #n2oGaugeFill {
     height: 100%;
     width: 40%;
-    background: linear-gradient(90deg, #00e5ff, #ffea00, #ff1744);
+    background: linear-gradient(90deg, #29b6f6, #ffea00, #ff4081);
     border-radius: 999px;
     transition: width 0.08s linear;
   }
 
-  /* ==================== 좌측 하단: 핸들(Steering Wheel) 컨트롤러 ==================== */
+  /* ==================== 좌측 하단: 귀여운 토이 핸들(Steering Wheel) 컨트롤러 ==================== */
   #wheelZone {
     position: absolute;
-    left: 18px;
-    bottom: 12px;
-    width: 268px;
-    height: 268px;
+    left: 16px;
+    bottom: 10px;
+    width: 266px;
+    height: 266px;
     pointer-events: auto;
     display: flex;
     align-items: center;
@@ -614,65 +622,65 @@
   }
   .wheel-guide-ring {
     position: absolute;
-    inset: 6px;
+    inset: 8px;
     border-radius: 50%;
-    border: 3px dashed rgba(255, 255, 255, 0.32);
-    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.28) 72%);
+    border: 4px dashed rgba(255, 255, 255, 0.55);
+    background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.05) 72%);
     pointer-events: none;
   }
   .wheel-dir-labels {
     position: absolute;
-    top: -12px;
+    top: -10px;
     left: 0;
     right: 0;
     display: flex;
     justify-content: space-between;
-    padding: 0 18px;
-    font-size: 15px;
+    padding: 0 22px;
+    font-size: 14px;
     font-weight: 900;
-    color: #ffea00;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.85);
+    color: #ffffff;
+    text-shadow: 0 2px 0 #0288d1, 0 4px 8px rgba(0,0,0,0.35);
     pointer-events: none;
   }
   #wheelGraphic {
-    width: 224px;
-    height: 224px;
+    width: 222px;
+    height: 222px;
     position: relative;
     will-change: transform;
-    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.6));
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.32));
     pointer-events: none;
   }
   #hornBtn {
     position: absolute;
-    width: 74px;
-    height: 74px;
+    width: 78px;
+    height: 78px;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ffeb3b, #ff9800 75%, #e65100 100%);
-    border: 4px solid #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    background: radial-gradient(circle at 32% 28%, #fff9c4 0%, #ffeb3b 45%, #ff9800 100%);
+    border: 4.5px solid #fff;
+    box-shadow: 0 6px 0 #e65100, 0 8px 16px rgba(0,0,0,0.35), inset 0 3px 0 rgba(255,255,255,0.8);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    color: #3e2723;
+    color: #bf360c;
     font-size: 13px;
     z-index: 3;
     pointer-events: auto;
   }
   #hornBtn span {
-    font-size: 24px;
+    font-size: 25px;
     line-height: 1;
   }
   #hornBtn:active {
-    transform: scale(0.9);
+    transform: scale(0.92) translateY(2px);
   }
 
-  /* ==================== 우측 하단: 어린이용 왕큰 액션 버튼들 ==================== */
+  /* ==================== 우측 하단: 말랑말랑 젤리 캡슐 액션 버튼들 ==================== */
   .action-zone {
     position: absolute;
-    right: 22px;
-    bottom: 18px;
+    right: 20px;
+    bottom: 16px;
     width: 290px;
     height: 250px;
     pointer-events: none;
@@ -680,7 +688,7 @@
   .big-action-btn {
     position: absolute;
     border-radius: 50%;
-    border: 5px solid #fff;
+    border: 5px solid #ffffff;
     color: #fff;
     font-weight: 900;
     display: flex;
@@ -689,12 +697,24 @@
     justify-content: center;
     pointer-events: auto;
     cursor: pointer;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.55);
     touch-action: none;
     transition: transform 0.08s;
+    overflow: hidden;
+  }
+  /* 젤리 버튼 상단 하이라이트 광택 */
+  .big-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 6%;
+    left: 18%;
+    width: 64%;
+    height: 28%;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.05) 100%);
+    pointer-events: none;
   }
   .big-action-btn:active, .big-action-btn.pressed {
-    transform: scale(0.91);
+    transform: scale(0.92) translateY(3px);
   }
 
   #boostBtn {
@@ -702,30 +722,31 @@
     bottom: 8px;
     width: 138px;
     height: 138px;
-    background: radial-gradient(circle at 35% 30%, #ff5252 0%, #d50000 65%, #7f0000 100%);
+    background: radial-gradient(circle at 35% 30%, #ff8a80 0%, #ff5252 60%, #d50000 100%);
+    box-shadow: 0 8px 0 #b71c1c, 0 12px 22px rgba(0,0,0,0.35);
   }
   #boostBtn.ready {
-    background: radial-gradient(circle at 35% 30%, #ffea00 0%, #ff3d00 58%, #dd2c00 100%);
-    box-shadow: 0 0 32px rgba(255, 61, 0, 0.95), 0 0 12px #ffea00;
-    animation: pulseBoost 0.7s infinite alternate;
+    background: radial-gradient(circle at 35% 30%, #ffee58 0%, #ff7043 55%, #f50057 100%);
+    box-shadow: 0 8px 0 #c51162, 0 0 26px rgba(255, 64, 129, 0.85);
+    animation: pulseBoost 0.75s infinite alternate;
   }
   @keyframes pulseBoost {
     from { transform: scale(1); }
-    to { transform: scale(1.08); }
+    to { transform: scale(1.06); }
   }
   .btn-icon {
-    font-size: 42px;
+    font-size: 40px;
     line-height: 1;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.45));
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.28));
   }
   .btn-title {
-    font-size: 20px;
-    margin-top: 3px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.65);
+    font-size: 19px;
+    margin-top: 2px;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.3);
   }
   .btn-sub {
     font-size: 12px;
-    color: #fff9c4;
+    color: #fffde7;
   }
 
   #itemBtn {
@@ -733,11 +754,12 @@
     bottom: 108px;
     width: 116px;
     height: 116px;
-    background: radial-gradient(circle at 35% 30%, #40c4ff 0%, #0288d1 70%, #01579b 100%);
+    background: radial-gradient(circle at 35% 30%, #80d8ff 0%, #29b6f6 65%, #0288d1 100%);
+    box-shadow: 0 7px 0 #01579b, 0 10px 20px rgba(0,0,0,0.32);
   }
   #itemBtn.has-item {
-    background: radial-gradient(circle at 35% 30%, #e040fb 0%, #7c4dff 65%, #311b92 100%);
-    box-shadow: 0 0 26px rgba(224, 64, 251, 0.9);
+    background: radial-gradient(circle at 35% 30%, #ff80ab 0%, #e040fb 60%, #8e24aa 100%);
+    box-shadow: 0 7px 0 #6a1b9a, 0 0 24px rgba(224, 64, 251, 0.85);
     animation: pulseBoost 0.8s infinite alternate;
   }
 
@@ -746,64 +768,64 @@
     bottom: 4px;
     width: 98px;
     height: 98px;
-    background: radial-gradient(circle at 35% 30%, #69f0ae 0%, #00c853 70%, #1b5e20 100%);
+    background: radial-gradient(circle at 35% 30%, #b9f6ca 0%, #00e676 65%, #00bfa5 100%);
+    box-shadow: 0 7px 0 #00897b, 0 10px 18px rgba(0,0,0,0.32);
   }
 
   /* ==================== 결승 골인 시상대 모달 ==================== */
   #finishModal {
     position: absolute;
     inset: 0;
-    background: rgba(8, 20, 42, 0.86);
+    background: rgba(13, 42, 78, 0.72);
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 40;
-    color: #fff;
+    color: #263238;
     padding: 20px;
   }
   .podium-card {
-    background: linear-gradient(160deg, #1a237e 0%, #0d47a1 55%, #01579b 100%);
-    border: 4px solid #ffea00;
-    border-radius: 30px;
-    padding: 24px 36px;
+    background: linear-gradient(180deg, #ffffff 0%, #fff8e1 100%);
+    border: 6px solid #ffca28;
+    border-radius: 36px;
+    padding: 26px 36px;
     text-align: center;
-    max-width: 580px;
+    max-width: 560px;
     width: 92%;
-    box-shadow: 0 18px 45px rgba(0,0,0,0.65);
+    box-shadow: 0 12px 0 #f57f17, 0 20px 45px rgba(0,0,0,0.45);
   }
   .trophy-big {
-    font-size: 74px;
+    font-size: 76px;
     line-height: 1;
     margin-bottom: 8px;
-    filter: drop-shadow(0 6px 14px rgba(255,215,0,0.65));
+    filter: drop-shadow(0 6px 10px rgba(255, 193, 7, 0.55));
   }
   #finishTitle {
-    font-size: 38px;
+    font-size: 36px;
     font-weight: 900;
-    color: #ffea00;
-    text-shadow: 0 4px 0 #e65100;
+    color: #e65100;
   }
   #finishSub {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 800;
-    color: #e1f5fe;
-    margin: 10px 0 18px;
+    color: #0277bd;
+    margin: 8px 0 18px;
   }
   .reward-row {
     display: flex;
     justify-content: center;
-    gap: 16px;
+    gap: 14px;
     margin-bottom: 22px;
   }
   .reward-pill {
-    background: rgba(0,0,0,0.35);
-    border: 2px solid rgba(255,255,255,0.35);
-    border-radius: 18px;
-    padding: 10px 20px;
-    font-size: 20px;
+    background: #fff3e0;
+    border: 3px solid #ffb74d;
+    border-radius: 999px;
+    padding: 9px 20px;
+    font-size: 19px;
     font-weight: 900;
-    color: #fff9c4;
+    color: #e65100;
   }
   .finish-actions {
     display: flex;
@@ -811,20 +833,21 @@
     justify-content: center;
   }
   .finish-btn {
-    border: 3px solid #fff;
-    border-radius: 20px;
-    padding: 14px 28px;
-    font-size: 22px;
+    border: 4px solid #fff;
+    border-radius: 999px;
+    padding: 13px 28px;
+    font-size: 21px;
     font-weight: 900;
     color: #fff;
     cursor: pointer;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.22);
   }
   .finish-btn.replay {
-    background: linear-gradient(135deg, #00e676, #00bfa5);
-    color: #00251a;
+    background: linear-gradient(180deg, #69f0ae, #00c853);
+    color: #004d40;
   }
   .finish-btn.lobby {
-    background: linear-gradient(135deg, #42a5f5, #1e88e5);
+    background: linear-gradient(180deg, #4fc3f7, #0288d1);
   }
 </style>
 </head>
@@ -832,15 +855,14 @@
 
 <canvas id="gameCanvas"></canvas>
 
-<!-- ==================== 1. 로비 화면 ==================== -->
+<!-- ==================== 1. 로비 화면 (도우미 삭제 & 귀여운 토이 캡슐 테마) ==================== -->
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.2.0</span>
+      <span class="lobby-badge" id="verBadge">v1.3.0</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
-      <button id="toggleAssistBtn" class="pill-btn active">⛑️ 코너 도우미 ON</button>
       <button id="toggleAutoBoostBtn" class="pill-btn active">🚀 자동 부스터 ON</button>
       <button id="toggleTiltBtn" class="pill-btn">📱 기울이기 핸들 OFF</button>
       <button id="checkUpdateBtn" class="pill-btn update-btn">🔄 업데이트</button>
@@ -850,7 +872,7 @@
   <div class="lobby-body">
     <!-- 캐릭터/카트 선택 -->
     <div class="panel-card">
-      <div class="panel-title">🧒 귀여운 레이서 & 카트 고르기</div>
+      <div class="panel-title">🧸 귀여운 레이서 & 입체 카트</div>
       <div class="racer-grid" id="racerGrid">
         <div class="racer-card selected" data-racer="0">
           <div class="racer-emoji">🔵🏎️</div>
@@ -865,12 +887,12 @@
         <div class="racer-card" data-racer="2">
           <div class="racer-emoji">🟡🐻</div>
           <div class="racer-name">배찌 옐로우</div>
-          <div class="racer-desc">튼튼 범퍼 카트</div>
+          <div class="racer-desc">꿀단지 범퍼 카트</div>
         </div>
         <div class="racer-card" data-racer="3">
           <div class="racer-emoji">🟢🦖</div>
           <div class="racer-name">우니 다이노</div>
-          <div class="racer-desc">공룡 로켓 카트</div>
+          <div class="racer-desc">요시 공룡 카트</div>
         </div>
       </div>
     </div>
@@ -887,34 +909,34 @@
 
     <!-- 트랙 선택 (슈퍼마리오 카트 + 카트라이더 4대 테마 코스) -->
     <div class="panel-card">
-      <div class="panel-title">🗺️ 슈퍼마리오 & 카트 코스 고르기</div>
+      <div class="panel-title">🗺️ 신나는 레이싱 코스</div>
       <div class="track-list" id="trackList">
         <div class="track-card selected" data-track="0">
           <div class="track-icon">🍄</div>
           <div class="track-info">
             <div class="track-name">마리오 서킷 빌리지</div>
-            <div class="track-sub">⭐ 초록 토관 · 점프대 · 물음표 박스 가득!</div>
+            <div class="track-sub">⭐ 초록 토관 · 점프대 · 물음표 박스!</div>
           </div>
         </div>
         <div class="track-card" data-track="1">
           <div class="track-icon">🌈</div>
           <div class="track-info">
             <div class="track-name">레인보우 우주 로드</div>
-            <div class="track-sub">⭐⭐ 무지개 점프 패드 & 별빛 대점프!</div>
+            <div class="track-sub">⭐⭐ 무지개 점프 패드 & 별빛 코스!</div>
           </div>
         </div>
         <div class="track-card" data-track="2">
           <div class="track-icon">🏰</div>
           <div class="track-info">
             <div class="track-name">쿠파 용암 캐슬</div>
-            <div class="track-sub">⭐⭐ 용암 다리 점프 & 불꽃 대시 구간!</div>
+            <div class="track-sub">⭐⭐ 용암 다리 점프 & 불꽃 대시!</div>
           </div>
         </div>
         <div class="track-card" data-track="3">
           <div class="track-icon">🦖</div>
           <div class="track-info">
             <div class="track-name">요시 공룡 정글</div>
-            <div class="track-sub">⭐⭐ 공룡 대교 · 황금 코인 대폭발!</div>
+            <div class="track-sub">⭐⭐ 공룡 대교 · 황금 코인 가득!</div>
           </div>
         </div>
       </div>
@@ -923,21 +945,22 @@
 
   <div class="lobby-footer">
     <div class="lobby-tip">
-      💡 <b>조작법:</b> 친구 차들과 함께 <b>부르릉~</b> 달려요! 왼쪽 <b>핸들</b>을 돌리고 오른쪽 <b>부스터·아이템</b>으로 앞차를 추월해 보세요!
+      🎈 왼쪽 <b>동그란 핸들</b>을 돌리고, 오른쪽 <b>젤리 버튼(부스터·아이템·점프)</b>으로 친구 차들을 추월해 보세요!
     </div>
     <button id="startRaceBtn" class="start-race-btn">🏁 출발하기!</button>
   </div>
 </div>
 
-<!-- ==================== 2. 인게임 HUD 및 핸들 컨트롤러 ==================== -->
+<!-- ==================== 2. 인게임 귀여운 HUD 및 핸들 컨트롤러 ==================== -->
 <div id="hudLayer">
   <div class="top-hud">
     <div class="hud-left-group">
       <div class="rank-box">
+        <span style="font-size:22px;">👑</span>
         <span id="rankNum" class="rank-num">1</span>
-        <span class="rank-label">위 / 6</span>
+        <span class="rank-label">등 / 6</span>
       </div>
-      <div id="lapBox" class="lap-box">바퀴 1 / 2</div>
+      <div id="lapBox" class="lap-box">🏁 1 / 2 바퀴</div>
       <div class="item-slots">
         <div id="itemSlot1" class="item-slot">🎁</div>
         <div id="itemSlot2" class="item-slot">🔥</div>
@@ -950,13 +973,11 @@
         <div id="rivalDotsContainer"></div>
         <div id="progressKart" class="progress-kart-icon">🏎️</div>
       </div>
-      <div id="turnPrompt">⬅️ 왼쪽으로 핸들!</div>
     </div>
 
     <div class="hud-right-group">
-      <button id="hudSoundBtn" class="mini-hud-btn active">🔊 엔진음 ON</button>
+      <button id="hudSoundBtn" class="mini-hud-btn active">🔊 사운드 ON</button>
       <button id="hudSpeedBtn" class="mini-hud-btn">🚗 속도: 보통</button>
-      <button id="hudAssistBtn" class="mini-hud-btn active">⛑️ 도우미 ON</button>
       <button id="hudHomeBtn" class="mini-hud-btn">🏠 대기실</button>
     </div>
   </div>
@@ -978,7 +999,7 @@
     </div>
   </div>
 
-  <!-- 좌측 하단: 인터랙티브 핸들(Steering Wheel) 컨트롤러 -->
+  <!-- 좌측 하단: 귀여운 파스텔 토이 핸들(Steering Wheel) 컨트롤러 -->
   <div id="wheelZone">
     <div class="wheel-dir-labels">
       <span>◀ 왼쪽</span>
@@ -988,25 +1009,29 @@
 
     <svg id="wheelGraphic" viewBox="0 0 220 220">
       <defs>
-        <radialGradient id="rimGrad" cx="50%" cy="40%" r="55%">
-          <stop offset="0%" stop-color="#546e7a" />
-          <stop offset="70%" stop-color="#263238" />
-          <stop offset="100%" stop-color="#11171a" />
+        <radialGradient id="rimGrad" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="55%" stop-color="#e1f5fe" />
+          <stop offset="100%" stop-color="#81d4fa" />
         </radialGradient>
         <linearGradient id="spokeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#eceff1" />
-          <stop offset="100%" stop-color="#90a4ae" />
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="100%" stop-color="#b3e5fc" />
         </linearGradient>
       </defs>
-      <path d="M 32 102 L 188 102 L 188 122 L 32 122 Z" fill="url(#spokeGrad)" stroke="#37474f" stroke-width="3" />
-      <path d="M 96 112 L 124 112 L 128 192 L 92 192 Z" fill="url(#spokeGrad)" stroke="#37474f" stroke-width="3" />
-      <circle cx="110" cy="110" r="88" fill="none" stroke="url(#rimGrad)" stroke-width="28" />
-      <circle cx="110" cy="110" r="88" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="4" />
-      <path d="M 32 68 A 88 88 0 0 0 32 152" fill="none" stroke="#29b6f6" stroke-width="26" stroke-linecap="round" />
-      <path d="M 188 68 A 88 88 0 0 1 188 152" fill="none" stroke="#ff5252" stroke-width="26" stroke-linecap="round" />
-      <rect x="98" y="8" width="24" height="28" rx="6" fill="#ffea00" stroke="#fff" stroke-width="2" />
-      <polygon points="18,110 30,98 30,122" fill="#ffffff" />
-      <polygon points="202,110 190,98 190,122" fill="#ffffff" />
+      <!-- 귀여운 통통한 스포크 -->
+      <path d="M 30 98 L 190 98 L 190 124 L 30 124 Z" fill="url(#spokeGrad)" stroke="#0288d1" stroke-width="3.5" />
+      <path d="M 95 110 L 125 110 L 130 192 L 90 192 Z" fill="url(#spokeGrad)" stroke="#0288d1" stroke-width="3.5" />
+      <!-- 외곽 화이트·스카이 링 -->
+      <circle cx="110" cy="110" r="86" fill="none" stroke="#0288d1" stroke-width="34" />
+      <circle cx="110" cy="110" r="86" fill="none" stroke="url(#rimGrad)" stroke-width="26" />
+      <!-- 좌우 캔디 그립 (하늘색 & 핑크색) -->
+      <path d="M 33 68 A 86 86 0 0 0 33 152" fill="none" stroke="#29b6f6" stroke-width="26" stroke-linecap="round" />
+      <path d="M 187 68 A 86 86 0 0 1 187 152" fill="none" stroke="#ff4081" stroke-width="26" stroke-linecap="round" />
+      <!-- 상단 귀여운 노란 별 포인트 -->
+      <circle cx="110" cy="24" r="14" fill="#ffeb3b" stroke="#ffffff" stroke-width="3" />
+      <polygon points="20,110 32,99 32,121" fill="#ffffff" />
+      <polygon points="200,110 188,99 188,121" fill="#ffffff" />
     </svg>
 
     <button id="hornBtn" type="button">
@@ -1118,16 +1143,17 @@
       this.bgmTimer = null;
       this.step = 0;
 
-      // 연속 엔진 사운드 노드 (실린더 배기음 + 중저음 서브베이스 + 터보 휘슬)
+      // 연속 엔진 사운드 노드 (중후한 V8/V6 저음 배기음 + 웜 서브베이스 + 부드러운 주행 풍절음)
       this.engineRunning = false;
       this.engOsc1 = null;
       this.engOsc2 = null;
       this.engSubOsc = null;
-      this.turboOsc = null;
+      this.roadNoiseNode = null;
+      this.roadFilter = null;
+      this.roadGain = null;
       this.engFilter = null;
       this.engGain = null;
       this.subGain = null;
-      this.turboGain = null;
 
       // 타이어 스키드(드리프트 마찰음) 노드
       this.skidNode = null;
@@ -1219,7 +1245,7 @@
       } catch (_) {}
     }
 
-    // 1. 자동차 시동 크랭킹 & 중저음 V8 배기음 ("큐르르릉~ 구르르릉! 부아아앙~!")
+    // 1. 자동차 시동 크랭킹 & 중후한 저음 배기음 ("부르르릉~ 우우웅~")
     playEngineStart() {
       if (this.muted || this.appPaused) return;
       try {
@@ -1237,24 +1263,24 @@
         sub.type = 'triangle';
         if (this.distCurve) shaper.curve = this.distCurve;
         filter.type = 'lowpass';
-        filter.Q.value = 4.5;
+        filter.Q.value = 1.6;
 
-        osc.frequency.setValueAtTime(38, now);
-        osc.frequency.linearRampToValueAtTime(62, now + 0.18);
-        osc.frequency.exponentialRampToValueAtTime(148, now + 0.48);
-        osc.frequency.exponentialRampToValueAtTime(68, now + 0.95);
+        osc.frequency.setValueAtTime(34, now);
+        osc.frequency.linearRampToValueAtTime(52, now + 0.22);
+        osc.frequency.exponentialRampToValueAtTime(96, now + 0.52);
+        osc.frequency.exponentialRampToValueAtTime(54, now + 1.05);
 
         sub.frequency.setValueAtTime(24, now);
-        sub.frequency.exponentialRampToValueAtTime(74, now + 0.48);
-        sub.frequency.exponentialRampToValueAtTime(36, now + 0.95);
+        sub.frequency.exponentialRampToValueAtTime(58, now + 0.52);
+        sub.frequency.exponentialRampToValueAtTime(32, now + 1.05);
 
-        filter.frequency.setValueAtTime(220, now);
-        filter.frequency.exponentialRampToValueAtTime(920, now + 0.48);
-        filter.frequency.exponentialRampToValueAtTime(340, now + 0.95);
+        filter.frequency.setValueAtTime(140, now);
+        filter.frequency.exponentialRampToValueAtTime(380, now + 0.52);
+        filter.frequency.exponentialRampToValueAtTime(185, now + 1.05);
 
         gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.28, now + 0.22);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.98);
+        gain.gain.linearRampToValueAtTime(0.24, now + 0.24);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.08);
 
         osc.connect(shaper);
         sub.connect(shaper);
@@ -1264,12 +1290,12 @@
 
         osc.start(now);
         sub.start(now);
-        osc.stop(now + 1.0);
-        sub.stop(now + 1.0);
+        osc.stop(now + 1.1);
+        sub.stop(now + 1.1);
       } catch (_) {}
     }
 
-    // 2. 주행 중 연속 자동차 엔진음 & 서브베이스 & 타이어 스키드 시작
+    // 2. 주행 중 연속 자동차 엔진음 (경박한 고음 없이 묵직하고 부드러운 저음 V8 배기음 & 아스팔트 타이어 회전음)
     startContinuousEngine() {
       if (this.appPaused) return;
       this.init();
@@ -1279,24 +1305,21 @@
         this.engOsc1 = this.ctx.createOscillator();
         this.engOsc2 = this.ctx.createOscillator();
         this.engSubOsc = this.ctx.createOscillator();
-        this.turboOsc = this.ctx.createOscillator();
         this.engFilter = this.ctx.createBiquadFilter();
         this.engGain = this.ctx.createGain();
         this.subGain = this.ctx.createGain();
-        this.turboGain = this.ctx.createGain();
 
+        // 거친 사각파(square)나 고음 휘슬(sine)을 제거하고 따뜻한 저음 조합(sawtooth + triangle) 사용
         this.engOsc1.type = 'sawtooth';
-        this.engOsc2.type = 'square';
+        this.engOsc2.type = 'triangle';
         this.engSubOsc.type = 'triangle';
-        this.turboOsc.type = 'sine';
 
         this.engFilter.type = 'lowpass';
-        this.engFilter.frequency.setValueAtTime(340, now);
-        this.engFilter.Q.setValueAtTime(3.8, now);
+        this.engFilter.frequency.setValueAtTime(165, now);
+        this.engFilter.Q.setValueAtTime(1.0, now);
 
         this.engGain.gain.setValueAtTime(0.001, now);
         this.subGain.gain.setValueAtTime(0.001, now);
-        this.turboGain.gain.setValueAtTime(0.0001, now);
 
         this.engOsc1.connect(this.engFilter);
         this.engOsc2.connect(this.engFilter);
@@ -1306,14 +1329,32 @@
         this.engSubOsc.connect(this.subGain);
         this.subGain.connect(this.ctx.destination);
 
-        this.turboOsc.connect(this.turboGain);
-        this.turboGain.connect(this.ctx.destination);
-
         this.engOsc1.start(now);
         this.engOsc2.start(now);
         this.engSubOsc.start(now);
-        this.turboOsc.start(now);
 
+        // 부드러운 중저음 도로 주행 & 배기 공기 흐름음 (브라운 노이즈 + 190Hz 로우패스)
+        const rBuf = this.brownNoiseBuffer || this.noiseBuffer;
+        if (rBuf) {
+          this.roadNoiseNode = this.ctx.createBufferSource();
+          this.roadNoiseNode.buffer = rBuf;
+          this.roadNoiseNode.loop = true;
+
+          this.roadFilter = this.ctx.createBiquadFilter();
+          this.roadFilter.type = 'lowpass';
+          this.roadFilter.frequency.setValueAtTime(180, now);
+          this.roadFilter.Q.setValueAtTime(0.8, now);
+
+          this.roadGain = this.ctx.createGain();
+          this.roadGain.gain.setValueAtTime(0.0001, now);
+
+          this.roadNoiseNode.connect(this.roadFilter);
+          this.roadFilter.connect(this.roadGain);
+          this.roadGain.connect(this.ctx.destination);
+          this.roadNoiseNode.start(now);
+        }
+
+        // 드리프트 시 귀가 아프지 않은 묵직한 타이어 노면 마찰음
         if (this.noiseBuffer) {
           this.skidNode = this.ctx.createBufferSource();
           this.skidNode.buffer = this.noiseBuffer;
@@ -1321,8 +1362,8 @@
 
           this.skidFilter = this.ctx.createBiquadFilter();
           this.skidFilter.type = 'bandpass';
-          this.skidFilter.frequency.setValueAtTime(1350, now);
-          this.skidFilter.Q.setValueAtTime(6.0, now);
+          this.skidFilter.frequency.setValueAtTime(560, now);
+          this.skidFilter.Q.setValueAtTime(2.2, now);
 
           this.skidGain = this.ctx.createGain();
           this.skidGain.gain.setValueAtTime(0.0001, now);
@@ -1341,10 +1382,10 @@
       if (!this.engineRunning || !this.ctx) return;
       if (this.muted || this.appPaused || state.mode !== 'racing') {
         const t = this.ctx.currentTime;
-        this.engGain.gain.setTargetAtTime(0.0001, t, 0.04);
-        if (this.subGain) this.subGain.gain.setTargetAtTime(0.0001, t, 0.04);
-        if (this.turboGain) this.turboGain.gain.setTargetAtTime(0.0001, t, 0.04);
-        if (this.skidGain) this.skidGain.gain.setTargetAtTime(0.0001, t, 0.04);
+        this.engGain.gain.setTargetAtTime(0.0001, t, 0.05);
+        if (this.subGain) this.subGain.gain.setTargetAtTime(0.0001, t, 0.05);
+        if (this.roadGain) this.roadGain.gain.setTargetAtTime(0.0001, t, 0.05);
+        if (this.skidGain) this.skidGain.gain.setTargetAtTime(0.0001, t, 0.05);
         return;
       }
 
@@ -1357,7 +1398,7 @@
 
       if (newGear !== this.currentGear) {
         if (newGear > this.currentGear) {
-          this.gearShiftCooldown = 0.14;
+          this.gearShiftCooldown = 0.16;
         }
         this.currentGear = newGear;
       }
@@ -1366,39 +1407,42 @@
       const gearRanges = [0, 56, 112, 165, 215, 340];
       const gMin = gearRanges[this.currentGear - 1];
       const gMax = gearRanges[this.currentGear];
-      const gearRpm = Math.max(0.15, Math.min(1.15, (speed - gMin) / Math.max(20, gMax - gMin)));
+      const gearRpm = Math.max(0.12, Math.min(1.05, (speed - gMin) / Math.max(25, gMax - gMin)));
+      const speedNorm = Math.min(1.3, speed / Math.max(120, maxSpeed));
 
-      const shiftDip = this.gearShiftCooldown > 0 ? 0.68 : 1.0;
-      const baseFreq = (42 + gearRpm * 76 + (speed / maxSpeed) * 38) * shiftDip * (isBoosting ? 1.18 : 1.0);
+      // 경박한 음정 뜀(shiftDip 급락)을 없애고 고급 세단/스포츠카처럼 부드럽고 중후하게 이어지는 저음 RPM 곡선
+      const shiftDip = this.gearShiftCooldown > 0 ? 0.91 : 1.0;
+      const baseFreq = (36 + speedNorm * 42 + gearRpm * 24) * shiftDip * (isBoosting ? 1.12 : 1.0);
 
-      this.engOsc1.frequency.setTargetAtTime(baseFreq, now, 0.03);
-      this.engOsc2.frequency.setTargetAtTime(baseFreq * 0.5, now, 0.03);
+      this.engOsc1.frequency.setTargetAtTime(baseFreq, now, 0.10);
+      this.engOsc2.frequency.setTargetAtTime(baseFreq * 1.498, now, 0.10);
       if (this.engSubOsc) {
-        this.engSubOsc.frequency.setTargetAtTime(Math.max(28, baseFreq * 0.5), now, 0.03);
+        this.engSubOsc.frequency.setTargetAtTime(Math.max(26, baseFreq * 0.5), now, 0.10);
       }
 
-      const filterFreq = isBoosting ? 780 : (310 + gearRpm * 460);
-      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.04);
+      // 로우패스 컷오프를 145Hz~290Hz 대역으로 낮춰 가벼운 쇳소리를 완전히 걸러내고 중후한 배기음만 통과
+      const filterFreq = isBoosting ? 295 : (145 + speedNorm * 95 + gearRpm * 35);
+      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.10);
 
-      const targetVol = speed < 5 ? 0.035 : (isBoosting ? 0.145 : 0.095);
-      this.engGain.gain.setTargetAtTime(targetVol, now, 0.04);
+      const targetVol = speed < 5 ? 0.03 : (isBoosting ? 0.115 : 0.078);
+      this.engGain.gain.setTargetAtTime(targetVol, now, 0.08);
       if (this.subGain) {
-        // 부스터 시 묵직한 서브베이스 울림 대폭 강화
-        this.subGain.gain.setTargetAtTime(isBoosting ? 0.24 : 0.09, now, 0.04);
+        this.subGain.gain.setTargetAtTime(isBoosting ? 0.22 : (0.095 + speedNorm * 0.045), now, 0.08);
       }
 
-      if (this.turboOsc && this.turboGain) {
-        const turboFreq = 260 + (speed / maxSpeed) * 320 + (isBoosting ? 180 : 0);
-        this.turboOsc.frequency.setTargetAtTime(turboFreq, now, 0.04);
-        this.turboGain.gain.setTargetAtTime(isBoosting ? 0.065 : 0.006, now, 0.05);
+      if (this.roadGain && this.roadFilter) {
+        const roadCutoff = 140 + speedNorm * 110 + (isBoosting ? 75 : 0);
+        const roadVol = speed < 5 ? 0.01 : (isBoosting ? 0.14 : 0.055 + speedNorm * 0.035);
+        this.roadFilter.frequency.setTargetAtTime(roadCutoff, now, 0.10);
+        this.roadGain.gain.setTargetAtTime(roadVol, now, 0.08);
       }
 
       if (this.skidGain && this.skidFilter) {
-        const skidding = (isDrifting || steerIntensity > 0.72) && speed > 60 && state.playerY <= 2;
-        const skidVol = skidding ? (isDrifting ? 0.14 : 0.06) : 0.0001;
-        const skidPitch = 1180 + Math.sin(now * 24) * 160 + steerIntensity * 280;
-        this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.03);
-        this.skidGain.gain.setTargetAtTime(skidVol, now, 0.03);
+        const skidding = (isDrifting || steerIntensity > 0.78) && speed > 65 && state.playerY <= 2;
+        const skidVol = skidding ? (isDrifting ? 0.068 : 0.032) : 0.0001;
+        const skidPitch = 520 + Math.sin(now * 16) * 45 + steerIntensity * 110;
+        this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.05);
+        this.skidGain.gain.setTargetAtTime(skidVol, now, 0.05);
       }
     }
 
@@ -1407,7 +1451,7 @@
         if (this.engOsc1) { this.engOsc1.stop(); this.engOsc1.disconnect(); this.engOsc1 = null; }
         if (this.engOsc2) { this.engOsc2.stop(); this.engOsc2.disconnect(); this.engOsc2 = null; }
         if (this.engSubOsc) { this.engSubOsc.stop(); this.engSubOsc.disconnect(); this.engSubOsc = null; }
-        if (this.turboOsc) { this.turboOsc.stop(); this.turboOsc.disconnect(); this.turboOsc = null; }
+        if (this.roadNoiseNode) { this.roadNoiseNode.stop(); this.roadNoiseNode.disconnect(); this.roadNoiseNode = null; }
         if (this.skidNode) { this.skidNode.stop(); this.skidNode.disconnect(); this.skidNode = null; }
       } catch (_) {}
       this.engineRunning = false;
@@ -1673,19 +1717,8 @@
     startBGM() {
       this.stopBGM();
       if (this.appPaused || this.muted) return;
+      // 경박한 멜로디 반복음을 제거하고 중후한 리얼 자동차 V8 배기음 & 주행 풍절음에 온전히 집중
       this.startContinuousEngine();
-      // 슈퍼마리오 카트 풍의 경쾌한 서킷 리듬 + 무적 스타 시 고속 멜로디
-      const normalNotes = [261.6, 329.6, 392.0, 523.3, 392.0, 329.6, 293.7, 349.2, 440.0, 587.3, 440.0, 349.2];
-      const starNotes = [523.3, 523.3, 523.3, 440.0, 523.3, 659.3, 587.3, 587.3, 587.3, 493.9, 587.3, 784.0];
-      this.step = 0;
-      this.bgmTimer = setInterval(() => {
-        if (this.appPaused || state.mode !== 'racing' || this.muted) return;
-        const isStar = state.starTimer > 0;
-        const notes = isStar ? starNotes : normalNotes;
-        const n = notes[this.step % notes.length];
-        this.playTone(n, isStar ? 0.09 : 0.12, 'triangle', isStar ? 0.065 : 0.038);
-        this.step++;
-      }, 170);
     }
 
     stopBGM() {
@@ -1857,7 +1890,6 @@
     selectedRacer: 0,
     selectedTrack: 0,
     speedPreset: 'normal',
-    cornerAssist: true,
     autoBoost: true,
     tiltSteer: false,
 
@@ -1940,7 +1972,6 @@
   const progressFill = document.getElementById('progressFill');
   const progressKart = document.getElementById('progressKart');
   const rivalDotsContainer = document.getElementById('rivalDotsContainer');
-  const turnPrompt = document.getElementById('turnPrompt');
   const centerBanner = document.getElementById('centerBanner');
   const gearBadge = document.getElementById('gearBadge');
   const speedText = document.getElementById('speedText');
@@ -2414,20 +2445,13 @@
     });
   });
 
-  const toggleAssistBtn = document.getElementById('toggleAssistBtn');
   const toggleAutoBoostBtn = document.getElementById('toggleAutoBoostBtn');
   const toggleTiltBtn = document.getElementById('toggleTiltBtn');
   const hudSoundBtn = document.getElementById('hudSoundBtn');
   const hudSpeedBtn = document.getElementById('hudSpeedBtn');
-  const hudAssistBtn = document.getElementById('hudAssistBtn');
   const hudHomeBtn = document.getElementById('hudHomeBtn');
 
   function syncAssistButtons() {
-    toggleAssistBtn.classList.toggle('active', state.cornerAssist);
-    toggleAssistBtn.textContent = state.cornerAssist ? '⛑️ 코너 도우미 ON' : '⛑️ 코너 도우미 OFF';
-    hudAssistBtn.classList.toggle('active', state.cornerAssist);
-    hudAssistBtn.textContent = state.cornerAssist ? '⛑️ 도우미 ON' : '⛑️ 도우미 OFF';
-
     toggleAutoBoostBtn.classList.toggle('active', state.autoBoost);
     toggleAutoBoostBtn.textContent = state.autoBoost ? '🚀 자동 부스터 ON' : '🚀 자동 부스터 OFF';
 
@@ -2449,16 +2473,6 @@
     hudSoundBtn.textContent = sfx.muted ? '🔇 소리 꺼짐' : '🔊 엔진음 ON';
   });
 
-  toggleAssistBtn.addEventListener('click', () => {
-    state.cornerAssist = !state.cornerAssist;
-    syncAssistButtons();
-    sfx.playCoin();
-  });
-  hudAssistBtn.addEventListener('click', () => {
-    state.cornerAssist = !state.cornerAssist;
-    syncAssistButtons();
-    sfx.playCoin();
-  });
   toggleAutoBoostBtn.addEventListener('click', () => {
     state.autoBoost = !state.autoBoost;
     syncAssistButtons();
@@ -2770,16 +2784,8 @@
 
     const segIdx = Math.floor(state.posZ / SEG_LEN) % state.segments.length;
     const currentSeg = state.segments[segIdx];
-    const lookAheadSeg = state.segments[(segIdx + 8) % state.segments.length];
 
-    if (Math.abs(lookAheadSeg.curve) > 1.1) {
-      turnPrompt.classList.add('show');
-      turnPrompt.textContent = lookAheadSeg.curve < 0 ? '⬅️ 왼쪽 코너! 핸들 돌리기!' : '➡️ 오른쪽 코너! 핸들 돌리기!';
-    } else {
-      turnPrompt.classList.remove('show');
-    }
-
-    // 8. 차의 움직임 자유도 대폭 확장 (횡방향 관성 속도 velX + 화면 좌우 다이내믹 이동 screenXOffset)
+    // 8. 차의 움직임 자유도 대폭 확장 (도우미 개입 없이 직접 핸들 조작 + 횡방향 관성 속도 velX + 화면 좌우 다이내믹 이동)
     const driftSlide = state.driftActive ? (state.driftDir * 0.42 + state.steerInput * 1.85) : (state.steerInput * 1.75);
     const targetVelX = driftSlide;
     state.velX += (targetVelX - state.velX) * Math.min(1, dt * 8.5);
@@ -2793,13 +2799,8 @@
     if (state.bulletTimer > 0) {
       // 킬러 로켓 변신 시 도로 중앙 자동 크루징!
       state.playerX += (0 - state.playerX) * 6.5 * dt;
-    } else if (state.cornerAssist) {
-      state.playerX -= centrifugal * 0.22;
-      if (Math.abs(state.steerInput) < 0.12 && !state.driftActive) {
-        state.playerX += (0 - state.playerX) * 0.95 * dt;
-      }
     } else {
-      state.playerX -= centrifugal * 0.72;
+      state.playerX -= centrifugal * 0.48;
     }
     // 도로 폭과 갓길까지 훨씬 자유롭게 이동 가능 (-1.18 ~ +1.18)
     state.playerX = Math.max(-1.18, Math.min(1.18, state.playerX));
@@ -3653,43 +3654,108 @@
     c.restore();
   }
 
+  // 3D 원통형 입체 타이어(트레드 패턴 + 측면 입체 림 + 휠 스포크) 렌더링 헬퍼
+  function draw3DTire(c, tx, ty, w, h, yawShift, steerAngle, timeMs) {
+    c.save();
+    c.translate(tx, ty);
+    if (steerAngle) c.rotate(steerAngle);
+
+    // 1) 타이어 바닥 접지 그림자
+    c.fillStyle = 'rgba(0,0,0,0.35)';
+    c.beginPath();
+    c.ellipse(0, h * 0.48, w * 0.62, h * 0.18, 0, 0, Math.PI * 2);
+    c.fill();
+
+    // 2) 3D 원통형 고무 트레드 본체 (그라데이션으로 둥근 입체감 부여)
+    const tireGrad = c.createLinearGradient(0, -h * 0.5, 0, h * 0.5);
+    tireGrad.addColorStop(0, '#455a64');
+    tireGrad.addColorStop(0.22, '#263238');
+    tireGrad.addColorStop(0.75, '#11171a');
+    tireGrad.addColorStop(1, '#070a0c');
+    c.fillStyle = tireGrad;
+    c.strokeStyle = '#11171a';
+    c.lineWidth = 2;
+    c.beginPath();
+    c.roundRect(-w * 0.5, -h * 0.5, w, h, w * 0.28);
+    c.fill();
+    c.stroke();
+
+    // 3) 회전하는 타이어 트레드 홈 (달리는 입체감)
+    c.strokeStyle = 'rgba(255,255,255,0.12)';
+    c.lineWidth = 2;
+    const grooveOffset = ((timeMs || 0) * 0.04) % 9;
+    for (let gy = -h * 0.35 + grooveOffset; gy < h * 0.38; gy += 9) {
+      c.beginPath();
+      c.moveTo(-w * 0.38, gy);
+      c.lineTo(w * 0.38, gy);
+      c.stroke();
+    }
+
+    // 4) 조향 각도에 따라 보이는 바퀴 측면 알로이 휠 림 (3D Sidewall)
+    const rimSideX = Math.max(-w * 0.34, Math.min(w * 0.34, yawShift * 0.42));
+    c.fillStyle = '#cfd8dc';
+    c.strokeStyle = '#78909c';
+    c.lineWidth = 1.5;
+    c.beginPath();
+    c.ellipse(rimSideX, 0, w * 0.22, h * 0.32, 0, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    c.fillStyle = '#ffca28';
+    c.beginPath();
+    c.arc(rimSideX, 0, w * 0.09, 0, Math.PI * 2);
+    c.fill();
+
+    c.restore();
+  }
+
   function drawKartCharacter(c, x, y, scale, racer, opts = {}) {
     c.save();
     c.translate(x, y);
     c.scale(scale, scale);
 
-    // 바닥 그림자 (점프 시에는 지면에 남아 입체감을 줌)
-    const shadowY = 12 + (opts.groundYOffset || 0) / Math.max(0.5, scale);
-    c.fillStyle = 'rgba(0, 0, 0, 0.38)';
+    // 1. 다층 입체 바닥 그림자 (점프 시에는 지면에 남아 높이감을 명확히 표현)
+    const shadowY = 14 + (opts.groundYOffset || 0) / Math.max(0.5, scale);
+    c.fillStyle = 'rgba(15, 23, 42, 0.32)';
     c.beginPath();
-    c.ellipse(0, shadowY, 68, 18, 0, 0, Math.PI * 2);
+    c.ellipse(0, shadowY, 74, 21, 0, 0, Math.PI * 2);
+    c.fill();
+    c.fillStyle = 'rgba(15, 23, 42, 0.22)';
+    c.beginPath();
+    c.ellipse(0, shadowY, 54, 14, 0, 0, Math.PI * 2);
     c.fill();
 
     const steer = opts.steer || 0;
     const spinAngle = opts.spinning ? Math.sin((opts.timeMs || 0) * 0.035) * 1.4 : 0;
     const trickAngle = opts.trickRot || 0;
-    const tilt = steer * 0.22 + (opts.drifting ? Math.sign(steer || 1) * 0.24 : 0) + spinAngle + trickAngle;
+    // 3D Yaw 시차(Parallax): 핸들을 꺾거나 드리프트할 때 앞코는 회전 방향으로, 후미는 반대 방향으로 입체 이동!
+    const yaw = steer * 15 + (opts.drifting ? Math.sign(steer || 1) * 9 : 0);
+    const tilt = steer * 0.16 + (opts.drifting ? Math.sign(steer || 1) * 0.18 : 0) + spinAngle + trickAngle;
     c.rotate(tilt);
 
-    // 킬러 로켓(Bullet Bill) 변신 모드일 때는 거대 검은 로켓으로 렌더링!
+    // 킬러 로켓(Bullet Bill) 변신 모드일 때는 3D 원통형 광택 거대 로켓으로 렌더링!
     if (opts.bullet) {
-      c.fillStyle = '#212121';
+      const rGrad = c.createRadialGradient(-16, -42, 8, 0, -30, 62);
+      rGrad.addColorStop(0, '#616161');
+      rGrad.addColorStop(0.45, '#212121');
+      rGrad.addColorStop(1, '#000000');
+      c.fillStyle = rGrad;
       c.strokeStyle = '#ffea00';
       c.lineWidth = 4;
       c.beginPath();
-      c.roundRect(-46, -68, 92, 74, 36);
+      c.roundRect(-48, -72, 96, 78, 38);
       c.fill();
       c.stroke();
 
       // 로켓 눈과 날개
       c.fillStyle = '#ffffff';
       c.beginPath();
-      c.arc(-20, -38, 11, 0, Math.PI * 2);
-      c.arc(20, -38, 11, 0, Math.PI * 2);
+      c.arc(-20 + yaw * 0.4, -38, 11, 0, Math.PI * 2);
+      c.arc(20 + yaw * 0.4, -38, 11, 0, Math.PI * 2);
       c.fill();
 
       // 거대 로켓 제트 불꽃
-      const fLen = 58 + Math.sin((opts.timeMs || 0) * 0.08) * 16;
+      const fLen = 62 + Math.sin((opts.timeMs || 0) * 0.08) * 16;
       const fg = c.createLinearGradient(0, 6, 0, fLen);
       fg.addColorStop(0, '#ffffff');
       fg.addColorStop(0.35, '#ffea00');
@@ -3697,8 +3763,8 @@
       fg.addColorStop(1, 'rgba(255,23,68,0)');
       c.fillStyle = fg;
       c.beginPath();
-      c.moveTo(-32, 6);
-      c.lineTo(32, 6);
+      c.moveTo(-34, 6);
+      c.lineTo(34, 6);
       c.lineTo(0, fLen);
       c.closePath();
       c.fill();
@@ -3713,7 +3779,7 @@
       c.fillStyle = 'rgba(255, 234, 0, 0.28)';
       c.lineWidth = 6;
       c.beginPath();
-      c.arc(0, -30, 82, 0, Math.PI * 2);
+      c.arc(0, -30, 84, 0, Math.PI * 2);
       c.fill();
       c.stroke();
     } else if (opts.shield) {
@@ -3736,23 +3802,6 @@
       c.stroke();
     }
 
-    // 뒷바퀴 및 앞바퀴
-    c.fillStyle = '#212121';
-    c.strokeStyle = '#424242';
-    c.lineWidth = 3;
-    c.beginPath();
-    c.roundRect(-64, -22, 22, 32, 7);
-    c.roundRect(42, -22, 22, 32, 7);
-    c.fill();
-    c.stroke();
-
-    c.fillStyle = '#263238';
-    c.beginPath();
-    c.roundRect(-56 + steer * 8, -42, 16, 22, 5);
-    c.roundRect(40 + steer * 8, -42, 16, 22, 5);
-    c.fill();
-
-    // 리어 윙
     const primaryCol = opts.star
       ? RAINBOW_COLORS[Math.floor((opts.timeMs || 0) * 0.03) % RAINBOW_COLORS.length]
       : racer.primary;
@@ -3760,113 +3809,295 @@
       ? '#ffea00'
       : racer.secondary;
 
-    c.fillStyle = secondaryCol;
+    // 2. [최하단 깊이 레이어] 3D 프론트 노즈콘(앞범퍼) 및 조향 앞바퀴 (yaw 방향으로 먼저 꺾여 보임)
+    const frontX = yaw * 0.85;
+    draw3DTire(c, -48 + frontX, -32, 18, 24, yaw, steer * 0.36, opts.timeMs);
+    draw3DTire(c, 48 + frontX, -32, 18, 24, yaw, steer * 0.36, opts.timeMs);
+
+    // 앞범퍼 프론트 윙 & 노즈콘 (입체 경사면)
+    const noseGrad = c.createLinearGradient(frontX, -52, frontX, -26);
+    noseGrad.addColorStop(0, '#ffffff');
+    noseGrad.addColorStop(0.35, primaryCol);
+    noseGrad.addColorStop(1, secondaryCol);
+    c.fillStyle = noseGrad;
     c.strokeStyle = '#ffffff';
     c.lineWidth = 2.5;
     c.beginPath();
-    c.roundRect(-52, -40, 104, 12, 6);
-    c.fill();
-    c.stroke();
-
-    // 차체 바디
-    const bodyGrad = c.createLinearGradient(0, -48, 0, 12);
-    bodyGrad.addColorStop(0, primaryCol);
-    bodyGrad.addColorStop(1, secondaryCol);
-    c.fillStyle = bodyGrad;
-    c.strokeStyle = '#ffffff';
-    c.lineWidth = 3;
-    c.beginPath();
-    c.moveTo(-48, 8);
-    c.lineTo(48, 8);
-    c.lineTo(56, -18);
-    c.lineTo(36, -36);
-    c.lineTo(-36, -36);
-    c.lineTo(-56, -18);
+    c.moveTo(-34 + frontX, -28);
+    c.lineTo(-22 + frontX * 1.15, -48);
+    c.lineTo(22 + frontX * 1.15, -48);
+    c.lineTo(34 + frontX, -28);
     c.closePath();
     c.fill();
     c.stroke();
 
-    // 트윈 배기구
+    // 3. [중간 깊이 레이어] 카본 하부 섀시 언더트레이(두께감 있는 3D 베이스) & 리어 액슬 샤프트
+    const rearX = -yaw * 0.25;
     c.fillStyle = '#37474f';
-    c.strokeStyle = '#cfd8dc';
-    c.lineWidth = 2;
+    c.fillRect(-58 + rearX, -9, 116, 7);
+
+    // 하부 3D 입체 범퍼 두께 (아래쪽 어두운 단면)
+    c.fillStyle = '#102027';
     c.beginPath();
-    c.arc(-22, -2, 8, 0, Math.PI * 2);
-    c.arc(22, -2, 8, 0, Math.PI * 2);
+    c.roundRect(-52 + rearX, -4, 104, 18, 9);
+    c.fill();
+
+    // 광폭 3D 뒷바퀴 2개 (두꺼운 원통형 레이싱 슬릭 타이어)
+    draw3DTire(c, -56 + rearX, -6, 25, 36, yaw, 0, opts.timeMs);
+    draw3DTire(c, 56 + rearX, -6, 25, 36, yaw, 0, opts.timeMs);
+
+    // 4. 좌·우 3D 입체 사이드 포드(Side Pontoons - 코너링 시 바깥쪽 포드가 입체적으로 더 넓게 보임)
+    const leftPodW = 24 - yaw * 0.32;
+    const rightPodW = 24 + yaw * 0.32;
+    const podGradL = c.createLinearGradient(-48, -32, -20, 6);
+    podGradL.addColorStop(0, '#ffffff');
+    podGradL.addColorStop(0.25, primaryCol);
+    podGradL.addColorStop(1, secondaryCol);
+
+    c.fillStyle = podGradL;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 2.5;
+    // 왼쪽 3D 사이드 포드
+    c.beginPath();
+    c.roundRect(-47 + yaw * 0.2, -28, Math.max(14, leftPodW), 32, 11);
+    c.fill();
+    c.stroke();
+    // 오른쪽 3D 사이드 포드
+    c.beginPath();
+    c.roundRect(47 - Math.max(14, rightPodW) + yaw * 0.2, -28, Math.max(14, rightPodW), 32, 11);
     c.fill();
     c.stroke();
 
-    // 슈퍼 부스터 제트 불꽃 vs 마리오 카트 3단 드리프트 스파크(파란불 -> 주황불 -> 보라불)
+    // 사이드 에어 인테이크 (입체 공기 흡입구 구멍)
+    c.fillStyle = '#1c2632';
+    c.beginPath();
+    c.roundRect(-42 + yaw * 0.25, -24, 9, 8, 3);
+    c.roundRect(33 + yaw * 0.25, -24, 9, 8, 3);
+    c.fill();
+
+    // 5. 운전석 버킷 시트 & 핸들 컬럼 & 드라이버 양손 (3D 콕핏 디테일)
+    c.fillStyle = '#1e293b';
+    c.strokeStyle = '#475569';
+    c.lineWidth = 2;
+    c.beginPath();
+    c.roundRect(-22 + yaw * 0.35, -38, 44, 24, 10);
+    c.fill();
+    c.stroke();
+
+    // 카트 앞쪽 실제 조향 핸들 & 드라이버의 귀여운 흰색 장갑 손
+    const swX = yaw * 0.65;
+    c.strokeStyle = '#263238';
+    c.lineWidth = 4;
+    c.beginPath();
+    c.arc(swX, -36, 11, Math.PI * 0.9, Math.PI * 2.1);
+    c.stroke();
+    c.fillStyle = '#ffffff';
+    c.beginPath();
+    c.arc(swX - 10, -35 - steer * 4, 4.5, 0, Math.PI * 2);
+    c.arc(swX + 10, -35 + steer * 4, 4.5, 0, Math.PI * 2);
+    c.fill();
+
+    // 6. 중앙 3D 입체 엔진 카울 & 리어 바디 쉘 (볼륨감 있는 상하/좌우 3D 쉐이딩)
+    const cowlGrad = c.createRadialGradient(-10 + rearX, -22, 4, rearX, -8, 48);
+    cowlGrad.addColorStop(0, '#ffffff');
+    cowlGrad.addColorStop(0.22, primaryCol);
+    cowlGrad.addColorStop(0.78, secondaryCol);
+    cowlGrad.addColorStop(1, '#1e293b');
+    c.fillStyle = cowlGrad;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 3;
+    c.beginPath();
+    c.moveTo(-42 + rearX, 9);
+    c.lineTo(42 + rearX, 9);
+    c.lineTo(35 + yaw * 0.2, -24);
+    c.lineTo(-35 + yaw * 0.2, -24);
+    c.closePath();
+    c.fill();
+    c.stroke();
+
+    // 차체 상단 하이라이트 곡면 유리광 (3D 볼륨감)
+    c.fillStyle = 'rgba(255, 255, 255, 0.38)';
+    c.beginPath();
+    c.ellipse(rearX * 0.5, -16, 24, 5, 0, 0, Math.PI * 2);
+    c.fill();
+
+    // 7. 3D 입체 리어 스포일러 윙 (지지대 파일런 + 상판 + 측면 엔드플레이트)
+    const wingX = rearX * 1.1;
+    // 스포일러 지지대 기둥 2개
+    c.fillStyle = '#263238';
+    c.fillRect(-24 + wingX, -38, 6, 16);
+    c.fillRect(18 + wingX, -38, 6, 16);
+
+    // 3D 스포일러 날개 본체 (두께 단면 + 상판 그라데이션)
+    c.fillStyle = '#0f172a';
+    c.beginPath();
+    c.roundRect(-50 + wingX, -41, 100, 11, 5);
+    c.fill();
+
+    const wingGrad = c.createLinearGradient(-50 + wingX, -45, 50 + wingX, -34);
+    wingGrad.addColorStop(0, secondaryCol);
+    wingGrad.addColorStop(0.5, '#ffffff');
+    wingGrad.addColorStop(1, primaryCol);
+    c.fillStyle = wingGrad;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 2.2;
+    c.beginPath();
+    c.roundRect(-50 + wingX, -44, 100, 10, 5);
+    c.fill();
+    c.stroke();
+
+    // 스포일러 양끝 3D 엔드플레이트 (날개 옆면 판)
+    c.fillStyle = primaryCol;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 1.8;
+    c.beginPath();
+    c.roundRect(-53 + wingX, -47, 7, 16, 3);
+    c.roundRect(46 + wingX, -47, 7, 16, 3);
+    c.fill();
+    c.stroke();
+
+    // 8. 3D 원통형 크롬 트윈 배기구 (머플러 파이프 외벽 + 깊은 내부 구멍)
+    [-22, 22].forEach(ox => {
+      const mx = ox + rearX;
+      // 파이프 원통 외벽
+      const pipeGrad = c.createLinearGradient(mx - 9, -8, mx + 9, 6);
+      pipeGrad.addColorStop(0, '#eceff1');
+      pipeGrad.addColorStop(0.5, '#78909c');
+      pipeGrad.addColorStop(1, '#263238');
+      c.fillStyle = pipeGrad;
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 2;
+      c.beginPath();
+      c.arc(mx, 0, 9.5, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+
+      // 배기구 안쪽 깊은 구멍 & 열기 링
+      c.fillStyle = (opts.boosting || opts.star) ? '#00e5ff' : '#11171a';
+      c.beginPath();
+      c.arc(mx, 0, 5.5, 0, Math.PI * 2);
+      c.fill();
+    });
+
+    // 9. 슈퍼 부스터 3D 다중 코어 제트 불꽃 vs 마리오 카트 3단 드리프트 스파크
     if (opts.boosting || opts.star) {
-      const flameLen = 34 + Math.sin((opts.timeMs || 0) * 0.06) * 12;
-      [-22, 22].forEach(mx => {
-        const fg = c.createLinearGradient(mx, -2, mx, flameLen);
+      const flameLen = 38 + Math.sin((opts.timeMs || 0) * 0.06) * 13;
+      [-22, 22].forEach(ox => {
+        const mx = ox + rearX;
+        const fg = c.createLinearGradient(mx, 0, mx, flameLen);
         fg.addColorStop(0, '#ffffff');
-        fg.addColorStop(0.35, opts.star ? '#ffea00' : '#00e5ff');
-        fg.addColorStop(0.75, '#ff1744');
+        fg.addColorStop(0.32, opts.star ? '#ffea00' : '#00e5ff');
+        fg.addColorStop(0.72, '#ff1744');
         fg.addColorStop(1, 'rgba(255, 23, 68, 0)');
         c.fillStyle = fg;
         c.beginPath();
-        c.moveTo(mx - 12, -2);
-        c.lineTo(mx + 12, -2);
-        c.lineTo(mx, flameLen);
+        c.moveTo(mx - 12, 0);
+        c.lineTo(mx + 12, 0);
+        c.lineTo(mx - yaw * 0.3, flameLen);
         c.closePath();
         c.fill();
       });
     } else if (opts.drifting) {
       const stageCol = opts.driftStage === 3 ? '#e040fb' : (opts.driftStage === 2 ? '#ff9100' : '#00e5ff');
-      const sparkR = 9 + (opts.driftStage || 1) * 3.5;
-      c.fillStyle = stageCol;
-      c.beginPath();
-      c.arc(-50, 10, sparkR, 0, Math.PI * 2);
-      c.arc(50, 10, sparkR, 0, Math.PI * 2);
-      c.fill();
+      const sparkR = 10 + (opts.driftStage || 1) * 4;
+      [-52, 52].forEach(sx => {
+        c.fillStyle = stageCol;
+        c.beginPath();
+        c.arc(sx + rearX, 11, sparkR, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.arc(sx + rearX, 11, sparkR * 0.45, 0, Math.PI * 2);
+        c.fill();
+      });
     }
 
+    // 10. 후면 입체 레이싱 넘버 엠블럼 캡슐
     c.fillStyle = '#ffffff';
+    c.strokeStyle = primaryCol;
+    c.lineWidth = 2.5;
     c.beginPath();
-    c.arc(0, -14, 12, 0, Math.PI * 2);
+    c.arc(rearX, -9, 12.5, 0, Math.PI * 2);
     c.fill();
-    c.fillStyle = '#111';
+    c.stroke();
+    c.fillStyle = '#1e293b';
     c.font = '900 15px sans-serif';
     c.textAlign = 'center';
     c.textBaseline = 'middle';
-    c.fillText(racer.number, 0, -13);
+    c.fillText(racer.number, rearX, -8);
 
+    // 11. [상단 깊이 레이어] 3D 구체 쉐이딩 캐릭터 헬멧 & 입체 귀/리본/공룡뿔 & 고글
     c.save();
-    c.translate(steer * 10, -54);
+    c.translate(yaw * 0.55, -54);
     c.rotate(steer * 0.16);
 
+    // 캐릭터 어깨/레이싱 수트 입체 토르소
+    const suitGrad = c.createLinearGradient(0, -2, 0, 18);
+    suitGrad.addColorStop(0, secondaryCol);
+    suitGrad.addColorStop(1, primaryCol);
+    c.fillStyle = suitGrad;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 2.5;
+    c.beginPath();
+    c.ellipse(0, 12, 22, 11, 0, Math.PI, 0);
+    c.fill();
+    c.stroke();
+
+    // 귀여운 3D 입체 귀 / 리본 / 공룡 볏
     if (racer.earType === 'bear') {
-      c.fillStyle = racer.helmet;
-      c.strokeStyle = '#fff';
-      c.lineWidth = 2.5;
-      c.beginPath();
-      c.arc(-22, -20, 11, 0, Math.PI * 2);
-      c.arc(22, -20, 11, 0, Math.PI * 2);
-      c.fill();
-      c.stroke();
+      [-21, 21].forEach(ex => {
+        c.fillStyle = racer.helmet;
+        c.strokeStyle = '#ffffff';
+        c.lineWidth = 2.5;
+        c.beginPath();
+        c.arc(ex, -21, 11.5, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+        c.fillStyle = '#fff59d';
+        c.beginPath();
+        c.arc(ex, -21, 5.5, 0, Math.PI * 2);
+        c.fill();
+      });
     } else if (racer.earType === 'ribbon') {
       c.fillStyle = '#ffea00';
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 2.2;
       c.beginPath();
       c.moveTo(0, -28);
-      c.lineTo(-18, -38);
-      c.lineTo(-14, -20);
-      c.lineTo(18, -38);
-      c.lineTo(14, -20);
+      c.lineTo(-20, -40);
+      c.lineTo(-15, -20);
+      c.lineTo(20, -40);
+      c.lineTo(15, -20);
       c.closePath();
+      c.fill();
+      c.stroke();
+      c.fillStyle = '#ff4081';
+      c.beginPath();
+      c.arc(0, -29, 5.5, 0, Math.PI * 2);
       c.fill();
     } else if (racer.earType === 'dino') {
       c.fillStyle = '#ffea00';
-      c.beginPath();
-      c.moveTo(-8, -28);
-      c.lineTo(0, -42);
-      c.lineTo(8, -28);
-      c.closePath();
-      c.fill();
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 2;
+      [-9, 0, 9].forEach((dx, idx) => {
+        const h = idx === 1 ? -44 : -37;
+        c.beginPath();
+        c.moveTo(dx - 6, -27);
+        c.lineTo(dx, h);
+        c.lineTo(dx + 6, -27);
+        c.closePath();
+        c.fill();
+        c.stroke();
+      });
     }
 
-    c.fillStyle = primaryCol;
+    // 3D 구체 광택 헬멧 (RadialGradient로 장난감 피규어 같은 둥근 입체 볼륨감 구현!)
+    const helmGrad = c.createRadialGradient(-10, -15, 4, 0, -4, 30);
+    helmGrad.addColorStop(0, '#ffffff');
+    helmGrad.addColorStop(0.22, primaryCol);
+    helmGrad.addColorStop(0.82, racer.helmet);
+    helmGrad.addColorStop(1, '#0f172a');
+    c.fillStyle = helmGrad;
     c.strokeStyle = '#ffffff';
     c.lineWidth = 3;
     c.beginPath();
@@ -3874,13 +4105,27 @@
     c.fill();
     c.stroke();
 
+    // 헬멧 상단 유리알 하이라이트 반사광
+    c.fillStyle = 'rgba(255, 255, 255, 0.55)';
+    c.beginPath();
+    c.ellipse(-9, -18, 9, 4.5, -0.35, 0, Math.PI * 2);
+    c.fill();
+
+    // 핸들 조향 방향(yaw)으로 시선이 돌아가는 3D 입체 레이싱 고글/바이저
+    const visorShift = steer * 6;
     c.fillStyle = racer.visor;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = 2;
+    c.lineWidth = 2.2;
     c.beginPath();
-    c.roundRect(-22, -22, 44, 14, 7);
+    c.roundRect(-21 + visorShift, -22, 42, 13, 6.5);
     c.fill();
     c.stroke();
+
+    // 고글 반사 하이라이트
+    c.fillStyle = 'rgba(255,255,255,0.65)';
+    c.beginPath();
+    c.roundRect(-16 + visorShift, -20, 14, 4, 2);
+    c.fill();
 
     // 스핀 중일 때 머리 위 별 빙글빙글 표시
     if (opts.spinning) {
@@ -3891,18 +4136,18 @@
     }
 
     if (opts.label && !opts.isPlayer) {
-      c.fillStyle = 'rgba(13, 27, 42, 0.85)';
+      c.fillStyle = 'rgba(255, 255, 255, 0.94)';
       c.strokeStyle = racer.primary;
-      c.lineWidth = 2.5;
+      c.lineWidth = 3;
       c.beginPath();
-      c.roundRect(-40, -66, 80, 22, 10);
+      c.roundRect(-42, -68, 84, 23, 12);
       c.fill();
       c.stroke();
-      c.fillStyle = '#ffffff';
+      c.fillStyle = '#1e293b';
       c.font = '900 13px sans-serif';
       c.textAlign = 'center';
       c.textBaseline = 'middle';
-      c.fillText(opts.label, 0, -55);
+      c.fillText(opts.label, 0, -56);
     }
 
     c.restore();
@@ -3914,19 +4159,24 @@
     const H = previewCanvas.height;
     pctx.clearRect(0, 0, W, H);
 
-    pctx.fillStyle = 'rgba(0, 229, 255, 0.22)';
-    pctx.strokeStyle = '#00e5ff';
-    pctx.lineWidth = 3;
+    // 귀여운 파스텔 3D 회전 쇼케이스 원판(턴테이블)
+    const padGrad = pctx.createRadialGradient(W * 0.5, H * 0.77, 12, W * 0.5, H * 0.78, 102);
+    padGrad.addColorStop(0, '#ffffff');
+    padGrad.addColorStop(0.55, '#80d8ff');
+    padGrad.addColorStop(1, '#29b6f6');
+    pctx.fillStyle = padGrad;
+    pctx.strokeStyle = '#ffffff';
+    pctx.lineWidth = 4;
     pctx.beginPath();
-    pctx.ellipse(W * 0.5, H * 0.78, 95, 24, 0, 0, Math.PI * 2);
+    pctx.ellipse(W * 0.5, H * 0.78, 96, 24, 0, 0, Math.PI * 2);
     pctx.fill();
     pctx.stroke();
 
     const racer = RACERS[state.selectedRacer];
-    const hoverY = Math.sin(timeMs * 0.005) * 5;
-    const demoSteer = Math.sin(timeMs * 0.003) * 0.45;
+    const hoverY = Math.sin(timeMs * 0.005) * 4;
+    const demoSteer = Math.sin(timeMs * 0.0028) * 0.65;
 
-    drawKartCharacter(pctx, W * 0.5, H * 0.70 + hoverY, 1.18, racer, {
+    drawKartCharacter(pctx, W * 0.5, H * 0.69 + hoverY, 1.18, racer, {
       steer: demoSteer,
       boosting: true,
       drifting: false,
@@ -3936,9 +4186,12 @@
     });
 
     pctx.fillStyle = '#ffffff';
-    pctx.font = '900 18px "Apple SD Gothic Neo", sans-serif';
+    pctx.strokeStyle = '#ec407a';
+    pctx.lineWidth = 5;
+    pctx.font = '900 17px "Apple SD Gothic Neo", sans-serif';
     pctx.textAlign = 'center';
-    pctx.fillText(`${racer.name} · ${racer.kartName}`, W * 0.5, 26);
+    pctx.strokeText(`✨ ${racer.name} · ${racer.kartName} ✨`, W * 0.5, 24);
+    pctx.fillText(`✨ ${racer.name} · ${racer.kartName} ✨`, W * 0.5, 24);
   }
 
   let lastTime = performance.now();

@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.2.0.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.3.0.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,20 +15,19 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.2.0.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.3.0.apk"
     notes = (
-        "• [신규] 🍄 슈퍼마리오 카트 & 카트라이더 러쉬+ 하이브리드 대개편 (마리오 서킷·레인보우 우주 로드·쿠파 용암 캐슬·요시 공룡 정글 4대 테마 트랙)\n"
-        "• [신규] 🤸 점프(Hop) & 무지개 점프대 공중 트릭 액션, 3단 드리프트 스파크(파란불→주황불→보라불 미니터보), 자유로운 와이드 서스펜션 차체 물리 적용\n"
-        "• [신규] ⭐ 슈퍼스타 무적 질주, 🍄 황금 거대버섯, 🚀 킬러 로켓 변신, 🐢 등껍질 발사, 🍌 바나나 껍질, ⚡ 번개 등 마리오 카트 슬롯 룰렛 아이템 탑재\n"
-        "• [개선] 🏎️ 60fps 연속 깊이 투영 및 뒤에서 부스터로 치고 올라와 앞뒤로 엎치락뒤치락 추월하는 독립 물리 라이벌 AI & 후방 추월 경보 미러\n"
-        "• [개선] 🔊 중저음 서브베이스(40~90Hz) + 트윈터보 디스토션이 결합된 묵직하고 두꺼운 슈퍼 부스터 사운드 & 앱 종료/백그라운드 시 사운드 즉시 차단"
+        "• [삭제] 🚫 코너 도우미 버튼 및 자동 조향 개입 완전 삭제 (100% 직관적이고 자유로운 핸들 조작)\n"
+        "• [디자인] 🧸 파스텔 장난감 캡슐 & 3D 젤리 버튼 스타일로 로비·HUD·핸들·아이템/부스터 버튼 UI가 훨씬 더 아기자기하고 귀엽게 업그레이드!\n"
+        "• [그래픽] 🏎️ 3D 다층 시차(Yaw Parallax) 입체 카트 렌더링: 조향 각도에 따라 꺾이는 앞바퀴·노즈콘, 3D 원통형 광폭 타이어&휠 림, 입체 사이드 포드, 운전석 핸들 잡은 양손, 3D 리어 스포일러 윙, 구체 광택 헬멧 적용\n"
+        "• [사운드] 🔊 경박한 고음 반복음을 완전히 제거하고, 중후하고 부드러운 저음 V8 배기음(36~110Hz) + 서브베이스 + 도로 주행 풍절음으로 고급스러운 주행 사운드 구현"
     )
 
     update_payload = {
         "appName": "키즈 카트 러쉬! (Kids Kart Rush+)",
         "packageId": "com.mj.kidskart",
-        "versionCode": 3,
-        "versionName": "1.2.0",
+        "versionCode": 4,
+        "versionName": "1.3.0",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -55,17 +54,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "키즈 카트 러쉬!",
-                "latest_version": "1.2.0",
-                "version_code": 3,
+                "latest_version": "1.3.0",
+                "version_code": 4,
                 "force_update": False,
-                "release_notes": "슈퍼마리오 카트 & 카트라이더 러쉬+ 하이브리드 대개편! 점프대 공중 트릭, 3단 드리프트 미니터보, 마리오 카트 슬롯 아이템(슈퍼스타·황금버섯·킬러로켓·등껍질·바나나), 60fps 앞뒤 추월 라이벌 AI, 중저음 서브베이스 슈퍼부스터 사운드, 백그라운드 사운드 즉시 차단 적용.",
+                "release_notes": "코너 도우미 완전 삭제, 파스텔 장난감 캡슐 & 3D 젤리 버튼 귀여운 UI 개편, 3D 다층 시차 입체 카트 그래픽 업그레이드, 경박한 고음을 제거한 중후하고 부드러운 저음 V8 배기음 적용.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.2.0 (build 3), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.3.0 (build 4), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
