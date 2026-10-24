@@ -9,14 +9,12 @@ FIREBASE_BIN=/usr/local/bin/firebase
 dot_clean -m "$PROJECT" /Volumes/M/firebase-app-update-server /Volumes/M/inanimals-corp-website 2>/dev/null || true
 
 cd "$PROJECT"
-if ! git remote get-url origin >/dev/null 2>&1; then
-  "$GH_BIN" repo create selfness-byte/KidsKartRush --public --source="$PROJECT" --remote=origin --push || {
-    git remote add origin https://github.com/selfness-byte/KidsKartRush.git 2>/dev/null || true
-    "$GH_BIN" auth setup-git || true
-    git push -u origin main
-  }
+"$GH_BIN" auth setup-git || true
+if ! "$GH_BIN" repo view selfness-byte/KidsKartRush >/dev/null 2>&1; then
+  git remote remove origin 2>/dev/null || true
+  "$GH_BIN" repo create selfness-byte/KidsKartRush --public --source="$PROJECT" --remote=origin --push
 else
-  "$GH_BIN" auth setup-git || true
+  git remote add origin https://github.com/selfness-byte/KidsKartRush.git 2>/dev/null || true
   git push -u origin main
 fi
 
