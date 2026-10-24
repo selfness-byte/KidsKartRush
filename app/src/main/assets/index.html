@@ -147,15 +147,16 @@
   }
   .racer-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 7px;
     flex: 1;
   }
   .racer-card {
-    border-radius: 20px;
-    border: 3.5px solid #e1f5fe;
+    position: relative;
+    border-radius: 18px;
+    border: 3px solid #e1f5fe;
     background: linear-gradient(180deg, #ffffff 0%, #f1f8fe 100%);
-    padding: 7px;
+    padding: 5px 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -168,24 +169,162 @@
   .racer-card.selected {
     border-color: #ff9100;
     background: linear-gradient(180deg, #fffde7 0%, #ffe082 100%);
-    box-shadow: 0 5px 0 #fb8c00, 0 0 16px rgba(255, 193, 7, 0.55);
+    box-shadow: 0 4px 0 #fb8c00, 0 0 14px rgba(255, 193, 7, 0.55);
     transform: translateY(-2px);
   }
-  .racer-emoji {
-    font-size: 30px;
-    margin-bottom: 2px;
-    filter: drop-shadow(0 3px 3px rgba(0,0,0,0.12));
+  .racer-face-wrap {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.18);
+    overflow: hidden;
+    background: #e1f5fe;
+    margin-bottom: 3px;
+  }
+  .racer-face-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .card-photo-btn {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    background: linear-gradient(180deg, #ff80ab, #ec407a);
+    color: #fff;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.22);
+    cursor: pointer;
+    z-index: 2;
   }
   .racer-name {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 900;
     color: #263238;
+    line-height: 1.1;
   }
   .racer-desc {
-    font-size: 11px;
+    font-size: 10px;
     color: #0277bd;
-    margin-top: 2px;
+    margin-top: 1px;
     font-weight: 800;
+  }
+  .photo-bar {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .photo-action-btn {
+    flex: 1;
+    border-radius: 14px;
+    border: 2.5px solid #ffffff;
+    padding: 6px 8px;
+    font-size: 12.5px;
+    font-weight: 900;
+    color: #ffffff;
+    cursor: pointer;
+    background: linear-gradient(180deg, #ff80ab, #ec407a);
+    box-shadow: 0 3px 0 #ad1457;
+    text-align: center;
+  }
+  .photo-action-btn.secondary {
+    background: linear-gradient(180deg, #4fc3f7, #0288d1);
+    box-shadow: 0 3px 0 #01579b;
+  }
+  .photo-action-btn:active {
+    transform: translateY(2px);
+  }
+
+  /* 레이서 얼굴 사진 스튜디오 모달 */
+  #photoModal {
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 42, 78, 0.76);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 16px;
+  }
+  .photo-modal-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f1f8fe 100%);
+    border: 5px solid #ff80ab;
+    border-radius: 32px;
+    padding: 18px 22px;
+    max-width: 720px;
+    width: 95%;
+    box-shadow: 0 12px 0 #c2185b, 0 20px 45px rgba(0,0,0,0.45);
+    text-align: center;
+  }
+  .photo-modal-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #ad1457;
+    margin-bottom: 4px;
+  }
+  .photo-modal-sub {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0277bd;
+    margin-bottom: 12px;
+  }
+  .photo-studio-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .photo-slot-item {
+    background: #ffffff;
+    border: 3px solid #b3e5fc;
+    border-radius: 20px;
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 0 #81d4fa;
+  }
+  .photo-slot-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 3px solid #ff80ab;
+    overflow: hidden;
+    background: #e1f5fe;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+  }
+  .photo-slot-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .photo-slot-btn {
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ff80ab, #ec407a);
+    color: #fff;
+    font-weight: 900;
+    font-size: 11.5px;
+    padding: 4px 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 0 #ad1457;
+  }
+  .photo-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
   /* 중앙 프리뷰 스테이지 */
@@ -843,7 +982,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.4.0</span>
+      <span class="lobby-badge" id="verBadge">v1.5.0</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
@@ -854,30 +993,50 @@
   </div>
 
   <div class="lobby-body">
-    <!-- 캐릭터/카트 선택 -->
+    <!-- 캐릭터/카트 & 얼굴 사진 선택 (6명 전체 레이서) -->
     <div class="panel-card">
-      <div class="panel-title">🧸 귀여운 레이서 & 입체 카트</div>
+      <div class="panel-title">📸 레이서 & 얼굴 사진 설정</div>
       <div class="racer-grid" id="racerGrid">
         <div class="racer-card selected" data-racer="0">
-          <div class="racer-emoji">🔵🏎️</div>
+          <button class="card-photo-btn" data-photo-racer="0" type="button">📷</button>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg0" alt="다오" /></div>
           <div class="racer-name">다오 블루</div>
-          <div class="racer-desc">번개 세이버 카트</div>
+          <div class="racer-desc">번개 세이버</div>
         </div>
         <div class="racer-card" data-racer="1">
-          <div class="racer-emoji">🩷🎀</div>
+          <button class="card-photo-btn" data-photo-racer="1" type="button">📷</button>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg1" alt="디지니" /></div>
           <div class="racer-name">디지니 핑크</div>
-          <div class="racer-desc">구름 솜사탕 카트</div>
+          <div class="racer-desc">구름 솜사탕</div>
         </div>
         <div class="racer-card" data-racer="2">
-          <div class="racer-emoji">🟡🐻</div>
+          <button class="card-photo-btn" data-photo-racer="2" type="button">📷</button>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg2" alt="배찌" /></div>
           <div class="racer-name">배찌 옐로우</div>
-          <div class="racer-desc">꿀단지 범퍼 카트</div>
+          <div class="racer-desc">꿀단지 범퍼</div>
         </div>
         <div class="racer-card" data-racer="3">
-          <div class="racer-emoji">🟢🦖</div>
+          <button class="card-photo-btn" data-photo-racer="3" type="button">📷</button>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg3" alt="우니" /></div>
           <div class="racer-name">우니 다이노</div>
-          <div class="racer-desc">요시 공룡 카트</div>
+          <div class="racer-desc">요시 공룡</div>
         </div>
+        <div class="racer-card" data-racer="4">
+          <button class="card-photo-btn" data-photo-racer="4" type="button">📷</button>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg4" alt="마리드" /></div>
+          <div class="racer-name">마리드 퍼플</div>
+          <div class="racer-desc">스타 슈팅</div>
+        </div>
+        <div class="racer-card" data-racer="5">
+          <button class="card-photo-btn" data-photo-racer="5" type="button">📷</button>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg5" alt="모비" /></div>
+          <div class="racer-name">모비 오렌지</div>
+          <div class="racer-desc">터보 불꽃</div>
+        </div>
+      </div>
+      <div class="photo-bar">
+        <button id="uploadMyFaceBtn" class="photo-action-btn" type="button">📸 내 얼굴 사진 올리기</button>
+        <button id="openPhotoModalBtn" class="photo-action-btn secondary" type="button">👨‍👩‍👧‍👦 다른 레이서 사진 설정</button>
       </div>
     </div>
 
@@ -1077,6 +1236,55 @@
     </div>
   </div>
 </div>
+
+<!-- ==================== 4. 레이서 얼굴 사진 스튜디오 모달 (내 캐릭터 & 다른 레이서 모두 사진 등록!) ==================== -->
+<div id="photoModal">
+  <div class="photo-modal-card">
+    <div class="photo-modal-title">📸 레이서 얼굴 사진 스튜디오</div>
+    <div class="photo-modal-sub">내 카트와 다른 레이서 카트 머리에 나올 얼굴 사진을 올려보세요! (가족·친구 사진 모두 가능!)</div>
+    <div class="photo-studio-grid">
+      <div class="photo-slot-item">
+        <div class="photo-slot-avatar"><img id="modalFaceImg0" alt="다오" /></div>
+        <div class="racer-name">다오 블루</div>
+        <button class="photo-slot-btn" data-photo-racer="0" type="button">📷 사진 선택</button>
+      </div>
+      <div class="photo-slot-item">
+        <div class="photo-slot-avatar"><img id="modalFaceImg1" alt="디지니" /></div>
+        <div class="racer-name">디지니 핑크</div>
+        <button class="photo-slot-btn" data-photo-racer="1" type="button">📷 사진 선택</button>
+      </div>
+      <div class="photo-slot-item">
+        <div class="photo-slot-avatar"><img id="modalFaceImg2" alt="배찌" /></div>
+        <div class="racer-name">배찌 옐로우</div>
+        <button class="photo-slot-btn" data-photo-racer="2" type="button">📷 사진 선택</button>
+      </div>
+      <div class="photo-slot-item">
+        <div class="photo-slot-avatar"><img id="modalFaceImg3" alt="우니" /></div>
+        <div class="racer-name">우니 다이노</div>
+        <button class="photo-slot-btn" data-photo-racer="3" type="button">📷 사진 선택</button>
+      </div>
+      <div class="photo-slot-item">
+        <div class="photo-slot-avatar"><img id="modalFaceImg4" alt="마리드" /></div>
+        <div class="racer-name">마리드 퍼플</div>
+        <button class="photo-slot-btn" data-photo-racer="4" type="button">📷 사진 선택</button>
+      </div>
+      <div class="photo-slot-item">
+        <div class="photo-slot-avatar"><img id="modalFaceImg5" alt="모비" /></div>
+        <div class="racer-name">모비 오렌지</div>
+        <button class="photo-slot-btn" data-photo-racer="5" type="button">📷 사진 선택</button>
+      </div>
+    </div>
+    <div class="photo-modal-actions">
+      <button id="multiPhotoUploadBtn" class="finish-btn" style="background:linear-gradient(180deg,#ff80ab,#ec407a);font-size:16px;padding:10px 18px;" type="button">🖼️ 여러 사진 한 번에 올리기</button>
+      <button id="copyMyPhotoAllBtn" class="finish-btn" style="background:linear-gradient(180deg,#ffd54f,#fb8c00);font-size:16px;padding:10px 18px;" type="button">✨ 내 사진으로 모두 채우기</button>
+      <button id="resetPhotosBtn" class="finish-btn" style="background:linear-gradient(180deg,#90a4ae,#546e7a);font-size:16px;padding:10px 18px;" type="button">🔄 기본 얼굴</button>
+      <button id="closePhotoModalBtn" class="finish-btn lobby" style="font-size:16px;padding:10px 22px;" type="button">✅ 완료</button>
+    </div>
+  </div>
+</div>
+
+<input id="singleFaceInput" type="file" accept="image/*" style="display:none;" />
+<input id="multiFaceInput" type="file" accept="image/*" multiple style="display:none;" />
 
 <script>
 (() => {
@@ -1979,8 +2187,9 @@
     spinTimer: 0,
 
     speed: 0,
-    maxSpeed: 215,
+    maxSpeed: 275,
     steerInput: 0,
+    smoothSteer: 0,
     wheelAngleDeg: 0,
     driftActive: false,
     driftDir: 0,
@@ -2014,6 +2223,183 @@
     confetti: [],
     floatingTexts: []
   };
+
+  // ==================== 레이서 얼굴 사진(내 얼굴 + 다른 레이서 얼굴) 관리 시스템 ====================
+  const FACE_STORAGE_KEY = 'kidskart_racer_faces_v1';
+  const defaultFaceCanvases = [];
+  const defaultFaceDataUrls = [];
+  const customFaceCanvases = [null, null, null, null, null, null];
+  const customFaceDataUrls = [null, null, null, null, null, null];
+  let photoTargetIndex = 0;
+  let photoTargetMode = 'single'; // 'single' | 'myAndEmptyRivals'
+
+  function createDefaultFaceCanvas(idx) {
+    const cnv = document.createElement('canvas');
+    cnv.width = 180;
+    cnv.height = 180;
+    const c = cnv.getContext('2d');
+    const rc = RACERS[idx] || RACERS[0];
+
+    // 배경 파스텔 원형 그라데이션
+    const bg = c.createRadialGradient(70, 55, 15, 90, 90, 90);
+    bg.addColorStop(0, '#ffffff');
+    bg.addColorStop(0.55, rc.secondary);
+    bg.addColorStop(1, rc.primary);
+    c.fillStyle = bg;
+    c.fillRect(0, 0, 180, 180);
+
+    // 귀여운 귀와 얼굴 윤곽 (따뜻한 살구빛 피부톤)
+    const skins = ['#ffe0bd', '#ffdfc4', '#f9d4b4', '#ffe4c8', '#ffd8be', '#f7cfa8'];
+    c.fillStyle = skins[idx % skins.length];
+    c.beginPath();
+    c.arc(36, 98, 16, 0, Math.PI * 2);
+    c.arc(144, 98, 16, 0, Math.PI * 2);
+    c.fill();
+
+    c.beginPath();
+    c.arc(90, 98, 56, 0, Math.PI * 2);
+    c.fill();
+
+    // 캐릭터별 개성 있는 앞머리/모자 스타일
+    const hairColors = ['#1e3a8a', '#880e4f', '#b71c1c', '#1b5e20', '#4a148c', '#e65100'];
+    c.fillStyle = hairColors[idx % hairColors.length];
+    c.beginPath();
+    c.arc(90, 82, 58, Math.PI * 1.05, Math.PI * 1.95);
+    c.quadraticCurveTo(120, 66, 90, 74);
+    c.quadraticCurveTo(60, 66, 33, 76);
+    c.closePath();
+    c.fill();
+
+    // 초롱초롱 큰 눈동자와 반짝이 하이라이트
+    [-22, 22].forEach(ox => {
+      c.fillStyle = '#1e293b';
+      c.beginPath();
+      c.ellipse(90 + ox, 98, 9.5, 11.5, 0, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = '#ffffff';
+      c.beginPath();
+      c.arc(90 + ox - 3, 94, 4, 0, Math.PI * 2);
+      c.arc(90 + ox + 3, 102, 2, 0, Math.PI * 2);
+      c.fill();
+    });
+
+    // 발그레 핑크 볼터치
+    c.fillStyle = 'rgba(255, 105, 160, 0.55)';
+    c.beginPath();
+    c.ellipse(54, 112, 12, 7.5, 0, 0, Math.PI * 2);
+    c.ellipse(126, 112, 12, 7.5, 0, 0, Math.PI * 2);
+    c.fill();
+
+    // 활짝 웃는 입
+    c.fillStyle = '#e91e63';
+    c.beginPath();
+    c.arc(90, 114, 14, 0.08 * Math.PI, 0.92 * Math.PI);
+    c.closePath();
+    c.fill();
+    c.fillStyle = '#ff80ab';
+    c.beginPath();
+    c.arc(90, 121, 7, 0, Math.PI, true);
+    c.fill();
+
+    return cnv;
+  }
+
+  function initDefaultFaces() {
+    for (let i = 0; i < RACERS.length; i++) {
+      const cnv = createDefaultFaceCanvas(i);
+      defaultFaceCanvases[i] = cnv;
+      defaultFaceDataUrls[i] = cnv.toDataURL('image/png');
+    }
+  }
+
+  function getRacerFaceCanvas(idx) {
+    return customFaceCanvases[idx] || defaultFaceCanvases[idx];
+  }
+
+  function getRacerFaceDataUrl(idx) {
+    return customFaceDataUrls[idx] || defaultFaceDataUrls[idx];
+  }
+
+  function refreshAllFaceThumbnails() {
+    for (let i = 0; i < RACERS.length; i++) {
+      const url = getRacerFaceDataUrl(i);
+      const lobbyImg = document.getElementById(`lobbyFaceImg${i}`);
+      if (lobbyImg && url) lobbyImg.src = url;
+      const modalImg = document.getElementById(`modalFaceImg${i}`);
+      if (modalImg && url) modalImg.src = url;
+    }
+  }
+
+  function saveFacesToStorage() {
+    try {
+      localStorage.setItem(FACE_STORAGE_KEY, JSON.stringify(customFaceDataUrls));
+    } catch (_e) {}
+  }
+
+  function applyDataUrlToRacer(idx, dataUrl, save = true) {
+    if (idx < 0 || idx >= RACERS.length) return;
+    if (!dataUrl) {
+      customFaceDataUrls[idx] = null;
+      customFaceCanvases[idx] = null;
+      refreshAllFaceThumbnails();
+      if (save) saveFacesToStorage();
+      return;
+    }
+    const img = new Image();
+    img.onload = () => {
+      const cnv = document.createElement('canvas');
+      cnv.width = 180;
+      cnv.height = 180;
+      const c = cnv.getContext('2d');
+      c.drawImage(img, 0, 0, 180, 180);
+      customFaceCanvases[idx] = cnv;
+      customFaceDataUrls[idx] = dataUrl;
+      refreshAllFaceThumbnails();
+      if (save) saveFacesToStorage();
+    };
+    img.src = dataUrl;
+  }
+
+  function loadFacesFromStorage() {
+    try {
+      const raw = localStorage.getItem(FACE_STORAGE_KEY);
+      if (!raw) return;
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        arr.forEach((dataUrl, idx) => {
+          if (dataUrl && typeof dataUrl === 'string') {
+            applyDataUrlToRacer(idx, dataUrl, false);
+          }
+        });
+      }
+    } catch (_e) {}
+  }
+
+  function cropImageFileToDataUrl(file, callback) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const cnv = document.createElement('canvas');
+        cnv.width = 180;
+        cnv.height = 180;
+        const c = cnv.getContext('2d');
+        const side = Math.min(img.width, img.height);
+        const sx = Math.max(0, (img.width - side) * 0.5);
+        // 인물 사진에서 얼굴이 잘 나오도록 상단~중앙 위주로 스마트 크롭
+        const sy = Math.max(0, (img.height - side) * 0.32);
+        c.drawImage(img, sx, sy, side, side, 0, 0, 180, 180);
+        callback(cnv.toDataURL('image/jpeg', 0.86));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  initDefaultFaces();
+  refreshAllFaceThumbnails();
+  loadFacesFromStorage();
 
   // ==================== DOM 요소 ====================
   const canvas = document.getElementById('gameCanvas');
@@ -2057,70 +2443,199 @@
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  // ==================== 8가지 테마별 개성 넘치는 다이나믹 코스 생성 ====================
+  // ==================== 사진 업로드 버튼 & 모달 이벤트 연결 ====================
+  const singleFaceInput = document.getElementById('singleFaceInput');
+  const multiFaceInput = document.getElementById('multiFaceInput');
+  const photoModal = document.getElementById('photoModal');
+  const uploadMyFaceBtn = document.getElementById('uploadMyFaceBtn');
+  const openPhotoModalBtn = document.getElementById('openPhotoModalBtn');
+  const closePhotoModalBtn = document.getElementById('closePhotoModalBtn');
+  const multiPhotoUploadBtn = document.getElementById('multiPhotoUploadBtn');
+  const copyMyPhotoAllBtn = document.getElementById('copyMyPhotoAllBtn');
+  const resetPhotosBtn = document.getElementById('resetPhotosBtn');
+
+  if (uploadMyFaceBtn) {
+    uploadMyFaceBtn.addEventListener('click', () => {
+      photoTargetIndex = state.selectedRacer;
+      photoTargetMode = 'myAndEmptyRivals';
+      singleFaceInput.value = '';
+      singleFaceInput.click();
+    });
+  }
+
+  document.querySelectorAll('.card-photo-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      photoTargetIndex = Number(btn.dataset.photoRacer || 0);
+      photoTargetMode = 'single';
+      singleFaceInput.value = '';
+      singleFaceInput.click();
+    });
+  });
+
+  document.querySelectorAll('.photo-slot-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      photoTargetIndex = Number(btn.dataset.slotRacer || 0);
+      photoTargetMode = 'single';
+      singleFaceInput.value = '';
+      singleFaceInput.click();
+    });
+  });
+
+  if (singleFaceInput) {
+    singleFaceInput.addEventListener('change', (e) => {
+      const files = e.target.files;
+      if (!files || !files.length) return;
+      cropImageFileToDataUrl(files[0], (dataUrl) => {
+        applyDataUrlToRacer(photoTargetIndex, dataUrl, true);
+        // 내 얼굴 사진을 올릴 때 다른 레이서에 아직 사진이 없다면 함께 채워주어 모든 레이서 머리에 얼굴 사진이 나오게 함
+        if (photoTargetMode === 'myAndEmptyRivals') {
+          for (let i = 0; i < RACERS.length; i++) {
+            if (i !== photoTargetIndex && !customFaceDataUrls[i]) {
+              applyDataUrlToRacer(i, dataUrl, true);
+            }
+          }
+        }
+        sfx.playCoin();
+        speakKR('와아! 멋진 얼굴 사진이 등록되었어요!', true);
+      });
+    });
+  }
+
+  if (multiPhotoUploadBtn && multiFaceInput) {
+    multiPhotoUploadBtn.addEventListener('click', () => {
+      multiFaceInput.value = '';
+      multiFaceInput.click();
+    });
+    multiFaceInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      files.forEach((file, idx) => {
+        if (idx < RACERS.length) {
+          cropImageFileToDataUrl(file, (dataUrl) => {
+            applyDataUrlToRacer(idx, dataUrl, true);
+            // 사진을 1~2장만 골랐더라도 나머지 슬롯에 골고루 배정해 모든 레이서에 사진이 나오도록 지원
+            if (files.length < RACERS.length) {
+              for (let r = idx + files.length; r < RACERS.length; r += files.length) {
+                applyDataUrlToRacer(r, dataUrl, true);
+              }
+            }
+          });
+        }
+      });
+      sfx.playFanfare();
+      speakKR('모든 레이서 친구들의 얼굴 사진이 설정되었어요!', true);
+    });
+  }
+
+  if (copyMyPhotoAllBtn) {
+    copyMyPhotoAllBtn.addEventListener('click', () => {
+      const myUrl = customFaceDataUrls[state.selectedRacer] || customFaceDataUrls.find(Boolean);
+      if (!myUrl) {
+        photoTargetIndex = state.selectedRacer;
+        photoTargetMode = 'myAndEmptyRivals';
+        singleFaceInput.value = '';
+        singleFaceInput.click();
+        return;
+      }
+      for (let i = 0; i < RACERS.length; i++) {
+        applyDataUrlToRacer(i, myUrl, true);
+      }
+      sfx.playCoin();
+      speakKR('모든 레이서 머리에 내 얼굴 사진을 넣었어요!', true);
+    });
+  }
+
+  if (resetPhotosBtn) {
+    resetPhotosBtn.addEventListener('click', () => {
+      for (let i = 0; i < RACERS.length; i++) {
+        customFaceDataUrls[i] = null;
+        customFaceCanvases[i] = null;
+      }
+      try { localStorage.removeItem(FACE_STORAGE_KEY); } catch (_e) {}
+      refreshAllFaceThumbnails();
+      sfx.playCoin();
+    });
+  }
+
+  if (openPhotoModalBtn && photoModal) {
+    openPhotoModalBtn.addEventListener('click', () => {
+      refreshAllFaceThumbnails();
+      photoModal.style.display = 'flex';
+      sfx.playCoin();
+    });
+  }
+  if (closePhotoModalBtn && photoModal) {
+    closePhotoModalBtn.addEventListener('click', () => {
+      photoModal.style.display = 'none';
+      sfx.playCoin();
+    });
+  }
+
+  // ==================== 8가지 테마별 개성 넘치는 다이나믹 고속 코스 생성 ====================
   const SEG_LEN = 100;
   function buildTrack(trackId) {
     const segs = [];
-    const totalSegs = 320;
+    const totalSegs = 340;
 
     for (let i = 0; i < totalSegs; i++) {
       let curve = 0;
       let y = 0;
 
       if (trackId === 0) {
-        // 0. 마리오 버섯 왕국: 부드러운 스탠다드 서킷 & 언덕
-        if (i > 24 && i < 64) curve = 1.6;
-        else if (i > 92 && i < 132) curve = -1.7;
-        else if (i > 165 && i < 210) curve = 1.9;
-        else if (i > 240 && i < 285) curve = -1.55;
-        y = Math.sin(i * 0.075) * 180 + Math.cos(i * 0.04) * 75;
+        // 0. 마리오 버섯 왕국: 시원한 고속 직선과 완만한 뱅크 코너
+        if (i > 24 && i < 66) curve = 1.25;
+        else if (i > 92 && i < 134) curve = -1.35;
+        else if (i > 165 && i < 212) curve = 1.45;
+        else if (i > 245 && i < 292) curve = -1.25;
+        y = Math.sin(i * 0.065) * 140 + Math.cos(i * 0.035) * 60;
       } else if (trackId === 1) {
-        // 1. 슈가 캔디 랜드: 통통 튀는 롤러코스터 젤리 언덕 & 연속 S자 캔디 커브
-        if (i > 18 && i < 52) curve = -1.85;
-        else if (i > 62 && i < 98) curve = 1.95;
-        else if (i > 120 && i < 162) curve = -2.05;
-        else if (i > 185 && i < 225) curve = 1.85;
-        else if (i > 248 && i < 290) curve = -1.75;
-        y = Math.sin(i * 0.14) * 240 + Math.sin(i * 0.05) * 110;
+        // 1. 슈가 캔디 랜드: 달콤한 롤러코스터 웨이브 & 리드미컬 S자 커브
+        if (i > 18 && i < 54) curve = -1.45;
+        else if (i > 64 && i < 102) curve = 1.55;
+        else if (i > 122 && i < 166) curve = -1.6;
+        else if (i > 188 && i < 230) curve = 1.45;
+        else if (i > 252 && i < 298) curve = -1.35;
+        y = Math.sin(i * 0.11) * 185 + Math.sin(i * 0.045) * 85;
       } else if (trackId === 2) {
-        // 2. 돌핀 비치 아일랜드: 시원하게 뻗은 해안선 와이드 스윕 코너 & 파도 물결 고저차
-        if (i > 28 && i < 85) curve = 1.55;
-        else if (i > 110 && i < 175) curve = -1.85;
-        else if (i > 205 && i < 275) curve = 1.75;
-        y = Math.sin(i * 0.06) * 150;
+        // 2. 돌핀 비치 아일랜드: 탁 트인 해안 고속 스윕 코너 & 파도 리듬
+        if (i > 28 && i < 88) curve = 1.2;
+        else if (i > 112 && i < 178) curve = -1.45;
+        else if (i > 208 && i < 282) curve = 1.35;
+        y = Math.sin(i * 0.055) * 120;
       } else if (trackId === 3) {
-        // 3. 펭귄 아이스 밸리: 짜릿한 설원 활강 다운힐 슬로프 & 헤어핀 코너
-        if (i > 22 && i < 68) curve = -2.1;
-        else if (i > 95 && i < 145) curve = 2.25;
-        else if (i > 175 && i < 220) curve = -1.95;
-        else if (i > 245 && i < 292) curve = 2.1;
-        y = Math.cos(i * 0.055) * 340 + Math.sin(i * 0.11) * 90;
+        // 3. 펭귄 아이스 밸리: 짜릿한 설원 롱 다운힐 활강 슬로프 & 아이스 커브
+        if (i > 22 && i < 70) curve = -1.6;
+        else if (i > 96 && i < 148) curve = 1.75;
+        else if (i > 176 && i < 224) curve = -1.55;
+        else if (i > 248 && i < 298) curve = 1.65;
+        y = Math.cos(i * 0.048) * 260 + Math.sin(i * 0.09) * 70;
       } else if (trackId === 4) {
-        // 4. 요시 공룡 정글: 연속 모글 점프 언덕 & 다이내믹 정글 와인딩
-        if (i > 25 && i < 70) curve = 2.0;
-        else if (i > 92 && i < 138) curve = -2.15;
-        else if (i > 162 && i < 212) curve = 2.1;
-        else if (i > 238 && i < 286) curve = -1.9;
-        y = Math.sin(i * 0.16) * 210 + Math.cos(i * 0.07) * 140;
+        // 4. 요시 공룡 정글: 정글 나무다리 점프 언덕 & 다이내믹 와인딩
+        if (i > 25 && i < 72) curve = 1.55;
+        else if (i > 94 && i < 142) curve = -1.65;
+        else if (i > 165 && i < 216) curve = 1.6;
+        else if (i > 242 && i < 292) curve = -1.45;
+        y = Math.sin(i * 0.13) * 165 + Math.cos(i * 0.06) * 110;
       } else if (trackId === 5) {
-        // 5. 벚꽃 스프링 가든: 리드미컬한 6연속 봄바람 S자 코너링 코스
-        curve = Math.sin(i * 0.065) * 1.95;
-        if (i < 15 || i > 298) curve = 0;
-        y = Math.sin(i * 0.08) * 175;
+        // 5. 벚꽃 스프링 가든: 부드럽게 이어지는 봄바람 S자 와인딩
+        curve = Math.sin(i * 0.058) * 1.48;
+        if (i < 16 || i > 312) curve = 0;
+        y = Math.sin(i * 0.07) * 140;
       } else if (trackId === 6) {
-        // 6. 쿠파 용암 캐슬: 다이나믹 성곽 직각 코너 & 용암 대교 고저차
-        if (i > 20 && i < 58) curve = 2.3;
-        else if (i > 82 && i < 126) curve = -2.35;
-        else if (i > 152 && i < 198) curve = 2.25;
-        else if (i > 225 && i < 278) curve = -2.2;
-        y = Math.sin(i * 0.095) * 310;
+        // 6. 쿠파 용암 캐슬: 다이나믹 성곽 코너 & 용암 대교 고저차
+        if (i > 20 && i < 60) curve = 1.75;
+        else if (i > 84 && i < 130) curve = -1.8;
+        else if (i > 155 && i < 202) curve = 1.7;
+        else if (i > 228 && i < 284) curve = -1.65;
+        y = Math.sin(i * 0.08) * 230;
       } else {
-        // 7. 레인보우 스타 로드: 우주 무중력 롤러코스터 급강하 & 고속 커브
-        if (i > 20 && i < 62) curve = -2.2;
-        else if (i > 78 && i < 125) curve = 2.3;
-        else if (i > 148 && i < 196) curve = -2.15;
-        else if (i > 220 && i < 275) curve = 2.25;
-        y = Math.sin(i * 0.105) * 350;
+        // 7. 레인보우 스타 로드: 우주 하이퍼스피드 다이나믹 뱅크 & 웨이브
+        if (i > 20 && i < 64) curve = -1.7;
+        else if (i > 80 && i < 128) curve = 1.8;
+        else if (i > 150 && i < 200) curve = -1.65;
+        else if (i > 224 && i < 284) curve = 1.75;
+        y = Math.sin(i * 0.09) * 250;
       }
 
       const seg = {
@@ -2131,14 +2646,14 @@
         scenery: []
       };
 
-      // 1) 아기자기한 3D 선물 캡슐 아이템 박스 배치
+      // 1) 아기자기한 3D 선물 캡슐 아이템 박스 (흔들리지 않게 고정 배치)
       if (i > 14 && i % 26 === 0) {
-        [-0.6, -0.2, 0.2, 0.6].forEach((ox, idx) => {
+        [-0.56, -0.18, 0.18, 0.56].forEach((ox, idx) => {
           seg.items.push({
             type: 'itemBox',
             x: ox,
             baseX: ox,
-            moving: (i % 52 === 0),
+            moving: false,
             phase: idx * 0.8,
             takenTimer: 0
           });
@@ -2150,29 +2665,29 @@
         seg.items.push({ type: 'coin', x: -0.46, takenTimer: 0 });
         seg.items.push({ type: 'coin', x: 0.46, takenTimer: 0 });
       }
-      // 3) 별빛 대시 부스터 패드 (Dash Pad)
-      else if (i > 14 && i % 20 === 10) {
-        const side = (i % 40 === 10) ? -0.36 : 0.36;
+      // 3) 별빛 대시 부스터 패드 (Dash Pad) - 속도감을 위해 더 자주 배치!
+      else if (i > 12 && i % 16 === 8) {
+        const side = (i % 32 === 8) ? -0.34 : 0.34;
         seg.items.push({ type: 'dashPad', x: side, takenTimer: 0 });
       }
-      // 4) 아기자기한 통통 버섯/토관 & 방긋 웃는 바나나 기믹
-      else if (i > 30 && i % 38 === 19) {
-        const pipeX = (i % 76 === 19) ? -0.70 : 0.70;
+      // 4) 아기자기한 초록 토관 & 바나나 기믹
+      else if (i > 30 && i % 40 === 20) {
+        const pipeX = (i % 80 === 20) ? -0.68 : 0.68;
         seg.items.push({ type: 'pipe', x: pipeX, takenTimer: 0 });
       }
-      else if (i > 24 && i % 34 === 9) {
-        const banX = Math.sin(i * 0.7) * 0.50;
+      else if (i > 24 && i % 36 === 9) {
+        const banX = Math.sin(i * 0.7) * 0.48;
         seg.items.push({ type: 'banana', x: banX, takenTimer: 0 });
       }
-      // 5) 방긋 웃는 별 코인 라인
+      // 5) 별 코인 라인
       else if (i > 8 && i % 6 === 0) {
-        const lane = Math.sin(i * 0.22 + trackId) * 0.52;
+        const lane = Math.sin(i * 0.22 + trackId) * 0.50;
         seg.items.push({ type: 'coin', x: lane, takenTimer: 0 });
       }
 
-      if (i % 4 === 0) {
-        seg.scenery.push({ side: -1, offset: -1.52 - (i % 3) * 0.24, variant: i % 3 });
-        seg.scenery.push({ side: 1, offset: 1.52 + ((i + 1) % 3) * 0.24, variant: (i + 1) % 3 });
+      if (i % 3 === 0) {
+        seg.scenery.push({ side: -1, offset: -1.48 - (i % 3) * 0.22, variant: i % 3 });
+        seg.scenery.push({ side: 1, offset: 1.48 + ((i + 1) % 3) * 0.22, variant: (i + 1) % 3 });
       }
       if (i % 50 === 0) {
         seg.arch = i === 0 ? 'start' : 'checkpoint';
@@ -2185,27 +2700,19 @@
     state.trackLength = segs.length * SEG_LEN;
   }
 
-  // ==================== 핸들(Steering Wheel) 멀티터치 조작 ====================
+  // ==================== 직관적인 핸들(Steering Wheel) 1:1 조향 컨트롤 ====================
   let wheelTouchId = null;
-  let wheelStartX = 0;
 
-  function updateSteerFromPoint(clientX, clientY, isInitial = false) {
+  function updateSteerFromPoint(clientX, _clientY) {
     const rect = wheelZone.getBoundingClientRect();
     const cx = rect.left + rect.width * 0.5;
-    const cy = rect.top + rect.height * 0.5;
     const dx = clientX - cx;
-    const dy = clientY - cy;
 
-    if (isInitial) wheelStartX = clientX;
-
-    const positional = dx / (rect.width * 0.34);
-    const slide = (clientX - wheelStartX) / (rect.width * 0.30);
-    const angleRad = Math.atan2(dx, Math.max(22, -dy + rect.height * 0.24));
-    const angular = angleRad / 1.0;
-
-    const raw = positional * 0.58 + slide * 0.27 + angular * 0.15;
-    state.steerInput = Math.max(-1, Math.min(1, raw));
-    state.wheelAngleDeg = state.steerInput * 82;
+    // 직관적인 1:1 좌우 위치 비례 조향 (핸들 왼쪽을 누르면 왼쪽, 오른쪽을 누르면 오른쪽으로 정확히 조향!)
+    const raw = dx / (rect.width * 0.28);
+    const cleaned = Math.abs(raw) < 0.04 ? 0 : raw;
+    state.steerInput = Math.max(-1, Math.min(1, cleaned));
+    state.wheelAngleDeg = state.steerInput * 75;
     wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
   }
 
@@ -2221,23 +2728,38 @@
       const t = e.changedTouches[i];
       if (e.target === hornBtn || hornBtn.contains(e.target)) continue;
       wheelTouchId = t.identifier;
-      updateSteerFromPoint(t.clientX, t.clientY, true);
+      updateSteerFromPoint(t.clientX, t.clientY);
       break;
     }
   }, { passive: false });
 
-  wheelZone.addEventListener('touchmove', (e) => {
-    e.preventDefault();
+  // 아이가 핸들 주변 왼쪽 하단 영역을 터치해도 직관적으로 조향되도록 보조 터치 지원
+  hudLayer.addEventListener('touchstart', (e) => {
+    if (wheelTouchId !== null) return;
     for (let i = 0; i < e.changedTouches.length; i++) {
       const t = e.changedTouches[i];
-      if (t.identifier === wheelTouchId) {
-        updateSteerFromPoint(t.clientX, t.clientY, false);
+      if (t.clientX < window.innerWidth * 0.44 && t.clientY > window.innerHeight * 0.36) {
+        if (e.target === hornBtn || hornBtn.contains(e.target)) continue;
+        wheelTouchId = t.identifier;
+        updateSteerFromPoint(t.clientX, t.clientY);
         break;
       }
     }
-  }, { passive: false });
+  }, { passive: true });
 
-  wheelZone.addEventListener('touchend', (e) => {
+  window.addEventListener('touchmove', (e) => {
+    if (wheelTouchId === null) return;
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      const t = e.changedTouches[i];
+      if (t.identifier === wheelTouchId) {
+        updateSteerFromPoint(t.clientX, t.clientY);
+        break;
+      }
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', (e) => {
+    if (wheelTouchId === null) return;
     for (let i = 0; i < e.changedTouches.length; i++) {
       if (e.changedTouches[i].identifier === wheelTouchId) {
         resetWheel();
@@ -2245,16 +2767,16 @@
       }
     }
   });
-  wheelZone.addEventListener('touchcancel', resetWheel);
+  window.addEventListener('touchcancel', resetWheel);
 
   let mouseWheelDown = false;
   wheelZone.addEventListener('mousedown', (e) => {
     if (e.target === hornBtn || hornBtn.contains(e.target)) return;
     mouseWheelDown = true;
-    updateSteerFromPoint(e.clientX, e.clientY, true);
+    updateSteerFromPoint(e.clientX, e.clientY);
   });
   window.addEventListener('mousemove', (e) => {
-    if (mouseWheelDown) updateSteerFromPoint(e.clientX, e.clientY, false);
+    if (mouseWheelDown) updateSteerFromPoint(e.clientX, e.clientY);
   });
   window.addEventListener('mouseup', () => {
     if (mouseWheelDown) {
@@ -2280,9 +2802,8 @@
     if (e) e.stopPropagation();
     sfx.playHorn();
     vibrateDevice(55);
-    // 클락션 누르면 차도 살짝 점프!
-    if (state.playerY <= 1) state.velY = Math.max(state.velY, 180);
-    showFloatingText('📯 빠아앙~!! 비켜주세요!', '#ffea00');
+    if (state.playerY <= 1) state.velY = Math.max(state.velY, 150);
+    showFloatingText('📯', '#ffea00');
     state.rivals.forEach(r => {
       const dist = r.z - state.posZ;
       if (dist > -120 && dist < 1400) {
@@ -2302,12 +2823,10 @@
     if (state.boostCount > 0 || state.n2oGauge >= 45) {
       if (state.boostCount > 0) state.boostCount--;
       else state.n2oGauge = Math.max(0, state.n2oGauge - 45);
-      state.boostTimer = 3.0;
-      showCenterBanner('🔥 중저음 슈퍼 부스터 폭발!!', 950);
+      state.boostTimer = 3.2;
       if (Math.random() < 0.45) speakKR('슈퍼 부스터 발동!', false);
     } else {
-      state.boostTimer = Math.max(state.boostTimer, 1.35);
-      showFloatingText('🔥 트윈터보 가속 슝~!', '#ff9100');
+      state.boostTimer = Math.max(state.boostTimer, 1.5);
     }
     spawnBoostParticles(24);
     updateBoostUI();
@@ -2324,17 +2843,15 @@
   function useHeldItem() {
     if (state.mode !== 'racing') return;
     if (state.rouletteTimer > 0) {
-      // 룰렛 돌아가는 중 터치하면 즉시 당첨 확정!
       state.rouletteTimer = 0.01;
       return;
     }
     if (!state.heldItem) {
-      // 아이템이 없을 때 누르면 마리오 카트 페더 점프 + 미니 가속!
       sfx.playHop();
       sfx.playBoost(false);
-      if (state.playerY <= 2) state.velY = 340;
-      state.boostTimer = Math.max(state.boostTimer, 0.95);
-      showFloatingText('🤸 슈퍼 점프 대시!', '#80d8ff');
+      if (state.playerY <= 2) state.velY = 280;
+      state.boostTimer = Math.max(state.boostTimer, 1.05);
+      showFloatingText('', '#80d8ff');
       return;
     }
 
@@ -2343,7 +2860,6 @@
     updateItemUI();
     vibrateDevice(90);
     speakKR(item.voice, true);
-    showCenterBanner(`${item.icon} ${item.name}`, 1250);
 
     if (item.id === 'star') {
       state.starTimer = 5.5;
@@ -2352,7 +2868,7 @@
     } else if (item.id === 'mushroom') {
       state.megaTimer = 5.0;
       state.boostTimer = 4.2;
-      if (state.playerY <= 2) state.velY = 260;
+      if (state.playerY <= 2) state.velY = 230;
       sfx.playBoost(true);
     } else if (item.id === 'bullet') {
       state.bulletTimer = 4.5;
@@ -2362,7 +2878,6 @@
     } else if (item.id === 'shell') {
       sfx.playShellShoot();
       state.boostTimer = Math.max(state.boostTimer, 1.5);
-      // 3D 트랙 위로 날아가는 빨강 등껍질 발사체 생성!
       state.projectiles.push({
         type: 'shell',
         z: state.posZ + 70,
@@ -2381,13 +2896,11 @@
     } else if (item.id === 'banana') {
       sfx.playBoost(false);
       state.boostTimer = Math.max(state.boostTimer, 2.2);
-      // 내 바로 뒤에 바나나 껍질 설치 & 뒤따르는 라이벌 스핀 유도!
       const dropSegIdx = Math.floor(Math.max(0, state.posZ - 90) / SEG_LEN) % state.segments.length;
       state.segments[dropSegIdx].items.push({ type: 'banana', x: state.playerX, takenTimer: 0 });
       state.rivals.forEach(r => {
         if (r.z < state.posZ && state.posZ - r.z < 380) {
           r.spinTimer = 1.6;
-          showFloatingText(`🍌 ${r.racer.shortName} 바나나 미끄덩!`, '#ffea00');
         }
       });
     }
@@ -2396,7 +2909,6 @@
   itemBtn.addEventListener('touchstart', (e) => { e.preventDefault(); useHeldItem(); }, { passive: false });
   itemBtn.addEventListener('mousedown', (e) => { e.preventDefault(); useHeldItem(); });
 
-  // 마리오 카트 시그니처: 버튼 누를 때 카트가 '폴짝(Hop)' 점프하며 드리프트 시작!
   function startDrift(e) {
     if (e) e.preventDefault();
     if (state.mode !== 'racing') return;
@@ -2405,7 +2917,7 @@
       state.driftChargeTime = 0;
       state.driftStage = 1;
       if (state.playerY <= 2) {
-        state.velY = 255; // 마리오 카트 드리프트 시작 홉(Hop)!
+        state.velY = 210;
         sfx.playHop();
       }
     }
@@ -2434,12 +2946,7 @@
     const boostDur = stage === 3 ? 2.5 : (stage === 2 ? 1.85 : 1.3);
     state.boostTimer = Math.max(state.boostTimer, boostDur);
     sfx.playBoost(stage >= 2);
-    const labelMap = {
-      1: '🔵 미니터보 대시!!',
-      2: '🟠 슈퍼 미니터보 폭발!!',
-      3: '🟣 울트라 무지개 터보 폭발!!'
-    };
-    showFloatingText(labelMap[stage] || '💨 드리프트 부스터!!', stage === 3 ? '#e040fb' : '#00e5ff');
+    showFloatingText('', stage === 3 ? '#e040fb' : '#00e5ff');
     spawnBoostParticles(stage * 10);
     updateBoostUI();
   }
@@ -2460,18 +2967,16 @@
     state.startBoostWindow = false;
     startBoostBtn.style.display = 'none';
     state.boostTimer = 2.8;
-    state.velY = 240;
+    state.velY = 200;
     sfx.playBoost(true);
     vibrateDevice(90);
-    showCenterBanner('🚀 마리오 로켓 스타트 성공!!', 1100);
     speakKR('우와! 로켓 스타트 성공!', true);
     spawnBoostParticles(28);
   }
 
-  // ==================== UI 업데이트 헬퍼 (주행 화면 글자 완전 제거 & 아이콘/파티클 연출) ====================
+  // ==================== UI 업데이트 헬퍼 ====================
   let bannerTimeout = null;
   function showCenterBanner(text, duration = 1000) {
-    // 주행 화면에는 긴 글자를 띄우지 않고 카운트다운 숫자(3, 2, 1)나 출발 깃발(🏁)만 깔끔하게 표시
     const clean = (text === '3' || text === '2' || text === '1') ? text : (text.includes('GO') ? '🏁' : '');
     centerBanner.textContent = clean;
     if (bannerTimeout) clearTimeout(bannerTimeout);
@@ -2483,7 +2988,6 @@
   }
 
   function showFloatingText(_text, color = '#ffea00') {
-    // 화면을 가리는 글자 대신 반짝이는 별빛/컬러 파티클만 예쁘게 톡 터뜨림!
     for (let i = 0; i < 6; i++) {
       state.particles.push({
         x: canvas.width * 0.5 + state.screenXOffset + (Math.random() - 0.5) * 90,
@@ -2567,9 +3071,10 @@
   function syncSpeedButtonLabel() {
     const map = { slow: '🐢', normal: '🚗', fast: '🚀' };
     hudSpeedBtn.textContent = map[state.speedPreset] || map.normal;
-    if (state.speedPreset === 'slow') state.maxSpeed = 165;
-    else if (state.speedPreset === 'normal') state.maxSpeed = 215;
-    else state.maxSpeed = 265;
+    // 시원한 속도감을 위해 전체 속도 프리셋 상향!
+    if (state.speedPreset === 'slow') state.maxSpeed = 210;
+    else if (state.speedPreset === 'normal') state.maxSpeed = 275;
+    else state.maxSpeed = 340;
   }
 
   hudSoundBtn.addEventListener('click', () => {
@@ -2613,6 +3118,10 @@
   document.getElementById('backLobbyBtn').addEventListener('click', goToLobby);
 
   window.onBackKey = () => {
+    if (photoModal && photoModal.style.display === 'flex') {
+      photoModal.style.display = 'none';
+      return;
+    }
     if (state.mode !== 'lobby') {
       goToLobby();
     } else if (window.AndroidBridge && typeof window.AndroidBridge.closeApp === 'function') {
@@ -2631,7 +3140,7 @@
     lobbyScreen.style.display = 'flex';
   }
 
-  // ==================== 레이스 시작 초기화 (자연스러운 레이싱 라인 & 추월 AI를 가진 5대 라이벌 배치) ====================
+  // ==================== 레이스 시작 초기화 ====================
   function startRace() {
     sfx.init();
     sfx.playEngineStart();
@@ -2650,6 +3159,7 @@
 
     state.speed = 0;
     state.steerInput = 0;
+    state.smoothSteer = 0;
     state.wheelAngleDeg = 0;
     wheelGraphic.style.transform = 'rotate(0deg)';
     state.driftActive = false;
@@ -2678,7 +3188,7 @@
 
     const otherRacers = RACERS.filter((_, idx) => idx !== state.selectedRacer);
     const startOffsetsZ = [-130, -55, 110, 240, 390];
-    const startLanes = [-0.58, 0.56, -0.32, 0.44, 0.08];
+    const startLanes = [-0.54, 0.52, -0.30, 0.42, 0.06];
 
     rivalDotsContainer.innerHTML = '';
     state.rivals = otherRacers.map((rc, i) => {
@@ -2730,15 +3240,15 @@
   function spawnBoostParticles(count = 10) {
     for (let i = 0; i < count; i++) {
       state.particles.push({
-        x: canvas.width * 0.5 + state.screenXOffset + (Math.random() - 0.5) * 95,
-        y: canvas.height * 0.80 - state.playerY * 0.45 + (Math.random() - 0.5) * 30,
-        vx: (Math.random() - 0.5) * 240,
-        vy: 110 + Math.random() * 250,
-        size: 8 + Math.random() * 14,
+        x: canvas.width * 0.5 + state.screenXOffset + (Math.random() - 0.5) * 80,
+        y: canvas.height * 0.80 - state.playerY * 0.45 + (Math.random() - 0.5) * 24,
+        vx: (Math.random() - 0.5) * 220,
+        vy: 110 + Math.random() * 240,
+        size: 6 + Math.random() * 10,
         color: state.starTimer > 0
           ? ['#ff1744', '#ffea00', '#00e676', '#00e5ff', '#e040fb'][i % 5]
           : (Math.random() < 0.5 ? '#00e5ff' : '#ffea00'),
-        life: 0.45 + Math.random() * 0.35
+        life: 0.40 + Math.random() * 0.30
       });
     }
   }
@@ -2793,21 +3303,23 @@
       }
     }
 
-    // 3. 핸들 입력 업데이트
+    // 3. 핸들 입력 업데이트 (1:1 직관적 반응 & 부드러운 보간)
     if (keys['ArrowLeft'] || keys['KeyA']) {
-      state.steerInput = -0.9;
+      state.steerInput = -0.85;
     } else if (keys['ArrowRight'] || keys['KeyD']) {
-      state.steerInput = 0.9;
+      state.steerInput = 0.85;
     } else if (wheelTouchId === null && !mouseWheelDown) {
       if (state.tiltSteer) {
         const tilt = getNativeTilt();
         state.steerInput = Math.max(-1, Math.min(1, tilt));
       } else {
-        state.steerInput *= Math.pow(0.06, dt);
+        state.steerInput *= Math.pow(0.015, dt);
         if (Math.abs(state.steerInput) < 0.01) state.steerInput = 0;
       }
     }
-    state.wheelAngleDeg = state.steerInput * 82;
+    state.smoothSteer += (state.steerInput - state.smoothSteer) * Math.min(1, dt * 14.0);
+    if (Math.abs(state.smoothSteer) < 0.005 && state.steerInput === 0) state.smoothSteer = 0;
+    state.wheelAngleDeg = state.smoothSteer * 75;
     wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
 
     // 4. 타이머 업데이트
@@ -2822,7 +3334,7 @@
 
     // 5. 3단 드리프트 스파크 게이지 충전
     if (state.driftActive) {
-      state.driftChargeTime += dt * (1 + Math.abs(state.steerInput) * 0.8);
+      state.driftChargeTime += dt * (1 + Math.abs(state.smoothSteer) * 0.8);
       if (state.driftChargeTime > 1.35) state.driftStage = 3;
       else if (state.driftChargeTime > 0.62) state.driftStage = 2;
       else state.driftStage = 1;
@@ -2835,23 +3347,24 @@
     else if (state.starTimer > 0) boostMult = 1.48;
     else if (state.megaTimer > 0) boostMult = 1.42;
     else if (state.boostTimer > 0) boostMult = 1.38;
-    if (state.spinTimer > 0) boostMult = 0.48;
+    if (state.spinTimer > 0) boostMult = 0.52;
 
     const offRoad = Math.abs(state.playerX) > 0.96 && !isBoosting;
-    const terrainMult = offRoad ? 0.82 : 1.0;
+    const terrainMult = offRoad ? 0.86 : 1.0;
 
     const targetSpeed = state.maxSpeed * boostMult * terrainMult;
-    state.speed += (targetSpeed - state.speed) * Math.min(1, dt * 5.2);
+    state.speed += (targetSpeed - state.speed) * Math.min(1, dt * 6.0);
 
-    const moveDist = state.speed * 3.15 * dt;
+    // 시원한 고속 주행감을 위해 전진 거리 배율 상향 (4.6x)
+    const moveDist = state.speed * 4.6 * dt;
     state.posZ += moveDist;
 
     // 6. 점프(Hop) & 무지개 점프대 공중 물리 및 착지 부스터!
     if (state.playerY > 0 || state.velY !== 0) {
       state.playerY += state.velY * dt;
-      state.velY -= 1180 * dt;
-      if (state.playerY > 38) {
-        state.trickRot += dt * 9.5;
+      state.velY -= 1280 * dt;
+      if (state.playerY > 45) {
+        state.trickRot += dt * 8.5;
       }
       if (state.playerY <= 0) {
         const landedFromHighJump = state.trickRot > 1.2;
@@ -2873,32 +3386,38 @@
       state.maxSpeed,
       isBoosting,
       state.driftActive,
-      Math.abs(state.steerInput),
+      Math.abs(state.smoothSteer),
       dt
     );
 
     const segIdx = Math.floor(state.posZ / SEG_LEN) % state.segments.length;
     const currentSeg = state.segments[segIdx];
 
-    // 8. 플레이어 차량 횡방향 물리
-    const driftSlide = state.driftActive ? (state.driftDir * 0.42 + state.steerInput * 1.85) : (state.steerInput * 1.75);
-    const targetVelX = driftSlide;
-    state.velX += (targetVelX - state.velX) * Math.min(1, dt * 8.5);
+    // 8. 플레이어 차량 횡방향 물리 (내가 핸들을 돌린 방향으로 직관적이고 매끄럽게 이동!)
+    const targetVelX = state.driftActive
+      ? (state.driftDir * 0.30 + state.smoothSteer * 1.48)
+      : (state.smoothSteer * 1.38);
+    state.velX += (targetVelX - state.velX) * Math.min(1, dt * 12.5);
     state.playerX += state.velX * dt;
 
-    const targetScreenOffset = state.velX * 72 + (state.driftActive ? state.driftDir * 28 : 0);
-    state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 7.5);
+    // 차가 화면 밖으로 미끄러지지 않고 도로 바닥에 단단히 밀착되도록 화면 오프셋 최소화
+    const targetScreenOffset = state.smoothSteer * 12 + (state.driftActive ? state.driftDir * 8 : 0);
+    state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 10.0);
 
-    const centrifugal = (currentSeg.curve * 0.16) * (state.speed / state.maxSpeed) * dt;
+    // 과도한 커브 밀림을 줄이고 부드러운 코너링 보조 적용
+    const centrifugal = (currentSeg.curve * 0.055) * (state.speed / state.maxSpeed) * dt;
     if (state.bulletTimer > 0) {
       state.playerX += (0 - state.playerX) * 6.5 * dt;
     } else {
-      state.playerX -= centrifugal * 0.48;
+      state.playerX -= centrifugal;
+      if (Math.abs(state.playerX) > 0.86 && Math.sign(state.smoothSteer) !== Math.sign(state.playerX)) {
+        state.playerX *= (1 - 1.8 * dt);
+      }
     }
-    state.playerX = Math.max(-1.18, Math.min(1.18, state.playerX));
+    state.playerX = Math.max(-1.02, Math.min(1.02, state.playerX));
 
     // 9. 자동 N2O 게이지 충전
-    const chargeRate = state.driftActive ? 48 : 19;
+    const chargeRate = state.driftActive ? 48 : 21;
     state.n2oGauge = Math.min(100, state.n2oGauge + chargeRate * dt);
     if (state.n2oGauge >= 100) {
       if (state.boostCount < 2) {
@@ -2912,18 +3431,15 @@
     }
     updateBoostUI();
 
-    // 10. 트랙 위 기믹 상호작용
+    // 10. 트랙 위 기믹 상호작용 (적절한 크기로 줄어든 아이템에 맞춘 정교한 충돌 판정)
     for (let offset = 0; offset <= 2; offset++) {
       const s = state.segments[(segIdx + offset) % state.segments.length];
       s.items.forEach(it => {
-        if (it.moving) {
-          it.x = it.baseX + Math.sin(performance.now() * 0.0025 + it.phase) * 0.22;
-        }
         if (it.takenTimer && it.takenTimer > 0) {
           it.takenTimer = Math.max(0, it.takenTimer - dt);
           return;
         }
-        const hitWidth = it.type === 'jumpRamp' ? 0.48 : (it.type === 'itemBox' ? 0.36 : 0.32);
+        const hitWidth = it.type === 'jumpRamp' ? 0.36 : (it.type === 'itemBox' ? 0.26 : 0.24);
         if (Math.abs(state.playerX - it.x) < hitWidth) {
           if (it.type === 'itemBox') {
             it.takenTimer = 3.5;
@@ -2932,7 +3448,7 @@
             startItemRoulette();
           } else if (it.type === 'jumpRamp') {
             it.takenTimer = 1.2;
-            state.velY = 520;
+            state.velY = 440;
             state.boostTimer = Math.max(state.boostTimer, 2.0);
             sfx.playHop();
             sfx.playBoost(false);
@@ -2950,15 +3466,15 @@
             state.n2oGauge = Math.min(100, state.n2oGauge + 15);
             sfx.playCoin();
             showFloatingText('', '#ffd54f');
-          } else if ((it.type === 'banana' || it.type === 'pipe') && state.playerY < 28) {
+          } else if ((it.type === 'banana' || it.type === 'pipe') && state.playerY < 24) {
             it.takenTimer = 3.0;
             if (isInvincible || state.shieldTimer > 0) {
               sfx.playShellHit();
               spawnBoostParticles(12);
             } else {
-              state.spinTimer = 0.75;
+              state.spinTimer = 0.65;
               sfx.playHop();
-              vibrateDevice(65);
+              vibrateDevice(55);
             }
           }
         }
@@ -2968,7 +3484,7 @@
     // 11. 발사된 날개 거북이 등껍질(Shell) 투사체 이동 및 앞차 명중 판정
     for (let i = state.projectiles.length - 1; i >= 0; i--) {
       const proj = state.projectiles[i];
-      proj.z += proj.speed * 3.15 * dt;
+      proj.z += proj.speed * 4.6 * dt;
       proj.life -= dt;
 
       let targetRival = null;
@@ -2982,9 +3498,9 @@
       });
       if (targetRival) {
         proj.x += (targetRival.x - proj.x) * Math.min(1, dt * 8.0);
-        if (Math.abs(targetRival.z - proj.z) < 95 && Math.abs(targetRival.x - proj.x) < 0.45) {
-          targetRival.spinTimer = 1.9;
-          targetRival.velY = 380;
+        if (Math.abs(targetRival.z - proj.z) < 95 && Math.abs(targetRival.x - proj.x) < 0.42) {
+          targetRival.spinTimer = 1.8;
+          targetRival.velY = 340;
           sfx.playShellHit();
           vibrateDevice(70);
           spawnBoostParticles(18);
@@ -2995,7 +3511,7 @@
       if (proj.life <= 0) state.projectiles.splice(i, 1);
     }
 
-    // 12. 5대의 라이벌 AI 차량 물리 개선 (실제 코너링 레이싱 라인 + 매끄러운 추월 차선 변경 + 순간이동 없는 순수 가감속)
+    // 12. 5대의 라이벌 AI 차량 물리 (매끄러운 레이싱 라인과 흔들림 없는 조향)
     const totalRaceDist = state.trackLength * state.totalLaps;
     const raceProgressRatio = state.posZ / totalRaceDist;
     let aheadCount = 0;
@@ -3012,19 +3528,16 @@
       const rCurSeg = state.segments[rSegIdx];
       const rLookSeg = state.segments[(rSegIdx + 6) % state.segments.length];
 
-      // (A) 종방향 속도 제어: 강제 위치 워프(r.z += ...)를 완전히 제거하고 순수 가속도·최고속도 제어로만 매끄럽게 주행!
       r.surgePhase += dt * r.surgeFreq;
       const surgeWave = Math.sin(r.surgePhase);
-      const finishHandicap = raceProgressRatio > 0.85 ? -110 : 0;
-      const desiredRelZ = r.baseBandOffset + surgeWave * 340 + finishHandicap;
+      const finishHandicap = raceProgressRatio > 0.85 ? -120 : 0;
+      const desiredRelZ = r.baseBandOffset + surgeWave * 350 + finishHandicap;
       const actualRelZ = r.z - state.posZ;
       const gapError = desiredRelZ - actualRelZ;
 
-      // 코너에서는 살짝 감속하거나 드리프트 부스터를 쓰며 리얼하게 주행
-      const curveFactor = Math.abs(rCurSeg.curve) > 1.5 ? 0.94 : 1.0;
-      let rivalTargetSpeed = state.maxSpeed * curveFactor * (1.01 + surgeWave * 0.14) + Math.max(-75, Math.min(115, gapError * 0.30));
+      const curveFactor = Math.abs(rCurSeg.curve) > 1.5 ? 0.95 : 1.0;
+      let rivalTargetSpeed = state.maxSpeed * curveFactor * (1.01 + surgeWave * 0.13) + Math.max(-75, Math.min(115, gapError * 0.30));
 
-      // 플레이어 뒤에서 슬립스트림 추격 중일 때 부스터 가속!
       if ((surgeWave > 0.25 || gapError > 120) && r.spinTimer <= 0 && r.shrinkTimer <= 0) {
         r.boostVisualTimer = 0.4;
         rivalTargetSpeed += 26;
@@ -3033,76 +3546,69 @@
       if (r.spinTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.28;
       else if (r.shrinkTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.58;
 
-      r.speed += (rivalTargetSpeed - r.speed) * Math.min(1, dt * 3.2);
-      r.z += r.speed * 3.15 * dt;
+      r.speed += (rivalTargetSpeed - r.speed) * Math.min(1, dt * 3.5);
+      r.z += r.speed * 4.6 * dt;
 
-      // (B) 횡방향 레이싱 라인 & 추월 조향(Steer) 물리
       r.laneTimer -= dt;
       if (r.laneTimer <= 0) {
-        r.laneTimer = 1.8 + Math.random() * 2.2;
-        const lanes = [-0.62, -0.32, 0.0, 0.32, 0.62];
+        r.laneTimer = 2.4 + Math.random() * 2.2;
+        const lanes = [-0.58, -0.28, 0.0, 0.28, 0.58];
         r.preferredLane = lanes[(idx + Math.floor(Math.random() * lanes.length)) % lanes.length];
       }
 
-      // 전방 코너가 있으면 인코스(Apex)로 자연스럽게 파고듦
       let desiredX = r.preferredLane;
       if (Math.abs(rLookSeg.curve) > 0.9) {
-        desiredX = Math.max(-0.72, Math.min(0.72, desiredX * 0.5 + Math.sign(rLookSeg.curve) * 0.38));
-        r.drifting = Math.abs(rCurSeg.curve) > 1.65 && r.spinTimer <= 0;
+        desiredX = Math.max(-0.68, Math.min(0.68, desiredX * 0.55 + Math.sign(rLookSeg.curve) * 0.32));
+        r.drifting = Math.abs(rCurSeg.curve) > 1.55 && r.spinTimer <= 0;
       } else {
         r.drifting = false;
       }
 
-      // 앞차(플레이어) 추월 시 옆 차선으로 부드럽게 회피 기동!
-      if (actualRelZ > -220 && actualRelZ < 75 && Math.abs(r.x - state.playerX) < 0.44) {
-        desiredX = state.playerX >= 0 ? -0.64 : 0.64;
+      if (actualRelZ > -220 && actualRelZ < 75 && Math.abs(r.x - state.playerX) < 0.42) {
+        desiredX = state.playerX >= 0 ? -0.60 : 0.60;
       }
 
-      // 다른 라이벌 차량과 겹치지 않도록 횡방향 간격 유지(Separation)
       state.rivals.forEach((other, oIdx) => {
         if (oIdx === idx) return;
-        if (Math.abs(r.z - other.z) < 110 && Math.abs(r.x - other.x) < 0.38) {
-          desiredX += (r.x >= other.x ? 0.36 : -0.36);
+        if (Math.abs(r.z - other.z) < 110 && Math.abs(r.x - other.x) < 0.36) {
+          desiredX += (r.x >= other.x ? 0.32 : -0.32);
         }
       });
-      desiredX = Math.max(-0.84, Math.min(0.84, desiredX));
+      desiredX = Math.max(-0.80, Math.min(0.80, desiredX));
 
-      // 실제 이동 방향과 일치하는 부드러운 핸들 조향각(r.steer) 및 횡속도(r.velX) 계산
       const xDiff = desiredX - r.x;
-      const targetSteer = Math.max(-1, Math.min(1, xDiff * 2.2 + rCurSeg.curve * 0.22));
-      r.steer += (targetSteer - (r.steer || 0)) * Math.min(1, dt * 7.0);
-      r.velX += (xDiff * 2.6 - r.velX) * Math.min(1, dt * 6.0);
-      r.x = Math.max(-0.88, Math.min(0.88, r.x + r.velX * dt));
+      const targetSteer = Math.max(-0.65, Math.min(0.65, xDiff * 1.4));
+      r.steer += (targetSteer - (r.steer || 0)) * Math.min(1, dt * 4.5);
+      r.velX += (xDiff * 2.2 - r.velX) * Math.min(1, dt * 5.0);
+      r.x = Math.max(-0.84, Math.min(0.84, r.x + r.velX * dt));
 
-      // (C) 점프대 구간 통과 시 라이벌도 자연스럽게 점프
       if (rSegIdx % 32 === 16 && r.y <= 1) {
-        r.velY = 420;
+        r.velY = 360;
         r.boostVisualTimer = 0.8;
       }
       if (r.y > 0 || r.velY !== 0) {
         r.y += r.velY * dt;
-        r.velY -= 1180 * dt;
+        r.velY -= 1280 * dt;
         if (r.y <= 0) {
           r.y = 0;
           r.velY = 0;
         }
       }
 
-      // 플레이어와 라이벌 카트 근접 접촉 물리
       const newRelZ = r.z - state.posZ;
-      if (Math.abs(newRelZ) < 52 && Math.abs(r.x - state.playerX) < 0.34 && state.playerY < 30) {
+      if (Math.abs(newRelZ) < 52 && Math.abs(r.x - state.playerX) < 0.32 && state.playerY < 30) {
         if (isInvincible) {
           if (r.spinTimer <= 0.2) {
             r.spinTimer = 1.6;
-            r.velY = 390;
+            r.velY = 340;
             sfx.playShellHit();
             vibrateDevice(60);
             spawnBoostParticles(14);
           }
         } else {
           const pushDir = state.playerX >= r.x ? 1 : -1;
-          state.velX += pushDir * 0.52;
-          r.velX -= pushDir * 0.52;
+          state.velX += pushDir * 0.38;
+          r.velX -= pushDir * 0.38;
         }
       }
 
@@ -3119,7 +3625,6 @@
 
       if (isAheadNow) aheadCount++;
 
-      // 후방 추월 경보 미러 (글자 없이 화살표 + 카트 아이콘만 표시)
       if (newRelZ > -220 && newRelZ < 10 && r.speed >= state.speed * 0.97) {
         if (newRelZ > closestRearDist) {
           closestRearDist = newRelZ;
@@ -3144,7 +3649,7 @@
     state.rank = 1 + aheadCount;
     rankNumEl.textContent = String(state.rank);
 
-    // 13. 바퀴(Lap) 및 결승선 골인 체크 (화면 글자 없이 음성과 아이콘만 업데이트)
+    // 13. 바퀴(Lap) 및 결승선 골인 체크
     const currentLap = Math.min(state.totalLaps, Math.floor(state.posZ / state.trackLength) + 1);
     if (currentLap !== state.lap) {
       state.lap = currentLap;
@@ -3156,7 +3661,7 @@
     const progressPct = Math.min(100, (state.posZ / totalRaceDist) * 100);
     progressFill.style.width = `${progressPct.toFixed(1)}%`;
     progressKart.style.left = `${progressPct.toFixed(1)}%`;
-    speedText.textContent = String(Math.round(state.speed));
+    speedText.textContent = String(Math.round(state.speed * 1.15));
 
     if (state.posZ >= totalRaceDist) {
       finishRace();
@@ -3197,7 +3702,7 @@
     speakKR(`우와! ${state.rank}등으로 골인했어요! 정말 최고예요! 축하합니다!`, true);
   }
 
-  // ==================== 3D 슈퍼마리오 카트 트랙 & 연속 깊이 투영 렌더링 엔진 ====================
+  // ==================== 3D 접지형 트랙 & 고속 원근 투영 렌더링 엔진 ====================
   const RAINBOW_COLORS = ['#ff1744', '#ff9100', '#ffea00', '#00e676', '#00e5ff', '#7c4dff', '#e040fb'];
 
   function drawScene(timeMs) {
@@ -3205,7 +3710,7 @@
     const H = canvas.height;
     const track = TRACKS[state.selectedTrack];
 
-    const horizonY = Math.floor(H * 0.39);
+    const horizonY = Math.floor(H * 0.38);
     const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
     skyGrad.addColorStop(0, track.skyTop);
     skyGrad.addColorStop(1, track.skyBottom);
@@ -3219,30 +3724,37 @@
 
     if (state.segments.length === 0) return;
 
-    const drawDistance = 72;
+    const drawDistance = 76;
     const baseIndex = Math.floor(state.posZ / SEG_LEN);
     const basePercent = (state.posZ % SEG_LEN) / SEG_LEN;
 
-    let dx = -(state.segments[baseIndex % state.segments.length].curve * basePercent * 1.45);
+    // 현재 내 차가 밟고 있는 지점의 도로 높이를 기준점(baseRoadY)으로 삼아 언덕에서도 타이어가 도로에 딱 붙어 있게 보정!
+    const seg0 = state.segments[baseIndex % state.segments.length];
+    const seg1 = state.segments[(baseIndex + 1) % state.segments.length];
+    const baseRoadY = seg0.y + (seg1.y - seg0.y) * basePercent;
+
+    let dx = -(seg0.curve * basePercent * 1.32);
     let x = -dx * basePercent;
     const projected = [];
+    const camHeight = (H * 0.44) / 17.5;
 
     for (let n = 0; n < drawDistance; n++) {
       const seg = state.segments[(baseIndex + n) % state.segments.length];
       const z = (n - basePercent) * SEG_LEN;
-      const clampedZ = Math.max(10, z);
+      const clampedZ = Math.max(11, z);
       const scale = 195 / clampedZ;
+      const relWorldY = seg.y - baseRoadY;
 
-      const projX = W * 0.5 + (x - state.playerX * 265) * scale;
-      const projY = horizonY + (212 - seg.y * 0.18 + state.playerY * 0.25) * scale;
-      const projW = 695 * scale;
+      const projX = W * 0.5 + (x - state.playerX * 290) * scale;
+      const projY = horizonY + (camHeight - relWorldY * 0.14 + state.playerY * 0.22) * scale;
+      const projW = 720 * scale;
 
       projected.push({
         seg,
         n,
         z,
         worldXCurve: x,
-        worldY: seg.y,
+        worldY: relWorldY,
         x: projX,
         y: projY,
         w: projW,
@@ -3250,28 +3762,30 @@
       });
 
       x += dx;
-      dx += seg.curve * 1.45;
+      dx += seg.curve * 1.32;
     }
 
-    // 도로 폴리곤 렌더링
+    // 도로 폴리곤 렌더링 (매 세그먼트마다 교차하는 고속 스트라이프 & 코스별 개성 넘치는 노면 패턴!)
     for (let i = projected.length - 1; i >= 1; i--) {
       const p1 = projected[i - 1];
       const p2 = projected[i];
       if (p1.y <= horizonY && p2.y <= horizonY) continue;
 
-      const stripe = Math.floor(p2.seg.index / 2) % 2 === 0;
+      // 매 세그먼트마다 색상이 교차되어 주행 속도감이 2배로 시원하게 느껴짐!
+      const stripe = (p2.seg.index % 2) === 0;
 
       ctx.fillStyle = stripe ? track.grass1 : track.grass2;
       ctx.fillRect(0, p2.y, W, Math.max(1, p1.y - p2.y + 1));
 
-      const k1 = p1.w * 1.14;
-      const k2 = p2.w * 1.14;
+      const k1 = p1.w * 1.13;
+      const k2 = p2.w * 1.13;
       ctx.fillStyle = stripe ? track.kerb1 : track.kerb2;
       drawTrapezoid(ctx, p1.x, p1.y, k1, p2.x, p2.y, k2);
 
+      // 코스별 개성 있는 도로 표면 렌더링
       if (track.sceneryType === 'rainbow') {
         ctx.fillStyle = RAINBOW_COLORS[p2.seg.index % RAINBOW_COLORS.length];
-        ctx.globalAlpha = 0.88;
+        ctx.globalAlpha = 0.90;
         drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
         ctx.globalAlpha = 1.0;
       } else {
@@ -3279,22 +3793,49 @@
         drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
       }
 
-      if (stripe) {
-        ctx.fillStyle = 'rgba(255,255,255,0.68)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.032, p2.x, p2.y, p2.w * 0.032);
+      // 코스 테마별 특색 있는 노면 디테일
+      if (track.sceneryType === 'candy' && stripe) {
+        ctx.fillStyle = 'rgba(255, 193, 227, 0.25)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.72, p2.x, p2.y, p2.w * 0.72);
+      } else if (track.sceneryType === 'snow') {
+        ctx.fillStyle = stripe ? 'rgba(255, 255, 255, 0.32)' : 'rgba(179, 229, 252, 0.18)';
+        drawTrapezoid(ctx, p1.x - p1.w * 0.45, p1.y, p1.w * 0.12, p2.x - p2.w * 0.45, p2.y, p2.w * 0.12);
+        drawTrapezoid(ctx, p1.x + p1.w * 0.45, p1.y, p1.w * 0.12, p2.x + p2.w * 0.45, p2.y, p2.w * 0.12);
+      } else if (track.sceneryType === 'dino' && p2.seg.index % 3 === 0) {
+        // 정글 통나무 다리 질감 라인
+        ctx.fillStyle = 'rgba(62, 39, 35, 0.35)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.96, p2.x, p2.y, p2.w * 0.96);
+      } else if (track.sceneryType === 'castle' && stripe) {
+        // 용암 캐슬 붉은 불빛 노면 테두리
+        ctx.fillStyle = 'rgba(255, 109, 0, 0.32)';
+        drawTrapezoid(ctx, p1.x - p1.w * 0.88, p1.y, p1.w * 0.06, p2.x - p2.w * 0.88, p2.y, p2.w * 0.06);
+        drawTrapezoid(ctx, p1.x + p1.w * 0.88, p1.y, p1.w * 0.06, p2.x + p2.w * 0.88, p2.y, p2.w * 0.06);
+      } else if (track.sceneryType === 'sakura' && stripe) {
+        ctx.fillStyle = 'rgba(248, 187, 208, 0.28)';
+        drawTrapezoid(ctx, p1.x - p1.w * 0.82, p1.y, p1.w * 0.08, p2.x - p2.w * 0.82, p2.y, p2.w * 0.08);
+        drawTrapezoid(ctx, p1.x + p1.w * 0.82, p1.y, p1.w * 0.08, p2.x + p2.w * 0.82, p2.y, p2.w * 0.08);
       }
-      if (p2.seg.index % 6 === 0 && p2.n < 35) {
-        ctx.fillStyle = 'rgba(0, 230, 118, 0.55)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.16, p2.x, p2.y, p2.w * 0.04);
+
+      // 고속 체감을 극대화하는 3차선 레이싱 점선 (중앙선 + 좌우 차선)
+      if (stripe) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.78)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.022, p2.x, p2.y, p2.w * 0.022);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+        drawTrapezoid(ctx, p1.x - p1.w * 0.48, p1.y, p1.w * 0.015, p2.x - p2.w * 0.48, p2.y, p2.w * 0.015);
+        drawTrapezoid(ctx, p1.x + p1.w * 0.48, p1.y, p1.w * 0.015, p2.x + p2.w * 0.48, p2.y, p2.w * 0.015);
+      }
+
+      // 노면 위 스피드 셰브론(화살표 마크)으로 질주감 강화
+      if (p2.seg.index % 4 === 0 && p2.n < 38) {
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.35)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.14, p2.x, p2.y, p2.w * 0.03);
       }
       if (p2.seg.index === 0) {
-        // 마리오 카트 체크무늬 결승선
         ctx.fillStyle = '#ffffff';
         drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
       }
     }
 
-    // 임의의 상대 거리 relZ를 60fps 연속 좌표로 변환하는 정밀 보간 함수 (라이벌 딜레이/끊김 완전 제거!)
     function projectContinuousRelZ(relZ) {
       const floatN = relZ / SEG_LEN + basePercent;
       if (floatN < 0) {
@@ -3318,7 +3859,7 @@
       };
     }
 
-    // 트랙 기믹 & 가로수 렌더링 (뒤에서 앞으로)
+    // 트랙 기믹 & 가로수 렌더링 (아이템 크기를 약 48% 축소하여 아기자기하고 시야가 탁 트이게 개선!)
     for (let i = projected.length - 1; i >= 1; i--) {
       const p = projected[i];
       if (p.y < horizonY) continue;
@@ -3329,38 +3870,38 @@
 
       p.seg.scenery.forEach(sc => {
         const sx = p.x + sc.offset * p.w;
-        drawRoadsideProp(ctx, sx, p.y, p.w * 0.36, track.sceneryType, sc.variant, timeMs);
+        drawRoadsideProp(ctx, sx, p.y, p.w * 0.34, track.sceneryType, sc.variant, timeMs);
       });
 
       p.seg.items.forEach(it => {
         if (it.takenTimer && it.takenTimer > 0) return;
         const ix = p.x + it.x * p.w * 0.78;
         if (it.type === 'itemBox') {
-          drawItemCube(ctx, ix, p.y, p.w * 0.165, timeMs);
+          drawItemCube(ctx, ix, p.y, p.w * 0.082, timeMs);
         } else if (it.type === 'jumpRamp') {
-          drawJumpRamp(ctx, ix, p.y, p.w * 0.62, timeMs);
+          drawJumpRamp(ctx, ix, p.y, p.w * 0.28, timeMs);
         } else if (it.type === 'dashPad') {
-          drawDashPad(ctx, ix, p.y, p.w * 0.25, timeMs);
+          drawDashPad(ctx, ix, p.y, p.w * 0.13, timeMs);
         } else if (it.type === 'coin') {
-          drawGoldCoin(ctx, ix, p.y, p.w * 0.125, timeMs);
+          drawGoldCoin(ctx, ix, p.y, p.w * 0.062, timeMs);
         } else if (it.type === 'pipe') {
-          drawMarioPipe(ctx, ix, p.y, p.w * 0.20);
+          drawMarioPipe(ctx, ix, p.y, p.w * 0.095);
         } else if (it.type === 'banana') {
-          drawBananaPeel(ctx, ix, p.y, p.w * 0.14, timeMs);
+          drawBananaPeel(ctx, ix, p.y, p.w * 0.068, timeMs);
         }
       });
     }
 
-    // 발사된 등껍질(Red Shell) 렌더링
+    // 발사된 등껍질(Red Shell) 렌더링 (아기자기한 크기로 조정)
     state.projectiles.forEach(proj => {
       const relZ = proj.z - state.posZ;
       if (relZ < 0 || relZ > 3200) return;
       const pt = projectContinuousRelZ(relZ);
       const sx = pt.x + proj.x * pt.w * 0.78;
-      drawRedShell(ctx, sx, pt.y, Math.max(8, pt.w * 0.14), timeMs);
+      drawRedShell(ctx, sx, pt.y, Math.max(6, pt.w * 0.075), timeMs);
     });
 
-    // 5대의 라이벌 카트를 원거리에서 근거리(내 바로 옆 추월 순간 relZ = -45까지!) 순서로 정렬해 매끄럽게 렌더링
+    // 5대의 라이벌 카트 렌더링 (모든 라이벌 머리에도 얼굴 사진이 선명하게 표시됨!)
     const visibleRivals = state.rivals
       .map(r => ({ r, relZ: r.z - state.posZ }))
       .filter(item => item.relZ > -45 && item.relZ < 3600)
@@ -3371,8 +3912,8 @@
       if (pt.y < horizonY) return;
       const rx = pt.x + r.x * pt.w * 0.78;
       const shrinkScale = r.shrinkTimer > 0 ? 0.56 : 1.0;
-      const kScale = Math.min(1.22, Math.max(0.20, pt.w / 285)) * shrinkScale;
-      const jumpLift = r.y * kScale * 0.45;
+      const kScale = Math.min(1.18, Math.max(0.20, pt.w / 295)) * shrinkScale;
+      const jumpLift = r.y * kScale * 0.42;
 
       drawKartCharacter(ctx, rx, pt.y - jumpLift, kScale, r.racer, {
         steer: r.steer || 0,
@@ -3388,7 +3929,6 @@
       });
     });
 
-    // 번개 공격 시 하늘에서 떨어지는 노란 번개 이펙트
     if (state.lightningTimer > 3.8) {
       ctx.save();
       ctx.fillStyle = 'rgba(255, 234, 0, 0.35)';
@@ -3396,21 +3936,25 @@
       ctx.restore();
     }
 
-    if (state.boostTimer > 0 || state.starTimer > 0 || state.bulletTimer > 0) {
-      drawSpeedLines(ctx, W, H, timeMs);
+    // 고속 주행 시 상시 속도선(Speed Lines) 연출로 박진감 넘치는 속도감 전달!
+    const speedRatio = state.speed / Math.max(1, state.maxSpeed);
+    if (state.boostTimer > 0 || state.starTimer > 0 || state.bulletTimer > 0 || speedRatio > 0.78) {
+      const intensity = (state.boostTimer > 0 || state.starTimer > 0 || state.bulletTimer > 0)
+        ? 1.0
+        : Math.min(0.65, (speedRatio - 0.75) * 2.2);
+      drawSpeedLines(ctx, W, H, timeMs, intensity);
     }
 
-    // 플레이어 주인공 카트 렌더링 (화면 좌우로 자유롭게 이동 + 점프 높이 + 거대버섯/슈퍼스타/하늘고래로켓 변신!)
+    // 플레이어 주인공 카트 렌더링 (상하 흔들림 bounceY를 0으로 제거하고 지면에 단단히 접지!)
     const playerRacer = RACERS[state.selectedRacer];
     const kartX = W * 0.5 + state.screenXOffset;
-    const bounceY = Math.sin(timeMs * 0.03) * (state.speed > 20 && state.playerY <= 1 ? 3.5 : 0.5);
-    const jumpOffset = -state.playerY * 0.52;
-    const ufoLift = state.ufoTimer > 0 ? -36 + Math.sin(timeMs * 0.01) * 7 : 0;
-    const kartY = H * 0.80 + bounceY + jumpOffset + ufoLift;
-    const megaScale = state.megaTimer > 0 ? 1.62 : 1.26;
+    const jumpOffset = -state.playerY * 0.48;
+    const ufoLift = state.ufoTimer > 0 ? -32 : 0;
+    const kartY = H * 0.80 + jumpOffset + ufoLift;
+    const megaScale = state.megaTimer > 0 ? 1.54 : 1.22;
 
     drawKartCharacter(ctx, kartX, kartY, megaScale, playerRacer, {
-      steer: state.steerInput,
+      steer: state.smoothSteer,
       boosting: state.boostTimer > 0,
       drifting: state.driftActive,
       driftStage: state.driftStage,
@@ -3828,57 +4372,61 @@
     c.restore();
   }
 
-  // 아기자기한 파스텔 3D 선물상자 아이템 큐브 (리본 + 반짝이 별)
-  function drawItemCube(c, x, y, size, timeMs) {
-    if (size < 5) return;
-    const floatY = y - size * 0.92 + Math.sin(timeMs * 0.008 + x) * (size * 0.22);
+  // 아기자기하고 흔들림 없이 깔끔한 파스텔 3D 선물상자 아이템 큐브
+  function drawItemCube(c, x, y, size, _timeMs) {
+    if (size < 4) return;
+    const floatY = y - size * 0.78;
     c.save();
-    c.translate(x, floatY);
-    c.rotate(Math.sin(timeMs * 0.004 + x * 0.01) * 0.22);
+    // 아이템 바닥 접지 그림자
+    c.fillStyle = 'rgba(15, 23, 42, 0.28)';
+    c.beginPath();
+    c.ellipse(x, y - size * 0.05, size * 0.65, size * 0.20, 0, 0, Math.PI * 2);
+    c.fill();
 
-    // 바닥 핑크 빛 그림자
-    const g = c.createLinearGradient(-size * 0.7, -size * 0.7, size * 0.7, size * 0.7);
+    c.translate(x, floatY);
+
+    const g = c.createLinearGradient(-size * 0.65, -size * 0.65, size * 0.65, size * 0.65);
     g.addColorStop(0, '#ff80ab');
     g.addColorStop(0.5, '#ffea00');
     g.addColorStop(1, '#80d8ff');
     c.fillStyle = g;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(2, size * 0.12);
+    c.lineWidth = Math.max(1.5, size * 0.11);
     c.beginPath();
-    c.roundRect(-size * 0.66, -size * 0.66, size * 1.32, size * 1.32, size * 0.32);
+    c.roundRect(-size * 0.62, -size * 0.62, size * 1.24, size * 1.24, size * 0.28);
     c.fill();
     c.stroke();
 
     // 선물상자 십자 리본 끈
     c.fillStyle = 'rgba(255, 255, 255, 0.85)';
-    c.fillRect(-size * 0.14, -size * 0.64, size * 0.28, size * 1.28);
-    c.fillRect(-size * 0.64, -size * 0.14, size * 1.28, size * 0.28);
+    c.fillRect(-size * 0.13, -size * 0.60, size * 0.26, size * 1.20);
+    c.fillRect(-size * 0.60, -size * 0.13, size * 1.20, size * 0.26);
 
     // 상단 귀여운 핑크 리본 매듭
     c.fillStyle = '#ff4081';
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.2, size * 0.07);
+    c.lineWidth = Math.max(1, size * 0.06);
     c.beginPath();
-    c.ellipse(-size * 0.24, -size * 0.72, size * 0.24, size * 0.14, -0.35, 0, Math.PI * 2);
-    c.ellipse(size * 0.24, -size * 0.72, size * 0.24, size * 0.14, 0.35, 0, Math.PI * 2);
+    c.ellipse(-size * 0.22, -size * 0.68, size * 0.22, size * 0.13, -0.3, 0, Math.PI * 2);
+    c.ellipse(size * 0.22, -size * 0.68, size * 0.22, size * 0.13, 0.3, 0, Math.PI * 2);
     c.fill();
     c.stroke();
 
-    // 정중앙 귀여운 황금 별 엠블럼 (글자 대신 아기자기한 아이콘!)
+    // 정중앙 귀여운 황금 별 엠블럼
     c.fillStyle = '#ffea00';
     c.strokeStyle = '#f57f17';
-    c.lineWidth = Math.max(1.2, size * 0.06);
+    c.lineWidth = Math.max(1, size * 0.06);
     c.beginPath();
-    c.arc(0, 0, size * 0.26, 0, Math.PI * 2);
+    c.arc(0, 0, size * 0.24, 0, Math.PI * 2);
     c.fill();
     c.stroke();
     c.restore();
   }
 
-  // 마리오 카트 무지개 점프대 (텍스트 없이 화살표 셰브론 그래픽으로 깔끔하게!)
+  // 마리오 카트 무지개 점프대 (아기자기한 비율로 도로에 밀착)
   function drawJumpRamp(c, x, y, w, timeMs) {
-    if (w < 12) return;
-    const h = w * 0.28;
+    if (w < 8) return;
+    const h = w * 0.24;
     c.save();
     const grad = c.createLinearGradient(x - w, y, x + w, y - h);
     grad.addColorStop(0, '#ff4081');
@@ -3887,21 +4435,20 @@
     grad.addColorStop(1, '#00e5ff');
     c.fillStyle = grad;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(2, w * 0.03);
+    c.lineWidth = Math.max(1.5, w * 0.03);
     c.beginPath();
     c.moveTo(x - w, y);
     c.lineTo(x + w, y);
-    c.lineTo(x + w * 0.78, y - h);
-    c.lineTo(x - w * 0.78, y - h);
+    c.lineTo(x + w * 0.80, y - h);
+    c.lineTo(x - w * 0.80, y - h);
     c.closePath();
     c.fill();
     c.stroke();
 
-    // 반짝이는 3연속 점프 셰브론 화살표 (글자 제거!)
-    if (w > 24) {
+    if (w > 18) {
       const pulse = (Math.floor(timeMs * 0.012) % 2 === 0) ? '#ffffff' : '#fff59d';
       c.strokeStyle = pulse;
-      c.lineWidth = Math.max(2.5, w * 0.045);
+      c.lineWidth = Math.max(2, w * 0.045);
       c.lineCap = 'round';
       [-0.42, 0, 0.42].forEach(ox => {
         const cx = x + ox * w;
@@ -3915,19 +4462,24 @@
     c.restore();
   }
 
-  // 슈퍼마리오 초록 토관 + 귀여운 꽃 장식
+  // 슈퍼마리오 초록 토관 (아기자기한 크기 + 바닥 그림자)
   function drawMarioPipe(c, x, y, size) {
-    if (size < 6) return;
+    if (size < 5) return;
     c.save();
-    const w = size * 0.95;
-    const h = size * 1.12;
+    const w = size * 0.90;
+    const h = size * 1.05;
+    c.fillStyle = 'rgba(15, 23, 42, 0.30)';
+    c.beginPath();
+    c.ellipse(x, y, w * 0.55, size * 0.18, 0, 0, Math.PI * 2);
+    c.fill();
+
     const pg = c.createLinearGradient(x - w * 0.5, y - h, x + w * 0.5, y);
     pg.addColorStop(0, '#69f0ae');
     pg.addColorStop(0.45, '#00e676');
     pg.addColorStop(1, '#00a152');
     c.fillStyle = pg;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.5, size * 0.08);
+    c.lineWidth = Math.max(1.2, size * 0.08);
     c.beginPath();
     c.roundRect(x - w * 0.42, y - h, w * 0.84, h, size * 0.1);
     c.fill();
@@ -3939,161 +4491,154 @@
     c.restore();
   }
 
-  // 아기자기한 웃는 바나나 요정 (Kawaii Smiling Banana)
-  function drawBananaPeel(c, x, y, size, timeMs) {
-    if (size < 5) return;
-    const wobble = Math.sin(timeMs * 0.012 + x) * 0.14;
+  // 아기자기한 웃는 바나나 (흔들림 없이 도로에 안착)
+  function drawBananaPeel(c, x, y, size, _timeMs) {
+    if (size < 4) return;
     c.save();
-    c.translate(x, y - size * 0.42);
-    c.rotate(wobble);
+    c.fillStyle = 'rgba(15, 23, 42, 0.26)';
+    c.beginPath();
+    c.ellipse(x, y, size * 0.58, size * 0.18, 0, 0, Math.PI * 2);
+    c.fill();
 
-    // 탱글탱글 노란 바나나 몸통
-    const bg = c.createRadialGradient(-size * 0.15, -size * 0.25, size * 0.05, 0, 0, size * 0.75);
+    c.translate(x, y - size * 0.38);
+
+    const bg = c.createRadialGradient(-size * 0.15, -size * 0.25, size * 0.05, 0, 0, size * 0.72);
     bg.addColorStop(0, '#ffff8d');
     bg.addColorStop(0.6, '#ffea00');
     bg.addColorStop(1, '#fbc02d');
     c.fillStyle = bg;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.8, size * 0.1);
+    c.lineWidth = Math.max(1.5, size * 0.1);
     c.beginPath();
-    c.moveTo(0, -size * 0.75);
-    c.quadraticCurveTo(size * 0.62, -size * 0.15, size * 0.55, size * 0.42);
-    c.quadraticCurveTo(0, size * 0.22, -size * 0.55, size * 0.42);
-    c.quadraticCurveTo(-size * 0.62, -size * 0.15, 0, -size * 0.75);
+    c.moveTo(0, -size * 0.72);
+    c.quadraticCurveTo(size * 0.58, -size * 0.15, size * 0.52, size * 0.38);
+    c.quadraticCurveTo(0, size * 0.20, -size * 0.52, size * 0.38);
+    c.quadraticCurveTo(-size * 0.58, -size * 0.15, 0, -size * 0.72);
     c.fill();
     c.stroke();
 
-    // 귀여운 눈과 발그레 볼터치
-    if (size > 10) {
+    if (size > 8) {
       c.fillStyle = '#263238';
       c.beginPath();
-      c.arc(-size * 0.15, -size * 0.1, size * 0.075, 0, Math.PI * 2);
-      c.arc(size * 0.15, -size * 0.1, size * 0.075, 0, Math.PI * 2);
-      c.fill();
-      c.fillStyle = '#ff80ab';
-      c.beginPath();
-      c.arc(-size * 0.26, 0, size * 0.09, 0, Math.PI * 2);
-      c.arc(size * 0.26, 0, size * 0.09, 0, Math.PI * 2);
+      c.arc(-size * 0.14, -size * 0.1, size * 0.075, 0, Math.PI * 2);
+      c.arc(size * 0.14, -size * 0.1, size * 0.075, 0, Math.PI * 2);
       c.fill();
     }
     c.restore();
   }
 
-  // 천사 날개가 달린 아기자기한 빨강 거북이 등껍질 (Winged Cute Shell)
+  // 천사 날개가 달린 아기자기한 빨강 거북이 등껍질
   function drawRedShell(c, x, y, size, timeMs) {
     c.save();
-    c.translate(x, y - size * 0.58);
-    const flap = Math.sin(timeMs * 0.03) * 0.25;
+    c.translate(x, y - size * 0.52);
+    const flap = Math.sin(timeMs * 0.025) * 0.18;
 
-    // 좌우 하얀 천사 날개
     c.fillStyle = '#ffffff';
     c.strokeStyle = '#80d8ff';
-    c.lineWidth = Math.max(1.5, size * 0.08);
+    c.lineWidth = Math.max(1.2, size * 0.08);
     [-1, 1].forEach(dir => {
       c.save();
       c.rotate(dir * flap);
       c.beginPath();
-      c.ellipse(dir * size * 0.72, -size * 0.15, size * 0.38, size * 0.2, dir * -0.3, 0, Math.PI * 2);
+      c.ellipse(dir * size * 0.68, -size * 0.14, size * 0.34, size * 0.18, dir * -0.3, 0, Math.PI * 2);
       c.fill();
       c.stroke();
       c.restore();
     });
 
-    // 둥근 3D 빨강 등껍질 본체
-    const sg = c.createRadialGradient(-size * 0.2, -size * 0.2, size * 0.1, 0, 0, size * 0.68);
+    const sg = c.createRadialGradient(-size * 0.2, -size * 0.2, size * 0.1, 0, 0, size * 0.65);
     sg.addColorStop(0, '#ff8a80');
     sg.addColorStop(0.45, '#ff1744');
     sg.addColorStop(1, '#b71c1c');
     c.fillStyle = sg;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(2, size * 0.14);
+    c.lineWidth = Math.max(1.5, size * 0.12);
     c.beginPath();
-    c.arc(0, 0, size * 0.62, 0, Math.PI * 2);
+    c.arc(0, 0, size * 0.58, 0, Math.PI * 2);
     c.fill();
     c.stroke();
-
-    // 등껍질 육각 무늬 하이라이트
-    c.fillStyle = 'rgba(255, 255, 255, 0.45)';
-    c.beginPath();
-    c.arc(-size * 0.18, -size * 0.18, size * 0.18, 0, Math.PI * 2);
-    c.fill();
     c.restore();
   }
 
   function drawDashPad(c, x, y, size, timeMs) {
-    if (size < 6) return;
+    if (size < 5) return;
     c.save();
     const glow = (Math.sin(timeMs * 0.018) + 1) * 0.5;
     c.fillStyle = glow > 0.5 ? '#00e5ff' : '#ffea00';
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.5, size * 0.08);
+    c.lineWidth = Math.max(1.2, size * 0.08);
     c.beginPath();
-    c.moveTo(x, y - size * 0.54);
-    c.lineTo(x + size * 0.72, y);
-    c.lineTo(x, y - size * 0.16);
-    c.lineTo(x - size * 0.72, y);
+    c.moveTo(x, y - size * 0.48);
+    c.lineTo(x + size * 0.68, y);
+    c.lineTo(x, y - size * 0.14);
+    c.lineTo(x - size * 0.68, y);
     c.closePath();
     c.fill();
     c.stroke();
     c.restore();
   }
 
-  // 아기자기한 스마일 황금 별 코인 (Kawaii Star Coin)
-  function drawGoldCoin(c, x, y, size, timeMs) {
-    if (size < 4) return;
-    const bounce = Math.sin(timeMs * 0.01 + x) * size * 0.2;
-    const cy = y - size * 0.72 + bounce;
+  // 아기자기한 스마일 황금 별 코인 (흔들림 최소화)
+  function drawGoldCoin(c, x, y, size, _timeMs) {
+    if (size < 3.5) return;
+    const cy = y - size * 0.62;
     c.save();
-    const cg = c.createRadialGradient(x - size * 0.18, cy - size * 0.18, size * 0.08, x, cy, size * 0.62);
+    c.fillStyle = 'rgba(15, 23, 42, 0.24)';
+    c.beginPath();
+    c.ellipse(x, y, size * 0.46, size * 0.15, 0, 0, Math.PI * 2);
+    c.fill();
+
+    const cg = c.createRadialGradient(x - size * 0.16, cy - size * 0.16, size * 0.08, x, cy, size * 0.58);
     cg.addColorStop(0, '#ffffff');
     cg.addColorStop(0.35, '#ffee58');
     cg.addColorStop(1, '#f57f17');
     c.fillStyle = cg;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.8, size * 0.14);
+    c.lineWidth = Math.max(1.4, size * 0.12);
     c.beginPath();
-    c.arc(x, cy, size * 0.58, 0, Math.PI * 2);
+    c.arc(x, cy, size * 0.54, 0, Math.PI * 2);
     c.fill();
     c.stroke();
 
-    // 코인 안쪽 귀여운 일자 눈
-    if (size > 9) {
+    if (size > 7) {
       c.fillStyle = '#5d4037';
-      c.fillRect(x - size * 0.18, cy - size * 0.16, size * 0.08, size * 0.28);
-      c.fillRect(x + size * 0.10, cy - size * 0.16, size * 0.08, size * 0.28);
+      c.fillRect(x - size * 0.16, cy - size * 0.15, size * 0.08, size * 0.26);
+      c.fillRect(x + size * 0.08, cy - size * 0.15, size * 0.08, size * 0.26);
     }
     c.restore();
   }
 
-  function drawSpeedLines(c, W, H, timeMs) {
+  function drawSpeedLines(c, W, H, timeMs, intensity = 1.0) {
     c.save();
-    c.strokeStyle = state.starTimer > 0 ? 'rgba(255, 234, 0, 0.58)' : 'rgba(255, 255, 255, 0.48)';
-    c.lineWidth = 4;
-    for (let i = 0; i < 14; i++) {
-      const angle = (i / 14) * Math.PI * 2 + (timeMs * 0.003);
-      const r1 = Math.min(W, H) * 0.36;
-      const r2 = Math.max(W, H) * 0.72;
+    c.globalAlpha = Math.max(0.15, Math.min(1.0, intensity));
+    c.strokeStyle = state.starTimer > 0 ? 'rgba(255, 234, 0, 0.62)' : 'rgba(255, 255, 255, 0.52)';
+    c.lineWidth = 3.5;
+    for (let i = 0; i < 16; i++) {
+      const angle = (i / 16) * Math.PI * 2 + ((timeMs * 0.004) % (Math.PI * 2));
+      const r1 = Math.min(W, H) * 0.38;
+      const r2 = Math.max(W, H) * 0.74;
       c.beginPath();
-      c.moveTo(W * 0.5 + Math.cos(angle) * r1, H * 0.5 + Math.sin(angle) * r1);
-      c.lineTo(W * 0.5 + Math.cos(angle) * r2, H * 0.5 + Math.sin(angle) * r2);
+      c.moveTo(W * 0.5 + Math.cos(angle) * r1, H * 0.48 + Math.sin(angle) * r1);
+      c.lineTo(W * 0.5 + Math.cos(angle) * r2, H * 0.48 + Math.sin(angle) * r2);
       c.stroke();
     }
     c.restore();
   }
 
-  // 3D 원통형 입체 타이어(트레드 패턴 + 측면 입체 림 + 휠 스포크) 렌더링 헬퍼
+  // 3D 원통형 입체 타이어(강력한 바닥 접지 그림자 + 트레드 패턴 + 휠 림)
   function draw3DTire(c, tx, ty, w, h, yawShift, steerAngle, timeMs) {
     c.save();
     c.translate(tx, ty);
-    if (steerAngle) c.rotate(steerAngle);
 
-    // 1) 타이어 바닥 접지 그림자
-    c.fillStyle = 'rgba(0,0,0,0.35)';
+    // 1) 타이어 바닥 밀착 다크 그림자 (자동차가 도로에 묵직하게 붙어 보이도록 강화!)
+    c.fillStyle = 'rgba(5, 10, 20, 0.62)';
     c.beginPath();
-    c.ellipse(0, h * 0.48, w * 0.62, h * 0.18, 0, 0, Math.PI * 2);
+    c.ellipse(0, h * 0.48, w * 0.72, h * 0.22, 0, 0, Math.PI * 2);
     c.fill();
 
-    // 2) 3D 원통형 고무 트레드 본체 (그라데이션으로 둥근 입체감 부여)
+    if (steerAngle) c.rotate(steerAngle);
+
+    // 2) 3D 원통형 고무 트레드 본체
     const tireGrad = c.createLinearGradient(0, -h * 0.5, 0, h * 0.5);
     tireGrad.addColorStop(0, '#455a64');
     tireGrad.addColorStop(0.22, '#263238');
@@ -4107,18 +4652,18 @@
     c.fill();
     c.stroke();
 
-    // 3) 회전하는 타이어 트레드 홈 (달리는 입체감)
-    c.strokeStyle = 'rgba(255,255,255,0.12)';
+    // 3) 회전하는 타이어 트레드 홈 (빠른 회전감)
+    c.strokeStyle = 'rgba(255,255,255,0.14)';
     c.lineWidth = 2;
-    const grooveOffset = ((timeMs || 0) * 0.04) % 9;
-    for (let gy = -h * 0.35 + grooveOffset; gy < h * 0.38; gy += 9) {
+    const grooveOffset = ((timeMs || 0) * 0.065) % 8;
+    for (let gy = -h * 0.35 + grooveOffset; gy < h * 0.38; gy += 8) {
       c.beginPath();
       c.moveTo(-w * 0.38, gy);
       c.lineTo(w * 0.38, gy);
       c.stroke();
     }
 
-    // 4) 조향 각도에 따라 보이는 바퀴 측면 알로이 휠 림 (3D Sidewall)
+    // 4) 조향 각도에 따라 보이는 바퀴 측면 알로이 휠 림
     const rimSideX = Math.max(-w * 0.34, Math.min(w * 0.34, yawShift * 0.42));
     c.fillStyle = '#cfd8dc';
     c.strokeStyle = '#78909c';
@@ -4136,25 +4681,21 @@
     c.restore();
   }
 
-  // 플레이어 카트 옆에 둥실둥실 떠다니는 아기자기한 3D 보유 아이템 프리뷰 렌더링!
-  function drawHeldItem3D(c, item, timeMs) {
+  // 플레이어 카트 옆에 아기자기하고 작게 표시되는 보유 아이템 캡슐 (크기 대폭 축소 & 흔들림 제거)
+  function drawHeldItem3D(c, item, _timeMs) {
     if (!item) return;
-    const orbitX = 68 + Math.cos(timeMs * 0.006) * 6;
-    const orbitY = -48 + Math.sin(timeMs * 0.008) * 7;
     c.save();
-    c.translate(orbitX, orbitY);
+    c.translate(54, -40);
 
-    // 반짝이는 버블 홀더 캡슐
-    c.fillStyle = 'rgba(255, 255, 255, 0.78)';
+    c.fillStyle = 'rgba(255, 255, 255, 0.85)';
     c.strokeStyle = item.color || '#ffea00';
-    c.lineWidth = 3;
+    c.lineWidth = 2.2;
     c.beginPath();
-    c.arc(0, 0, 22, 0, Math.PI * 2);
+    c.arc(0, 0, 13, 0, Math.PI * 2);
     c.fill();
     c.stroke();
 
-    // 아이템 아이콘을 아기자기하게 표시
-    c.font = '24px "Apple Color Emoji", sans-serif';
+    c.font = '15px "Apple Color Emoji", sans-serif';
     c.textAlign = 'center';
     c.textBaseline = 'middle';
     c.fillText(item.icon, 0, 1);
@@ -4166,28 +4707,29 @@
     c.translate(x, y);
     c.scale(scale, scale);
 
-    // 1. 다층 입체 바닥 그림자 (점프 시에는 지면에 남아 높이감을 명확히 표현)
-    const shadowY = 14 + (opts.groundYOffset || 0) / Math.max(0.5, scale);
-    c.fillStyle = 'rgba(15, 23, 42, 0.32)';
+    // 1. 지면 밀착 다층 앰비언트 오클루전(AO) 바닥 그림자 (자동차가 붕 뜨지 않고 아스팔트에 쫙 붙어 보이게 함!)
+    const shadowY = 11 + (opts.groundYOffset || 0) / Math.max(0.5, scale);
+    c.fillStyle = 'rgba(8, 13, 26, 0.52)';
     c.beginPath();
-    c.ellipse(0, shadowY, 74, 21, 0, 0, Math.PI * 2);
+    c.ellipse(0, shadowY, 76, 18, 0, 0, Math.PI * 2);
     c.fill();
-    c.fillStyle = 'rgba(15, 23, 42, 0.22)';
+    c.fillStyle = 'rgba(5, 8, 18, 0.42)';
     c.beginPath();
-    c.ellipse(0, shadowY, 54, 14, 0, 0, Math.PI * 2);
+    c.ellipse(0, shadowY - 2, 60, 12, 0, 0, Math.PI * 2);
     c.fill();
 
     const steer = opts.steer || 0;
     const spinAngle = opts.spinning ? Math.sin((opts.timeMs || 0) * 0.035) * 1.4 : 0;
     const trickAngle = opts.trickRot || 0;
-    // 3D Yaw 시차(Parallax): 핸들을 꺾거나 드리프트할 때 앞코는 회전 방향으로, 후미는 반대 방향으로 입체 이동!
-    const yaw = steer * 15 + (opts.drifting ? Math.sign(steer || 1) * 9 : 0);
-    const tilt = steer * 0.16 + (opts.drifting ? Math.sign(steer || 1) * 0.18 : 0) + spinAngle + trickAngle;
-    c.rotate(tilt);
 
-    // 하늘 고래 로켓(Bullet) 변신 모드일 때는 아기자기한 파스텔 하늘색 3D 고래 비행선으로 렌더링!
+    // 차가 좌우로 기우뚱하며 흔들리지 않도록 일반 조향 시 회전(Roll Tilt)을 제거하고 네 바퀴를 지면에 수평 고정!
+    const yaw = steer * 6.5 + (opts.drifting ? Math.sign(steer || 1) * 4.5 : 0);
+    if (spinAngle !== 0 || trickAngle !== 0) {
+      c.rotate(spinAngle + trickAngle);
+    }
+
+    // 하늘 고래 로켓(Bullet) 변신 모드
     if (opts.bullet) {
-      // 좌우 귀여운 고래 지느러미 날개
       c.fillStyle = '#4fc3f7';
       c.strokeStyle = '#ffffff';
       c.lineWidth = 3;
@@ -4198,7 +4740,6 @@
         c.stroke();
       });
 
-      // 포동포동 입체 하늘 고래 본체
       const rGrad = c.createRadialGradient(-16, -48, 10, 0, -32, 66);
       rGrad.addColorStop(0, '#ffffff');
       rGrad.addColorStop(0.32, '#80d8ff');
@@ -4212,7 +4753,6 @@
       c.fill();
       c.stroke();
 
-      // 고래의 초롱초롱 눈과 핑크 볼터치
       c.fillStyle = '#1e293b';
       c.beginPath();
       c.arc(-22 + yaw * 0.35, -42, 7.5, 0, Math.PI * 2);
@@ -4229,7 +4769,6 @@
       c.arc(34 + yaw * 0.35, -34, 7, 0, Math.PI * 2);
       c.fill();
 
-      // 무지개 별빛 로켓 제트 불꽃
       const fLen = 64 + Math.sin((opts.timeMs || 0) * 0.08) * 16;
       const fg = c.createLinearGradient(0, 6, 0, fLen);
       fg.addColorStop(0, '#ffffff');
@@ -4284,13 +4823,12 @@
       ? '#ffea00'
       : racer.secondary;
 
-    // 2. [최하단 깊이 레이어] 3D 프론트 노즈콘(앞범퍼) 및 조향 앞바퀴 (yaw 방향으로 먼저 꺾여 보임)
-    const frontX = yaw * 0.85;
-    draw3DTire(c, -48 + frontX, -32, 18, 24, yaw, steer * 0.36, opts.timeMs);
-    draw3DTire(c, 48 + frontX, -32, 18, 24, yaw, steer * 0.36, opts.timeMs);
+    // 2. [최하단 깊이 레이어] 3D 프론트 노즈콘(앞범퍼) 및 조향 앞바퀴
+    const frontX = yaw * 0.65;
+    draw3DTire(c, -48 + frontX, -28, 18, 24, yaw, steer * 0.28, opts.timeMs);
+    draw3DTire(c, 48 + frontX, -28, 18, 24, yaw, steer * 0.28, opts.timeMs);
 
-    // 앞범퍼 프론트 윙 & 노즈콘 (입체 경사면)
-    const noseGrad = c.createLinearGradient(frontX, -52, frontX, -26);
+    const noseGrad = c.createLinearGradient(frontX, -48, frontX, -24);
     noseGrad.addColorStop(0, '#ffffff');
     noseGrad.addColorStop(0.35, primaryCol);
     noseGrad.addColorStop(1, secondaryCol);
@@ -4298,33 +4836,32 @@
     c.strokeStyle = '#ffffff';
     c.lineWidth = 2.5;
     c.beginPath();
-    c.moveTo(-34 + frontX, -28);
-    c.lineTo(-22 + frontX * 1.15, -48);
-    c.lineTo(22 + frontX * 1.15, -48);
-    c.lineTo(34 + frontX, -28);
+    c.moveTo(-34 + frontX, -26);
+    c.lineTo(-22 + frontX * 1.1, -45);
+    c.lineTo(22 + frontX * 1.1, -45);
+    c.lineTo(34 + frontX, -26);
     c.closePath();
     c.fill();
     c.stroke();
 
-    // 3. [중간 깊이 레이어] 카본 하부 섀시 언더트레이(두께감 있는 3D 베이스) & 리어 액슬 샤프트
-    const rearX = -yaw * 0.25;
+    // 3. [중간 깊이 레이어] 카본 하부 섀시 언더트레이 & 리어 액슬 샤프트
+    const rearX = -yaw * 0.2;
     c.fillStyle = '#37474f';
-    c.fillRect(-58 + rearX, -9, 116, 7);
+    c.fillRect(-58 + rearX, -7, 116, 7);
 
-    // 하부 3D 입체 범퍼 두께 (아래쪽 어두운 단면)
     c.fillStyle = '#102027';
     c.beginPath();
-    c.roundRect(-52 + rearX, -4, 104, 18, 9);
+    c.roundRect(-52 + rearX, -2, 104, 17, 8);
     c.fill();
 
-    // 광폭 3D 뒷바퀴 2개 (두꺼운 원통형 레이싱 슬릭 타이어)
-    draw3DTire(c, -56 + rearX, -6, 25, 36, yaw, 0, opts.timeMs);
-    draw3DTire(c, 56 + rearX, -6, 25, 36, yaw, 0, opts.timeMs);
+    // 광폭 3D 뒷바퀴 2개 (도로 바닥에 단단히 밀착!)
+    draw3DTire(c, -56 + rearX, -4, 25, 36, yaw, 0, opts.timeMs);
+    draw3DTire(c, 56 + rearX, -4, 25, 36, yaw, 0, opts.timeMs);
 
-    // 4. 좌·우 3D 입체 사이드 포드(Side Pontoons - 코너링 시 바깥쪽 포드가 입체적으로 더 넓게 보임)
-    const leftPodW = 24 - yaw * 0.32;
-    const rightPodW = 24 + yaw * 0.32;
-    const podGradL = c.createLinearGradient(-48, -32, -20, 6);
+    // 4. 좌·우 3D 입체 사이드 포드
+    const leftPodW = 24 - yaw * 0.25;
+    const rightPodW = 24 + yaw * 0.25;
+    const podGradL = c.createLinearGradient(-48, -30, -20, 6);
     podGradL.addColorStop(0, '#ffffff');
     podGradL.addColorStop(0.25, primaryCol);
     podGradL.addColorStop(1, secondaryCol);
@@ -4332,48 +4869,44 @@
     c.fillStyle = podGradL;
     c.strokeStyle = '#ffffff';
     c.lineWidth = 2.5;
-    // 왼쪽 3D 사이드 포드
     c.beginPath();
-    c.roundRect(-47 + yaw * 0.2, -28, Math.max(14, leftPodW), 32, 11);
+    c.roundRect(-47 + yaw * 0.15, -26, Math.max(15, leftPodW), 32, 11);
     c.fill();
     c.stroke();
-    // 오른쪽 3D 사이드 포드
     c.beginPath();
-    c.roundRect(47 - Math.max(14, rightPodW) + yaw * 0.2, -28, Math.max(14, rightPodW), 32, 11);
+    c.roundRect(47 - Math.max(15, rightPodW) + yaw * 0.15, -26, Math.max(15, rightPodW), 32, 11);
     c.fill();
     c.stroke();
 
-    // 사이드 에어 인테이크 (입체 공기 흡입구 구멍)
     c.fillStyle = '#1c2632';
     c.beginPath();
-    c.roundRect(-42 + yaw * 0.25, -24, 9, 8, 3);
-    c.roundRect(33 + yaw * 0.25, -24, 9, 8, 3);
+    c.roundRect(-42 + yaw * 0.2, -22, 9, 8, 3);
+    c.roundRect(33 + yaw * 0.2, -22, 9, 8, 3);
     c.fill();
 
-    // 5. 운전석 버킷 시트 & 핸들 컬럼 & 드라이버 양손 (3D 콕핏 디테일)
+    // 5. 운전석 버킷 시트 & 핸들 컬럼 & 드라이버 양손
     c.fillStyle = '#1e293b';
     c.strokeStyle = '#475569';
     c.lineWidth = 2;
     c.beginPath();
-    c.roundRect(-22 + yaw * 0.35, -38, 44, 24, 10);
+    c.roundRect(-22 + yaw * 0.25, -36, 44, 24, 10);
     c.fill();
     c.stroke();
 
-    // 카트 앞쪽 실제 조향 핸들 & 드라이버의 귀여운 흰색 장갑 손
-    const swX = yaw * 0.65;
+    const swX = yaw * 0.45;
     c.strokeStyle = '#263238';
     c.lineWidth = 4;
     c.beginPath();
-    c.arc(swX, -36, 11, Math.PI * 0.9, Math.PI * 2.1);
+    c.arc(swX, -34, 11, Math.PI * 0.9, Math.PI * 2.1);
     c.stroke();
     c.fillStyle = '#ffffff';
     c.beginPath();
-    c.arc(swX - 10, -35 - steer * 4, 4.5, 0, Math.PI * 2);
-    c.arc(swX + 10, -35 + steer * 4, 4.5, 0, Math.PI * 2);
+    c.arc(swX - 10, -33 - steer * 2.5, 4.5, 0, Math.PI * 2);
+    c.arc(swX + 10, -33 + steer * 2.5, 4.5, 0, Math.PI * 2);
     c.fill();
 
-    // 6. 중앙 3D 입체 엔진 카울 & 리어 바디 쉘 (볼륨감 있는 상하/좌우 3D 쉐이딩)
-    const cowlGrad = c.createRadialGradient(-10 + rearX, -22, 4, rearX, -8, 48);
+    // 6. 중앙 3D 입체 엔진 카울 & 리어 바디 쉘
+    const cowlGrad = c.createRadialGradient(-10 + rearX, -20, 4, rearX, -6, 48);
     cowlGrad.addColorStop(0, '#ffffff');
     cowlGrad.addColorStop(0.22, primaryCol);
     cowlGrad.addColorStop(0.78, secondaryCol);
@@ -4382,34 +4915,31 @@
     c.strokeStyle = '#ffffff';
     c.lineWidth = 3;
     c.beginPath();
-    c.moveTo(-42 + rearX, 9);
-    c.lineTo(42 + rearX, 9);
-    c.lineTo(35 + yaw * 0.2, -24);
-    c.lineTo(-35 + yaw * 0.2, -24);
+    c.moveTo(-42 + rearX, 11);
+    c.lineTo(42 + rearX, 11);
+    c.lineTo(35 + yaw * 0.15, -22);
+    c.lineTo(-35 + yaw * 0.15, -22);
     c.closePath();
     c.fill();
     c.stroke();
 
-    // 차체 상단 하이라이트 곡면 유리광 (3D 볼륨감)
     c.fillStyle = 'rgba(255, 255, 255, 0.38)';
     c.beginPath();
-    c.ellipse(rearX * 0.5, -16, 24, 5, 0, 0, Math.PI * 2);
+    c.ellipse(rearX * 0.5, -14, 24, 5, 0, 0, Math.PI * 2);
     c.fill();
 
-    // 7. 3D 입체 리어 스포일러 윙 (지지대 파일런 + 상판 + 측면 엔드플레이트)
-    const wingX = rearX * 1.1;
-    // 스포일러 지지대 기둥 2개
+    // 7. 3D 입체 리어 스포일러 윙
+    const wingX = rearX * 0.9;
     c.fillStyle = '#263238';
-    c.fillRect(-24 + wingX, -38, 6, 16);
-    c.fillRect(18 + wingX, -38, 6, 16);
+    c.fillRect(-24 + wingX, -36, 6, 16);
+    c.fillRect(18 + wingX, -36, 6, 16);
 
-    // 3D 스포일러 날개 본체 (두께 단면 + 상판 그라데이션)
     c.fillStyle = '#0f172a';
     c.beginPath();
-    c.roundRect(-50 + wingX, -41, 100, 11, 5);
+    c.roundRect(-50 + wingX, -39, 100, 11, 5);
     c.fill();
 
-    const wingGrad = c.createLinearGradient(-50 + wingX, -45, 50 + wingX, -34);
+    const wingGrad = c.createLinearGradient(-50 + wingX, -43, 50 + wingX, -32);
     wingGrad.addColorStop(0, secondaryCol);
     wingGrad.addColorStop(0.5, '#ffffff');
     wingGrad.addColorStop(1, primaryCol);
@@ -4417,25 +4947,23 @@
     c.strokeStyle = '#ffffff';
     c.lineWidth = 2.2;
     c.beginPath();
-    c.roundRect(-50 + wingX, -44, 100, 10, 5);
+    c.roundRect(-50 + wingX, -42, 100, 10, 5);
     c.fill();
     c.stroke();
 
-    // 스포일러 양끝 3D 엔드플레이트 (날개 옆면 판)
     c.fillStyle = primaryCol;
     c.strokeStyle = '#ffffff';
     c.lineWidth = 1.8;
     c.beginPath();
-    c.roundRect(-53 + wingX, -47, 7, 16, 3);
-    c.roundRect(46 + wingX, -47, 7, 16, 3);
+    c.roundRect(-53 + wingX, -45, 7, 16, 3);
+    c.roundRect(46 + wingX, -45, 7, 16, 3);
     c.fill();
     c.stroke();
 
-    // 8. 3D 원통형 크롬 트윈 배기구 (머플러 파이프 외벽 + 깊은 내부 구멍)
+    // 8. 3D 원통형 크롬 트윈 배기구
     [-22, 22].forEach(ox => {
       const mx = ox + rearX;
-      // 파이프 원통 외벽
-      const pipeGrad = c.createLinearGradient(mx - 9, -8, mx + 9, 6);
+      const pipeGrad = c.createLinearGradient(mx - 9, -6, mx + 9, 8);
       pipeGrad.addColorStop(0, '#eceff1');
       pipeGrad.addColorStop(0.5, '#78909c');
       pipeGrad.addColorStop(1, '#263238');
@@ -4443,46 +4971,45 @@
       c.strokeStyle = '#ffffff';
       c.lineWidth = 2;
       c.beginPath();
-      c.arc(mx, 0, 9.5, 0, Math.PI * 2);
+      c.arc(mx, 2, 9.5, 0, Math.PI * 2);
       c.fill();
       c.stroke();
 
-      // 배기구 안쪽 깊은 구멍 & 열기 링
       c.fillStyle = (opts.boosting || opts.star) ? '#00e5ff' : '#11171a';
       c.beginPath();
-      c.arc(mx, 0, 5.5, 0, Math.PI * 2);
+      c.arc(mx, 2, 5.5, 0, Math.PI * 2);
       c.fill();
     });
 
-    // 9. 슈퍼 부스터 3D 다중 코어 제트 불꽃 vs 마리오 카트 3단 드리프트 스파크
+    // 9. 슈퍼 부스터 제트 불꽃 vs 드리프트 스파크
     if (opts.boosting || opts.star) {
-      const flameLen = 38 + Math.sin((opts.timeMs || 0) * 0.06) * 13;
+      const flameLen = 38 + Math.sin((opts.timeMs || 0) * 0.06) * 10;
       [-22, 22].forEach(ox => {
         const mx = ox + rearX;
-        const fg = c.createLinearGradient(mx, 0, mx, flameLen);
+        const fg = c.createLinearGradient(mx, 2, mx, flameLen);
         fg.addColorStop(0, '#ffffff');
         fg.addColorStop(0.32, opts.star ? '#ffea00' : '#00e5ff');
         fg.addColorStop(0.72, '#ff1744');
         fg.addColorStop(1, 'rgba(255, 23, 68, 0)');
         c.fillStyle = fg;
         c.beginPath();
-        c.moveTo(mx - 12, 0);
-        c.lineTo(mx + 12, 0);
-        c.lineTo(mx - yaw * 0.3, flameLen);
+        c.moveTo(mx - 12, 2);
+        c.lineTo(mx + 12, 2);
+        c.lineTo(mx - yaw * 0.2, flameLen);
         c.closePath();
         c.fill();
       });
     } else if (opts.drifting) {
       const stageCol = opts.driftStage === 3 ? '#e040fb' : (opts.driftStage === 2 ? '#ff9100' : '#00e5ff');
-      const sparkR = 10 + (opts.driftStage || 1) * 4;
+      const sparkR = 9 + (opts.driftStage || 1) * 3.5;
       [-52, 52].forEach(sx => {
         c.fillStyle = stageCol;
         c.beginPath();
-        c.arc(sx + rearX, 11, sparkR, 0, Math.PI * 2);
+        c.arc(sx + rearX, 12, sparkR, 0, Math.PI * 2);
         c.fill();
         c.fillStyle = '#ffffff';
         c.beginPath();
-        c.arc(sx + rearX, 11, sparkR * 0.45, 0, Math.PI * 2);
+        c.arc(sx + rearX, 12, sparkR * 0.45, 0, Math.PI * 2);
         c.fill();
       });
     }
@@ -4492,24 +5019,22 @@
     c.strokeStyle = primaryCol;
     c.lineWidth = 2.5;
     c.beginPath();
-    c.arc(rearX, -9, 12.5, 0, Math.PI * 2);
+    c.arc(rearX, -7, 12, 0, Math.PI * 2);
     c.fill();
     c.stroke();
     c.fillStyle = '#1e293b';
-    c.font = '900 15px sans-serif';
+    c.font = '900 14px sans-serif';
     c.textAlign = 'center';
     c.textBaseline = 'middle';
-    c.fillText(racer.number, rearX, -8);
+    c.fillText(racer.number, rearX, -6);
 
-    // 플레이어가 아이템을 보유 중이면 카트 옆에 아기자기한 버블 아이템 표시!
     if (opts.isPlayer && opts.heldItem) {
       drawHeldItem3D(c, opts.heldItem, opts.timeMs || 0);
     }
 
-    // 11. [상단 깊이 레이어] 3D 구체 쉐이딩 캐릭터 헬멧 & 입체 귀/리본/공룡뿔 & 고글
+    // 11. [상단 깊이 레이어] 흔들림 없이 안정적인 캐릭터 헤드 & 얼굴 사진(내 얼굴 + 다른 레이서 얼굴) 액자 렌더링!
     c.save();
-    c.translate(yaw * 0.55, -54);
-    c.rotate(steer * 0.16);
+    c.translate(yaw * 0.32, -53);
 
     // 캐릭터 어깨/레이싱 수트 입체 토르소
     const suitGrad = c.createLinearGradient(0, -2, 0, 18);
@@ -4519,7 +5044,7 @@
     c.strokeStyle = '#ffffff';
     c.lineWidth = 2.5;
     c.beginPath();
-    c.ellipse(0, 12, 22, 11, 0, Math.PI, 0);
+    c.ellipse(0, 13, 22, 11, 0, Math.PI, 0);
     c.fill();
     c.stroke();
 
@@ -4571,7 +5096,7 @@
       });
     }
 
-    // 3D 구체 광택 헬멧 (RadialGradient로 장난감 피규어 같은 둥근 입체 볼륨감 구현!)
+    // 3D 구체 광택 헬멧 외곽 테두리
     const helmGrad = c.createRadialGradient(-10, -15, 4, 0, -4, 30);
     helmGrad.addColorStop(0, '#ffffff');
     helmGrad.addColorStop(0.22, primaryCol);
@@ -4585,29 +5110,36 @@
     c.fill();
     c.stroke();
 
-    // 헬멧 상단 유리알 하이라이트 반사광
-    c.fillStyle = 'rgba(255, 255, 255, 0.55)';
-    c.beginPath();
-    c.ellipse(-9, -18, 9, 4.5, -0.35, 0, Math.PI * 2);
-    c.fill();
+    // 헬멧 중앙 원형 얼굴 사진(내 사진 / 다른 레이서 얼굴 사진) 렌더링!
+    const faceCanvas = getRacerFaceCanvas(racer.id || 0);
+    const faceOffsetX = steer * 2.5;
+    if (faceCanvas) {
+      c.save();
+      c.beginPath();
+      c.arc(faceOffsetX, -3, 22, 0, Math.PI * 2);
+      c.clip();
+      c.drawImage(faceCanvas, -22 + faceOffsetX, -25, 44, 44);
+      c.restore();
 
-    // 핸들 조향 방향(yaw)으로 시선이 돌아가는 3D 입체 레이싱 고글/바이저
-    const visorShift = steer * 6;
+      // 얼굴 사진을 돋보이게 하는 반짝이는 화이트 원형 프레임
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 2.6;
+      c.beginPath();
+      c.arc(faceOffsetX, -3, 22, 0, Math.PI * 2);
+      c.stroke();
+    }
+
+    // 이마 위쪽에 귀엽게 올린 미니 레이싱 고글 (얼굴 사진을 가리지 않음!)
+    const visorShift = steer * 2.5;
     c.fillStyle = racer.visor;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = 2.2;
+    c.lineWidth = 2;
     c.beginPath();
-    c.roundRect(-21 + visorShift, -22, 42, 13, 6.5);
+    c.roundRect(-16 + visorShift, -29, 32, 7.5, 4);
     c.fill();
     c.stroke();
 
-    // 고글 반사 하이라이트
-    c.fillStyle = 'rgba(255,255,255,0.65)';
-    c.beginPath();
-    c.roundRect(-16 + visorShift, -20, 14, 4, 2);
-    c.fill();
-
-    // 스핀 중일 때 머리 위 별 빙글빙글 표시
+    // 스핀 중일 때 머리 위 별 표시
     if (opts.spinning) {
       c.fillStyle = '#ffea00';
       c.font = '900 18px sans-serif';
@@ -4624,7 +5156,7 @@
     const H = previewCanvas.height;
     pctx.clearRect(0, 0, W, H);
 
-    // 귀여운 파스텔 3D 회전 쇼케이스 원판(턴테이블)
+    // 귀여운 파스텔 3D 쇼케이스 원판(턴테이블)
     const padGrad = pctx.createRadialGradient(W * 0.5, H * 0.77, 12, W * 0.5, H * 0.78, 102);
     padGrad.addColorStop(0, '#ffffff');
     padGrad.addColorStop(0.55, '#80d8ff');
@@ -4638,11 +5170,10 @@
     pctx.stroke();
 
     const racer = RACERS[state.selectedRacer];
-    const hoverY = Math.sin(timeMs * 0.005) * 4;
-    const demoSteer = Math.sin(timeMs * 0.0028) * 0.65;
 
-    drawKartCharacter(pctx, W * 0.5, H * 0.69 + hoverY, 1.18, racer, {
-      steer: demoSteer,
+    // 로비 프리뷰에서도 캐릭터와 차가 흔들리지 않고 턴테이블 바닥에 단단히 안착!
+    drawKartCharacter(pctx, W * 0.5, H * 0.72, 1.18, racer, {
+      steer: 0,
       boosting: true,
       drifting: false,
       ufo: false,

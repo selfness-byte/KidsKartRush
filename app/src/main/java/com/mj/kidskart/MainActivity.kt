@@ -3,10 +3,12 @@ package com.mj.kidskart
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -18,6 +20,7 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.webkit.JavascriptInterface
+import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -32,6 +35,11 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
     private var ttsReady = false
     private var sensorManager: SensorManager? = null
     private var accelSensor: Sensor? = null
+    private var fileUploadCallback: ValueCallback<Array<Uri>>? = null
+
+    companion object {
+        private const val FILE_CHOOSER_REQUEST_CODE = 1001
+    }
 
     @Volatile
     private var tiltSteerValue: Float = 0f
@@ -68,7 +76,34 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
             }
 
             webViewClient = WebViewClient()
-            webChromeClient = WebChromeClient()
+            webChromeClient = object : WebChromeClient() {
+                override fun onShowFileChooser(
+                    webView: WebView?,
+                    filePathCallback: ValueCallback<Array<Uri>>?,
+                    fileChooserParams: FileChooserParams?
+                ): Boolean {
+                    fileUploadCallback?.onReceiveValue(null)
+                    fileUploadCallback = filePathCallback
+                    return try {
+                        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type = "image/*"
+                            putExtra(
+                                Intent.EXTRA_ALLOW_MULTIPLE,
+                                fileChooserParams?.mode == FileChooserParams.MODE_OPEN_MULTIPLE
+                            )
+                        }
+                        startActivityForResult(
+                            Intent.createChooser(intent, "레이서 얼굴 사진 선택"),
+                            FILE_CHOOSER_REQUEST_CODE
+                        )
+                        true
+                    } catch (_: Exception) {
+                        fileUploadCallback = null
+                        false
+                    }
+                }
+            }
             addJavascriptInterface(KartBridge(), "AndroidBridge")
         }
 
@@ -78,6 +113,28 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
 
         // 앱 시작 시 백그라운드 자동 업데이트 확인 (inanimals-1977.web.app / GitHub)
         AppUpdater.checkOnStartup(this)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == FILE_CHOOSER_REQUEST_CODE) {
+            val callback = fileUploadCallback
+            fileUploadCallback = null
+            if (resultCode == RESULT_OK && data != null) {
+                val clip = data.clipData
+                val results: Array<Uri>? = when {
+                    clip != null && clip.itemCount > 0 -> {
+                        Array(clip.itemCount) { idx -> clip.getItemAt(idx).uri }
+                    }
+                    data.data != null -> arrayOf(data.data!!)
+                    else -> null
+                }
+                callback?.onReceiveValue(results)
+            } else {
+                callback?.onReceiveValue(null)
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")
