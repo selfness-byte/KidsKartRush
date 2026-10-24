@@ -501,6 +501,46 @@
     animation: pulseBtn 0.45s infinite alternate;
   }
 
+  /* 하단 후방 추월 경보 미러 (마리오 카트 스타일 후방 레이더) */
+  #rearAlertBar {
+    position: absolute;
+    bottom: 84px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, rgba(213, 0, 0, 0.92), rgba(255, 109, 0, 0.92));
+    border: 3px solid #ffea00;
+    border-radius: 999px;
+    padding: 5px 18px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.85);
+    z-index: 18;
+    animation: pulseBtn 0.35s infinite alternate;
+    white-space: nowrap;
+  }
+
+  /* 드리프트 미니터보 단계 표시 배지 */
+  #driftStageBadge {
+    position: absolute;
+    bottom: 122px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(13, 27, 42, 0.88);
+    border: 2.5px solid #00e5ff;
+    border-radius: 999px;
+    padding: 4px 16px;
+    color: #00e5ff;
+    font-size: 15px;
+    font-weight: 900;
+    display: none;
+    z-index: 18;
+    box-shadow: 0 0 16px rgba(0, 229, 255, 0.65);
+  }
+
   /* 하단 중앙 속도계 & 기어 단수 표시 */
   .speedometer-box {
     position: absolute;
@@ -796,8 +836,8 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.1.0</span>
-      <h1>🏎️ 키즈 카트 러쉬!</h1>
+      <span class="lobby-badge" id="verBadge">v1.2.0</span>
+      <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
       <button id="toggleAssistBtn" class="pill-btn active">⛑️ 코너 도우미 ON</button>
@@ -845,29 +885,36 @@
       </div>
     </div>
 
-    <!-- 트랙 선택 -->
+    <!-- 트랙 선택 (슈퍼마리오 카트 + 카트라이더 4대 테마 코스) -->
     <div class="panel-card">
-      <div class="panel-title">🗺️ 달릴 코스 고르기</div>
+      <div class="panel-title">🗺️ 슈퍼마리오 & 카트 코스 고르기</div>
       <div class="track-list" id="trackList">
         <div class="track-card selected" data-track="0">
-          <div class="track-icon">🌳</div>
+          <div class="track-icon">🍄</div>
           <div class="track-info">
-            <div class="track-name">햇살 빌리지 트랙</div>
-            <div class="track-sub">⭐ 아주 쉬움 · 넓고 평탄한 마을 길</div>
+            <div class="track-name">마리오 서킷 빌리지</div>
+            <div class="track-sub">⭐ 초록 토관 · 점프대 · 물음표 박스 가득!</div>
           </div>
         </div>
         <div class="track-card" data-track="1">
-          <div class="track-icon">🍭</div>
+          <div class="track-icon">🌈</div>
           <div class="track-info">
-            <div class="track-name">달콤 캔디 랜드</div>
-            <div class="track-sub">⭐⭐ 재미있음 · 무지개 부스터 가득!</div>
+            <div class="track-name">레인보우 우주 로드</div>
+            <div class="track-sub">⭐⭐ 무지개 점프 패드 & 별빛 대점프!</div>
           </div>
         </div>
         <div class="track-card" data-track="2">
+          <div class="track-icon">🏰</div>
+          <div class="track-info">
+            <div class="track-name">쿠파 용암 캐슬</div>
+            <div class="track-sub">⭐⭐ 용암 다리 점프 & 불꽃 대시 구간!</div>
+          </div>
+        </div>
+        <div class="track-card" data-track="3">
           <div class="track-icon">🦖</div>
           <div class="track-info">
-            <div class="track-name">공룡 정글 파크</div>
-            <div class="track-sub">⭐⭐ 신나는 모험 · 황금 코인 대폭발!</div>
+            <div class="track-name">요시 공룡 정글</div>
+            <div class="track-sub">⭐⭐ 공룡 대교 · 황금 코인 대폭발!</div>
           </div>
         </div>
       </div>
@@ -915,7 +962,9 @@
   </div>
 
   <div id="centerBanner"></div>
-  <button id="startBoostBtn">🚀 출발 부스터 터치!</button>
+  <button id="startBoostBtn">🚀 출발 로켓 부스터 터치!</button>
+  <div id="driftStageBadge">🔵 1단 미니터보 충전 중!</div>
+  <div id="rearAlertBar">⚠️ 뒤에서 라이벌 추월 중! 💨</div>
 
   <!-- 하단 중앙 디지털 속도계 & 기어 단수 & N2O 게이지 -->
   <div class="speedometer-box">
@@ -974,8 +1023,8 @@
     </button>
 
     <button id="driftBtn" class="big-action-btn" type="button">
-      <div class="btn-icon">💨</div>
-      <div class="btn-title" style="font-size:16px;">드리프트</div>
+      <div class="btn-icon">🤸</div>
+      <div class="btn-title" style="font-size:15px;">점프·드리프트</div>
     </button>
 
     <button id="boostBtn" class="big-action-btn ready" type="button">
@@ -1060,21 +1109,24 @@
     } catch (_) {}
   });
 
-  // ==================== 리얼 자동차 & 카트 레이싱 사운드 합성 엔진 (CarSoundEngine) ====================
+  // ==================== 리얼 자동차 & 슈퍼마리오 카트 사운드 합성 엔진 (CarSoundEngine) ====================
   class CarSoundEngine {
     constructor() {
       this.ctx = null;
       this.muted = false;
+      this.appPaused = false;
       this.bgmTimer = null;
       this.step = 0;
 
-      // 연속 엔진 사운드 노드 (실린더 배기음 + 서브베이스 + 터보 휘슬)
+      // 연속 엔진 사운드 노드 (실린더 배기음 + 중저음 서브베이스 + 터보 휘슬)
       this.engineRunning = false;
       this.engOsc1 = null;
       this.engOsc2 = null;
+      this.engSubOsc = null;
       this.turboOsc = null;
       this.engFilter = null;
       this.engGain = null;
+      this.subGain = null;
       this.turboGain = null;
 
       // 타이어 스키드(드리프트 마찰음) 노드
@@ -1082,107 +1134,168 @@
       this.skidFilter = null;
       this.skidGain = null;
       this.noiseBuffer = null;
+      this.brownNoiseBuffer = null;
+      this.distCurve = null;
 
       this.currentGear = 1;
       this.gearShiftCooldown = 0;
     }
 
     init() {
+      if (this.appPaused) return;
       if (!this.ctx) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (AC) {
           this.ctx = new AC();
-          this.createNoiseBuffer();
+          this.createNoiseBuffers();
+          this.distCurve = this.makeDistortionCurve(55);
         }
       }
-      if (this.ctx && this.ctx.state === 'suspended') {
-        this.ctx.resume();
+      if (this.ctx && this.ctx.state === 'suspended' && !this.appPaused) {
+        this.ctx.resume().catch(() => {});
       }
     }
 
-    createNoiseBuffer() {
+    makeDistortionCurve(amount = 50) {
+      const n = 8192;
+      const curve = new Float32Array(n);
+      const deg = Math.PI / 180;
+      for (let i = 0; i < n; i++) {
+        const x = (i * 2) / n - 1;
+        curve[i] = ((3 + amount) * x * 20 * deg) / (Math.PI + amount * Math.abs(x));
+      }
+      return curve;
+    }
+
+    createNoiseBuffers() {
       if (!this.ctx) return;
       const sr = this.ctx.sampleRate;
       const len = sr * 2;
+
+      // 화이트 노이즈 (타이어 스키드용)
       const buf = this.ctx.createBuffer(1, len, sr);
       const data = buf.getChannelData(0);
       for (let i = 0; i < len; i++) {
         data[i] = Math.random() * 2 - 1;
       }
       this.noiseBuffer = buf;
+
+      // 브라운/핑크 중저음 노이즈 (두꺼운 슈퍼부스터 제트 배기음용)
+      const bBuf = this.ctx.createBuffer(1, len, sr);
+      const bData = bBuf.getChannelData(0);
+      let lastOut = 0.0;
+      for (let i = 0; i < len; i++) {
+        const white = Math.random() * 2 - 1;
+        bData[i] = (lastOut + 0.045 * white) / 1.045;
+        lastOut = bData[i];
+        bData[i] *= 3.2;
+      }
+      this.brownNoiseBuffer = bBuf;
     }
 
-    // 1. 자동차 시동 크랭킹 & 부르릉 배기음 ("큐르르릉~ 부르르릉! 브아앙~!")
+    // 앱 백그라운드 전환 / 화면 꺼짐 / 종료 시 모든 오디오 즉시 완전 차단
+    suspendAll() {
+      this.appPaused = true;
+      this.stopBGM();
+      try {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      } catch (_) {}
+      try {
+        if (this.ctx && this.ctx.state !== 'closed') {
+          this.ctx.suspend().catch(() => {});
+        }
+      } catch (_) {}
+    }
+
+    resumeAll() {
+      this.appPaused = false;
+      try {
+        if (this.ctx && this.ctx.state === 'suspended' && !this.muted) {
+          this.ctx.resume().catch(() => {});
+        }
+        if (state && state.mode === 'racing' && state.countdownTimer <= 0 && !this.muted) {
+          this.startBGM();
+        }
+      } catch (_) {}
+    }
+
+    // 1. 자동차 시동 크랭킹 & 중저음 V8 배기음 ("큐르르릉~ 구르르릉! 부아아앙~!")
     playEngineStart() {
-      if (this.muted) return;
+      if (this.muted || this.appPaused) return;
       try {
         this.init();
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
 
-        // 크랭킹 후 우렁찬 배기 레브(Rev)
         const osc = this.ctx.createOscillator();
         const sub = this.ctx.createOscillator();
+        const shaper = this.ctx.createWaveShaper();
         const filter = this.ctx.createBiquadFilter();
         const gain = this.ctx.createGain();
 
         osc.type = 'sawtooth';
         sub.type = 'triangle';
+        if (this.distCurve) shaper.curve = this.distCurve;
         filter.type = 'lowpass';
-        filter.Q.value = 5.5;
+        filter.Q.value = 4.5;
 
-        // 시동 모터 -> 점화 폭발 -> 브아앙 레브업 -> 아이들링
-        osc.frequency.setValueAtTime(42, now);
-        osc.frequency.linearRampToValueAtTime(68, now + 0.18);
-        osc.frequency.exponentialRampToValueAtTime(175, now + 0.48);
-        osc.frequency.exponentialRampToValueAtTime(82, now + 0.92);
+        osc.frequency.setValueAtTime(38, now);
+        osc.frequency.linearRampToValueAtTime(62, now + 0.18);
+        osc.frequency.exponentialRampToValueAtTime(148, now + 0.48);
+        osc.frequency.exponentialRampToValueAtTime(68, now + 0.95);
 
-        sub.frequency.setValueAtTime(21, now);
-        sub.frequency.exponentialRampToValueAtTime(88, now + 0.48);
-        sub.frequency.exponentialRampToValueAtTime(41, now + 0.92);
+        sub.frequency.setValueAtTime(24, now);
+        sub.frequency.exponentialRampToValueAtTime(74, now + 0.48);
+        sub.frequency.exponentialRampToValueAtTime(36, now + 0.95);
 
-        filter.frequency.setValueAtTime(260, now);
-        filter.frequency.exponentialRampToValueAtTime(1400, now + 0.48);
-        filter.frequency.exponentialRampToValueAtTime(450, now + 0.92);
+        filter.frequency.setValueAtTime(220, now);
+        filter.frequency.exponentialRampToValueAtTime(920, now + 0.48);
+        filter.frequency.exponentialRampToValueAtTime(340, now + 0.95);
 
         gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.26, now + 0.22);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
+        gain.gain.linearRampToValueAtTime(0.28, now + 0.22);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.98);
 
-        osc.connect(filter);
-        sub.connect(filter);
+        osc.connect(shaper);
+        sub.connect(shaper);
+        shaper.connect(filter);
         filter.connect(gain);
         gain.connect(this.ctx.destination);
 
         osc.start(now);
         sub.start(now);
-        osc.stop(now + 0.96);
-        sub.stop(now + 0.96);
+        osc.stop(now + 1.0);
+        sub.stop(now + 1.0);
       } catch (_) {}
     }
 
-    // 2. 주행 중 연속 자동차 엔진음 & 기어 변속 & 타이어 스키드 시작
+    // 2. 주행 중 연속 자동차 엔진음 & 서브베이스 & 타이어 스키드 시작
     startContinuousEngine() {
+      if (this.appPaused) return;
       this.init();
       if (!this.ctx || this.engineRunning) return;
       try {
         const now = this.ctx.currentTime;
         this.engOsc1 = this.ctx.createOscillator();
         this.engOsc2 = this.ctx.createOscillator();
+        this.engSubOsc = this.ctx.createOscillator();
         this.turboOsc = this.ctx.createOscillator();
         this.engFilter = this.ctx.createBiquadFilter();
         this.engGain = this.ctx.createGain();
+        this.subGain = this.ctx.createGain();
         this.turboGain = this.ctx.createGain();
 
         this.engOsc1.type = 'sawtooth';
         this.engOsc2.type = 'square';
+        this.engSubOsc.type = 'triangle';
         this.turboOsc.type = 'sine';
 
         this.engFilter.type = 'lowpass';
-        this.engFilter.frequency.setValueAtTime(380, now);
-        this.engFilter.Q.setValueAtTime(4.2, now);
+        this.engFilter.frequency.setValueAtTime(340, now);
+        this.engFilter.Q.setValueAtTime(3.8, now);
 
         this.engGain.gain.setValueAtTime(0.001, now);
+        this.subGain.gain.setValueAtTime(0.001, now);
         this.turboGain.gain.setValueAtTime(0.0001, now);
 
         this.engOsc1.connect(this.engFilter);
@@ -1190,14 +1303,17 @@
         this.engFilter.connect(this.engGain);
         this.engGain.connect(this.ctx.destination);
 
+        this.engSubOsc.connect(this.subGain);
+        this.subGain.connect(this.ctx.destination);
+
         this.turboOsc.connect(this.turboGain);
         this.turboGain.connect(this.ctx.destination);
 
         this.engOsc1.start(now);
         this.engOsc2.start(now);
+        this.engSubOsc.start(now);
         this.turboOsc.start(now);
 
-        // 타이어 스키드 노이즈 루프
         if (this.noiseBuffer) {
           this.skidNode = this.ctx.createBufferSource();
           this.skidNode.buffer = this.noiseBuffer;
@@ -1205,8 +1321,8 @@
 
           this.skidFilter = this.ctx.createBiquadFilter();
           this.skidFilter.type = 'bandpass';
-          this.skidFilter.frequency.setValueAtTime(1450, now);
-          this.skidFilter.Q.setValueAtTime(6.5, now);
+          this.skidFilter.frequency.setValueAtTime(1350, now);
+          this.skidFilter.Q.setValueAtTime(6.0, now);
 
           this.skidGain = this.ctx.createGain();
           this.skidGain.gain.setValueAtTime(0.0001, now);
@@ -1221,62 +1337,66 @@
       } catch (_) {}
     }
 
-    // 매 프레임 자동차 속도(km/h), 기어 변속, 부스터, 드리프트 상태에 맞춰 엔진음 업데이트
     updateContinuousEngine(speed, maxSpeed, isBoosting, isDrifting, steerIntensity, dt) {
       if (!this.engineRunning || !this.ctx) return;
-      if (this.muted || state.mode !== 'racing') {
-        this.engGain.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.05);
-        if (this.turboGain) this.turboGain.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.05);
-        if (this.skidGain) this.skidGain.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.05);
+      if (this.muted || this.appPaused || state.mode !== 'racing') {
+        const t = this.ctx.currentTime;
+        this.engGain.gain.setTargetAtTime(0.0001, t, 0.04);
+        if (this.subGain) this.subGain.gain.setTargetAtTime(0.0001, t, 0.04);
+        if (this.turboGain) this.turboGain.gain.setTargetAtTime(0.0001, t, 0.04);
+        if (this.skidGain) this.skidGain.gain.setTargetAtTime(0.0001, t, 0.04);
         return;
       }
 
       const now = this.ctx.currentTime;
-      // 1단~5단 기어 계산 및 기어 변속 사운드 효과
       let newGear = 1;
-      if (speed > 210) newGear = 5;
-      else if (speed > 160) newGear = 4;
-      else if (speed > 110) newGear = 3;
-      else if (speed > 55) newGear = 2;
+      if (speed > 215) newGear = 5;
+      else if (speed > 165) newGear = 4;
+      else if (speed > 112) newGear = 3;
+      else if (speed > 56) newGear = 2;
 
       if (newGear !== this.currentGear) {
         if (newGear > this.currentGear) {
-          this.gearShiftCooldown = 0.14; // 기어 변속 순간 RPM 블립("철컥- 부아앙!")
+          this.gearShiftCooldown = 0.14;
         }
         this.currentGear = newGear;
       }
       if (this.gearShiftCooldown > 0) this.gearShiftCooldown = Math.max(0, this.gearShiftCooldown - dt);
 
-      // 기어 내 RPM 비율 계산 (실제 자동차처럼 단수마다 RPM이 솟구쳤다 내려감)
-      const gearRanges = [0, 55, 110, 160, 210, 320];
+      const gearRanges = [0, 56, 112, 165, 215, 340];
       const gMin = gearRanges[this.currentGear - 1];
       const gMax = gearRanges[this.currentGear];
       const gearRpm = Math.max(0.15, Math.min(1.15, (speed - gMin) / Math.max(20, gMax - gMin)));
 
       const shiftDip = this.gearShiftCooldown > 0 ? 0.68 : 1.0;
-      const baseFreq = (48 + gearRpm * 92 + (speed / maxSpeed) * 45) * shiftDip * (isBoosting ? 1.24 : 1.0);
+      const baseFreq = (42 + gearRpm * 76 + (speed / maxSpeed) * 38) * shiftDip * (isBoosting ? 1.18 : 1.0);
 
       this.engOsc1.frequency.setTargetAtTime(baseFreq, now, 0.03);
       this.engOsc2.frequency.setTargetAtTime(baseFreq * 0.5, now, 0.03);
-
-      const filterFreq = isBoosting ? 1650 : (360 + gearRpm * 680);
-      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.04);
-
-      const targetVol = speed < 5 ? 0.04 : (isBoosting ? 0.15 : 0.105);
-      this.engGain.gain.setTargetAtTime(targetVol, now, 0.04);
-
-      // 터보차저 고주파 휘슬 (부스터 시 "위이이잉~ 슈우웅!")
-      if (this.turboOsc && this.turboGain) {
-        const turboFreq = 680 + (speed / maxSpeed) * 950 + (isBoosting ? 550 : 0);
-        this.turboOsc.frequency.setTargetAtTime(turboFreq, now, 0.04);
-        this.turboGain.gain.setTargetAtTime(isBoosting ? 0.055 : 0.008, now, 0.05);
+      if (this.engSubOsc) {
+        this.engSubOsc.frequency.setTargetAtTime(Math.max(28, baseFreq * 0.5), now, 0.03);
       }
 
-      // 드리프트 / 급조향 타이어 스키드 마찰음 ("끼이이익~!")
+      const filterFreq = isBoosting ? 780 : (310 + gearRpm * 460);
+      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.04);
+
+      const targetVol = speed < 5 ? 0.035 : (isBoosting ? 0.145 : 0.095);
+      this.engGain.gain.setTargetAtTime(targetVol, now, 0.04);
+      if (this.subGain) {
+        // 부스터 시 묵직한 서브베이스 울림 대폭 강화
+        this.subGain.gain.setTargetAtTime(isBoosting ? 0.24 : 0.09, now, 0.04);
+      }
+
+      if (this.turboOsc && this.turboGain) {
+        const turboFreq = 260 + (speed / maxSpeed) * 320 + (isBoosting ? 180 : 0);
+        this.turboOsc.frequency.setTargetAtTime(turboFreq, now, 0.04);
+        this.turboGain.gain.setTargetAtTime(isBoosting ? 0.065 : 0.006, now, 0.05);
+      }
+
       if (this.skidGain && this.skidFilter) {
-        const skidding = (isDrifting || steerIntensity > 0.72) && speed > 60;
-        const skidVol = skidding ? (isDrifting ? 0.16 : 0.07) : 0.0001;
-        const skidPitch = 1250 + Math.sin(now * 24) * 180 + steerIntensity * 320;
+        const skidding = (isDrifting || steerIntensity > 0.72) && speed > 60 && state.playerY <= 2;
+        const skidVol = skidding ? (isDrifting ? 0.14 : 0.06) : 0.0001;
+        const skidPitch = 1180 + Math.sin(now * 24) * 160 + steerIntensity * 280;
         this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.03);
         this.skidGain.gain.setTargetAtTime(skidVol, now, 0.03);
       }
@@ -1284,64 +1404,168 @@
 
     stopContinuousEngine() {
       try {
-        if (this.engOsc1) { this.engOsc1.stop(); this.engOsc1.disconnect(); }
-        if (this.engOsc2) { this.engOsc2.stop(); this.engOsc2.disconnect(); }
-        if (this.turboOsc) { this.turboOsc.stop(); this.turboOsc.disconnect(); }
-        if (this.skidNode) { this.skidNode.stop(); this.skidNode.disconnect(); }
+        if (this.engOsc1) { this.engOsc1.stop(); this.engOsc1.disconnect(); this.engOsc1 = null; }
+        if (this.engOsc2) { this.engOsc2.stop(); this.engOsc2.disconnect(); this.engOsc2 = null; }
+        if (this.engSubOsc) { this.engSubOsc.stop(); this.engSubOsc.disconnect(); this.engSubOsc = null; }
+        if (this.turboOsc) { this.turboOsc.stop(); this.turboOsc.disconnect(); this.turboOsc = null; }
+        if (this.skidNode) { this.skidNode.stop(); this.skidNode.disconnect(); this.skidNode = null; }
       } catch (_) {}
       this.engineRunning = false;
     }
 
-    // 3. 터보 블로우오프 밸브 + 니트로 제트 화염 폭발음 ("푸쉬익! 쿠아아앙~ 슈우우웅!!")
-    playBoost() {
-      if (this.muted) return;
+    // 3. 묵직하고 두꺼운 중저음 슈퍼 부스터 사운드 ("구아아아앙~ 우우우웅!! 쾅!")
+    playBoost(isSuper = true) {
+      if (this.muted || this.appPaused) return;
       try {
         this.init();
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
+        const dur = isSuper ? 1.15 : 0.72;
 
-        // (A) 저음 배기 백파이어 펀치 ("쿠앙!")
-        const boom = this.ctx.createOscillator();
-        const boomGain = this.ctx.createGain();
-        boom.type = 'sawtooth';
-        boom.frequency.setValueAtTime(135, now);
-        boom.frequency.exponentialRampToValueAtTime(34, now + 0.35);
-        boomGain.gain.setValueAtTime(0.28, now);
-        boomGain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
-        boom.connect(boomGain);
-        boomGain.connect(this.ctx.destination);
-        boom.start(now);
-        boom.stop(now + 0.37);
+        // (A) 초저역 서브베이스 임팩트 & 묵직한 지속 럼블 (36Hz ~ 92Hz)
+        const subOsc = this.ctx.createOscillator();
+        const subGain = this.ctx.createGain();
+        subOsc.type = 'triangle';
+        subOsc.frequency.setValueAtTime(92, now);
+        subOsc.frequency.exponentialRampToValueAtTime(38, now + 0.18);
+        subOsc.frequency.linearRampToValueAtTime(52, now + dur * 0.75);
+        subOsc.frequency.exponentialRampToValueAtTime(32, now + dur);
 
-        // (B) 제트 애프터버너 화염 노이즈 스윕 ("슈우우웅~!")
-        if (this.noiseBuffer) {
+        subGain.gain.setValueAtTime(0.01, now);
+        subGain.gain.linearRampToValueAtTime(isSuper ? 0.42 : 0.28, now + 0.04);
+        subGain.gain.setValueAtTime(isSuper ? 0.34 : 0.20, now + dur * 0.55);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        subOsc.connect(subGain);
+        subGain.connect(this.ctx.destination);
+        subOsc.start(now);
+        subOsc.stop(now + dur + 0.02);
+
+        // (B) 듀얼 디튠 중저음 V8 트윈터보 배기 포효 (WaveShaper 오버드라이브 + 로우패스 380Hz)
+        const growl1 = this.ctx.createOscillator();
+        const growl2 = this.ctx.createOscillator();
+        const shaper = this.ctx.createWaveShaper();
+        const lowFilter = this.ctx.createBiquadFilter();
+        const growlGain = this.ctx.createGain();
+
+        growl1.type = 'sawtooth';
+        growl2.type = 'sawtooth';
+        if (this.distCurve) shaper.curve = this.distCurve;
+
+        growl1.frequency.setValueAtTime(54, now);
+        growl1.frequency.exponentialRampToValueAtTime(118, now + 0.28);
+        growl1.frequency.exponentialRampToValueAtTime(78, now + dur);
+
+        growl2.frequency.setValueAtTime(81, now);
+        growl2.frequency.exponentialRampToValueAtTime(176, now + 0.28);
+        growl2.frequency.exponentialRampToValueAtTime(116, now + dur);
+
+        lowFilter.type = 'lowpass';
+        lowFilter.Q.value = 3.2;
+        lowFilter.frequency.setValueAtTime(240, now);
+        lowFilter.frequency.exponentialRampToValueAtTime(520, now + 0.25);
+        lowFilter.frequency.exponentialRampToValueAtTime(260, now + dur);
+
+        growlGain.gain.setValueAtTime(0.01, now);
+        growlGain.gain.linearRampToValueAtTime(isSuper ? 0.26 : 0.17, now + 0.05);
+        growlGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        growl1.connect(shaper);
+        growl2.connect(shaper);
+        shaper.connect(lowFilter);
+        lowFilter.connect(growlGain);
+        growlGain.connect(this.ctx.destination);
+
+        growl1.start(now);
+        growl2.start(now);
+        growl1.stop(now + dur + 0.02);
+        growl2.stop(now + dur + 0.02);
+
+        // (C) 두꺼운 저중음 제트 애프터버너 공기압 노이즈 (브라운 노이즈 + Lowpass 360Hz)
+        const nBuf = this.brownNoiseBuffer || this.noiseBuffer;
+        if (nBuf) {
           const jet = this.ctx.createBufferSource();
-          jet.buffer = this.noiseBuffer;
+          jet.buffer = nBuf;
           const jetFilter = this.ctx.createBiquadFilter();
-          jetFilter.type = 'bandpass';
-          jetFilter.Q.value = 1.8;
-          jetFilter.frequency.setValueAtTime(2400, now);
-          jetFilter.frequency.exponentialRampToValueAtTime(420, now + 0.55);
+          jetFilter.type = 'lowpass';
+          jetFilter.Q.value = 2.4;
+          jetFilter.frequency.setValueAtTime(480, now);
+          jetFilter.frequency.exponentialRampToValueAtTime(220, now + dur);
 
           const jetGain = this.ctx.createGain();
-          jetGain.gain.setValueAtTime(0.25, now);
-          jetGain.gain.exponentialRampToValueAtTime(0.001, now + 0.56);
+          jetGain.gain.setValueAtTime(isSuper ? 0.34 : 0.22, now);
+          jetGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
 
           jet.connect(jetFilter);
           jetFilter.connect(jetGain);
           jetGain.connect(this.ctx.destination);
           jet.start(now);
-          jet.stop(now + 0.58);
+          jet.stop(now + dur + 0.02);
         }
-
-        // (C) 터보 차저 상승 휘슬
-        this.playTone(320, 0.42, 'sawtooth', 0.14, 1180);
       } catch (_) {}
     }
 
-    // 4. 실제 자동차 듀얼톤 클락션 ("빠아앙~! 빠앙!")
+    // 4. 마리오 카트 시그니처 카트 점프(Hop) 효과음 ("뽀잉~!")
+    playHop() {
+      if (this.muted || this.appPaused) return;
+      this.playTone(190, 0.16, 'sine', 0.18, 460);
+    }
+
+    // 5. 마리오 카트 물음표 박스 슬롯머신 룰렛 틱 & 당첨 효과음
+    playItemRouletteTick(stepIdx = 0) {
+      if (this.muted || this.appPaused) return;
+      const notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.0, 987.77, 1046.5];
+      const f = notes[stepIdx % notes.length];
+      this.playTone(f, 0.055, 'square', 0.08);
+    }
+
+    playItemRouletteLock() {
+      if (this.muted || this.appPaused) return;
+      this.playTone(784, 0.08, 'triangle', 0.18);
+      setTimeout(() => this.playTone(1046.5, 0.18, 'triangle', 0.22), 75);
+    }
+
+    // 6. 등껍질 / 미사일 발사 및 명중 폭발음
+    playShellShoot() {
+      if (this.muted || this.appPaused) return;
+      this.playTone(520, 0.18, 'sawtooth', 0.16, 180);
+    }
+
+    playShellHit() {
+      if (this.muted || this.appPaused) return;
+      this.playBoost(false);
+      this.playTone(440, 0.25, 'sawtooth', 0.16, 110);
+    }
+
+    // 7. 뒤에서 라이벌 차가 부스터로 나를 추월해 지나갈 때 묵직한 도플러 배기음
+    playRivalPassBy() {
+      if (this.muted || this.appPaused) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const filt = this.ctx.createBiquadFilter();
+        const g = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(165, now);
+        osc.frequency.exponentialRampToValueAtTime(68, now + 0.42);
+        filt.type = 'lowpass';
+        filt.frequency.setValueAtTime(480, now);
+        g.gain.setValueAtTime(0.01, now);
+        g.gain.linearRampToValueAtTime(0.16, now + 0.12);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.44);
+        osc.connect(filt);
+        filt.connect(g);
+        g.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      } catch (_) {}
+    }
+
+    // 8. 실제 자동차 듀얼톤 클락션 ("빠아앙~! 빠앙!")
     playHorn() {
-      if (this.muted) return;
+      if (this.muted || this.appPaused) return;
       try {
         this.init();
         if (!this.ctx) return;
@@ -1352,7 +1576,6 @@
           const filter = this.ctx.createBiquadFilter();
           const g = this.ctx.createGain();
 
-          // 실제 자동차 혼 화음 (G#4 415Hz + C5 523Hz)
           f1.type = 'sawtooth';
           f2.type = 'sawtooth';
           f1.frequency.setValueAtTime(415.3, t0);
@@ -1382,33 +1605,32 @@
       } catch (_) {}
     }
 
-    // 5. 앞차 추월 시 도플러 패싱 효과음 ("슈우욱~!")
     playOvertakeWhoosh() {
-      if (this.muted || !this.ctx || !this.noiseBuffer) return;
+      if (this.muted || this.appPaused || !this.ctx || !this.noiseBuffer) return;
       try {
         const now = this.ctx.currentTime;
         const src = this.ctx.createBufferSource();
-        src.buffer = this.noiseBuffer;
+        src.buffer = this.brownNoiseBuffer || this.noiseBuffer;
         const filt = this.ctx.createBiquadFilter();
-        filt.type = 'bandpass';
-        filt.Q.value = 3.2;
-        filt.frequency.setValueAtTime(950, now);
-        filt.frequency.exponentialRampToValueAtTime(260, now + 0.28);
+        filt.type = 'lowpass';
+        filt.Q.value = 2.5;
+        filt.frequency.setValueAtTime(620, now);
+        filt.frequency.exponentialRampToValueAtTime(180, now + 0.30);
 
         const g = this.ctx.createGain();
-        g.gain.setValueAtTime(0.16, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.30);
+        g.gain.setValueAtTime(0.20, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
 
         src.connect(filt);
         filt.connect(g);
         g.connect(this.ctx.destination);
         src.start(now);
-        src.stop(now + 0.31);
+        src.stop(now + 0.33);
       } catch (_) {}
     }
 
     playTone(freq, dur = 0.14, type = 'triangle', vol = 0.14, slideTo = null) {
-      if (this.muted) return;
+      if (this.muted || this.appPaused) return;
       try {
         this.init();
         if (!this.ctx) return;
@@ -1418,7 +1640,7 @@
         osc.type = type;
         osc.frequency.setValueAtTime(freq, now);
         if (slideTo) {
-          osc.frequency.exponentialRampToValueAtTime(Math.max(40, slideTo), now + dur);
+          osc.frequency.exponentialRampToValueAtTime(Math.max(30, slideTo), now + dur);
         }
         gain.gain.setValueAtTime(vol, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
@@ -1430,16 +1652,19 @@
     }
 
     playCoin() {
-      this.playTone(987.77, 0.08, 'sine', 0.15);
-      setTimeout(() => this.playTone(1318.5, 0.14, 'sine', 0.15), 65);
+      if (this.muted || this.appPaused) return;
+      this.playTone(987.77, 0.07, 'sine', 0.15);
+      setTimeout(() => this.playTone(1318.5, 0.14, 'sine', 0.15), 60);
     }
 
     playItemBox() {
+      if (this.muted || this.appPaused) return;
       const notes = [523, 659, 784, 1046];
-      notes.forEach((n, i) => setTimeout(() => this.playTone(n, 0.09, 'triangle', 0.15), i * 50));
+      notes.forEach((n, i) => setTimeout(() => this.playTone(n, 0.08, 'triangle', 0.15), i * 45));
     }
 
     playFanfare() {
+      if (this.muted || this.appPaused) return;
       const melody = [523, 659, 784, 1046, 784, 1046];
       const times = [0, 130, 260, 390, 560, 720];
       melody.forEach((n, i) => setTimeout(() => this.playTone(n, 0.22, 'triangle', 0.2), times[i]));
@@ -1447,15 +1672,20 @@
 
     startBGM() {
       this.stopBGM();
+      if (this.appPaused || this.muted) return;
       this.startContinuousEngine();
-      const notes = [261.6, 329.6, 392.0, 523.3, 392.0, 329.6, 293.7, 349.2, 440.0, 587.3, 440.0, 349.2];
+      // 슈퍼마리오 카트 풍의 경쾌한 서킷 리듬 + 무적 스타 시 고속 멜로디
+      const normalNotes = [261.6, 329.6, 392.0, 523.3, 392.0, 329.6, 293.7, 349.2, 440.0, 587.3, 440.0, 349.2];
+      const starNotes = [523.3, 523.3, 523.3, 440.0, 523.3, 659.3, 587.3, 587.3, 587.3, 493.9, 587.3, 784.0];
       this.step = 0;
       this.bgmTimer = setInterval(() => {
-        if (state.mode !== 'racing' || this.muted) return;
+        if (this.appPaused || state.mode !== 'racing' || this.muted) return;
+        const isStar = state.starTimer > 0;
+        const notes = isStar ? starNotes : normalNotes;
         const n = notes[this.step % notes.length];
-        this.playTone(n, 0.12, 'triangle', 0.04);
+        this.playTone(n, isStar ? 0.09 : 0.12, 'triangle', isStar ? 0.065 : 0.038);
         this.step++;
-      }, 185);
+      }, 170);
     }
 
     stopBGM() {
@@ -1467,6 +1697,18 @@
     }
   }
   const sfx = new CarSoundEngine();
+
+  // 앱 닫기 / 홈 버튼 / 화면 전환 시 소리 완전 차단 이벤트 연결
+  window.onAppPause = () => sfx.suspendAll();
+  window.onAppResume = () => sfx.resumeAll();
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) sfx.suspendAll();
+    else sfx.resumeAll();
+  });
+  window.addEventListener('pagehide', () => sfx.suspendAll());
+  window.addEventListener('blur', () => {
+    if (document.hidden) sfx.suspendAll();
+  });
 
   // ==================== 레이서(캐릭터 & 카트 6종) 및 트랙 데이터 ====================
   const RACERS = [
@@ -1547,51 +1789,66 @@
   const TRACKS = [
     {
       id: 0,
-      name: '햇살 빌리지 트랙',
-      skyTop: '#29b6f6',
+      name: '마리오 서킷 빌리지',
+      skyTop: '#1e88e5',
       skyBottom: '#b3e5fc',
       grass1: '#43a047',
       grass2: '#66bb6a',
       road1: '#546e7a',
       road2: '#455a64',
-      kerb1: '#ff5252',
+      kerb1: '#ff1744',
       kerb2: '#ffffff',
-      sceneryType: 'village'
+      sceneryType: 'mario'
     },
     {
       id: 1,
-      name: '달콤 캔디 랜드',
-      skyTop: '#f48fb1',
-      skyBottom: '#fff9c4',
-      grass1: '#f8bbd0',
-      grass2: '#fce4ec',
-      road1: '#7e57c2',
-      road2: '#673ab7',
-      kerb1: '#ffea00',
-      kerb2: '#ff4081',
-      sceneryType: 'candy'
+      name: '레인보우 우주 로드',
+      skyTop: '#070b24',
+      skyBottom: '#311b92',
+      grass1: '#1a103c',
+      grass2: '#28185a',
+      road1: '#5e35b1',
+      road2: '#3949ab',
+      kerb1: '#00e5ff',
+      kerb2: '#ffea00',
+      sceneryType: 'rainbow'
     },
     {
       id: 2,
-      name: '공룡 정글 파크',
-      skyTop: '#26a69a',
-      skyBottom: '#c8e6c9',
+      name: '쿠파 용암 캐슬',
+      skyTop: '#3e1008',
+      skyBottom: '#bf360c',
+      grass1: '#b71c1c',
+      grass2: '#ff6d00',
+      road1: '#37474f',
+      road2: '#263238',
+      kerb1: '#ffab00',
+      kerb2: '#d50000',
+      sceneryType: 'castle'
+    },
+    {
+      id: 3,
+      name: '요시 공룡 정글',
+      skyTop: '#00897b',
+      skyBottom: '#b2dfdb',
       grass1: '#2e7d32',
-      grass2: '#388e3c',
+      grass2: '#4caf50',
       road1: '#6d4c41',
       road2: '#5d4037',
-      kerb1: '#ffab00',
-      kerb2: '#ffffff',
+      kerb1: '#ffea00',
+      kerb2: '#00e676',
       sceneryType: 'dino'
     }
   ];
 
+  // 슈퍼마리오 카트 + 카트라이더 시그니처 아이템
   const ITEMS = [
-    { id: 'ufo', icon: '🛸', name: '우주선 비행!', voice: '우주선 변신! 앞차들을 모두 추월해요!' },
-    { id: 'magnet', icon: '🧲', name: '슈퍼 자석!', voice: '슈퍼 자석 발동! 일등 차를 향해 슝 끌려가요!' },
-    { id: 'missile', icon: '🚀', name: '황금 미사일!', voice: '황금 미사일 발사! 앞차 명중!' },
-    { id: 'lightning', icon: '⚡', name: '무지개 번개!', voice: '번개 파워! 앞차들이 작아졌어요!' },
-    { id: 'shield', icon: '🛡️', name: '천사 날개!', voice: '천사 날개 부스터! 신나게 달려요!' }
+    { id: 'star', icon: '⭐', name: '무적 슈퍼스타!', voice: '무적 슈퍼스타 발동! 부딪히는 차들을 모두 날려버려요!' },
+    { id: 'mushroom', icon: '🍄', name: '황금 거대버섯!', voice: '황금 거대버섯! 차가 커지고 초고속으로 달려요!' },
+    { id: 'bullet', icon: '🚀', name: '킬러 로켓 변신!', voice: '킬러 로켓 변신! 자동으로 트랙을 따라 초음속 비행!' },
+    { id: 'shell', icon: '🐢', name: '빨강 등껍질 발사!', voice: '빨강 거북이 등껍질 발사! 앞차 명중!' },
+    { id: 'lightning', icon: '⚡', name: '번개 아이템!', voice: '번개 공격! 모든 라이벌 차들이 꼬마 차가 되었어요!' },
+    { id: 'banana', icon: '🍌', name: '바나나 & 부스터!', voice: '바나나 껍질 투척! 뒤따라오는 차가 미끄러져요!' }
   ];
 
   // ==================== 게임 전역 상태 ====================
@@ -1610,19 +1867,34 @@
 
     posZ: 0,
     playerX: 0,
+    velX: 0,
+    screenXOffset: 0,
+    playerY: 0,
+    velY: 0,
+    trickRot: 0,
+    spinTimer: 0,
+
     speed: 0,
-    maxSpeed: 210,
+    maxSpeed: 215,
     steerInput: 0,
     wheelAngleDeg: 0,
     driftActive: false,
     driftDir: 0,
+    driftChargeTime: 0,
+    driftStage: 0,
 
     n2oGauge: 65,
     boostCount: 1,
     boostTimer: 0,
+    starTimer: 0,
+    megaTimer: 0,
+    bulletTimer: 0,
     ufoTimer: 0,
     shieldTimer: 0,
     lightningTimer: 0,
+
+    rouletteTimer: 0,
+    rouletteStep: 0,
     heldItem: null,
     coins: 0,
     lap: 1,
@@ -1633,6 +1905,7 @@
     startBoostWindow: false,
 
     rivals: [],
+    projectiles: [],
     particles: [],
     confetti: [],
     floatingTexts: []
@@ -1657,6 +1930,8 @@
   const itemBtnLabel = document.getElementById('itemBtnLabel');
   const driftBtn = document.getElementById('driftBtn');
   const startBoostBtn = document.getElementById('startBoostBtn');
+  const rearAlertBar = document.getElementById('rearAlertBar');
+  const driftStageBadge = document.getElementById('driftStageBadge');
 
   const rankNumEl = document.getElementById('rankNum');
   const lapBoxEl = document.getElementById('lapBox');
@@ -1679,34 +1954,40 @@
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  // ==================== 트랙 생성 ====================
+  // ==================== 슈퍼마리오 카트 스타일 다이나믹 트랙 생성 ====================
   const SEG_LEN = 100;
   function buildTrack(trackId) {
     const segs = [];
-    const totalSegs = 280;
+    const totalSegs = 300;
 
     for (let i = 0; i < totalSegs; i++) {
       let curve = 0;
       let y = 0;
 
       if (trackId === 0) {
-        if (i > 30 && i < 65) curve = 1.6;
-        else if (i > 95 && i < 130) curve = -1.7;
-        else if (i > 165 && i < 205) curve = 1.9;
-        else if (i > 225 && i < 255) curve = -1.4;
-        y = Math.sin(i * 0.08) * 180;
+        if (i > 25 && i < 65) curve = 1.65;
+        else if (i > 90 && i < 130) curve = -1.75;
+        else if (i > 160 && i < 205) curve = 1.95;
+        else if (i > 230 && i < 270) curve = -1.55;
+        y = Math.sin(i * 0.08) * 190 + Math.cos(i * 0.04) * 80;
       } else if (trackId === 1) {
-        if (i > 25 && i < 60) curve = -2.1;
-        else if (i > 70 && i < 110) curve = 2.2;
-        else if (i > 140 && i < 185) curve = -2.0;
-        else if (i > 205 && i < 245) curve = 2.1;
-        y = Math.sin(i * 0.11) * 260;
+        if (i > 20 && i < 60) curve = -2.15;
+        else if (i > 75 && i < 120) curve = 2.25;
+        else if (i > 145 && i < 190) curve = -2.1;
+        else if (i > 215 && i < 265) curve = 2.2;
+        y = Math.sin(i * 0.10) * 290;
+      } else if (trackId === 2) {
+        if (i > 22 && i < 58) curve = 2.3;
+        else if (i > 82 && i < 128) curve = -2.35;
+        else if (i > 152 && i < 195) curve = 2.25;
+        else if (i > 220 && i < 268) curve = -2.1;
+        y = Math.sin(i * 0.09) * 310;
       } else {
-        if (i > 20 && i < 55) curve = 2.3;
-        else if (i > 80 && i < 125) curve = -2.4;
-        else if (i > 150 && i < 190) curve = 2.2;
-        else if (i > 210 && i < 255) curve = -2.0;
-        y = Math.sin(i * 0.09) * 320;
+        if (i > 28 && i < 70) curve = -1.95;
+        else if (i > 95 && i < 140) curve = 2.2;
+        else if (i > 165 && i < 210) curve = -2.15;
+        else if (i > 235 && i < 275) curve = 1.85;
+        y = Math.sin(i * 0.085) * 260;
       }
 
       const seg = {
@@ -1717,23 +1998,51 @@
         scenery: []
       };
 
-      if (i > 15 && i % 30 === 0) {
-        [-0.55, 0, 0.55].forEach(ox => {
-          seg.items.push({ type: 'itemBox', x: ox, takenTimer: 0 });
+      // 1) 마리오 카트 물음표(?) 아이템 박스 4연속 배치 (살짝 좌우로 움직이는 박스 포함!)
+      if (i > 14 && i % 28 === 0) {
+        [-0.6, -0.2, 0.2, 0.6].forEach((ox, idx) => {
+          seg.items.push({
+            type: 'itemBox',
+            x: ox,
+            baseX: ox,
+            moving: (i % 56 === 0),
+            phase: idx * 0.8,
+            takenTimer: 0
+          });
         });
-      } else if (i > 18 && i % 26 === 13) {
-        seg.items.push({ type: 'dashPad', x: (i % 52 === 13) ? -0.32 : 0.32 });
-      } else if (i > 10 && i % 10 === 0) {
-        const lane = Math.sin(i * 0.25) * 0.45;
+      }
+      // 2) 마리오 카트 무지개 점프대 (Jump Ramp: 밟으면 하늘로 붕 날아올라 공중 트릭 & 착지 부스터!)
+      else if (i > 20 && i % 34 === 17) {
+        seg.items.push({ type: 'jumpRamp', x: 0, takenTimer: 0 });
+        seg.items.push({ type: 'coin', x: -0.45, takenTimer: 0 });
+        seg.items.push({ type: 'coin', x: 0.45, takenTimer: 0 });
+      }
+      // 3) 바닥 대시 부스터 패드 (Dash Pad)
+      else if (i > 16 && i % 22 === 11) {
+        const side = (i % 44 === 11) ? -0.36 : 0.36;
+        seg.items.push({ type: 'dashPad', x: side, takenTimer: 0 });
+      }
+      // 4) 마리오 서킷 초록 토관(Pipe) / 바나나 껍질 기믹 (가장자리에 배치되어 스릴 연출)
+      else if (i > 32 && i % 40 === 20) {
+        const pipeX = (i % 80 === 20) ? -0.72 : 0.72;
+        seg.items.push({ type: 'pipe', x: pipeX, takenTimer: 0 });
+      }
+      else if (i > 26 && i % 36 === 9) {
+        const banX = Math.sin(i * 0.7) * 0.52;
+        seg.items.push({ type: 'banana', x: banX, takenTimer: 0 });
+      }
+      // 5) 황금 코인 라인
+      else if (i > 8 && i % 7 === 0) {
+        const lane = Math.sin(i * 0.22) * 0.52;
         seg.items.push({ type: 'coin', x: lane, takenTimer: 0 });
       }
 
-      if (i % 6 === 0) {
-        seg.scenery.push({ side: -1, offset: -1.65 - (i % 3) * 0.25, variant: i % 3 });
-        seg.scenery.push({ side: 1, offset: 1.65 + ((i + 1) % 3) * 0.25, variant: (i + 1) % 3 });
+      if (i % 5 === 0) {
+        seg.scenery.push({ side: -1, offset: -1.55 - (i % 3) * 0.24, variant: i % 3 });
+        seg.scenery.push({ side: 1, offset: 1.55 + ((i + 1) % 3) * 0.24, variant: (i + 1) % 3 });
       }
       if (i % 45 === 0) {
-        seg.arch = i === 0 ? 'START / FINISH' : 'KART RUSH+';
+        seg.arch = i === 0 ? '🏁 MARIO & KART START' : (trackId === 1 ? '🌈 RAINBOW ROAD' : '🍄 SUPER KART RUSH');
       }
 
       segs.push(seg);
@@ -1756,14 +2065,14 @@
 
     if (isInitial) wheelStartX = clientX;
 
-    const positional = dx / (rect.width * 0.36);
-    const slide = (clientX - wheelStartX) / (rect.width * 0.32);
-    const angleRad = Math.atan2(dx, Math.max(25, -dy + rect.height * 0.25));
-    const angular = angleRad / 1.05;
+    const positional = dx / (rect.width * 0.34);
+    const slide = (clientX - wheelStartX) / (rect.width * 0.30);
+    const angleRad = Math.atan2(dx, Math.max(22, -dy + rect.height * 0.24));
+    const angular = angleRad / 1.0;
 
     const raw = positional * 0.58 + slide * 0.27 + angular * 0.15;
     state.steerInput = Math.max(-1, Math.min(1, raw));
-    state.wheelAngleDeg = state.steerInput * 75;
+    state.wheelAngleDeg = state.steerInput * 82;
     wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
   }
 
@@ -1826,22 +2135,25 @@
     keys[e.code] = true;
     if (e.code === 'Space') triggerBoost();
     if (e.code === 'KeyZ' || e.code === 'ControlLeft') useHeldItem();
+    if (e.code === 'ShiftLeft' || e.code === 'KeyX') startDrift();
   });
   window.addEventListener('keyup', (e) => {
     keys[e.code] = false;
+    if (e.code === 'ShiftLeft' || e.code === 'KeyX') endDrift();
   });
 
-  // ==================== 클락션 / 부스터 / 아이템 / 드리프트 액션 ====================
+  // ==================== 클락션 / 부스터 / 마리오 카트 아이템 / 점프·드리프트 액션 ====================
   function triggerHorn(e) {
     if (e) e.stopPropagation();
     sfx.playHorn();
-    vibrateDevice(50);
+    vibrateDevice(55);
+    // 클락션 누르면 차도 살짝 점프!
+    if (state.playerY <= 1) state.velY = Math.max(state.velY, 180);
     showFloatingText('📯 빠아앙~!! 비켜주세요!', '#ffea00');
-    // 내 앞의 라이벌 차들이 깜짝 놀라며 양옆으로 비켜주고 살짝 감속
     state.rivals.forEach(r => {
       const dist = r.z - state.posZ;
-      if (dist > -100 && dist < 1400) {
-        r.targetLane = r.x >= state.playerX ? 0.68 : -0.68;
+      if (dist > -120 && dist < 1400) {
+        r.targetLane = r.x >= state.playerX ? 0.72 : -0.72;
         r.spinTimer = Math.max(r.spinTimer, 0.45);
       }
     });
@@ -1851,87 +2163,151 @@
 
   function triggerBoost() {
     if (state.mode !== 'racing') return;
-    sfx.playBoost();
-    vibrateDevice(75);
+    sfx.playBoost(true);
+    vibrateDevice(85);
 
     if (state.boostCount > 0 || state.n2oGauge >= 45) {
       if (state.boostCount > 0) state.boostCount--;
       else state.n2oGauge = Math.max(0, state.n2oGauge - 45);
-      state.boostTimer = 2.8;
-      showCenterBanner('🔥 슈퍼 N2O 부스터!!', 950);
+      state.boostTimer = 3.0;
+      showCenterBanner('🔥 중저음 슈퍼 부스터 폭발!!', 950);
       if (Math.random() < 0.45) speakKR('슈퍼 부스터 발동!', false);
     } else {
-      state.boostTimer = Math.max(state.boostTimer, 1.25);
-      showFloatingText('🔥 터보 부스터 슝~!', '#ff9100');
+      state.boostTimer = Math.max(state.boostTimer, 1.35);
+      showFloatingText('🔥 트윈터보 가속 슝~!', '#ff9100');
     }
-    spawnBoostParticles(20);
+    spawnBoostParticles(24);
     updateBoostUI();
   }
   boostBtn.addEventListener('touchstart', (e) => { e.preventDefault(); triggerBoost(); }, { passive: false });
   boostBtn.addEventListener('mousedown', (e) => { e.preventDefault(); triggerBoost(); });
 
+  function startItemRoulette() {
+    if (state.heldItem || state.rouletteTimer > 0) return;
+    state.rouletteTimer = 1.05;
+    state.rouletteStep = 0;
+  }
+
   function useHeldItem() {
     if (state.mode !== 'racing') return;
-    if (!state.heldItem) {
-      sfx.playBoost();
-      state.boostTimer = Math.max(state.boostTimer, 0.9);
-      showFloatingText('✨ 점프 터보 가속!', '#80d8ff');
+    if (state.rouletteTimer > 0) {
+      // 룰렛 돌아가는 중 터치하면 즉시 당첨 확정!
+      state.rouletteTimer = 0.01;
       return;
     }
+    if (!state.heldItem) {
+      // 아이템이 없을 때 누르면 마리오 카트 페더 점프 + 미니 가속!
+      sfx.playHop();
+      sfx.playBoost(false);
+      if (state.playerY <= 2) state.velY = 340;
+      state.boostTimer = Math.max(state.boostTimer, 0.95);
+      showFloatingText('🤸 슈퍼 점프 대시!', '#80d8ff');
+      return;
+    }
+
     const item = state.heldItem;
     state.heldItem = null;
     updateItemUI();
-    vibrateDevice(85);
-    sfx.playBoost();
+    vibrateDevice(90);
     speakKR(item.voice, true);
-    showCenterBanner(`${item.icon} ${item.name}`, 1200);
+    showCenterBanner(`${item.icon} ${item.name}`, 1250);
 
-    if (item.id === 'ufo') {
-      state.ufoTimer = 3.8;
-      state.boostTimer = 3.8;
-    } else if (item.id === 'magnet') {
-      state.boostTimer = 3.2;
-    } else if (item.id === 'missile') {
-      state.boostTimer = 2.2;
-      state.rivals.forEach(r => {
-        if (r.z > state.posZ && r.z - state.posZ < 2400) {
-          r.spinTimer = 2.0;
-        }
+    if (item.id === 'star') {
+      state.starTimer = 5.5;
+      state.boostTimer = 5.5;
+      sfx.playBoost(true);
+    } else if (item.id === 'mushroom') {
+      state.megaTimer = 5.0;
+      state.boostTimer = 4.2;
+      if (state.playerY <= 2) state.velY = 260;
+      sfx.playBoost(true);
+    } else if (item.id === 'bullet') {
+      state.bulletTimer = 4.5;
+      state.ufoTimer = 4.5;
+      state.boostTimer = 4.5;
+      sfx.playBoost(true);
+    } else if (item.id === 'shell') {
+      sfx.playShellShoot();
+      state.boostTimer = Math.max(state.boostTimer, 1.5);
+      // 3D 트랙 위로 날아가는 빨강 등껍질 발사체 생성!
+      state.projectiles.push({
+        type: 'shell',
+        z: state.posZ + 70,
+        x: state.playerX,
+        speed: state.maxSpeed * 1.95 + 180,
+        life: 3.5
       });
     } else if (item.id === 'lightning') {
       state.lightningTimer = 4.5;
-      state.boostTimer = 2.5;
-      state.rivals.forEach(r => { r.shrinkTimer = 4.5; });
-    } else if (item.id === 'shield') {
-      state.shieldTimer = 5.0;
-      state.boostTimer = 2.4;
+      state.boostTimer = 2.6;
+      sfx.playShellHit();
+      state.rivals.forEach(r => {
+        r.shrinkTimer = 5.0;
+        r.spinTimer = 1.1;
+      });
+    } else if (item.id === 'banana') {
+      sfx.playBoost(false);
+      state.boostTimer = Math.max(state.boostTimer, 2.2);
+      // 내 바로 뒤에 바나나 껍질 설치 & 뒤따르는 라이벌 스핀 유도!
+      const dropSegIdx = Math.floor(Math.max(0, state.posZ - 90) / SEG_LEN) % state.segments.length;
+      state.segments[dropSegIdx].items.push({ type: 'banana', x: state.playerX, takenTimer: 0 });
+      state.rivals.forEach(r => {
+        if (r.z < state.posZ && state.posZ - r.z < 380) {
+          r.spinTimer = 1.6;
+          showFloatingText(`🍌 ${r.racer.shortName} 바나나 미끄덩!`, '#ffea00');
+        }
+      });
     }
-    spawnBoostParticles(24);
+    spawnBoostParticles(26);
   }
   itemBtn.addEventListener('touchstart', (e) => { e.preventDefault(); useHeldItem(); }, { passive: false });
   itemBtn.addEventListener('mousedown', (e) => { e.preventDefault(); useHeldItem(); });
 
+  // 마리오 카트 시그니처: 버튼 누를 때 카트가 '폴짝(Hop)' 점프하며 드리프트 시작!
   function startDrift(e) {
     if (e) e.preventDefault();
     if (state.mode !== 'racing') return;
-    state.driftActive = true;
+    if (!state.driftActive) {
+      state.driftActive = true;
+      state.driftChargeTime = 0;
+      state.driftStage = 1;
+      if (state.playerY <= 2) {
+        state.velY = 255; // 마리오 카트 드리프트 시작 홉(Hop)!
+        sfx.playHop();
+      }
+    }
     driftBtn.classList.add('pressed');
-    state.driftDir = state.steerInput !== 0 ? Math.sign(state.steerInput) : 1;
+    state.driftDir = Math.abs(state.steerInput) > 0.08 ? Math.sign(state.steerInput) : (state.driftDir || 1);
     vibrateDevice(35);
   }
+
   function endDrift(e) {
     if (e) e.preventDefault();
     if (!state.driftActive) return;
+    const stage = state.driftStage;
     state.driftActive = false;
+    state.driftChargeTime = 0;
+    state.driftStage = 0;
     driftBtn.classList.remove('pressed');
-    state.n2oGauge = Math.min(100, state.n2oGauge + 42);
+    driftStageBadge.style.display = 'none';
+
+    const gainGauge = stage === 3 ? 65 : (stage === 2 ? 48 : 34);
+    state.n2oGauge = Math.min(100, state.n2oGauge + gainGauge);
     if (state.n2oGauge >= 100 && state.boostCount < 2) {
       state.boostCount++;
-      state.n2oGauge = 25;
+      state.n2oGauge = 28;
     }
-    state.boostTimer = Math.max(state.boostTimer, 1.45);
-    sfx.playBoost();
-    showFloatingText('💨 드리프트 순간 부스터!!', '#00e5ff');
+
+    const boostDur = stage === 3 ? 2.5 : (stage === 2 ? 1.85 : 1.3);
+    state.boostTimer = Math.max(state.boostTimer, boostDur);
+    sfx.playBoost(stage >= 2);
+    const labelMap = {
+      1: '🔵 미니터보 대시!!',
+      2: '🟠 슈퍼 미니터보 폭발!!',
+      3: '🟣 울트라 무지개 터보 폭발!!'
+    };
+    showFloatingText(labelMap[stage] || '💨 드리프트 부스터!!', stage === 3 ? '#e040fb' : '#00e5ff');
+    spawnBoostParticles(stage * 10);
     updateBoostUI();
   }
   driftBtn.addEventListener('touchstart', startDrift, { passive: false });
@@ -1950,12 +2326,13 @@
     if (!state.startBoostWindow) return;
     state.startBoostWindow = false;
     startBoostBtn.style.display = 'none';
-    state.boostTimer = 2.6;
-    sfx.playBoost();
-    vibrateDevice(80);
-    showCenterBanner('🚀 슈퍼 출발 부스터 성공!!', 1100);
-    speakKR('우와! 출발 부스터 성공!', true);
-    spawnBoostParticles(25);
+    state.boostTimer = 2.8;
+    state.velY = 240;
+    sfx.playBoost(true);
+    vibrateDevice(90);
+    showCenterBanner('🚀 마리오 로켓 스타트 성공!!', 1100);
+    speakKR('우와! 로켓 스타트 성공!', true);
+    spawnBoostParticles(28);
   }
 
   // ==================== UI 업데이트 헬퍼 ====================
@@ -1974,9 +2351,9 @@
     state.floatingTexts.push({
       text,
       color,
-      x: canvas.width * 0.5,
-      y: canvas.height * 0.45,
-      life: 1.0
+      x: canvas.width * 0.5 + (Math.random() - 0.5) * 60,
+      y: canvas.height * 0.44,
+      life: 1.05
     });
   }
 
@@ -2001,7 +2378,7 @@
     } else {
       itemSlot1.textContent = '🎁';
       itemBtnIcon.textContent = '🎁';
-      itemBtnLabel.textContent = '아이템';
+      itemBtnLabel.textContent = '아이템·점프';
       itemBtn.classList.remove('has-item');
     }
   }
@@ -2061,9 +2438,9 @@
   function syncSpeedButtonLabel() {
     const map = { slow: '🐢 속도: 천천히', normal: '🚗 속도: 보통', fast: '🚀 속도: 빠르게' };
     hudSpeedBtn.textContent = map[state.speedPreset] || map.normal;
-    if (state.speedPreset === 'slow') state.maxSpeed = 160;
-    else if (state.speedPreset === 'normal') state.maxSpeed = 210;
-    else state.maxSpeed = 260;
+    if (state.speedPreset === 'slow') state.maxSpeed = 165;
+    else if (state.speedPreset === 'normal') state.maxSpeed = 215;
+    else state.maxSpeed = 265;
   }
 
   hudSoundBtn.addEventListener('click', () => {
@@ -2107,51 +2484,73 @@
   document.getElementById('backLobbyBtn').addEventListener('click', goToLobby);
 
   window.onBackKey = () => {
-    if (state.mode !== 'lobby') goToLobby();
+    if (state.mode !== 'lobby') {
+      goToLobby();
+    } else if (window.AndroidBridge && typeof window.AndroidBridge.closeApp === 'function') {
+      sfx.suspendAll();
+      window.AndroidBridge.closeApp();
+    }
   };
 
   function goToLobby() {
     state.mode = 'lobby';
     sfx.stopBGM();
+    rearAlertBar.style.display = 'none';
+    driftStageBadge.style.display = 'none';
     hudLayer.style.display = 'none';
     finishModal.style.display = 'none';
     lobbyScreen.style.display = 'flex';
   }
 
-  // ==================== 레이스 시작 초기화 (5대의 경쟁 AI 카트 배치) ====================
+  // ==================== 레이스 시작 초기화 (독립 물리 & 추월 사이클을 가진 5대 라이벌 배치) ====================
   function startRace() {
     sfx.init();
-    sfx.playEngineStart(); // 우렁찬 자동차 시동 & 배기 사운드!
+    sfx.playEngineStart();
     buildTrack(state.selectedTrack);
     syncSpeedButtonLabel();
 
     state.mode = 'racing';
     state.posZ = 0;
     state.playerX = 0;
+    state.velX = 0;
+    state.screenXOffset = 0;
+    state.playerY = 0;
+    state.velY = 0;
+    state.trickRot = 0;
+    state.spinTimer = 0;
+
     state.speed = 0;
     state.steerInput = 0;
     state.wheelAngleDeg = 0;
     wheelGraphic.style.transform = 'rotate(0deg)';
     state.driftActive = false;
+    state.driftChargeTime = 0;
+    state.driftStage = 0;
+
     state.n2oGauge = 70;
     state.boostCount = 1;
     state.boostTimer = 0;
+    state.starTimer = 0;
+    state.megaTimer = 0;
+    state.bulletTimer = 0;
     state.ufoTimer = 0;
     state.shieldTimer = 0;
     state.lightningTimer = 0;
+    state.rouletteTimer = 0;
     state.heldItem = null;
     state.coins = 0;
     state.lap = 1;
     state.rank = 4;
+    state.projectiles = [];
     state.particles = [];
     state.floatingTexts = [];
+    rearAlertBar.style.display = 'none';
+    driftStageBadge.style.display = 'none';
 
-    // 5대의 라이벌 카트를 내 바로 앞과 옆에 촘촘히 배치 (출발 직후부터 눈앞에서 앞서 달리며 경쟁!)
     const otherRacers = RACERS.filter((_, idx) => idx !== state.selectedRacer);
-    const startOffsetsZ = [140, 290, 460, 680, 920];
-    const startLanes = [-0.52, 0.48, -0.22, 0.56, 0.08];
-    // 각 라이벌이 평소 유지하려는 목표 거리 오프셋 (양수면 플레이어보다 앞서 달리고, 부스터 쓰면 추월당함!)
-    const paceTargetOffsets = [-120, 140, 320, 540, 780];
+    // 일부는 내 뒤(-160, -70), 일부는 내 앞(+130, +280, +450)에서 출발하여 시작부터 앞뒤로 치열하게 추월!
+    const startOffsetsZ = [-150, -65, 135, 290, 470];
+    const startLanes = [-0.55, 0.52, -0.26, 0.48, 0.05];
 
     rivalDotsContainer.innerHTML = '';
     state.rivals = otherRacers.map((rc, i) => {
@@ -2162,16 +2561,22 @@
 
       return {
         racer: rc,
-        z: startOffsetsZ[i],
+        z: Math.max(0, startOffsetsZ[i]),
         x: startLanes[i],
+        velX: 0,
+        y: 0,
+        velY: 0,
         targetLane: startLanes[i],
-        paceOffset: paceTargetOffsets[i],
-        speed: 0,
-        boosting: false,
+        speed: state.maxSpeed * 0.85,
+        // 각 라이벌마다 고유한 부스터/추월 사이클 위상(surgePhase)을 부여해 때론 나보다 훨씬 빠르게 치고 나가고 때론 뒤처짐!
+        surgePhase: i * 1.35,
+        surgeFreq: 0.55 + (i % 3) * 0.18,
+        baseBandOffset: -120 + i * 165,
         boostVisualTimer: 0,
         spinTimer: 0,
         shrinkTimer: 0,
-        wasAhead: true,
+        passSoundCooldown: 0,
+        wasAhead: startOffsetsZ[i] > 0,
         dotEl: dot
       };
     });
@@ -2183,42 +2588,44 @@
     finishModal.style.display = 'none';
     hudLayer.style.display = 'block';
 
-    state.countdownTimer = 2.5;
+    state.countdownTimer = 2.4;
     state.countdownStage = 3;
     state.startBoostWindow = false;
     startBoostBtn.style.display = 'none';
     showCenterBanner('3', 0);
     sfx.playTone(440, 0.18, 'triangle', 0.18);
-    speakKR('부르릉! 삼, 이, 일, 출발!', true);
+    speakKR('슈퍼마리오 카트 레이스! 삼, 이, 일, 출발!', true);
   }
 
   function spawnBoostParticles(count = 10) {
     for (let i = 0; i < count; i++) {
       state.particles.push({
-        x: canvas.width * 0.5 + (Math.random() - 0.5) * 90,
-        y: canvas.height * 0.82 + (Math.random() - 0.5) * 30,
-        vx: (Math.random() - 0.5) * 220,
-        vy: 120 + Math.random() * 240,
+        x: canvas.width * 0.5 + state.screenXOffset + (Math.random() - 0.5) * 95,
+        y: canvas.height * 0.80 - state.playerY * 0.45 + (Math.random() - 0.5) * 30,
+        vx: (Math.random() - 0.5) * 240,
+        vy: 110 + Math.random() * 250,
         size: 8 + Math.random() * 14,
-        color: Math.random() < 0.5 ? '#00e5ff' : '#ffea00',
+        color: state.starTimer > 0
+          ? ['#ff1744', '#ffea00', '#00e676', '#00e5ff', '#e040fb'][i % 5]
+          : (Math.random() < 0.5 ? '#00e5ff' : '#ffea00'),
         life: 0.45 + Math.random() * 0.35
       });
     }
   }
 
-  // ==================== 물리 & 스마트 라이벌 레이싱 업데이트 (60fps) ====================
+  // ==================== 물리 & 마리오 카트 기믹 & 라이벌 앞뒤 추월 AI 업데이트 (60fps) ====================
   function updateRace(dt) {
     // 1. 출발 신호등 카운트다운
     if (state.countdownTimer > 0) {
       state.countdownTimer -= dt;
-      const stage = Math.ceil(state.countdownTimer / 0.82);
+      const stage = Math.ceil(state.countdownTimer / 0.80);
       if (stage !== state.countdownStage && stage >= 1) {
         state.countdownStage = stage;
         showCenterBanner(String(stage), 0);
         sfx.playTone(440, 0.18, 'triangle', 0.18);
       }
       if (state.countdownTimer <= 0) {
-        showCenterBanner('🏁 START!! 출발!', 900);
+        showCenterBanner('🏁 GO!! 신나게 달려요!', 900);
         sfx.playTone(880, 0.35, 'triangle', 0.24);
         sfx.playEngineStart();
         state.startBoostWindow = true;
@@ -2232,38 +2639,125 @@
       return;
     }
 
-    // 2. 핸들 입력 업데이트
+    // 2. 마리오 카트 물음표 박스 슬롯머신 룰렛 처리
+    if (state.rouletteTimer > 0) {
+      state.rouletteTimer -= dt;
+      const nextStep = Math.floor((1.05 - state.rouletteTimer) * 16);
+      if (nextStep !== state.rouletteStep) {
+        state.rouletteStep = nextStep;
+        const previewItem = ITEMS[nextStep % ITEMS.length];
+        itemSlot1.textContent = previewItem.icon;
+        itemBtnIcon.textContent = previewItem.icon;
+        itemBtnLabel.textContent = '룰렛 회전중..';
+        sfx.playItemRouletteTick(nextStep);
+      }
+      if (state.rouletteTimer <= 0) {
+        state.rouletteTimer = 0;
+        // 내 순위가 낮을수록(3~6위) 슈퍼스타/킬러로켓/황금버섯 확률 대폭 상승 (마리오 카트 밸런싱!)
+        let pool = ITEMS;
+        if (state.rank >= 3 && Math.random() < 0.65) {
+          pool = [ITEMS[0], ITEMS[1], ITEMS[2], ITEMS[3]];
+        }
+        const picked = pool[Math.floor(Math.random() * pool.length)];
+        state.heldItem = picked;
+        updateItemUI();
+        sfx.playItemRouletteLock();
+        showFloatingText(`${picked.icon} ${picked.name} 당첨!`, '#ffea00');
+      }
+    }
+
+    // 3. 핸들 입력 업데이트
     if (keys['ArrowLeft'] || keys['KeyA']) {
-      state.steerInput = -0.85;
+      state.steerInput = -0.9;
     } else if (keys['ArrowRight'] || keys['KeyD']) {
-      state.steerInput = 0.85;
+      state.steerInput = 0.9;
     } else if (wheelTouchId === null && !mouseWheelDown) {
       if (state.tiltSteer) {
         const tilt = getNativeTilt();
         state.steerInput = Math.max(-1, Math.min(1, tilt));
       } else {
-        state.steerInput *= Math.pow(0.08, dt);
+        state.steerInput *= Math.pow(0.06, dt);
         if (Math.abs(state.steerInput) < 0.01) state.steerInput = 0;
       }
     }
-    state.wheelAngleDeg = state.steerInput * 75;
+    state.wheelAngleDeg = state.steerInput * 82;
     wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
 
-    // 3. 부스터/아이템 타이머 감소
+    // 4. 타이머 및 마리오 카트 변신 상태 업데이트
     if (state.boostTimer > 0) state.boostTimer = Math.max(0, state.boostTimer - dt);
+    if (state.starTimer > 0) state.starTimer = Math.max(0, state.starTimer - dt);
+    if (state.megaTimer > 0) state.megaTimer = Math.max(0, state.megaTimer - dt);
+    if (state.bulletTimer > 0) state.bulletTimer = Math.max(0, state.bulletTimer - dt);
     if (state.ufoTimer > 0) state.ufoTimer = Math.max(0, state.ufoTimer - dt);
     if (state.shieldTimer > 0) state.shieldTimer = Math.max(0, state.shieldTimer - dt);
     if (state.lightningTimer > 0) state.lightningTimer = Math.max(0, state.lightningTimer - dt);
+    if (state.spinTimer > 0) state.spinTimer = Math.max(0, state.spinTimer - dt);
 
-    const isBoosting = state.boostTimer > 0 || state.ufoTimer > 0;
-    const boostMult = state.ufoTimer > 0 ? 1.48 : (state.boostTimer > 0 ? 1.38 : 1.0);
-    const targetSpeed = state.maxSpeed * boostMult;
-    state.speed += (targetSpeed - state.speed) * Math.min(1, dt * 4.5);
+    // 5. 마리오 카트 3단 드리프트 스파크 게이지 충전
+    if (state.driftActive) {
+      state.driftChargeTime += dt * (1 + Math.abs(state.steerInput) * 0.8);
+      if (state.driftChargeTime > 1.35) state.driftStage = 3;
+      else if (state.driftChargeTime > 0.62) state.driftStage = 2;
+      else state.driftStage = 1;
 
-    const moveDist = state.speed * 3.1 * dt;
+      driftStageBadge.style.display = 'block';
+      if (state.driftStage === 1) {
+        driftStageBadge.textContent = '🔵 1단 파란불 미니터보!';
+        driftStageBadge.style.borderColor = '#00e5ff';
+        driftStageBadge.style.color = '#00e5ff';
+      } else if (state.driftStage === 2) {
+        driftStageBadge.textContent = '🟠 2단 주황불 슈퍼터보!!';
+        driftStageBadge.style.borderColor = '#ff9100';
+        driftStageBadge.style.color = '#ffab00';
+      } else {
+        driftStageBadge.textContent = '🟣 3단 보라불 울트라 부스터 준비완료!!';
+        driftStageBadge.style.borderColor = '#e040fb';
+        driftStageBadge.style.color = '#ea80fc';
+      }
+    }
+
+    const isInvincible = state.starTimer > 0 || state.megaTimer > 0 || state.bulletTimer > 0;
+    const isBoosting = state.boostTimer > 0 || isInvincible;
+    let boostMult = 1.0;
+    if (state.bulletTimer > 0) boostMult = 1.62;
+    else if (state.starTimer > 0) boostMult = 1.48;
+    else if (state.megaTimer > 0) boostMult = 1.42;
+    else if (state.boostTimer > 0) boostMult = 1.38;
+    if (state.spinTimer > 0) boostMult = 0.48;
+
+    // 갓길(잔디) 감속 처리 (무적/부스터 시에는 감속 없음!)
+    const offRoad = Math.abs(state.playerX) > 0.96 && !isBoosting;
+    const terrainMult = offRoad ? 0.82 : 1.0;
+
+    const targetSpeed = state.maxSpeed * boostMult * terrainMult;
+    state.speed += (targetSpeed - state.speed) * Math.min(1, dt * 5.2);
+
+    const moveDist = state.speed * 3.15 * dt;
     state.posZ += moveDist;
 
-    // 연속 자동차 엔진 사운드 & 기어 변속 & 타이어 스키드 실시간 반영
+    // 6. 점프(Hop) & 무지개 점프대 공중 물리 및 착지 부스터!
+    if (state.playerY > 0 || state.velY !== 0) {
+      state.playerY += state.velY * dt;
+      state.velY -= 1180 * dt; // 중력 가속도
+      if (state.playerY > 38) {
+        state.trickRot += dt * 9.5; // 점프대 공중 트릭 회전 연출!
+      }
+      if (state.playerY <= 0) {
+        const landedFromHighJump = state.trickRot > 1.2;
+        state.playerY = 0;
+        state.velY = 0;
+        state.trickRot = 0;
+        if (landedFromHighJump) {
+          state.boostTimer = Math.max(state.boostTimer, 1.8);
+          sfx.playBoost(false);
+          vibrateDevice(55);
+          showFloatingText('🤸✨ 착지 점프 부스터!!', '#00e676');
+          spawnBoostParticles(18);
+        }
+      }
+    }
+
+    // 7. 연속 자동차 엔진음 & 서브베이스 실시간 반영
     sfx.updateContinuousEngine(
       state.speed,
       state.maxSpeed,
@@ -2280,37 +2774,45 @@
 
     if (Math.abs(lookAheadSeg.curve) > 1.1) {
       turnPrompt.classList.add('show');
-      turnPrompt.textContent = lookAheadSeg.curve < 0 ? '⬅️ 왼쪽으로 핸들 돌리기!' : '➡️ 오른쪽으로 핸들 돌리기!';
+      turnPrompt.textContent = lookAheadSeg.curve < 0 ? '⬅️ 왼쪽 코너! 핸들 돌리기!' : '➡️ 오른쪽 코너! 핸들 돌리기!';
     } else {
       turnPrompt.classList.remove('show');
     }
 
-    // 4. 조향 및 어린이 코너 어시스트
-    const driftFactor = state.driftActive ? 1.45 : 1.0;
-    state.playerX += state.steerInput * 1.65 * driftFactor * dt;
+    // 8. 차의 움직임 자유도 대폭 확장 (횡방향 관성 속도 velX + 화면 좌우 다이내믹 이동 screenXOffset)
+    const driftSlide = state.driftActive ? (state.driftDir * 0.42 + state.steerInput * 1.85) : (state.steerInput * 1.75);
+    const targetVelX = driftSlide;
+    state.velX += (targetVelX - state.velX) * Math.min(1, dt * 8.5);
+    state.playerX += state.velX * dt;
+
+    // 화면 안에서 카트 자체가 좌우로 훨씬 넓고 역동적으로 움직이도록 screenXOffset 계산 (±155px)
+    const targetScreenOffset = state.velX * 72 + (state.driftActive ? state.driftDir * 28 : 0);
+    state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 7.5);
 
     const centrifugal = (currentSeg.curve * 0.16) * (state.speed / state.maxSpeed) * dt;
-    if (state.ufoTimer > 0) {
-      state.playerX += (0 - state.playerX) * 5 * dt;
+    if (state.bulletTimer > 0) {
+      // 킬러 로켓 변신 시 도로 중앙 자동 크루징!
+      state.playerX += (0 - state.playerX) * 6.5 * dt;
     } else if (state.cornerAssist) {
-      state.playerX -= centrifugal * 0.25;
-      if (Math.abs(state.steerInput) < 0.15) {
-        state.playerX += (0 - state.playerX) * 1.4 * dt;
+      state.playerX -= centrifugal * 0.22;
+      if (Math.abs(state.steerInput) < 0.12 && !state.driftActive) {
+        state.playerX += (0 - state.playerX) * 0.95 * dt;
       }
     } else {
-      state.playerX -= centrifugal * 0.75;
+      state.playerX -= centrifugal * 0.72;
     }
-    state.playerX = Math.max(-0.92, Math.min(0.92, state.playerX));
+    // 도로 폭과 갓길까지 훨씬 자유롭게 이동 가능 (-1.18 ~ +1.18)
+    state.playerX = Math.max(-1.18, Math.min(1.18, state.playerX));
 
-    // 5. 자동 N2O 게이지 충전
-    const chargeRate = state.driftActive ? 44 : 18;
+    // 9. 자동 N2O 게이지 충전
+    const chargeRate = state.driftActive ? 48 : 19;
     state.n2oGauge = Math.min(100, state.n2oGauge + chargeRate * dt);
     if (state.n2oGauge >= 100) {
       if (state.boostCount < 2) {
         state.boostCount++;
-        state.n2oGauge = 22;
+        state.n2oGauge = 24;
         sfx.playCoin();
-        showFloatingText('🔥 N2O 부스터 충전 완료!', '#ffea00');
+        showFloatingText('🔥 슈퍼 부스터 충전 완료!', '#ffea00');
       }
       if (state.autoBoost && state.boostTimer <= 0.1) {
         triggerBoost();
@@ -2318,122 +2820,232 @@
     }
     updateBoostUI();
 
-    // 6. 도로 위 아이템 박스 / 부스터 패드 / 코인 충돌 체크
+    // 10. 트랙 위 마리오 카트 기믹 (물음표 박스, 무지개 점프대, 대시 패드, 토관, 바나나, 코인) 상호작용
     for (let offset = 0; offset <= 2; offset++) {
       const s = state.segments[(segIdx + offset) % state.segments.length];
       s.items.forEach(it => {
+        if (it.moving) {
+          it.x = it.baseX + Math.sin(performance.now() * 0.0025 + it.phase) * 0.22;
+        }
         if (it.takenTimer && it.takenTimer > 0) {
           it.takenTimer = Math.max(0, it.takenTimer - dt);
           return;
         }
-        const hitWidth = it.type === 'itemBox' ? 0.38 : 0.36;
+        const hitWidth = it.type === 'jumpRamp' ? 0.48 : (it.type === 'itemBox' ? 0.36 : 0.32);
         if (Math.abs(state.playerX - it.x) < hitWidth) {
           if (it.type === 'itemBox') {
-            it.takenTimer = 4.0;
+            it.takenTimer = 3.5;
             sfx.playItemBox();
             vibrateDevice(35);
-            const picked = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-            state.heldItem = picked;
-            updateItemUI();
-            showFloatingText(`${picked.icon} ${picked.name} 획득!`, '#e040fb');
+            startItemRoulette();
+          } else if (it.type === 'jumpRamp') {
+            it.takenTimer = 1.2;
+            state.velY = 520; // 하늘 높이 점프!
+            state.boostTimer = Math.max(state.boostTimer, 2.0);
+            sfx.playHop();
+            sfx.playBoost(false);
+            vibrateDevice(65);
+            showCenterBanner('🌈 슈퍼 점프대 비행!!', 850);
+            spawnBoostParticles(20);
           } else if (it.type === 'dashPad') {
-            it.takenTimer = 1.5;
-            state.boostTimer = Math.max(state.boostTimer, 1.7);
-            sfx.playBoost();
-            vibrateDevice(45);
-            showFloatingText('⚡ 바닥 부스터 패드!!', '#00e5ff');
-            spawnBoostParticles(14);
+            it.takenTimer = 1.4;
+            state.boostTimer = Math.max(state.boostTimer, 1.8);
+            sfx.playBoost(false);
+            vibrateDevice(50);
+            showFloatingText('⚡ 바닥 대시 부스터!!', '#00e5ff');
+            spawnBoostParticles(16);
           } else if (it.type === 'coin') {
-            it.takenTimer = 5.0;
+            it.takenTimer = 4.5;
             state.coins++;
-            state.n2oGauge = Math.min(100, state.n2oGauge + 14);
+            state.n2oGauge = Math.min(100, state.n2oGauge + 15);
             sfx.playCoin();
             showFloatingText('🪙 코인 +1', '#ffd54f');
+          } else if ((it.type === 'banana' || it.type === 'pipe') && state.playerY < 28) {
+            it.takenTimer = 3.0;
+            if (isInvincible || state.shieldTimer > 0) {
+              // 무적/거대버섯 상태에서는 토관과 바나나를 그대로 튕겨냄!
+              sfx.playShellHit();
+              showFloatingText('💥 무적 파워로 장애물 격파!!', '#ffea00');
+            } else {
+              state.spinTimer = 0.75;
+              sfx.playHop();
+              vibrateDevice(65);
+              showFloatingText(it.type === 'banana' ? '🍌 어이쿠! 바나나 미끄덩~!' : '🟢 초록 토관 통통~!', '#ff9100');
+            }
           }
         }
       });
     }
 
-    // 7. 5대의 라이벌 AI 카트 업데이트 (내 바로 앞에서 앞서 달리거나 엎치락뒤치락 경쟁!)
+    // 11. 발사된 등껍질(Shell) 투사체 이동 및 앞차 명중 판정
+    for (let i = state.projectiles.length - 1; i >= 0; i--) {
+      const proj = state.projectiles[i];
+      proj.z += proj.speed * 3.15 * dt;
+      proj.life -= dt;
+
+      // 가장 가까운 앞차를 향해 유도 추적(Homing Red Shell!)
+      let targetRival = null;
+      let minDist = 99999;
+      state.rivals.forEach(r => {
+        const d = r.z - proj.z;
+        if (d > -40 && d < 1800 && d < minDist) {
+          minDist = d;
+          targetRival = r;
+        }
+      });
+      if (targetRival) {
+        proj.x += (targetRival.x - proj.x) * Math.min(1, dt * 8.0);
+        if (Math.abs(targetRival.z - proj.z) < 95 && Math.abs(targetRival.x - proj.x) < 0.45) {
+          targetRival.spinTimer = 1.9;
+          targetRival.velY = 380;
+          sfx.playShellHit();
+          vibrateDevice(70);
+          showCenterBanner(`🐢💥 ${targetRival.racer.shortName} 등껍질 명중!!`, 950);
+          state.projectiles.splice(i, 1);
+          continue;
+        }
+      }
+      if (proj.life <= 0) state.projectiles.splice(i, 1);
+    }
+
+    // 12. 5대의 라이벌 AI 카트 독립 물리 업데이트 (딜레이 없이 때론 나보다 빠르게 뒤에서 치고 올라와 앞뒤로 추월!)
     const totalRaceDist = state.trackLength * state.totalLaps;
     const raceProgressRatio = state.posZ / totalRaceDist;
     let aheadCount = 0;
+    let rearChallenger = null;
+    let closestRearDist = -9999;
 
     state.rivals.forEach((r, idx) => {
       if (r.spinTimer > 0) r.spinTimer = Math.max(0, r.spinTimer - dt);
       if (r.shrinkTimer > 0) r.shrinkTimer = Math.max(0, r.shrinkTimer - dt);
       if (r.boostVisualTimer > 0) r.boostVisualTimer = Math.max(0, r.boostVisualTimer - dt);
+      if (r.passSoundCooldown > 0) r.passSoundCooldown = Math.max(0, r.passSoundCooldown - dt);
 
-      // 레이스 중반까지는 라이벌들이 내 앞(+100 ~ +750)에서 앞서 달리고,
-      // 내가 부스터를 쓰거나 레이스 후반부(75% 이후)가 되면 목표 오프셋이 줄어들어 신나게 추월 가능!
-      let dynamicTargetOffset = r.paceOffset;
-      if (isBoosting) {
-        // 플레이어가 부스터를 쓰면 앞차들을 휙휙 제칠 수 있도록 목표 오프셋 감소
-        r.paceOffset = Math.max(-420 + idx * 85, r.paceOffset - 290 * dt);
-      } else {
-        // 평소 주행 시에는 앞차들이 다시 힘내서 내 바로 앞 시야(+80 ~ +650)로 치고 나감!
-        const desired = (-100 + idx * 190) * (raceProgressRatio > 0.78 ? 0.35 : 1.0);
-        r.paceOffset += (desired - r.paceOffset) * 0.45 * dt;
-      }
-      dynamicTargetOffset = r.paceOffset;
+      // 각 라이벌의 고유 추월 파동(surgeWave): +1에 가까우면 맹추격 슈퍼부스터 모드(플레이어보다 훨씬 빠름!), -1이면 숨고르기 모드
+      r.surgePhase += dt * r.surgeFreq;
+      const surgeWave = Math.sin(r.surgePhase);
 
-      const desiredZ = state.posZ + dynamicTargetOffset;
-      const diffZ = desiredZ - r.z;
+      // 라이벌이 지향하는 플레이어 대비 상대 위치 (앞뒤 -260 ~ +680 사이를 끊임없이 오르락내리락!)
+      const finishHandicap = raceProgressRatio > 0.84 ? -120 : 0;
+      const desiredRelZ = r.baseBandOffset + surgeWave * 360 + finishHandicap;
+      const actualRelZ = r.z - state.posZ;
+      const gapError = desiredRelZ - actualRelZ;
 
-      // 라이벌 속도 결정: 목표 지점보다 뒤에 있으면 부스터 불꽃을 켜고 빠르게 앞서 나감!
-      let aiSpeed = state.maxSpeed * (1.0 + Math.clamp ? 0 : 0);
-      const speedAdjust = Math.max(-75, Math.min(85, diffZ * 0.38));
-      aiSpeed = state.maxSpeed + speedAdjust;
+      // 독립 목표 속도 계산 (플레이어 속도를 즉각 복사하지 않고 라이벌 고유의 최고속도 + 부스터 사이클로 주행!)
+      let rivalTargetSpeed = state.maxSpeed * (1.02 + surgeWave * 0.16) + Math.max(-65, Math.min(95, gapError * 0.24));
 
-      if (diffZ > 110 && r.spinTimer <= 0) {
-        r.boostVisualTimer = 0.4;
-      }
-      if (r.spinTimer > 0) aiSpeed = state.maxSpeed * 0.32;
-      else if (r.shrinkTimer > 0) aiSpeed = state.maxSpeed * 0.58;
-
-      r.z += aiSpeed * 3.1 * dt;
-
-      // 시야 범위(-350 ~ +1650)를 절대 벗어나지 않도록 소프트 바운딩하여 항상 눈앞에 차들이 보이게 보장!
-      if (r.z < state.posZ - 380) {
-        r.z = state.posZ - 380;
-      } else if (r.z > state.posZ + 1650) {
-        r.z = state.posZ + 1650;
+      // 뒤에서 추격 중일 때(actualRelZ < 0 && surgeWave > 0.15) 라이벌이 부스터를 켜고 나보다 빠르게 치고 올라옴!
+      if ((surgeWave > 0.22 || gapError > 110) && r.spinTimer <= 0 && r.shrinkTimer <= 0) {
+        r.boostVisualTimer = 0.35;
+        rivalTargetSpeed += 28;
       }
 
-      // 차선 변경 및 부드러운 코너링
-      if (Math.random() < 0.015) {
-        r.targetLane = (Math.random() - 0.5) * 1.3;
+      if (r.spinTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.30;
+      else if (r.shrinkTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.60;
+
+      // 관성 가속도 적용으로 끊김·딜레이 전혀 없는 매끄러운 속도 변화
+      r.speed += (rivalTargetSpeed - r.speed) * Math.min(1, dt * 3.8);
+      r.z += r.speed * 3.15 * dt;
+
+      // 라이벌 점프 물리 (점프대 구간 통과 시 라이벌도 신나게 점프!)
+      const rSegIdx = Math.floor(Math.max(0, r.z) / SEG_LEN) % state.segments.length;
+      if (rSegIdx % 34 === 17 && r.y <= 1) {
+        r.velY = 420;
+        r.boostVisualTimer = 0.8;
       }
-      r.x += (r.targetLane - r.x) * 2.2 * dt;
-      r.x = Math.max(-0.78, Math.min(0.78, r.x));
+      if (r.y > 0 || r.velY !== 0) {
+        r.y += r.velY * dt;
+        r.velY -= 1180 * dt;
+        if (r.y <= 0) {
+          r.y = 0;
+          r.velY = 0;
+        }
+      }
+
+      // 너무 멀리 뒤처지거나 보이지 않는 곳으로 사라지지 않도록 부드러운 탄성 범위 유지 (-320 ~ +1450)
+      if (r.z < state.posZ - 340) {
+        r.z += (state.posZ - 260 - r.z) * Math.min(1, dt * 2.5);
+        r.speed = Math.max(r.speed, state.speed * 1.15);
+      } else if (r.z > state.posZ + 1480) {
+        r.z += (state.posZ + 1320 - r.z) * Math.min(1, dt * 2.5);
+      }
+
+      // 자연스러운 차선 변경 및 와이드 코너링
+      if (Math.random() < 0.022) {
+        r.targetLane = (Math.random() - 0.5) * 1.45;
+      }
+      r.x += (r.targetLane - r.x) * 2.8 * dt;
+      r.x = Math.max(-0.88, Math.min(0.88, r.x));
+
+      // 플레이어와 라이벌 카트 근접 접촉/추월 물리 상호작용
+      const newRelZ = r.z - state.posZ;
+      if (Math.abs(newRelZ) < 52 && Math.abs(r.x - state.playerX) < 0.34 && state.playerY < 30) {
+        if (isInvincible) {
+          // 내가 무적 스타/거대버섯/킬러로켓 상태면 부딪힌 라이벌이 하늘로 붕 날아가며 스핀!
+          if (r.spinTimer <= 0.2) {
+            r.spinTimer = 1.6;
+            r.velY = 390;
+            sfx.playShellHit();
+            vibrateDevice(60);
+            showFloatingText(`⭐💥 ${r.racer.shortName} 날려버림!!`, '#ffea00');
+          }
+        } else {
+          // 일반 상태에서는 범퍼카처럼 서로 살짝 튕기며 불꽃 스파크!
+          const pushDir = state.playerX >= r.x ? 1 : -1;
+          state.velX += pushDir * 0.55;
+          r.targetLane = Math.max(-0.85, Math.min(0.85, r.x - pushDir * 0.45));
+        }
+      }
 
       const isAheadNow = r.z > state.posZ;
       if (r.wasAhead && !isAheadNow) {
-        // 방금 앞차를 추월함! 도플러 효과음 + 칭찬 메시지!
+        // 내가 앞차를 추월함!
         sfx.playOvertakeWhoosh();
         showFloatingText(`💨 ${r.racer.shortName} 추월 성공!!`, '#00e676');
+      } else if (!r.wasAhead && isAheadNow && state.posZ > 250) {
+        // 뒤에서 달리던 라이벌이 부스터를 켜고 나를 추월해 앞으로 치고 나감!
+        if (r.passSoundCooldown <= 0) {
+          sfx.playRivalPassBy();
+          r.passSoundCooldown = 2.5;
+          showFloatingText(`⚡ ${r.racer.shortName} 카트가 앞서 나가요!`, '#ff9100');
+        }
       }
       r.wasAhead = isAheadNow;
 
       if (isAheadNow) aheadCount++;
 
-      // 상단 진행도 바에 라이벌 위치 표시
+      // 내 바로 뒤(-240 ~ +15)에서 무섭게 달려오는 라이벌 감지 -> 후방 추월 경보 미러 표시!
+      if (newRelZ > -240 && newRelZ < 15 && r.speed >= state.speed * 0.96) {
+        if (newRelZ > closestRearDist) {
+          closestRearDist = newRelZ;
+          rearChallenger = r;
+        }
+      }
+
       if (r.dotEl) {
         const rPct = Math.max(0, Math.min(100, (r.z / totalRaceDist) * 100));
         r.dotEl.style.left = `${rPct.toFixed(1)}%`;
       }
     });
 
+    if (rearChallenger) {
+      rearAlertBar.style.display = 'flex';
+      const dirArrow = rearChallenger.x < state.playerX - 0.15 ? '↙️ 왼쪽 뒤' : (rearChallenger.x > state.playerX + 0.15 ? '↘️ 오른쪽 뒤' : '⬇️ 바로 뒤');
+      rearAlertBar.textContent = `⚠️ ${dirArrow}에서 ${rearChallenger.racer.shortName} 카트 맹추격·추월 중! 💨`;
+    } else {
+      rearAlertBar.style.display = 'none';
+    }
+
     state.rank = 1 + aheadCount;
     rankNumEl.textContent = String(state.rank);
 
-    // 8. 바퀴(Lap) 및 결승선 골인 체크
+    // 13. 바퀴(Lap) 및 결승선 골인 체크
     const currentLap = Math.min(state.totalLaps, Math.floor(state.posZ / state.trackLength) + 1);
     if (currentLap !== state.lap) {
       state.lap = currentLap;
       sfx.playFanfare();
-      showCenterBanner('🎉 마지막 바퀴! 스퍼트!', 1300);
-      speakKR('마지막 바퀴예요! 부스터를 눌러 일등으로 달려봐요!', true);
+      showCenterBanner('🎉 FINAL LAP! 마지막 바퀴!', 1300);
+      speakKR('마지막 바퀴예요! 슈퍼 부스터로 일등으로 골인해 봐요!', true);
     }
     lapBoxEl.textContent = `바퀴 ${state.lap} / ${state.totalLaps}`;
 
@@ -2455,8 +3067,8 @@
     }
     for (let i = state.floatingTexts.length - 1; i >= 0; i--) {
       const ft = state.floatingTexts[i];
-      ft.y -= 48 * dt;
-      ft.life -= dt * 0.9;
+      ft.y -= 52 * dt;
+      ft.life -= dt * 0.92;
       if (ft.life <= 0) state.floatingTexts.splice(i, 1);
     }
   }
@@ -2487,13 +3099,15 @@
     speakKR(`우와! ${state.rank}등으로 골인했어요! 정말 최고예요! 축하합니다!`, true);
   }
 
-  // ==================== 3D 트랙 & 라이벌 카트 렌더링 엔진 ====================
+  // ==================== 3D 슈퍼마리오 카트 트랙 & 연속 깊이 투영 렌더링 엔진 ====================
+  const RAINBOW_COLORS = ['#ff1744', '#ff9100', '#ffea00', '#00e676', '#00e5ff', '#7c4dff', '#e040fb'];
+
   function drawScene(timeMs) {
     const W = canvas.width;
     const H = canvas.height;
     const track = TRACKS[state.selectedTrack];
 
-    const horizonY = Math.floor(H * 0.40);
+    const horizonY = Math.floor(H * 0.39);
     const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
     skyGrad.addColorStop(0, track.skyTop);
     skyGrad.addColorStop(1, track.skyBottom);
@@ -2507,27 +3121,30 @@
 
     if (state.segments.length === 0) return;
 
-    const drawDistance = 68;
+    const drawDistance = 72;
     const baseIndex = Math.floor(state.posZ / SEG_LEN);
     const basePercent = (state.posZ % SEG_LEN) / SEG_LEN;
 
-    let dx = -(state.segments[baseIndex % state.segments.length].curve * basePercent);
-    let x = 0;
+    let dx = -(state.segments[baseIndex % state.segments.length].curve * basePercent * 1.45);
+    let x = -dx * basePercent;
     const projected = [];
 
     for (let n = 0; n < drawDistance; n++) {
       const seg = state.segments[(baseIndex + n) % state.segments.length];
       const z = (n - basePercent) * SEG_LEN;
-      const clampedZ = Math.max(12, z);
-      const scale = 190 / clampedZ;
+      const clampedZ = Math.max(10, z);
+      const scale = 195 / clampedZ;
 
-      const projX = W * 0.5 + (x - state.playerX * 260) * scale;
-      const projY = horizonY + (210 - seg.y * 0.18) * scale;
-      const projW = 680 * scale;
+      const projX = W * 0.5 + (x - state.playerX * 265) * scale;
+      const projY = horizonY + (212 - seg.y * 0.18 + state.playerY * 0.25) * scale;
+      const projW = 695 * scale;
 
       projected.push({
         seg,
         n,
+        z,
+        worldXCurve: x,
+        worldY: seg.y,
         x: projX,
         y: projY,
         w: projW,
@@ -2538,6 +3155,7 @@
       dx += seg.curve * 1.45;
     }
 
+    // 도로 폴리곤 렌더링
     for (let i = projected.length - 1; i >= 1; i--) {
       const p1 = projected[i - 1];
       const p2 = projected[i];
@@ -2548,101 +3166,164 @@
       ctx.fillStyle = stripe ? track.grass1 : track.grass2;
       ctx.fillRect(0, p2.y, W, Math.max(1, p1.y - p2.y + 1));
 
-      const k1 = p1.w * 1.13;
-      const k2 = p2.w * 1.13;
+      const k1 = p1.w * 1.14;
+      const k2 = p2.w * 1.14;
       ctx.fillStyle = stripe ? track.kerb1 : track.kerb2;
       drawTrapezoid(ctx, p1.x, p1.y, k1, p2.x, p2.y, k2);
 
-      ctx.fillStyle = stripe ? track.road1 : track.road2;
-      drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
+      if (track.sceneryType === 'rainbow') {
+        ctx.fillStyle = RAINBOW_COLORS[p2.seg.index % RAINBOW_COLORS.length];
+        ctx.globalAlpha = 0.88;
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
+        ctx.globalAlpha = 1.0;
+      } else {
+        ctx.fillStyle = stripe ? track.road1 : track.road2;
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
+      }
 
       if (stripe) {
-        ctx.fillStyle = 'rgba(255,255,255,0.65)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.035, p2.x, p2.y, p2.w * 0.035);
+        ctx.fillStyle = 'rgba(255,255,255,0.68)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.032, p2.x, p2.y, p2.w * 0.032);
       }
       if (p2.seg.index % 6 === 0 && p2.n < 35) {
         ctx.fillStyle = 'rgba(0, 230, 118, 0.55)';
         drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.16, p2.x, p2.y, p2.w * 0.04);
       }
       if (p2.seg.index === 0) {
+        // 마리오 카트 체크무늬 결승선
         ctx.fillStyle = '#ffffff';
         drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
       }
     }
 
-    // 뒤에서 앞으로 오브젝트 및 앞서 달리는 라이벌 카트 렌더링 (소수점 보간으로 아주 매끄럽게!)
+    // 임의의 상대 거리 relZ를 60fps 연속 좌표로 변환하는 정밀 보간 함수 (라이벌 딜레이/끊김 완전 제거!)
+    function projectContinuousRelZ(relZ) {
+      const floatN = relZ / SEG_LEN + basePercent;
+      if (floatN < 0) {
+        const p0 = projected[0];
+        const p1 = projected[1];
+        const t = Math.max(-0.65, floatN);
+        return {
+          x: p0.x + (p1.x - p0.x) * t,
+          y: p0.y + (p1.y - p0.y) * t,
+          w: Math.max(120, p0.w + (p1.w - p0.w) * t)
+        };
+      }
+      const idx = Math.min(projected.length - 2, Math.max(0, Math.floor(floatN)));
+      const frac = floatN - idx;
+      const pA = projected[idx];
+      const pB = projected[idx + 1];
+      return {
+        x: pA.x + (pB.x - pA.x) * frac,
+        y: pA.y + (pB.y - pA.y) * frac,
+        w: pA.w + (pB.w - pA.w) * frac
+      };
+    }
+
+    // 트랙 기믹 & 가로수 렌더링 (뒤에서 앞으로)
     for (let i = projected.length - 1; i >= 1; i--) {
       const p = projected[i];
       if (p.y < horizonY) continue;
 
-      if (p.seg.arch && p.n < 45) {
+      if (p.seg.arch && p.n < 46) {
         drawArchGate(ctx, p.x, p.y, p.w, p.seg.arch);
       }
 
       p.seg.scenery.forEach(sc => {
         const sx = p.x + sc.offset * p.w;
-        drawRoadsideProp(ctx, sx, p.y, p.w * 0.35, track.sceneryType, sc.variant);
+        drawRoadsideProp(ctx, sx, p.y, p.w * 0.36, track.sceneryType, sc.variant, timeMs);
       });
 
       p.seg.items.forEach(it => {
         if (it.takenTimer && it.takenTimer > 0) return;
         const ix = p.x + it.x * p.w * 0.78;
         if (it.type === 'itemBox') {
-          drawItemCube(ctx, ix, p.y, p.w * 0.16, timeMs);
+          drawItemCube(ctx, ix, p.y, p.w * 0.165, timeMs);
+        } else if (it.type === 'jumpRamp') {
+          drawJumpRamp(ctx, ix, p.y, p.w * 0.62, timeMs);
         } else if (it.type === 'dashPad') {
-          drawDashPad(ctx, ix, p.y, p.w * 0.24, timeMs);
+          drawDashPad(ctx, ix, p.y, p.w * 0.25, timeMs);
         } else if (it.type === 'coin') {
-          drawGoldCoin(ctx, ix, p.y, p.w * 0.12, timeMs);
-        }
-      });
-
-      // 전방 라이벌 카트 매끄러운 보간 렌더링
-      state.rivals.forEach(r => {
-        const relZ = r.z - state.posZ;
-        if (relZ < 20 || relZ > 3200) return;
-        const floatSeg = relZ / SEG_LEN;
-        const segFloor = Math.floor(floatSeg);
-        if (segFloor === p.n && p.n >= 1 && p.n < projected.length - 1) {
-          const frac = floatSeg - segFloor;
-          const pNext = projected[p.n + 1];
-          const interpX = p.x + (pNext.x - p.x) * frac;
-          const interpY = p.y + (pNext.y - p.y) * frac;
-          const interpW = p.w + (pNext.w - p.w) * frac;
-
-          const rx = interpX + r.x * interpW * 0.75;
-          const shrinkScale = r.shrinkTimer > 0 ? 0.58 : 1.0;
-          const kScale = Math.min(1.18, Math.max(0.22, (interpW / 285))) * shrinkScale;
-
-          drawKartCharacter(ctx, rx, interpY, kScale, r.racer, {
-            steer: Math.sin(timeMs * 0.005 + r.racer.id) * 0.28,
-            boosting: r.boostVisualTimer > 0,
-            drifting: r.spinTimer > 0,
-            ufo: false,
-            shield: false,
-            label: `${r.racer.shortName}`,
-            timeMs
-          });
+          drawGoldCoin(ctx, ix, p.y, p.w * 0.125, timeMs);
+        } else if (it.type === 'pipe') {
+          drawMarioPipe(ctx, ix, p.y, p.w * 0.20);
+        } else if (it.type === 'banana') {
+          drawBananaPeel(ctx, ix, p.y, p.w * 0.14, timeMs);
         }
       });
     }
 
-    if (state.boostTimer > 0 || state.ufoTimer > 0) {
+    // 발사된 등껍질(Red Shell) 렌더링
+    state.projectiles.forEach(proj => {
+      const relZ = proj.z - state.posZ;
+      if (relZ < 0 || relZ > 3200) return;
+      const pt = projectContinuousRelZ(relZ);
+      const sx = pt.x + proj.x * pt.w * 0.78;
+      drawRedShell(ctx, sx, pt.y, Math.max(8, pt.w * 0.14), timeMs);
+    });
+
+    // 5대의 라이벌 카트를 원거리에서 근거리(내 바로 옆 추월 순간 relZ = -45까지!) 순서로 정렬해 매끄럽게 렌더링
+    const visibleRivals = state.rivals
+      .map(r => ({ r, relZ: r.z - state.posZ }))
+      .filter(item => item.relZ > -45 && item.relZ < 3600)
+      .sort((a, b) => b.relZ - a.relZ);
+
+    visibleRivals.forEach(({ r, relZ }) => {
+      const pt = projectContinuousRelZ(Math.max(8, relZ));
+      if (pt.y < horizonY) return;
+      const rx = pt.x + r.x * pt.w * 0.78;
+      const shrinkScale = r.shrinkTimer > 0 ? 0.56 : 1.0;
+      const kScale = Math.min(1.22, Math.max(0.20, pt.w / 285)) * shrinkScale;
+      const jumpLift = r.y * kScale * 0.45;
+
+      drawKartCharacter(ctx, rx, pt.y - jumpLift, kScale, r.racer, {
+        steer: Math.sin(timeMs * 0.005 + r.racer.id) * 0.32,
+        boosting: r.boostVisualTimer > 0,
+        drifting: r.spinTimer > 0,
+        spinning: r.spinTimer > 0,
+        star: false,
+        bullet: false,
+        ufo: false,
+        shield: false,
+        label: r.boostVisualTimer > 0 ? `🔥 ${r.racer.shortName}` : r.racer.shortName,
+        timeMs
+      });
+    });
+
+    // 번개 공격 시 하늘에서 떨어지는 노란 번개 이펙트
+    if (state.lightningTimer > 3.8) {
+      ctx.save();
+      ctx.fillStyle = 'rgba(255, 234, 0, 0.35)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    }
+
+    if (state.boostTimer > 0 || state.starTimer > 0 || state.bulletTimer > 0) {
       drawSpeedLines(ctx, W, H, timeMs);
     }
 
-    // 플레이어 주인공 카트 렌더링
+    // 플레이어 주인공 카트 렌더링 (화면 좌우로 자유롭게 이동 + 점프 높이 + 거대버섯/슈퍼스타/킬러로켓 변신!)
     const playerRacer = RACERS[state.selectedRacer];
-    const kartX = W * 0.5 + state.steerInput * 34;
-    const bounceY = Math.sin(timeMs * 0.028) * (state.speed > 20 ? 3.5 : 1);
-    const ufoLift = state.ufoTimer > 0 ? -42 + Math.sin(timeMs * 0.01) * 8 : 0;
-    const kartY = H * 0.80 + bounceY + ufoLift;
+    const kartX = W * 0.5 + state.screenXOffset;
+    const bounceY = Math.sin(timeMs * 0.03) * (state.speed > 20 && state.playerY <= 1 ? 3.5 : 0.5);
+    const jumpOffset = -state.playerY * 0.52;
+    const ufoLift = state.ufoTimer > 0 ? -36 + Math.sin(timeMs * 0.01) * 7 : 0;
+    const kartY = H * 0.80 + bounceY + jumpOffset + ufoLift;
+    const megaScale = state.megaTimer > 0 ? 1.62 : 1.26;
 
-    drawKartCharacter(ctx, kartX, kartY, 1.25, playerRacer, {
+    drawKartCharacter(ctx, kartX, kartY, megaScale, playerRacer, {
       steer: state.steerInput,
       boosting: state.boostTimer > 0,
       drifting: state.driftActive,
-      ufo: state.ufoTimer > 0,
+      driftStage: state.driftStage,
+      spinning: state.spinTimer > 0,
+      trickRot: state.trickRot,
+      star: state.starTimer > 0,
+      bullet: state.bulletTimer > 0,
+      ufo: state.ufoTimer > 0 && state.bulletTimer <= 0,
       shield: state.shieldTimer > 0,
+      airborne: state.playerY > 5,
+      groundYOffset: -jumpOffset,
       label: '⭐ 나 (MY KART)',
       isPlayer: true,
       timeMs
@@ -2698,15 +3379,28 @@
   }
 
   function drawHorizonScenery(c, W, horizonY, track, timeMs) {
-    const grad = c.createRadialGradient(W * 0.5, horizonY + 40, 80, W * 0.5, horizonY + 40, 260);
+    if (track.sceneryType === 'rainbow') {
+      // 레인보우 우주 로드 별빛 & 행성 배경
+      c.fillStyle = '#ffffff';
+      for (let i = 0; i < 28; i++) {
+        const sx = (i * 97 + Math.floor(timeMs * 0.015)) % W;
+        const sy = (i * 43) % (horizonY - 15);
+        const r = (i % 3) + 1.2;
+        c.beginPath();
+        c.arc(sx, sy, r, 0, Math.PI * 2);
+        c.fill();
+      }
+    }
+
+    const grad = c.createRadialGradient(W * 0.5, horizonY + 40, 80, W * 0.5, horizonY + 40, 280);
     grad.addColorStop(0, 'rgba(255,255,255,0)');
-    grad.addColorStop(0.7, 'rgba(255,234,0,0.22)');
-    grad.addColorStop(0.85, 'rgba(255,64,129,0.22)');
+    grad.addColorStop(0.65, 'rgba(255,234,0,0.24)');
+    grad.addColorStop(0.82, 'rgba(255,64,129,0.24)');
     grad.addColorStop(1, 'rgba(0,229,255,0)');
     c.fillStyle = grad;
     c.fillRect(0, 0, W, horizonY);
 
-    c.fillStyle = 'rgba(255,255,255,0.85)';
+    c.fillStyle = 'rgba(255,255,255,0.86)';
     for (let i = 0; i < 5; i++) {
       const cx = ((i * 290 + timeMs * 0.02) % (W + 200)) - 100;
       const cy = 42 + (i % 2) * 34;
@@ -2730,7 +3424,7 @@
     if (w < 25) return;
     const archH = w * 0.72;
     c.save();
-    c.fillStyle = '#ff3d00';
+    c.fillStyle = '#e53935';
     c.fillRect(x - w * 0.95, y - archH, w * 0.12, archH);
     c.fillRect(x + w * 0.83, y - archH, w * 0.12, archH);
     c.fillStyle = '#1e88e5';
@@ -2741,33 +3435,55 @@
 
     if (w > 70) {
       c.fillStyle = '#ffffff';
-      c.font = `900 ${Math.floor(w * 0.13)}px sans-serif`;
+      c.font = `900 ${Math.floor(w * 0.12)}px sans-serif`;
       c.textAlign = 'center';
       c.fillText(label, x, y - archH - w * 0.06);
     }
     c.restore();
   }
 
-  function drawRoadsideProp(c, x, y, size, type, variant) {
+  function drawRoadsideProp(c, x, y, size, type, variant, timeMs) {
     if (size < 6) return;
     c.save();
-    if (type === 'village') {
-      c.fillStyle = '#6d4c41';
-      c.fillRect(x - size * 0.14, y - size * 0.7, size * 0.28, size * 0.7);
-      c.fillStyle = variant === 0 ? '#2e7d32' : '#43a047';
+    if (type === 'mario') {
+      if (variant === 0) {
+        // 슈퍼마리오 빨간 점박이 버섯 나무
+        c.fillStyle = '#fff8e1';
+        c.fillRect(x - size * 0.18, y - size * 0.55, size * 0.36, size * 0.55);
+        c.fillStyle = '#ff1744';
+        c.beginPath();
+        c.arc(x, y - size * 0.65, size * 0.52, Math.PI, 0);
+        c.closePath();
+        c.fill();
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.arc(x - size * 0.2, y - size * 0.82, size * 0.12, 0, Math.PI * 2);
+        c.arc(x + size * 0.2, y - size * 0.82, size * 0.12, 0, Math.PI * 2);
+        c.fill();
+      } else {
+        // 초록 마리오 언덕 나무
+        c.fillStyle = '#6d4c41';
+        c.fillRect(x - size * 0.14, y - size * 0.7, size * 0.28, size * 0.7);
+        c.fillStyle = '#43a047';
+        c.beginPath();
+        c.arc(x, y - size * 0.85, size * 0.52, 0, Math.PI * 2);
+        c.fill();
+      }
+    } else if (type === 'rainbow') {
+      // 회전하는 황금 스타 링 기둥
+      c.strokeStyle = variant % 2 === 0 ? '#ffea00' : '#00e5ff';
+      c.lineWidth = Math.max(2, size * 0.12);
       c.beginPath();
-      c.arc(x, y - size * 0.85, size * 0.55, 0, Math.PI * 2);
-      c.fill();
-    } else if (type === 'candy') {
-      c.fillStyle = '#ffffff';
-      c.fillRect(x - size * 0.08, y - size * 0.9, size * 0.16, size * 0.9);
-      c.fillStyle = variant % 2 === 0 ? '#ff4081' : '#00e5ff';
-      c.beginPath();
-      c.arc(x, y - size * 1.0, size * 0.5, 0, Math.PI * 2);
-      c.fill();
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = Math.max(2, size * 0.08);
+      c.arc(x, y - size * 0.75, size * 0.48, 0, Math.PI * 2);
       c.stroke();
+    } else if (type === 'castle') {
+      // 쿠파 성 횃불 기둥
+      c.fillStyle = '#455a64';
+      c.fillRect(x - size * 0.22, y - size * 0.8, size * 0.44, size * 0.8);
+      c.fillStyle = (Math.floor(timeMs * 0.01) + variant) % 2 === 0 ? '#ffea00' : '#ff3d00';
+      c.beginPath();
+      c.arc(x, y - size * 0.95, size * 0.32, 0, Math.PI * 2);
+      c.fill();
     } else {
       c.fillStyle = '#5d4037';
       c.fillRect(x - size * 0.12, y - size * 0.85, size * 0.24, size * 0.85);
@@ -2787,9 +3503,9 @@
     c.rotate(Math.sin(timeMs * 0.004) * 0.35);
 
     const g = c.createLinearGradient(-size, -size, size, size);
-    g.addColorStop(0, 'rgba(255, 64, 129, 0.92)');
-    g.addColorStop(0.5, 'rgba(255, 234, 0, 0.92)');
-    g.addColorStop(1, 'rgba(0, 229, 255, 0.92)');
+    g.addColorStop(0, 'rgba(255, 23, 68, 0.94)');
+    g.addColorStop(0.5, 'rgba(255, 234, 0, 0.94)');
+    g.addColorStop(1, 'rgba(0, 229, 255, 0.94)');
     c.fillStyle = g;
     c.strokeStyle = '#ffffff';
     c.lineWidth = Math.max(1.5, size * 0.12);
@@ -2798,9 +3514,9 @@
     c.fill();
     c.stroke();
 
-    if (size > 12) {
+    if (size > 11) {
       c.fillStyle = '#ffffff';
-      c.font = `900 ${Math.floor(size * 0.85)}px sans-serif`;
+      c.font = `900 ${Math.floor(size * 0.88)}px sans-serif`;
       c.textAlign = 'center';
       c.textBaseline = 'middle';
       c.fillText('?', 0, 2);
@@ -2808,15 +3524,100 @@
     c.restore();
   }
 
+  // 마리오 카트 무지개 점프대 (Jump Ramp)
+  function drawJumpRamp(c, x, y, w, timeMs) {
+    if (w < 12) return;
+    const h = w * 0.28;
+    c.save();
+    const grad = c.createLinearGradient(x - w, y, x + w, y - h);
+    grad.addColorStop(0, '#ff1744');
+    grad.addColorStop(0.35, '#ffea00');
+    grad.addColorStop(0.7, '#00e676');
+    grad.addColorStop(1, '#00e5ff');
+    c.fillStyle = grad;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(2, w * 0.03);
+    c.beginPath();
+    c.moveTo(x - w, y);
+    c.lineTo(x + w, y);
+    c.lineTo(x + w * 0.78, y - h);
+    c.lineTo(x - w * 0.78, y - h);
+    c.closePath();
+    c.fill();
+    c.stroke();
+
+    // 점프 화살표 표시
+    if (w > 35) {
+      c.fillStyle = (Math.floor(timeMs * 0.01) % 2 === 0) ? '#ffffff' : '#ffea00';
+      c.font = `900 ${Math.floor(h * 0.75)}px sans-serif`;
+      c.textAlign = 'center';
+      c.fillText('▲ JUMP ▲', x, y - h * 0.22);
+    }
+    c.restore();
+  }
+
+  // 슈퍼마리오 초록 토관 (Green Warp Pipe)
+  function drawMarioPipe(c, x, y, size) {
+    if (size < 6) return;
+    c.save();
+    const w = size * 0.95;
+    const h = size * 1.15;
+    c.fillStyle = '#00c853';
+    c.strokeStyle = '#1b5e20';
+    c.lineWidth = Math.max(1.5, size * 0.08);
+    c.fillRect(x - w * 0.42, y - h, w * 0.84, h);
+    c.strokeRect(x - w * 0.42, y - h, w * 0.84, h);
+    c.fillStyle = '#69f0ae';
+    c.fillRect(x - w * 0.5, y - h, w, h * 0.28);
+    c.strokeRect(x - w * 0.5, y - h, w, h * 0.28);
+    c.restore();
+  }
+
+  // 바나나 껍질 (Banana Peel)
+  function drawBananaPeel(c, x, y, size, timeMs) {
+    if (size < 5) return;
+    const wobble = Math.sin(timeMs * 0.01 + x) * 0.12;
+    c.save();
+    c.translate(x, y - size * 0.35);
+    c.rotate(wobble);
+    c.fillStyle = '#ffea00';
+    c.strokeStyle = '#f57f17';
+    c.lineWidth = Math.max(1.5, size * 0.1);
+    c.beginPath();
+    c.moveTo(0, -size * 0.7);
+    c.lineTo(size * 0.55, size * 0.35);
+    c.lineTo(0, size * 0.15);
+    c.lineTo(-size * 0.55, size * 0.35);
+    c.closePath();
+    c.fill();
+    c.stroke();
+    c.restore();
+  }
+
+  // 빨강 거북이 등껍질 (Red Homing Shell)
+  function drawRedShell(c, x, y, size, timeMs) {
+    c.save();
+    c.translate(x, y - size * 0.55);
+    c.rotate(timeMs * 0.025);
+    c.fillStyle = '#ff1744';
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(2, size * 0.15);
+    c.beginPath();
+    c.arc(0, 0, size * 0.65, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+    c.restore();
+  }
+
   function drawDashPad(c, x, y, size, timeMs) {
     if (size < 6) return;
     c.save();
-    const glow = (Math.sin(timeMs * 0.015) + 1) * 0.5;
+    const glow = (Math.sin(timeMs * 0.018) + 1) * 0.5;
     c.fillStyle = glow > 0.5 ? '#00e5ff' : '#ffea00';
     c.beginPath();
-    c.moveTo(x, y - size * 0.45);
-    c.lineTo(x + size * 0.65, y);
-    c.lineTo(x - size * 0.65, y);
+    c.moveTo(x, y - size * 0.48);
+    c.lineTo(x + size * 0.68, y);
+    c.lineTo(x - size * 0.68, y);
     c.closePath();
     c.fill();
     c.restore();
@@ -2838,7 +3639,7 @@
 
   function drawSpeedLines(c, W, H, timeMs) {
     c.save();
-    c.strokeStyle = 'rgba(255, 255, 255, 0.48)';
+    c.strokeStyle = state.starTimer > 0 ? 'rgba(255, 234, 0, 0.58)' : 'rgba(255, 255, 255, 0.48)';
     c.lineWidth = 4;
     for (let i = 0; i < 14; i++) {
       const angle = (i / 14) * Math.PI * 2 + (timeMs * 0.003);
@@ -2857,16 +3658,65 @@
     c.translate(x, y);
     c.scale(scale, scale);
 
-    const steer = opts.steer || 0;
-    const tilt = steer * 0.16 + (opts.drifting ? Math.sign(steer || 1) * 0.22 : 0);
-    c.rotate(tilt);
-
+    // 바닥 그림자 (점프 시에는 지면에 남아 입체감을 줌)
+    const shadowY = 12 + (opts.groundYOffset || 0) / Math.max(0.5, scale);
     c.fillStyle = 'rgba(0, 0, 0, 0.38)';
     c.beginPath();
-    c.ellipse(0, 12, 68, 18, 0, 0, Math.PI * 2);
+    c.ellipse(0, shadowY, 68, 18, 0, 0, Math.PI * 2);
     c.fill();
 
-    if (opts.shield) {
+    const steer = opts.steer || 0;
+    const spinAngle = opts.spinning ? Math.sin((opts.timeMs || 0) * 0.035) * 1.4 : 0;
+    const trickAngle = opts.trickRot || 0;
+    const tilt = steer * 0.22 + (opts.drifting ? Math.sign(steer || 1) * 0.24 : 0) + spinAngle + trickAngle;
+    c.rotate(tilt);
+
+    // 킬러 로켓(Bullet Bill) 변신 모드일 때는 거대 검은 로켓으로 렌더링!
+    if (opts.bullet) {
+      c.fillStyle = '#212121';
+      c.strokeStyle = '#ffea00';
+      c.lineWidth = 4;
+      c.beginPath();
+      c.roundRect(-46, -68, 92, 74, 36);
+      c.fill();
+      c.stroke();
+
+      // 로켓 눈과 날개
+      c.fillStyle = '#ffffff';
+      c.beginPath();
+      c.arc(-20, -38, 11, 0, Math.PI * 2);
+      c.arc(20, -38, 11, 0, Math.PI * 2);
+      c.fill();
+
+      // 거대 로켓 제트 불꽃
+      const fLen = 58 + Math.sin((opts.timeMs || 0) * 0.08) * 16;
+      const fg = c.createLinearGradient(0, 6, 0, fLen);
+      fg.addColorStop(0, '#ffffff');
+      fg.addColorStop(0.35, '#ffea00');
+      fg.addColorStop(0.75, '#ff1744');
+      fg.addColorStop(1, 'rgba(255,23,68,0)');
+      c.fillStyle = fg;
+      c.beginPath();
+      c.moveTo(-32, 6);
+      c.lineTo(32, 6);
+      c.lineTo(0, fLen);
+      c.closePath();
+      c.fill();
+      c.restore();
+      return;
+    }
+
+    // 무적 슈퍼스타(Starman) 무지개 오라
+    if (opts.star) {
+      const starCol = RAINBOW_COLORS[Math.floor((opts.timeMs || 0) * 0.025) % RAINBOW_COLORS.length];
+      c.strokeStyle = starCol;
+      c.fillStyle = 'rgba(255, 234, 0, 0.28)';
+      c.lineWidth = 6;
+      c.beginPath();
+      c.arc(0, -30, 82, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+    } else if (opts.shield) {
       c.strokeStyle = 'rgba(0, 229, 255, 0.85)';
       c.fillStyle = 'rgba(128, 216, 255, 0.22)';
       c.lineWidth = 4;
@@ -2886,6 +3736,7 @@
       c.stroke();
     }
 
+    // 뒷바퀴 및 앞바퀴
     c.fillStyle = '#212121';
     c.strokeStyle = '#424242';
     c.lineWidth = 3;
@@ -2897,11 +3748,19 @@
 
     c.fillStyle = '#263238';
     c.beginPath();
-    c.roundRect(-56 + steer * 5, -42, 16, 22, 5);
-    c.roundRect(40 + steer * 5, -42, 16, 22, 5);
+    c.roundRect(-56 + steer * 8, -42, 16, 22, 5);
+    c.roundRect(40 + steer * 8, -42, 16, 22, 5);
     c.fill();
 
-    c.fillStyle = racer.secondary;
+    // 리어 윙
+    const primaryCol = opts.star
+      ? RAINBOW_COLORS[Math.floor((opts.timeMs || 0) * 0.03) % RAINBOW_COLORS.length]
+      : racer.primary;
+    const secondaryCol = opts.star
+      ? '#ffea00'
+      : racer.secondary;
+
+    c.fillStyle = secondaryCol;
     c.strokeStyle = '#ffffff';
     c.lineWidth = 2.5;
     c.beginPath();
@@ -2909,9 +3768,10 @@
     c.fill();
     c.stroke();
 
+    // 차체 바디
     const bodyGrad = c.createLinearGradient(0, -48, 0, 12);
-    bodyGrad.addColorStop(0, racer.primary);
-    bodyGrad.addColorStop(1, racer.secondary);
+    bodyGrad.addColorStop(0, primaryCol);
+    bodyGrad.addColorStop(1, secondaryCol);
     c.fillStyle = bodyGrad;
     c.strokeStyle = '#ffffff';
     c.lineWidth = 3;
@@ -2926,6 +3786,7 @@
     c.fill();
     c.stroke();
 
+    // 트윈 배기구
     c.fillStyle = '#37474f';
     c.strokeStyle = '#cfd8dc';
     c.lineWidth = 2;
@@ -2935,26 +3796,30 @@
     c.fill();
     c.stroke();
 
-    if (opts.boosting || opts.ufo) {
-      const flameLen = 28 + Math.sin((opts.timeMs || 0) * 0.05) * 10;
+    // 슈퍼 부스터 제트 불꽃 vs 마리오 카트 3단 드리프트 스파크(파란불 -> 주황불 -> 보라불)
+    if (opts.boosting || opts.star) {
+      const flameLen = 34 + Math.sin((opts.timeMs || 0) * 0.06) * 12;
       [-22, 22].forEach(mx => {
         const fg = c.createLinearGradient(mx, -2, mx, flameLen);
         fg.addColorStop(0, '#ffffff');
-        fg.addColorStop(0.4, '#00e5ff');
+        fg.addColorStop(0.35, opts.star ? '#ffea00' : '#00e5ff');
+        fg.addColorStop(0.75, '#ff1744');
         fg.addColorStop(1, 'rgba(255, 23, 68, 0)');
         c.fillStyle = fg;
         c.beginPath();
-        c.moveTo(mx - 10, -2);
-        c.lineTo(mx + 10, -2);
+        c.moveTo(mx - 12, -2);
+        c.lineTo(mx + 12, -2);
         c.lineTo(mx, flameLen);
         c.closePath();
         c.fill();
       });
     } else if (opts.drifting) {
-      c.fillStyle = '#00e5ff';
+      const stageCol = opts.driftStage === 3 ? '#e040fb' : (opts.driftStage === 2 ? '#ff9100' : '#00e5ff');
+      const sparkR = 9 + (opts.driftStage || 1) * 3.5;
+      c.fillStyle = stageCol;
       c.beginPath();
-      c.arc(-48, 10, 9, 0, Math.PI * 2);
-      c.arc(48, 10, 9, 0, Math.PI * 2);
+      c.arc(-50, 10, sparkR, 0, Math.PI * 2);
+      c.arc(50, 10, sparkR, 0, Math.PI * 2);
       c.fill();
     }
 
@@ -2969,8 +3834,8 @@
     c.fillText(racer.number, 0, -13);
 
     c.save();
-    c.translate(steer * 8, -54);
-    c.rotate(steer * 0.14);
+    c.translate(steer * 10, -54);
+    c.rotate(steer * 0.16);
 
     if (racer.earType === 'bear') {
       c.fillStyle = racer.helmet;
@@ -3001,7 +3866,7 @@
       c.fill();
     }
 
-    c.fillStyle = racer.helmet;
+    c.fillStyle = primaryCol;
     c.strokeStyle = '#ffffff';
     c.lineWidth = 3;
     c.beginPath();
@@ -3017,20 +3882,27 @@
     c.fill();
     c.stroke();
 
-    // 머리 위 이름표 태그 (라이벌 차들이 눈앞에서 달릴 때 누구인지 선명하게 표시)
+    // 스핀 중일 때 머리 위 별 빙글빙글 표시
+    if (opts.spinning) {
+      c.fillStyle = '#ffea00';
+      c.font = '900 18px sans-serif';
+      c.textAlign = 'center';
+      c.fillText('💫⭐💫', 0, -42);
+    }
+
     if (opts.label && !opts.isPlayer) {
       c.fillStyle = 'rgba(13, 27, 42, 0.85)';
       c.strokeStyle = racer.primary;
       c.lineWidth = 2.5;
       c.beginPath();
-      c.roundRect(-36, -64, 72, 22, 10);
+      c.roundRect(-40, -66, 80, 22, 10);
       c.fill();
       c.stroke();
       c.fillStyle = '#ffffff';
       c.font = '900 13px sans-serif';
       c.textAlign = 'center';
       c.textBaseline = 'middle';
-      c.fillText(opts.label, 0, -53);
+      c.fillText(opts.label, 0, -55);
     }
 
     c.restore();

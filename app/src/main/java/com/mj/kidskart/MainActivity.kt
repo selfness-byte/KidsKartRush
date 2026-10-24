@@ -141,6 +141,14 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
         fun getAppVersion(): String {
             return AppUpdater.installedVersionName(this@MainActivity)
         }
+
+        @JavascriptInterface
+        fun closeApp() {
+            runOnUiThread {
+                tts?.stop()
+                finish()
+            }
+        }
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -156,6 +164,8 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
         super.onResume()
         webView.post { hideSystemUI() }
         webView.onResume()
+        webView.resumeTimers()
+        webView.evaluateJavascript("if(window.onAppResume) window.onAppResume();", null)
         accelSensor?.let {
             sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
         }
@@ -164,13 +174,32 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
 
     override fun onPause() {
         sensorManager?.unregisterListener(this)
-        webView.onPause()
+        tts?.stop()
+        try {
+            webView.evaluateJavascript("if(window.onAppPause) window.onAppPause();", null)
+            webView.onPause()
+            webView.pauseTimers()
+        } catch (_: Exception) {
+        }
         super.onPause()
+    }
+
+    override fun onStop() {
+        tts?.stop()
+        try {
+            webView.evaluateJavascript("if(window.onAppPause) window.onAppPause();", null)
+            webView.onPause()
+            webView.pauseTimers()
+        } catch (_: Exception) {
+        }
+        super.onStop()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) webView.post { hideSystemUI() }
+        if (hasFocus) {
+            webView.post { hideSystemUI() }
+        }
     }
 
     private fun hideSystemUI() {
