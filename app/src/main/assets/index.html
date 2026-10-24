@@ -234,22 +234,21 @@
     box-shadow: 0 4px 0 #e65100;
   }
 
-  /* 우측 트랙 선택 */
+  /* 우측 트랙 선택 (8대 테마 코스 2x4 그리드) */
   .track-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 7px;
     flex: 1;
   }
   .track-card {
-    flex: 1;
     border-radius: 18px;
     border: 3px solid #e1f5fe;
     background: linear-gradient(180deg, #ffffff 0%, #f5fafe 100%);
-    padding: 6px 11px;
+    padding: 5px 8px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 7px;
     cursor: pointer;
     transition: all 0.15s;
     box-shadow: 0 4px 0 #b3e5fc;
@@ -258,33 +257,41 @@
     border-color: #ff4081;
     background: linear-gradient(180deg, #fff0f6 0%, #ffc1e3 100%);
     box-shadow: 0 4px 0 #ec407a;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
   .track-icon {
-    font-size: 28px;
-    width: 42px;
-    height: 42px;
-    border-radius: 14px;
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
     background: #e1f5fe;
     border: 2px solid #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
   }
   .track-info {
     flex: 1;
+    min-width: 0;
   }
   .track-name {
-    font-size: 15px;
+    font-size: 13.5px;
     font-weight: 900;
     color: #263238;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .track-sub {
-    font-size: 11.5px;
+    font-size: 10.5px;
     color: #0277bd;
     margin-top: 1px;
     font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .lobby-footer {
@@ -457,12 +464,16 @@
   }
   .mini-hud-btn {
     background: rgba(255, 255, 255, 0.92);
-    border: 3px solid #ffffff;
-    border-radius: 999px;
-    padding: 8px 14px;
+    border: 3.5px solid #ffffff;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #01579b;
     font-weight: 900;
-    font-size: 13.5px;
+    font-size: 22px;
     cursor: pointer;
     box-shadow: 0 5px 0 rgba(2, 136, 209, 0.3), 0 8px 14px rgba(0,0,0,0.2);
   }
@@ -478,10 +489,10 @@
     top: 32%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 50px;
+    font-size: 72px;
     font-weight: 900;
     color: #fff;
-    text-shadow: 0 4px 0 #ff4081, 0 8px 20px rgba(0,0,0,0.45);
+    text-shadow: 0 5px 0 #ff4081, 0 10px 24px rgba(0,0,0,0.45);
     text-align: center;
     pointer-events: none;
     white-space: nowrap;
@@ -490,37 +501,35 @@
 
   #startBoostBtn {
     position: absolute;
-    bottom: 26%;
+    bottom: 24%;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(180deg, #ffeb3b, #ff4081);
-    border: 4px solid #fff;
-    border-radius: 999px;
-    padding: 14px 34px;
-    font-size: 25px;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 2px 0 #c51162;
-    box-shadow: 0 7px 0 #ad1457, 0 0 28px rgba(255, 64, 129, 0.85);
-    pointer-events: auto;
+    background: radial-gradient(circle at 35% 30%, #ffeb3b, #ff4081);
+    border: 5px solid #fff;
+    border-radius: 50%;
+    width: 92px;
+    height: 92px;
+    font-size: 46px;
     display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 0 #ad1457, 0 0 28px rgba(255, 64, 129, 0.85);
+    pointer-events: auto;
     cursor: pointer;
     animation: pulseBtn 0.45s infinite alternate;
   }
 
-  /* 하단 후방 추월 경보 미러 (귀여운 캡슐 알림) */
+  /* 하단 후방 추월 경보 미러 (글자 없이 직관적인 아이콘 미러) */
   #rearAlertBar {
     position: absolute;
-    bottom: 88px;
+    bottom: 78px;
     left: 50%;
     transform: translateX(-50%);
     background: linear-gradient(180deg, #fff8e1, #ffe082);
     border: 3.5px solid #ff5252;
     border-radius: 999px;
-    padding: 5px 18px;
-    color: #c62828;
-    font-size: 15px;
-    font-weight: 900;
+    padding: 4px 16px;
+    font-size: 20px;
     display: none;
     align-items: center;
     gap: 6px;
@@ -530,73 +539,48 @@
     white-space: nowrap;
   }
 
-  /* 드리프트 미니터보 단계 표시 배지 */
   #driftStageBadge {
-    position: absolute;
-    bottom: 126px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.94);
-    border: 3.5px solid #00e5ff;
-    border-radius: 999px;
-    padding: 4px 16px;
-    color: #0277bd;
-    font-size: 14.5px;
-    font-weight: 900;
-    display: none;
-    z-index: 18;
-    box-shadow: 0 5px 0 rgba(0, 184, 212, 0.35);
+    display: none !important;
   }
 
-  /* 하단 중앙 귀여운 장난감 계기판 */
+  /* 하단 중앙 심플 장난감 계기판 (글자 제거, 게이지 & 숫자만 깔끔하게 표시) */
   .speedometer-box {
     position: absolute;
     bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.93);
+    background: rgba(255, 255, 255, 0.92);
     border: 4px solid #ffffff;
-    border-radius: 28px;
-    padding: 7px 22px 9px;
+    border-radius: 26px;
+    padding: 6px 18px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 215px;
+    min-width: 176px;
     box-shadow: 0 6px 0 rgba(2, 136, 209, 0.32), 0 10px 22px rgba(0,0,0,0.25);
   }
   .speed-value-row {
     display: flex;
-    align-items: baseline;
-    gap: 7px;
+    align-items: center;
+    gap: 6px;
   }
   #gearBadge {
-    background: linear-gradient(180deg, #ff80ab, #ff4081);
-    color: #fff;
-    font-weight: 900;
-    font-size: 13px;
-    padding: 2px 9px;
-    border-radius: 999px;
-    box-shadow: 0 2px 0 #c51162;
+    display: none;
   }
   #speedText {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 900;
     color: #01579b;
     font-variant-numeric: tabular-nums;
     line-height: 1;
   }
-  .speed-unit {
-    font-size: 13px;
-    font-weight: 900;
-    color: #0288d1;
-  }
   .n2o-gauge-wrap {
-    width: 172px;
-    height: 13px;
+    width: 148px;
+    height: 12px;
     background: #e1f5fe;
     border-radius: 999px;
     overflow: hidden;
-    margin-top: 5px;
+    margin-top: 4px;
     border: 2px solid #81d4fa;
   }
   #n2oGaugeFill {
@@ -859,7 +843,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.3.0</span>
+      <span class="lobby-badge" id="verBadge">v1.4.0</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
@@ -907,36 +891,64 @@
       </div>
     </div>
 
-    <!-- 트랙 선택 (슈퍼마리오 카트 + 카트라이더 4대 테마 코스) -->
+    <!-- 트랙 선택 (8대 다채로운 테마 코스!) -->
     <div class="panel-card">
-      <div class="panel-title">🗺️ 신나는 레이싱 코스</div>
+      <div class="panel-title">🗺️ 8가지 테마 레이싱 코스</div>
       <div class="track-list" id="trackList">
         <div class="track-card selected" data-track="0">
           <div class="track-icon">🍄</div>
           <div class="track-info">
-            <div class="track-name">마리오 서킷 빌리지</div>
-            <div class="track-sub">⭐ 초록 토관 · 점프대 · 물음표 박스!</div>
+            <div class="track-name">마리오 버섯 왕국</div>
+            <div class="track-sub">점박이 버섯·초록 언덕</div>
           </div>
         </div>
         <div class="track-card" data-track="1">
-          <div class="track-icon">🌈</div>
+          <div class="track-icon">🍭</div>
           <div class="track-info">
-            <div class="track-name">레인보우 우주 로드</div>
-            <div class="track-sub">⭐⭐ 무지개 점프 패드 & 별빛 코스!</div>
+            <div class="track-name">슈가 캔디 랜드</div>
+            <div class="track-sub">막대사탕·아이스크림 길</div>
           </div>
         </div>
         <div class="track-card" data-track="2">
-          <div class="track-icon">🏰</div>
+          <div class="track-icon">🏖️</div>
           <div class="track-info">
-            <div class="track-name">쿠파 용암 캐슬</div>
-            <div class="track-sub">⭐⭐ 용암 다리 점프 & 불꽃 대시!</div>
+            <div class="track-name">돌핀 비치 아일랜드</div>
+            <div class="track-sub">푸른 바다·야자수 해변</div>
           </div>
         </div>
         <div class="track-card" data-track="3">
-          <div class="track-icon">🦖</div>
+          <div class="track-icon">❄️</div>
+          <div class="track-info">
+            <div class="track-name">펭귄 아이스 밸리</div>
+            <div class="track-sub">눈사람·얼음 결정 슬로프</div>
+          </div>
+        </div>
+        <div class="track-card" data-track="4">
+          <div class="track-icon">🦕</div>
           <div class="track-info">
             <div class="track-name">요시 공룡 정글</div>
-            <div class="track-sub">⭐⭐ 공룡 대교 · 황금 코인 가득!</div>
+            <div class="track-sub">공룡알·점프 언덕 숲길</div>
+          </div>
+        </div>
+        <div class="track-card" data-track="5">
+          <div class="track-icon">🌸</div>
+          <div class="track-info">
+            <div class="track-name">벚꽃 스프링 가든</div>
+            <div class="track-sub">핑크 벚꽃잎·풍차 정원</div>
+          </div>
+        </div>
+        <div class="track-card" data-track="6">
+          <div class="track-icon">🌋</div>
+          <div class="track-info">
+            <div class="track-name">쿠파 용암 캐슬</div>
+            <div class="track-sub">불꽃 성곽·용암 다리 점프</div>
+          </div>
+        </div>
+        <div class="track-card" data-track="7">
+          <div class="track-icon">🌈</div>
+          <div class="track-info">
+            <div class="track-name">레인보우 스타 로드</div>
+            <div class="track-sub">무지개 우주·별빛 트랙</div>
           </div>
         </div>
       </div>
@@ -945,22 +957,21 @@
 
   <div class="lobby-footer">
     <div class="lobby-tip">
-      🎈 왼쪽 <b>동그란 핸들</b>을 돌리고, 오른쪽 <b>젤리 버튼(부스터·아이템·점프)</b>으로 친구 차들을 추월해 보세요!
+      🎈 8가지 신나는 코스를 골라 <b>동그란 핸들</b>과 <b>젤리 버튼</b>으로 달려보세요!
     </div>
     <button id="startRaceBtn" class="start-race-btn">🏁 출발하기!</button>
   </div>
 </div>
 
-<!-- ==================== 2. 인게임 귀여운 HUD 및 핸들 컨트롤러 ==================== -->
+<!-- ==================== 2. 인게임 심플 아이콘 HUD (화면 글자 제거!) ==================== -->
 <div id="hudLayer">
   <div class="top-hud">
     <div class="hud-left-group">
       <div class="rank-box">
-        <span style="font-size:22px;">👑</span>
+        <span style="font-size:24px;">👑</span>
         <span id="rankNum" class="rank-num">1</span>
-        <span class="rank-label">등 / 6</span>
       </div>
-      <div id="lapBox" class="lap-box">🏁 1 / 2 바퀴</div>
+      <div id="lapBox" class="lap-box">🏁 1/2</div>
       <div class="item-slots">
         <div id="itemSlot1" class="item-slot">🎁</div>
         <div id="itemSlot2" class="item-slot">🔥</div>
@@ -976,35 +987,31 @@
     </div>
 
     <div class="hud-right-group">
-      <button id="hudSoundBtn" class="mini-hud-btn active">🔊 사운드 ON</button>
-      <button id="hudSpeedBtn" class="mini-hud-btn">🚗 속도: 보통</button>
-      <button id="hudHomeBtn" class="mini-hud-btn">🏠 대기실</button>
+      <button id="hudSoundBtn" class="mini-hud-btn active" aria-label="Sound">🔊</button>
+      <button id="hudSpeedBtn" class="mini-hud-btn" aria-label="Speed">🚗</button>
+      <button id="hudHomeBtn" class="mini-hud-btn" aria-label="Home">🏠</button>
     </div>
   </div>
 
   <div id="centerBanner"></div>
-  <button id="startBoostBtn">🚀 출발 로켓 부스터 터치!</button>
-  <div id="driftStageBadge">🔵 1단 미니터보 충전 중!</div>
-  <div id="rearAlertBar">⚠️ 뒤에서 라이벌 추월 중! 💨</div>
+  <button id="startBoostBtn" aria-label="Rocket Start">🚀</button>
+  <div id="driftStageBadge"></div>
+  <div id="rearAlertBar"></div>
 
-  <!-- 하단 중앙 디지털 속도계 & 기어 단수 & N2O 게이지 -->
+  <!-- 하단 중앙 심플 속도 & N2O 게이지 (불필요한 글자 제거) -->
   <div class="speedometer-box">
     <div class="speed-value-row">
-      <span id="gearBadge">3단</span>
+      <span id="gearBadge"></span>
+      <span style="font-size:20px;">⚡</span>
       <span id="speedText">120</span>
-      <span class="speed-unit">km/h</span>
     </div>
     <div class="n2o-gauge-wrap">
       <div id="n2oGaugeFill"></div>
     </div>
   </div>
 
-  <!-- 좌측 하단: 귀여운 파스텔 토이 핸들(Steering Wheel) 컨트롤러 -->
+  <!-- 좌측 하단: 귀여운 파스텔 토이 핸들(Steering Wheel) 컨트롤러 (글자 제거) -->
   <div id="wheelZone">
-    <div class="wheel-dir-labels">
-      <span>◀ 왼쪽</span>
-      <span>오른쪽 ▶</span>
-    </div>
     <div class="wheel-guide-ring"></div>
 
     <svg id="wheelGraphic" viewBox="0 0 220 220">
@@ -1019,43 +1026,36 @@
           <stop offset="100%" stop-color="#b3e5fc" />
         </linearGradient>
       </defs>
-      <!-- 귀여운 통통한 스포크 -->
       <path d="M 30 98 L 190 98 L 190 124 L 30 124 Z" fill="url(#spokeGrad)" stroke="#0288d1" stroke-width="3.5" />
       <path d="M 95 110 L 125 110 L 130 192 L 90 192 Z" fill="url(#spokeGrad)" stroke="#0288d1" stroke-width="3.5" />
-      <!-- 외곽 화이트·스카이 링 -->
       <circle cx="110" cy="110" r="86" fill="none" stroke="#0288d1" stroke-width="34" />
       <circle cx="110" cy="110" r="86" fill="none" stroke="url(#rimGrad)" stroke-width="26" />
-      <!-- 좌우 캔디 그립 (하늘색 & 핑크색) -->
       <path d="M 33 68 A 86 86 0 0 0 33 152" fill="none" stroke="#29b6f6" stroke-width="26" stroke-linecap="round" />
       <path d="M 187 68 A 86 86 0 0 1 187 152" fill="none" stroke="#ff4081" stroke-width="26" stroke-linecap="round" />
-      <!-- 상단 귀여운 노란 별 포인트 -->
       <circle cx="110" cy="24" r="14" fill="#ffeb3b" stroke="#ffffff" stroke-width="3" />
       <polygon points="20,110 32,99 32,121" fill="#ffffff" />
       <polygon points="200,110 188,99 188,121" fill="#ffffff" />
     </svg>
 
-    <button id="hornBtn" type="button">
-      <span>📯</span>
-      빵빵!
+    <button id="hornBtn" type="button" aria-label="Horn">
+      <span style="font-size:34px;">📯</span>
     </button>
   </div>
 
-  <!-- 우측 하단: 왕큰 액션 버튼 3종 -->
+  <!-- 우측 하단: 글자 없는 직관적 아이콘 젤리 버튼 3종 -->
   <div class="action-zone">
-    <button id="itemBtn" class="big-action-btn" type="button">
-      <div id="itemBtnIcon" class="btn-icon">🎁</div>
-      <div id="itemBtnLabel" class="btn-title">아이템</div>
+    <button id="itemBtn" class="big-action-btn" type="button" aria-label="Item">
+      <div id="itemBtnIcon" class="btn-icon" style="font-size:50px;">🎁</div>
+      <div id="itemBtnLabel" style="display:none;"></div>
     </button>
 
-    <button id="driftBtn" class="big-action-btn" type="button">
-      <div class="btn-icon">🤸</div>
-      <div class="btn-title" style="font-size:15px;">점프·드리프트</div>
+    <button id="driftBtn" class="big-action-btn" type="button" aria-label="Drift">
+      <div class="btn-icon" style="font-size:42px;">🤸</div>
     </button>
 
-    <button id="boostBtn" class="big-action-btn ready" type="button">
-      <div class="btn-icon">🔥</div>
-      <div class="btn-title">N2O 부스터</div>
-      <div id="boostCountText" class="btn-sub">터치!</div>
+    <button id="boostBtn" class="big-action-btn ready" type="button" aria-label="Boost">
+      <div class="btn-icon" style="font-size:56px;">🔥</div>
+      <div id="boostCountText" style="display:none;"></div>
     </button>
   </div>
 </div>
@@ -1071,8 +1071,9 @@
       <div id="finishCoinText" class="reward-pill">🪙 코인 +35</div>
     </div>
     <div class="finish-actions">
-      <button id="replayBtn" class="finish-btn replay">🔄 한 판 더 달리기!</button>
-      <button id="backLobbyBtn" class="finish-btn lobby">🏠 카트·코스 바꾸기</button>
+      <button id="replayBtn" class="finish-btn replay">🔄 다시 달리기</button>
+      <button id="nextTrackBtn" class="finish-btn" style="background:linear-gradient(180deg,#ff80ab,#ff4081);">⏭️ 다음 코스!</button>
+      <button id="backLobbyBtn" class="finish-btn lobby">🏠 대기실</button>
     </div>
   </div>
 </div>
@@ -1143,11 +1144,13 @@
       this.bgmTimer = null;
       this.step = 0;
 
-      // 연속 엔진 사운드 노드 (중후한 V8/V6 저음 배기음 + 웜 서브베이스 + 부드러운 주행 풍절음)
+      // 연속 엔진 사운드 노드 (속도가 빨라질수록 강렬해지는 V8 하모닉 오버드라이브 배기음 + 서브베이스 + 풍절음)
       this.engineRunning = false;
       this.engOsc1 = null;
       this.engOsc2 = null;
+      this.engOsc3 = null;
       this.engSubOsc = null;
+      this.engShaper = null;
       this.roadNoiseNode = null;
       this.roadFilter = null;
       this.roadGain = null;
@@ -1295,7 +1298,7 @@
       } catch (_) {}
     }
 
-    // 2. 주행 중 연속 자동차 엔진음 (경박한 고음 없이 묵직하고 부드러운 저음 V8 배기음 & 아스팔트 타이어 회전음)
+    // 2. 주행 중 연속 자동차 엔진음 (속도가 빨라질수록 배기 플랩이 열리며 묵직하고 강렬하게 뿜어져 나오는 V8 사운드)
     startContinuousEngine() {
       if (this.appPaused) return;
       this.init();
@@ -1304,25 +1307,31 @@
         const now = this.ctx.currentTime;
         this.engOsc1 = this.ctx.createOscillator();
         this.engOsc2 = this.ctx.createOscillator();
+        this.engOsc3 = this.ctx.createOscillator();
         this.engSubOsc = this.ctx.createOscillator();
+        this.engShaper = this.ctx.createWaveShaper();
         this.engFilter = this.ctx.createBiquadFilter();
         this.engGain = this.ctx.createGain();
         this.subGain = this.ctx.createGain();
 
-        // 거친 사각파(square)나 고음 휘슬(sine)을 제거하고 따뜻한 저음 조합(sawtooth + triangle) 사용
         this.engOsc1.type = 'sawtooth';
         this.engOsc2.type = 'triangle';
+        this.engOsc3.type = 'sawtooth';
         this.engSubOsc.type = 'triangle';
 
+        if (this.distCurve) this.engShaper.curve = this.distCurve;
+
         this.engFilter.type = 'lowpass';
-        this.engFilter.frequency.setValueAtTime(165, now);
-        this.engFilter.Q.setValueAtTime(1.0, now);
+        this.engFilter.frequency.setValueAtTime(140, now);
+        this.engFilter.Q.setValueAtTime(1.2, now);
 
         this.engGain.gain.setValueAtTime(0.001, now);
         this.subGain.gain.setValueAtTime(0.001, now);
 
-        this.engOsc1.connect(this.engFilter);
-        this.engOsc2.connect(this.engFilter);
+        this.engOsc1.connect(this.engShaper);
+        this.engOsc2.connect(this.engShaper);
+        this.engOsc3.connect(this.engShaper);
+        this.engShaper.connect(this.engFilter);
         this.engFilter.connect(this.engGain);
         this.engGain.connect(this.ctx.destination);
 
@@ -1331,9 +1340,10 @@
 
         this.engOsc1.start(now);
         this.engOsc2.start(now);
+        this.engOsc3.start(now);
         this.engSubOsc.start(now);
 
-        // 부드러운 중저음 도로 주행 & 배기 공기 흐름음 (브라운 노이즈 + 190Hz 로우패스)
+        // 고속 주행일수록 강해지는 중저음 도로 주행 & 배기 압력 사운드
         const rBuf = this.brownNoiseBuffer || this.noiseBuffer;
         if (rBuf) {
           this.roadNoiseNode = this.ctx.createBufferSource();
@@ -1342,8 +1352,8 @@
 
           this.roadFilter = this.ctx.createBiquadFilter();
           this.roadFilter.type = 'lowpass';
-          this.roadFilter.frequency.setValueAtTime(180, now);
-          this.roadFilter.Q.setValueAtTime(0.8, now);
+          this.roadFilter.frequency.setValueAtTime(160, now);
+          this.roadFilter.Q.setValueAtTime(1.0, now);
 
           this.roadGain = this.ctx.createGain();
           this.roadGain.gain.setValueAtTime(0.0001, now);
@@ -1354,7 +1364,7 @@
           this.roadNoiseNode.start(now);
         }
 
-        // 드리프트 시 귀가 아프지 않은 묵직한 타이어 노면 마찰음
+        // 드리프트 시 묵직한 타이어 노면 마찰음
         if (this.noiseBuffer) {
           this.skidNode = this.ctx.createBufferSource();
           this.skidNode.buffer = this.noiseBuffer;
@@ -1362,7 +1372,7 @@
 
           this.skidFilter = this.ctx.createBiquadFilter();
           this.skidFilter.type = 'bandpass';
-          this.skidFilter.frequency.setValueAtTime(560, now);
+          this.skidFilter.frequency.setValueAtTime(540, now);
           this.skidFilter.Q.setValueAtTime(2.2, now);
 
           this.skidGain = this.ctx.createGain();
@@ -1398,49 +1408,58 @@
 
       if (newGear !== this.currentGear) {
         if (newGear > this.currentGear) {
-          this.gearShiftCooldown = 0.16;
+          this.gearShiftCooldown = 0.14;
         }
         this.currentGear = newGear;
       }
       if (this.gearShiftCooldown > 0) this.gearShiftCooldown = Math.max(0, this.gearShiftCooldown - dt);
 
-      const gearRanges = [0, 56, 112, 165, 215, 340];
+      const gearRanges = [0, 56, 112, 165, 215, 360];
       const gMin = gearRanges[this.currentGear - 1];
       const gMax = gearRanges[this.currentGear];
-      const gearRpm = Math.max(0.12, Math.min(1.05, (speed - gMin) / Math.max(25, gMax - gMin)));
-      const speedNorm = Math.min(1.3, speed / Math.max(120, maxSpeed));
+      const gearRpm = Math.max(0.10, Math.min(1.10, (speed - gMin) / Math.max(25, gMax - gMin)));
 
-      // 경박한 음정 뜀(shiftDip 급락)을 없애고 고급 세단/스포츠카처럼 부드럽고 중후하게 이어지는 저음 RPM 곡선
-      const shiftDip = this.gearShiftCooldown > 0 ? 0.91 : 1.0;
-      const baseFreq = (36 + speedNorm * 42 + gearRpm * 24) * shiftDip * (isBoosting ? 1.12 : 1.0);
+      // 속도 비례 파워 곡선 (속도가 빨라질수록 기하급수적으로 깊고 강렬해지는 배기음!)
+      const speedNorm = Math.max(0, Math.min(1.65, speed / Math.max(120, maxSpeed)));
+      const powerCurve = Math.pow(speedNorm, 1.35);
 
-      this.engOsc1.frequency.setTargetAtTime(baseFreq, now, 0.10);
-      this.engOsc2.frequency.setTargetAtTime(baseFreq * 1.498, now, 0.10);
+      const shiftDip = this.gearShiftCooldown > 0 ? 0.90 : 1.0;
+      const baseFreq = (32 + speedNorm * 64 + gearRpm * 26) * shiftDip * (isBoosting ? 1.15 : 1.0);
+
+      this.engOsc1.frequency.setTargetAtTime(baseFreq, now, 0.07);
+      this.engOsc2.frequency.setTargetAtTime(baseFreq * 1.498, now, 0.07);
+      if (this.engOsc3) {
+        this.engOsc3.frequency.setTargetAtTime(baseFreq * 2.01, now, 0.07);
+      }
       if (this.engSubOsc) {
-        this.engSubOsc.frequency.setTargetAtTime(Math.max(26, baseFreq * 0.5), now, 0.10);
+        this.engSubOsc.frequency.setTargetAtTime(Math.max(24, baseFreq * 0.5), now, 0.07);
       }
 
-      // 로우패스 컷오프를 145Hz~290Hz 대역으로 낮춰 가벼운 쇳소리를 완전히 걸러내고 중후한 배기음만 통과
-      const filterFreq = isBoosting ? 295 : (145 + speedNorm * 95 + gearRpm * 35);
-      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.10);
+      // 저속에서는 부드러운 저음(125Hz), 고속/부스터에서는 배기 밸브가 열리며 강렬한 중저음 포효(최대 620Hz)
+      const filterFreq = 125 + powerCurve * 290 + gearRpm * 65 + (isBoosting ? 130 : 0);
+      const filterQ = 1.15 + Math.min(1.8, speedNorm * 1.35) + (isBoosting ? 0.5 : 0);
+      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.07);
+      this.engFilter.Q.setTargetAtTime(filterQ, now, 0.07);
 
-      const targetVol = speed < 5 ? 0.03 : (isBoosting ? 0.115 : 0.078);
-      this.engGain.gain.setTargetAtTime(targetVol, now, 0.08);
+      // 속도가 올라갈수록 엔진 볼륨과 서브베이스 타격감이 확실하게 증폭!
+      const targetVol = speed < 5 ? 0.022 : Math.min(0.34, 0.034 + powerCurve * 0.185 + (isBoosting ? 0.075 : 0));
+      this.engGain.gain.setTargetAtTime(targetVol, now, 0.06);
       if (this.subGain) {
-        this.subGain.gain.setTargetAtTime(isBoosting ? 0.22 : (0.095 + speedNorm * 0.045), now, 0.08);
+        const subVol = speed < 5 ? 0.035 : Math.min(0.38, 0.055 + powerCurve * 0.21 + (isBoosting ? 0.095 : 0));
+        this.subGain.gain.setTargetAtTime(subVol, now, 0.06);
       }
 
       if (this.roadGain && this.roadFilter) {
-        const roadCutoff = 140 + speedNorm * 110 + (isBoosting ? 75 : 0);
-        const roadVol = speed < 5 ? 0.01 : (isBoosting ? 0.14 : 0.055 + speedNorm * 0.035);
-        this.roadFilter.frequency.setTargetAtTime(roadCutoff, now, 0.10);
-        this.roadGain.gain.setTargetAtTime(roadVol, now, 0.08);
+        const roadCutoff = 135 + powerCurve * 220 + (isBoosting ? 110 : 0);
+        const roadVol = speed < 5 ? 0.008 : Math.min(0.28, 0.018 + powerCurve * 0.145 + (isBoosting ? 0.085 : 0));
+        this.roadFilter.frequency.setTargetAtTime(roadCutoff, now, 0.08);
+        this.roadGain.gain.setTargetAtTime(roadVol, now, 0.06);
       }
 
       if (this.skidGain && this.skidFilter) {
         const skidding = (isDrifting || steerIntensity > 0.78) && speed > 65 && state.playerY <= 2;
-        const skidVol = skidding ? (isDrifting ? 0.068 : 0.032) : 0.0001;
-        const skidPitch = 520 + Math.sin(now * 16) * 45 + steerIntensity * 110;
+        const skidVol = skidding ? (isDrifting ? 0.075 : 0.035) : 0.0001;
+        const skidPitch = 510 + Math.sin(now * 16) * 45 + steerIntensity * 110;
         this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.05);
         this.skidGain.gain.setTargetAtTime(skidVol, now, 0.05);
       }
@@ -1450,6 +1469,7 @@
       try {
         if (this.engOsc1) { this.engOsc1.stop(); this.engOsc1.disconnect(); this.engOsc1 = null; }
         if (this.engOsc2) { this.engOsc2.stop(); this.engOsc2.disconnect(); this.engOsc2 = null; }
+        if (this.engOsc3) { this.engOsc3.stop(); this.engOsc3.disconnect(); this.engOsc3 = null; }
         if (this.engSubOsc) { this.engSubOsc.stop(); this.engSubOsc.disconnect(); this.engSubOsc = null; }
         if (this.roadNoiseNode) { this.roadNoiseNode.stop(); this.roadNoiseNode.disconnect(); this.roadNoiseNode = null; }
         if (this.skidNode) { this.skidNode.stop(); this.skidNode.disconnect(); this.skidNode = null; }
@@ -1822,7 +1842,7 @@
   const TRACKS = [
     {
       id: 0,
-      name: '마리오 서킷 빌리지',
+      name: '마리오 버섯 왕국',
       skyTop: '#1e88e5',
       skyBottom: '#b3e5fc',
       grass1: '#43a047',
@@ -1835,19 +1855,71 @@
     },
     {
       id: 1,
-      name: '레인보우 우주 로드',
-      skyTop: '#070b24',
-      skyBottom: '#311b92',
-      grass1: '#1a103c',
-      grass2: '#28185a',
-      road1: '#5e35b1',
-      road2: '#3949ab',
-      kerb1: '#00e5ff',
-      kerb2: '#ffea00',
-      sceneryType: 'rainbow'
+      name: '슈가 캔디 랜드',
+      skyTop: '#ec407a',
+      skyBottom: '#fce4ec',
+      grass1: '#f48fb1',
+      grass2: '#f8bbd0',
+      road1: '#6d4c41',
+      road2: '#5d4037',
+      kerb1: '#ff4081',
+      kerb2: '#fff9c4',
+      sceneryType: 'candy'
     },
     {
       id: 2,
+      name: '돌핀 비치 아일랜드',
+      skyTop: '#00acc1',
+      skyBottom: '#e0f7fa',
+      grass1: '#26c6da',
+      grass2: '#80deea',
+      road1: '#ffe082',
+      road2: '#ffd54f',
+      kerb1: '#ff7043',
+      kerb2: '#ffffff',
+      sceneryType: 'beach'
+    },
+    {
+      id: 3,
+      name: '펭귄 아이스 밸리',
+      skyTop: '#1565c0',
+      skyBottom: '#e3f2fd',
+      grass1: '#e1f5fe',
+      grass2: '#ffffff',
+      road1: '#4fc3f7',
+      road2: '#29b6f6',
+      kerb1: '#0288d1',
+      kerb2: '#ffffff',
+      sceneryType: 'snow'
+    },
+    {
+      id: 4,
+      name: '요시 공룡 정글',
+      skyTop: '#00897b',
+      skyBottom: '#b2dfdb',
+      grass1: '#2e7d32',
+      grass2: '#4caf50',
+      road1: '#6d4c41',
+      road2: '#5d4037',
+      kerb1: '#ffea00',
+      kerb2: '#00e676',
+      sceneryType: 'dino'
+    },
+    {
+      id: 5,
+      name: '벚꽃 스프링 가든',
+      skyTop: '#f06292',
+      skyBottom: '#fff3e0',
+      grass1: '#66bb6a',
+      grass2: '#81c784',
+      road1: '#78909c',
+      road2: '#607d8b',
+      kerb1: '#ff80ab',
+      kerb2: '#ffffff',
+      sceneryType: 'sakura'
+    },
+    {
+      id: 6,
       name: '쿠파 용암 캐슬',
       skyTop: '#3e1008',
       skyBottom: '#bf360c',
@@ -1860,28 +1932,28 @@
       sceneryType: 'castle'
     },
     {
-      id: 3,
-      name: '요시 공룡 정글',
-      skyTop: '#00897b',
-      skyBottom: '#b2dfdb',
-      grass1: '#2e7d32',
-      grass2: '#4caf50',
-      road1: '#6d4c41',
-      road2: '#5d4037',
-      kerb1: '#ffea00',
-      kerb2: '#00e676',
-      sceneryType: 'dino'
+      id: 7,
+      name: '레인보우 스타 로드',
+      skyTop: '#070b24',
+      skyBottom: '#311b92',
+      grass1: '#1a103c',
+      grass2: '#28185a',
+      road1: '#5e35b1',
+      road2: '#3949ab',
+      kerb1: '#00e5ff',
+      kerb2: '#ffea00',
+      sceneryType: 'rainbow'
     }
   ];
 
-  // 슈퍼마리오 카트 + 카트라이더 시그니처 아이템
+  // 아기자기한 슈퍼마리오 카트 & 카트라이더 시그니처 아이템
   const ITEMS = [
-    { id: 'star', icon: '⭐', name: '무적 슈퍼스타!', voice: '무적 슈퍼스타 발동! 부딪히는 차들을 모두 날려버려요!' },
-    { id: 'mushroom', icon: '🍄', name: '황금 거대버섯!', voice: '황금 거대버섯! 차가 커지고 초고속으로 달려요!' },
-    { id: 'bullet', icon: '🚀', name: '킬러 로켓 변신!', voice: '킬러 로켓 변신! 자동으로 트랙을 따라 초음속 비행!' },
-    { id: 'shell', icon: '🐢', name: '빨강 등껍질 발사!', voice: '빨강 거북이 등껍질 발사! 앞차 명중!' },
-    { id: 'lightning', icon: '⚡', name: '번개 아이템!', voice: '번개 공격! 모든 라이벌 차들이 꼬마 차가 되었어요!' },
-    { id: 'banana', icon: '🍌', name: '바나나 & 부스터!', voice: '바나나 껍질 투척! 뒤따라오는 차가 미끄러져요!' }
+    { id: 'star', icon: '🌟', name: '반짝 무지개별', voice: '반짝반짝 무지개 별 발동!' },
+    { id: 'mushroom', icon: '🍄', name: '왕방울 핑크버섯', voice: '왕방울 버섯! 차가 커지고 쌩쌩 달려요!' },
+    { id: 'bullet', icon: '🐳', name: '하늘 고래 로켓', voice: '귀여운 하늘 고래 로켓 변신!' },
+    { id: 'shell', icon: '🐢', name: '날개 거북이 등껍질', voice: '날개 달린 거북이 등껍질 발사!' },
+    { id: 'lightning', icon: '⚡', name: '구름 번개 요정', voice: '구름 번개 요정! 라이벌 차들이 꼬마가 되었어요!' },
+    { id: 'banana', icon: '🍌', name: '방긋 웃는 바나나', voice: '귀여운 바나나 투척!' }
   ];
 
   // ==================== 게임 전역 상태 ====================
@@ -1985,40 +2057,70 @@
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  // ==================== 슈퍼마리오 카트 스타일 다이나믹 트랙 생성 ====================
+  // ==================== 8가지 테마별 개성 넘치는 다이나믹 코스 생성 ====================
   const SEG_LEN = 100;
   function buildTrack(trackId) {
     const segs = [];
-    const totalSegs = 300;
+    const totalSegs = 320;
 
     for (let i = 0; i < totalSegs; i++) {
       let curve = 0;
       let y = 0;
 
       if (trackId === 0) {
-        if (i > 25 && i < 65) curve = 1.65;
-        else if (i > 90 && i < 130) curve = -1.75;
-        else if (i > 160 && i < 205) curve = 1.95;
-        else if (i > 230 && i < 270) curve = -1.55;
-        y = Math.sin(i * 0.08) * 190 + Math.cos(i * 0.04) * 80;
+        // 0. 마리오 버섯 왕국: 부드러운 스탠다드 서킷 & 언덕
+        if (i > 24 && i < 64) curve = 1.6;
+        else if (i > 92 && i < 132) curve = -1.7;
+        else if (i > 165 && i < 210) curve = 1.9;
+        else if (i > 240 && i < 285) curve = -1.55;
+        y = Math.sin(i * 0.075) * 180 + Math.cos(i * 0.04) * 75;
       } else if (trackId === 1) {
-        if (i > 20 && i < 60) curve = -2.15;
-        else if (i > 75 && i < 120) curve = 2.25;
-        else if (i > 145 && i < 190) curve = -2.1;
-        else if (i > 215 && i < 265) curve = 2.2;
-        y = Math.sin(i * 0.10) * 290;
+        // 1. 슈가 캔디 랜드: 통통 튀는 롤러코스터 젤리 언덕 & 연속 S자 캔디 커브
+        if (i > 18 && i < 52) curve = -1.85;
+        else if (i > 62 && i < 98) curve = 1.95;
+        else if (i > 120 && i < 162) curve = -2.05;
+        else if (i > 185 && i < 225) curve = 1.85;
+        else if (i > 248 && i < 290) curve = -1.75;
+        y = Math.sin(i * 0.14) * 240 + Math.sin(i * 0.05) * 110;
       } else if (trackId === 2) {
-        if (i > 22 && i < 58) curve = 2.3;
-        else if (i > 82 && i < 128) curve = -2.35;
-        else if (i > 152 && i < 195) curve = 2.25;
-        else if (i > 220 && i < 268) curve = -2.1;
-        y = Math.sin(i * 0.09) * 310;
+        // 2. 돌핀 비치 아일랜드: 시원하게 뻗은 해안선 와이드 스윕 코너 & 파도 물결 고저차
+        if (i > 28 && i < 85) curve = 1.55;
+        else if (i > 110 && i < 175) curve = -1.85;
+        else if (i > 205 && i < 275) curve = 1.75;
+        y = Math.sin(i * 0.06) * 150;
+      } else if (trackId === 3) {
+        // 3. 펭귄 아이스 밸리: 짜릿한 설원 활강 다운힐 슬로프 & 헤어핀 코너
+        if (i > 22 && i < 68) curve = -2.1;
+        else if (i > 95 && i < 145) curve = 2.25;
+        else if (i > 175 && i < 220) curve = -1.95;
+        else if (i > 245 && i < 292) curve = 2.1;
+        y = Math.cos(i * 0.055) * 340 + Math.sin(i * 0.11) * 90;
+      } else if (trackId === 4) {
+        // 4. 요시 공룡 정글: 연속 모글 점프 언덕 & 다이내믹 정글 와인딩
+        if (i > 25 && i < 70) curve = 2.0;
+        else if (i > 92 && i < 138) curve = -2.15;
+        else if (i > 162 && i < 212) curve = 2.1;
+        else if (i > 238 && i < 286) curve = -1.9;
+        y = Math.sin(i * 0.16) * 210 + Math.cos(i * 0.07) * 140;
+      } else if (trackId === 5) {
+        // 5. 벚꽃 스프링 가든: 리드미컬한 6연속 봄바람 S자 코너링 코스
+        curve = Math.sin(i * 0.065) * 1.95;
+        if (i < 15 || i > 298) curve = 0;
+        y = Math.sin(i * 0.08) * 175;
+      } else if (trackId === 6) {
+        // 6. 쿠파 용암 캐슬: 다이나믹 성곽 직각 코너 & 용암 대교 고저차
+        if (i > 20 && i < 58) curve = 2.3;
+        else if (i > 82 && i < 126) curve = -2.35;
+        else if (i > 152 && i < 198) curve = 2.25;
+        else if (i > 225 && i < 278) curve = -2.2;
+        y = Math.sin(i * 0.095) * 310;
       } else {
-        if (i > 28 && i < 70) curve = -1.95;
-        else if (i > 95 && i < 140) curve = 2.2;
-        else if (i > 165 && i < 210) curve = -2.15;
-        else if (i > 235 && i < 275) curve = 1.85;
-        y = Math.sin(i * 0.085) * 260;
+        // 7. 레인보우 스타 로드: 우주 무중력 롤러코스터 급강하 & 고속 커브
+        if (i > 20 && i < 62) curve = -2.2;
+        else if (i > 78 && i < 125) curve = 2.3;
+        else if (i > 148 && i < 196) curve = -2.15;
+        else if (i > 220 && i < 275) curve = 2.25;
+        y = Math.sin(i * 0.105) * 350;
       }
 
       const seg = {
@@ -2029,51 +2131,51 @@
         scenery: []
       };
 
-      // 1) 마리오 카트 물음표(?) 아이템 박스 4연속 배치 (살짝 좌우로 움직이는 박스 포함!)
-      if (i > 14 && i % 28 === 0) {
+      // 1) 아기자기한 3D 선물 캡슐 아이템 박스 배치
+      if (i > 14 && i % 26 === 0) {
         [-0.6, -0.2, 0.2, 0.6].forEach((ox, idx) => {
           seg.items.push({
             type: 'itemBox',
             x: ox,
             baseX: ox,
-            moving: (i % 56 === 0),
+            moving: (i % 52 === 0),
             phase: idx * 0.8,
             takenTimer: 0
           });
         });
       }
-      // 2) 마리오 카트 무지개 점프대 (Jump Ramp: 밟으면 하늘로 붕 날아올라 공중 트릭 & 착지 부스터!)
-      else if (i > 20 && i % 34 === 17) {
+      // 2) 구름 무지개 점프대 (Jump Ramp)
+      else if (i > 18 && i % 32 === 16) {
         seg.items.push({ type: 'jumpRamp', x: 0, takenTimer: 0 });
-        seg.items.push({ type: 'coin', x: -0.45, takenTimer: 0 });
-        seg.items.push({ type: 'coin', x: 0.45, takenTimer: 0 });
+        seg.items.push({ type: 'coin', x: -0.46, takenTimer: 0 });
+        seg.items.push({ type: 'coin', x: 0.46, takenTimer: 0 });
       }
-      // 3) 바닥 대시 부스터 패드 (Dash Pad)
-      else if (i > 16 && i % 22 === 11) {
-        const side = (i % 44 === 11) ? -0.36 : 0.36;
+      // 3) 별빛 대시 부스터 패드 (Dash Pad)
+      else if (i > 14 && i % 20 === 10) {
+        const side = (i % 40 === 10) ? -0.36 : 0.36;
         seg.items.push({ type: 'dashPad', x: side, takenTimer: 0 });
       }
-      // 4) 마리오 서킷 초록 토관(Pipe) / 바나나 껍질 기믹 (가장자리에 배치되어 스릴 연출)
-      else if (i > 32 && i % 40 === 20) {
-        const pipeX = (i % 80 === 20) ? -0.72 : 0.72;
+      // 4) 아기자기한 통통 버섯/토관 & 방긋 웃는 바나나 기믹
+      else if (i > 30 && i % 38 === 19) {
+        const pipeX = (i % 76 === 19) ? -0.70 : 0.70;
         seg.items.push({ type: 'pipe', x: pipeX, takenTimer: 0 });
       }
-      else if (i > 26 && i % 36 === 9) {
-        const banX = Math.sin(i * 0.7) * 0.52;
+      else if (i > 24 && i % 34 === 9) {
+        const banX = Math.sin(i * 0.7) * 0.50;
         seg.items.push({ type: 'banana', x: banX, takenTimer: 0 });
       }
-      // 5) 황금 코인 라인
-      else if (i > 8 && i % 7 === 0) {
-        const lane = Math.sin(i * 0.22) * 0.52;
+      // 5) 방긋 웃는 별 코인 라인
+      else if (i > 8 && i % 6 === 0) {
+        const lane = Math.sin(i * 0.22 + trackId) * 0.52;
         seg.items.push({ type: 'coin', x: lane, takenTimer: 0 });
       }
 
-      if (i % 5 === 0) {
-        seg.scenery.push({ side: -1, offset: -1.55 - (i % 3) * 0.24, variant: i % 3 });
-        seg.scenery.push({ side: 1, offset: 1.55 + ((i + 1) % 3) * 0.24, variant: (i + 1) % 3 });
+      if (i % 4 === 0) {
+        seg.scenery.push({ side: -1, offset: -1.52 - (i % 3) * 0.24, variant: i % 3 });
+        seg.scenery.push({ side: 1, offset: 1.52 + ((i + 1) % 3) * 0.24, variant: (i + 1) % 3 });
       }
-      if (i % 45 === 0) {
-        seg.arch = i === 0 ? '🏁 MARIO & KART START' : (trackId === 1 ? '🌈 RAINBOW ROAD' : '🍄 SUPER KART RUSH');
+      if (i % 50 === 0) {
+        seg.arch = i === 0 ? 'start' : 'checkpoint';
       }
 
       segs.push(seg);
@@ -2366,26 +2468,33 @@
     spawnBoostParticles(28);
   }
 
-  // ==================== UI 업데이트 헬퍼 ====================
+  // ==================== UI 업데이트 헬퍼 (주행 화면 글자 완전 제거 & 아이콘/파티클 연출) ====================
   let bannerTimeout = null;
   function showCenterBanner(text, duration = 1000) {
-    centerBanner.textContent = text;
+    // 주행 화면에는 긴 글자를 띄우지 않고 카운트다운 숫자(3, 2, 1)나 출발 깃발(🏁)만 깔끔하게 표시
+    const clean = (text === '3' || text === '2' || text === '1') ? text : (text.includes('GO') ? '🏁' : '');
+    centerBanner.textContent = clean;
     if (bannerTimeout) clearTimeout(bannerTimeout);
-    if (duration > 0) {
+    if (duration > 0 && clean) {
       bannerTimeout = setTimeout(() => {
-        if (centerBanner.textContent === text) centerBanner.textContent = '';
+        if (centerBanner.textContent === clean) centerBanner.textContent = '';
       }, duration);
     }
   }
 
-  function showFloatingText(text, color = '#ffea00') {
-    state.floatingTexts.push({
-      text,
-      color,
-      x: canvas.width * 0.5 + (Math.random() - 0.5) * 60,
-      y: canvas.height * 0.44,
-      life: 1.05
-    });
+  function showFloatingText(_text, color = '#ffea00') {
+    // 화면을 가리는 글자 대신 반짝이는 별빛/컬러 파티클만 예쁘게 톡 터뜨림!
+    for (let i = 0; i < 6; i++) {
+      state.particles.push({
+        x: canvas.width * 0.5 + state.screenXOffset + (Math.random() - 0.5) * 90,
+        y: canvas.height * 0.72 - state.playerY * 0.4 + (Math.random() - 0.5) * 40,
+        vx: (Math.random() - 0.5) * 220,
+        vy: -80 - Math.random() * 160,
+        size: 7 + Math.random() * 9,
+        color,
+        life: 0.45 + Math.random() * 0.25
+      });
+    }
   }
 
   function updateBoostUI() {
@@ -2393,10 +2502,8 @@
     itemSlot2.textContent = state.boostCount > 0 ? '🔥' : '⚡';
     if (state.boostCount > 0 || state.n2oGauge >= 50) {
       boostBtn.classList.add('ready');
-      boostCountText.textContent = state.boostCount > 0 ? `N2O x${state.boostCount} 준비!` : '부스터 준비!';
     } else {
       boostBtn.classList.remove('ready');
-      boostCountText.textContent = `${Math.round(state.n2oGauge)}%`;
     }
   }
 
@@ -2404,12 +2511,10 @@
     if (state.heldItem) {
       itemSlot1.textContent = state.heldItem.icon;
       itemBtnIcon.textContent = state.heldItem.icon;
-      itemBtnLabel.textContent = state.heldItem.name;
       itemBtn.classList.add('has-item');
     } else {
       itemSlot1.textContent = '🎁';
       itemBtnIcon.textContent = '🎁';
-      itemBtnLabel.textContent = '아이템·점프';
       itemBtn.classList.remove('has-item');
     }
   }
@@ -2460,7 +2565,7 @@
   }
 
   function syncSpeedButtonLabel() {
-    const map = { slow: '🐢 속도: 천천히', normal: '🚗 속도: 보통', fast: '🚀 속도: 빠르게' };
+    const map = { slow: '🐢', normal: '🚗', fast: '🚀' };
     hudSpeedBtn.textContent = map[state.speedPreset] || map.normal;
     if (state.speedPreset === 'slow') state.maxSpeed = 165;
     else if (state.speedPreset === 'normal') state.maxSpeed = 215;
@@ -2470,7 +2575,7 @@
   hudSoundBtn.addEventListener('click', () => {
     sfx.muted = !sfx.muted;
     hudSoundBtn.classList.toggle('active', !sfx.muted);
-    hudSoundBtn.textContent = sfx.muted ? '🔇 소리 꺼짐' : '🔊 엔진음 ON';
+    hudSoundBtn.textContent = sfx.muted ? '🔇' : '🔊';
   });
 
   toggleAutoBoostBtn.addEventListener('click', () => {
@@ -2495,6 +2600,16 @@
 
   document.getElementById('startRaceBtn').addEventListener('click', startRace);
   document.getElementById('replayBtn').addEventListener('click', startRace);
+  const nextTrackBtn = document.getElementById('nextTrackBtn');
+  if (nextTrackBtn) {
+    nextTrackBtn.addEventListener('click', () => {
+      state.selectedTrack = (state.selectedTrack + 1) % TRACKS.length;
+      document.querySelectorAll('.track-card').forEach(c => {
+        c.classList.toggle('selected', Number(c.dataset.track) === state.selectedTrack);
+      });
+      startRace();
+    });
+  }
   document.getElementById('backLobbyBtn').addEventListener('click', goToLobby);
 
   window.onBackKey = () => {
@@ -2516,7 +2631,7 @@
     lobbyScreen.style.display = 'flex';
   }
 
-  // ==================== 레이스 시작 초기화 (독립 물리 & 추월 사이클을 가진 5대 라이벌 배치) ====================
+  // ==================== 레이스 시작 초기화 (자연스러운 레이싱 라인 & 추월 AI를 가진 5대 라이벌 배치) ====================
   function startRace() {
     sfx.init();
     sfx.playEngineStart();
@@ -2562,9 +2677,8 @@
     driftStageBadge.style.display = 'none';
 
     const otherRacers = RACERS.filter((_, idx) => idx !== state.selectedRacer);
-    // 일부는 내 뒤(-160, -70), 일부는 내 앞(+130, +280, +450)에서 출발하여 시작부터 앞뒤로 치열하게 추월!
-    const startOffsetsZ = [-150, -65, 135, 290, 470];
-    const startLanes = [-0.55, 0.52, -0.26, 0.48, 0.05];
+    const startOffsetsZ = [-130, -55, 110, 240, 390];
+    const startLanes = [-0.58, 0.56, -0.32, 0.44, 0.08];
 
     rivalDotsContainer.innerHTML = '';
     state.rivals = otherRacers.map((rc, i) => {
@@ -2578,14 +2692,16 @@
         z: Math.max(0, startOffsetsZ[i]),
         x: startLanes[i],
         velX: 0,
+        steer: 0,
+        drifting: false,
         y: 0,
         velY: 0,
-        targetLane: startLanes[i],
-        speed: state.maxSpeed * 0.85,
-        // 각 라이벌마다 고유한 부스터/추월 사이클 위상(surgePhase)을 부여해 때론 나보다 훨씬 빠르게 치고 나가고 때론 뒤처짐!
-        surgePhase: i * 1.35,
-        surgeFreq: 0.55 + (i % 3) * 0.18,
-        baseBandOffset: -120 + i * 165,
+        preferredLane: startLanes[i],
+        laneTimer: 1.5 + i * 0.6,
+        speed: state.maxSpeed * 0.88,
+        surgePhase: i * 1.25,
+        surgeFreq: 0.48 + (i % 3) * 0.16,
+        baseBandOffset: -90 + i * 145,
         boostVisualTimer: 0,
         spinTimer: 0,
         shrinkTimer: 0,
@@ -2608,7 +2724,7 @@
     startBoostBtn.style.display = 'none';
     showCenterBanner('3', 0);
     sfx.playTone(440, 0.18, 'triangle', 0.18);
-    speakKR('슈퍼마리오 카트 레이스! 삼, 이, 일, 출발!', true);
+    speakKR(`${TRACKS[state.selectedTrack].name}! 삼, 이, 일, 출발!`, true);
   }
 
   function spawnBoostParticles(count = 10) {
@@ -2627,7 +2743,7 @@
     }
   }
 
-  // ==================== 물리 & 마리오 카트 기믹 & 라이벌 앞뒤 추월 AI 업데이트 (60fps) ====================
+  // ==================== 물리 & 아기자기한 기믹 & 자연스러운 라이벌 레이싱 AI 업데이트 (60fps) ====================
   function updateRace(dt) {
     // 1. 출발 신호등 카운트다운
     if (state.countdownTimer > 0) {
@@ -2639,11 +2755,11 @@
         sfx.playTone(440, 0.18, 'triangle', 0.18);
       }
       if (state.countdownTimer <= 0) {
-        showCenterBanner('🏁 GO!! 신나게 달려요!', 900);
+        showCenterBanner('🏁 GO', 750);
         sfx.playTone(880, 0.35, 'triangle', 0.24);
         sfx.playEngineStart();
         state.startBoostWindow = true;
-        startBoostBtn.style.display = 'block';
+        startBoostBtn.style.display = 'flex';
         setTimeout(() => {
           state.startBoostWindow = false;
           startBoostBtn.style.display = 'none';
@@ -2653,7 +2769,7 @@
       return;
     }
 
-    // 2. 마리오 카트 물음표 박스 슬롯머신 룰렛 처리
+    // 2. 물음표 박스 슬롯머신 룰렛 처리
     if (state.rouletteTimer > 0) {
       state.rouletteTimer -= dt;
       const nextStep = Math.floor((1.05 - state.rouletteTimer) * 16);
@@ -2662,12 +2778,10 @@
         const previewItem = ITEMS[nextStep % ITEMS.length];
         itemSlot1.textContent = previewItem.icon;
         itemBtnIcon.textContent = previewItem.icon;
-        itemBtnLabel.textContent = '룰렛 회전중..';
         sfx.playItemRouletteTick(nextStep);
       }
       if (state.rouletteTimer <= 0) {
         state.rouletteTimer = 0;
-        // 내 순위가 낮을수록(3~6위) 슈퍼스타/킬러로켓/황금버섯 확률 대폭 상승 (마리오 카트 밸런싱!)
         let pool = ITEMS;
         if (state.rank >= 3 && Math.random() < 0.65) {
           pool = [ITEMS[0], ITEMS[1], ITEMS[2], ITEMS[3]];
@@ -2676,7 +2790,6 @@
         state.heldItem = picked;
         updateItemUI();
         sfx.playItemRouletteLock();
-        showFloatingText(`${picked.icon} ${picked.name} 당첨!`, '#ffea00');
       }
     }
 
@@ -2697,7 +2810,7 @@
     state.wheelAngleDeg = state.steerInput * 82;
     wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
 
-    // 4. 타이머 및 마리오 카트 변신 상태 업데이트
+    // 4. 타이머 업데이트
     if (state.boostTimer > 0) state.boostTimer = Math.max(0, state.boostTimer - dt);
     if (state.starTimer > 0) state.starTimer = Math.max(0, state.starTimer - dt);
     if (state.megaTimer > 0) state.megaTimer = Math.max(0, state.megaTimer - dt);
@@ -2707,27 +2820,12 @@
     if (state.lightningTimer > 0) state.lightningTimer = Math.max(0, state.lightningTimer - dt);
     if (state.spinTimer > 0) state.spinTimer = Math.max(0, state.spinTimer - dt);
 
-    // 5. 마리오 카트 3단 드리프트 스파크 게이지 충전
+    // 5. 3단 드리프트 스파크 게이지 충전
     if (state.driftActive) {
       state.driftChargeTime += dt * (1 + Math.abs(state.steerInput) * 0.8);
       if (state.driftChargeTime > 1.35) state.driftStage = 3;
       else if (state.driftChargeTime > 0.62) state.driftStage = 2;
       else state.driftStage = 1;
-
-      driftStageBadge.style.display = 'block';
-      if (state.driftStage === 1) {
-        driftStageBadge.textContent = '🔵 1단 파란불 미니터보!';
-        driftStageBadge.style.borderColor = '#00e5ff';
-        driftStageBadge.style.color = '#00e5ff';
-      } else if (state.driftStage === 2) {
-        driftStageBadge.textContent = '🟠 2단 주황불 슈퍼터보!!';
-        driftStageBadge.style.borderColor = '#ff9100';
-        driftStageBadge.style.color = '#ffab00';
-      } else {
-        driftStageBadge.textContent = '🟣 3단 보라불 울트라 부스터 준비완료!!';
-        driftStageBadge.style.borderColor = '#e040fb';
-        driftStageBadge.style.color = '#ea80fc';
-      }
     }
 
     const isInvincible = state.starTimer > 0 || state.megaTimer > 0 || state.bulletTimer > 0;
@@ -2739,7 +2837,6 @@
     else if (state.boostTimer > 0) boostMult = 1.38;
     if (state.spinTimer > 0) boostMult = 0.48;
 
-    // 갓길(잔디) 감속 처리 (무적/부스터 시에는 감속 없음!)
     const offRoad = Math.abs(state.playerX) > 0.96 && !isBoosting;
     const terrainMult = offRoad ? 0.82 : 1.0;
 
@@ -2752,9 +2849,9 @@
     // 6. 점프(Hop) & 무지개 점프대 공중 물리 및 착지 부스터!
     if (state.playerY > 0 || state.velY !== 0) {
       state.playerY += state.velY * dt;
-      state.velY -= 1180 * dt; // 중력 가속도
+      state.velY -= 1180 * dt;
       if (state.playerY > 38) {
-        state.trickRot += dt * 9.5; // 점프대 공중 트릭 회전 연출!
+        state.trickRot += dt * 9.5;
       }
       if (state.playerY <= 0) {
         const landedFromHighJump = state.trickRot > 1.2;
@@ -2765,13 +2862,12 @@
           state.boostTimer = Math.max(state.boostTimer, 1.8);
           sfx.playBoost(false);
           vibrateDevice(55);
-          showFloatingText('🤸✨ 착지 점프 부스터!!', '#00e676');
           spawnBoostParticles(18);
         }
       }
     }
 
-    // 7. 연속 자동차 엔진음 & 서브베이스 실시간 반영
+    // 7. 속도에 비례해 강렬해지는 자동차 엔진음 실시간 반영
     sfx.updateContinuousEngine(
       state.speed,
       state.maxSpeed,
@@ -2780,29 +2876,25 @@
       Math.abs(state.steerInput),
       dt
     );
-    gearBadge.textContent = `${sfx.currentGear}단`;
 
     const segIdx = Math.floor(state.posZ / SEG_LEN) % state.segments.length;
     const currentSeg = state.segments[segIdx];
 
-    // 8. 차의 움직임 자유도 대폭 확장 (도우미 개입 없이 직접 핸들 조작 + 횡방향 관성 속도 velX + 화면 좌우 다이내믹 이동)
+    // 8. 플레이어 차량 횡방향 물리
     const driftSlide = state.driftActive ? (state.driftDir * 0.42 + state.steerInput * 1.85) : (state.steerInput * 1.75);
     const targetVelX = driftSlide;
     state.velX += (targetVelX - state.velX) * Math.min(1, dt * 8.5);
     state.playerX += state.velX * dt;
 
-    // 화면 안에서 카트 자체가 좌우로 훨씬 넓고 역동적으로 움직이도록 screenXOffset 계산 (±155px)
     const targetScreenOffset = state.velX * 72 + (state.driftActive ? state.driftDir * 28 : 0);
     state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 7.5);
 
     const centrifugal = (currentSeg.curve * 0.16) * (state.speed / state.maxSpeed) * dt;
     if (state.bulletTimer > 0) {
-      // 킬러 로켓 변신 시 도로 중앙 자동 크루징!
       state.playerX += (0 - state.playerX) * 6.5 * dt;
     } else {
       state.playerX -= centrifugal * 0.48;
     }
-    // 도로 폭과 갓길까지 훨씬 자유롭게 이동 가능 (-1.18 ~ +1.18)
     state.playerX = Math.max(-1.18, Math.min(1.18, state.playerX));
 
     // 9. 자동 N2O 게이지 충전
@@ -2813,7 +2905,6 @@
         state.boostCount++;
         state.n2oGauge = 24;
         sfx.playCoin();
-        showFloatingText('🔥 슈퍼 부스터 충전 완료!', '#ffea00');
       }
       if (state.autoBoost && state.boostTimer <= 0.1) {
         triggerBoost();
@@ -2821,7 +2912,7 @@
     }
     updateBoostUI();
 
-    // 10. 트랙 위 마리오 카트 기믹 (물음표 박스, 무지개 점프대, 대시 패드, 토관, 바나나, 코인) 상호작용
+    // 10. 트랙 위 기믹 상호작용
     for (let offset = 0; offset <= 2; offset++) {
       const s = state.segments[(segIdx + offset) % state.segments.length];
       s.items.forEach(it => {
@@ -2841,50 +2932,45 @@
             startItemRoulette();
           } else if (it.type === 'jumpRamp') {
             it.takenTimer = 1.2;
-            state.velY = 520; // 하늘 높이 점프!
+            state.velY = 520;
             state.boostTimer = Math.max(state.boostTimer, 2.0);
             sfx.playHop();
             sfx.playBoost(false);
             vibrateDevice(65);
-            showCenterBanner('🌈 슈퍼 점프대 비행!!', 850);
             spawnBoostParticles(20);
           } else if (it.type === 'dashPad') {
             it.takenTimer = 1.4;
             state.boostTimer = Math.max(state.boostTimer, 1.8);
             sfx.playBoost(false);
             vibrateDevice(50);
-            showFloatingText('⚡ 바닥 대시 부스터!!', '#00e5ff');
             spawnBoostParticles(16);
           } else if (it.type === 'coin') {
             it.takenTimer = 4.5;
             state.coins++;
             state.n2oGauge = Math.min(100, state.n2oGauge + 15);
             sfx.playCoin();
-            showFloatingText('🪙 코인 +1', '#ffd54f');
+            showFloatingText('', '#ffd54f');
           } else if ((it.type === 'banana' || it.type === 'pipe') && state.playerY < 28) {
             it.takenTimer = 3.0;
             if (isInvincible || state.shieldTimer > 0) {
-              // 무적/거대버섯 상태에서는 토관과 바나나를 그대로 튕겨냄!
               sfx.playShellHit();
-              showFloatingText('💥 무적 파워로 장애물 격파!!', '#ffea00');
+              spawnBoostParticles(12);
             } else {
               state.spinTimer = 0.75;
               sfx.playHop();
               vibrateDevice(65);
-              showFloatingText(it.type === 'banana' ? '🍌 어이쿠! 바나나 미끄덩~!' : '🟢 초록 토관 통통~!', '#ff9100');
             }
           }
         }
       });
     }
 
-    // 11. 발사된 등껍질(Shell) 투사체 이동 및 앞차 명중 판정
+    // 11. 발사된 날개 거북이 등껍질(Shell) 투사체 이동 및 앞차 명중 판정
     for (let i = state.projectiles.length - 1; i >= 0; i--) {
       const proj = state.projectiles[i];
       proj.z += proj.speed * 3.15 * dt;
       proj.life -= dt;
 
-      // 가장 가까운 앞차를 향해 유도 추적(Homing Red Shell!)
       let targetRival = null;
       let minDist = 99999;
       state.rivals.forEach(r => {
@@ -2901,7 +2987,7 @@
           targetRival.velY = 380;
           sfx.playShellHit();
           vibrateDevice(70);
-          showCenterBanner(`🐢💥 ${targetRival.racer.shortName} 등껍질 명중!!`, 950);
+          spawnBoostParticles(18);
           state.projectiles.splice(i, 1);
           continue;
         }
@@ -2909,7 +2995,7 @@
       if (proj.life <= 0) state.projectiles.splice(i, 1);
     }
 
-    // 12. 5대의 라이벌 AI 카트 독립 물리 업데이트 (딜레이 없이 때론 나보다 빠르게 뒤에서 치고 올라와 앞뒤로 추월!)
+    // 12. 5대의 라이벌 AI 차량 물리 개선 (실제 코너링 레이싱 라인 + 매끄러운 추월 차선 변경 + 순간이동 없는 순수 가감속)
     const totalRaceDist = state.trackLength * state.totalLaps;
     const raceProgressRatio = state.posZ / totalRaceDist;
     let aheadCount = 0;
@@ -2922,35 +3008,74 @@
       if (r.boostVisualTimer > 0) r.boostVisualTimer = Math.max(0, r.boostVisualTimer - dt);
       if (r.passSoundCooldown > 0) r.passSoundCooldown = Math.max(0, r.passSoundCooldown - dt);
 
-      // 각 라이벌의 고유 추월 파동(surgeWave): +1에 가까우면 맹추격 슈퍼부스터 모드(플레이어보다 훨씬 빠름!), -1이면 숨고르기 모드
+      const rSegIdx = Math.floor(Math.max(0, r.z) / SEG_LEN) % state.segments.length;
+      const rCurSeg = state.segments[rSegIdx];
+      const rLookSeg = state.segments[(rSegIdx + 6) % state.segments.length];
+
+      // (A) 종방향 속도 제어: 강제 위치 워프(r.z += ...)를 완전히 제거하고 순수 가속도·최고속도 제어로만 매끄럽게 주행!
       r.surgePhase += dt * r.surgeFreq;
       const surgeWave = Math.sin(r.surgePhase);
-
-      // 라이벌이 지향하는 플레이어 대비 상대 위치 (앞뒤 -260 ~ +680 사이를 끊임없이 오르락내리락!)
-      const finishHandicap = raceProgressRatio > 0.84 ? -120 : 0;
-      const desiredRelZ = r.baseBandOffset + surgeWave * 360 + finishHandicap;
+      const finishHandicap = raceProgressRatio > 0.85 ? -110 : 0;
+      const desiredRelZ = r.baseBandOffset + surgeWave * 340 + finishHandicap;
       const actualRelZ = r.z - state.posZ;
       const gapError = desiredRelZ - actualRelZ;
 
-      // 독립 목표 속도 계산 (플레이어 속도를 즉각 복사하지 않고 라이벌 고유의 최고속도 + 부스터 사이클로 주행!)
-      let rivalTargetSpeed = state.maxSpeed * (1.02 + surgeWave * 0.16) + Math.max(-65, Math.min(95, gapError * 0.24));
+      // 코너에서는 살짝 감속하거나 드리프트 부스터를 쓰며 리얼하게 주행
+      const curveFactor = Math.abs(rCurSeg.curve) > 1.5 ? 0.94 : 1.0;
+      let rivalTargetSpeed = state.maxSpeed * curveFactor * (1.01 + surgeWave * 0.14) + Math.max(-75, Math.min(115, gapError * 0.30));
 
-      // 뒤에서 추격 중일 때(actualRelZ < 0 && surgeWave > 0.15) 라이벌이 부스터를 켜고 나보다 빠르게 치고 올라옴!
-      if ((surgeWave > 0.22 || gapError > 110) && r.spinTimer <= 0 && r.shrinkTimer <= 0) {
-        r.boostVisualTimer = 0.35;
-        rivalTargetSpeed += 28;
+      // 플레이어 뒤에서 슬립스트림 추격 중일 때 부스터 가속!
+      if ((surgeWave > 0.25 || gapError > 120) && r.spinTimer <= 0 && r.shrinkTimer <= 0) {
+        r.boostVisualTimer = 0.4;
+        rivalTargetSpeed += 26;
       }
 
-      if (r.spinTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.30;
-      else if (r.shrinkTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.60;
+      if (r.spinTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.28;
+      else if (r.shrinkTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.58;
 
-      // 관성 가속도 적용으로 끊김·딜레이 전혀 없는 매끄러운 속도 변화
-      r.speed += (rivalTargetSpeed - r.speed) * Math.min(1, dt * 3.8);
+      r.speed += (rivalTargetSpeed - r.speed) * Math.min(1, dt * 3.2);
       r.z += r.speed * 3.15 * dt;
 
-      // 라이벌 점프 물리 (점프대 구간 통과 시 라이벌도 신나게 점프!)
-      const rSegIdx = Math.floor(Math.max(0, r.z) / SEG_LEN) % state.segments.length;
-      if (rSegIdx % 34 === 17 && r.y <= 1) {
+      // (B) 횡방향 레이싱 라인 & 추월 조향(Steer) 물리
+      r.laneTimer -= dt;
+      if (r.laneTimer <= 0) {
+        r.laneTimer = 1.8 + Math.random() * 2.2;
+        const lanes = [-0.62, -0.32, 0.0, 0.32, 0.62];
+        r.preferredLane = lanes[(idx + Math.floor(Math.random() * lanes.length)) % lanes.length];
+      }
+
+      // 전방 코너가 있으면 인코스(Apex)로 자연스럽게 파고듦
+      let desiredX = r.preferredLane;
+      if (Math.abs(rLookSeg.curve) > 0.9) {
+        desiredX = Math.max(-0.72, Math.min(0.72, desiredX * 0.5 + Math.sign(rLookSeg.curve) * 0.38));
+        r.drifting = Math.abs(rCurSeg.curve) > 1.65 && r.spinTimer <= 0;
+      } else {
+        r.drifting = false;
+      }
+
+      // 앞차(플레이어) 추월 시 옆 차선으로 부드럽게 회피 기동!
+      if (actualRelZ > -220 && actualRelZ < 75 && Math.abs(r.x - state.playerX) < 0.44) {
+        desiredX = state.playerX >= 0 ? -0.64 : 0.64;
+      }
+
+      // 다른 라이벌 차량과 겹치지 않도록 횡방향 간격 유지(Separation)
+      state.rivals.forEach((other, oIdx) => {
+        if (oIdx === idx) return;
+        if (Math.abs(r.z - other.z) < 110 && Math.abs(r.x - other.x) < 0.38) {
+          desiredX += (r.x >= other.x ? 0.36 : -0.36);
+        }
+      });
+      desiredX = Math.max(-0.84, Math.min(0.84, desiredX));
+
+      // 실제 이동 방향과 일치하는 부드러운 핸들 조향각(r.steer) 및 횡속도(r.velX) 계산
+      const xDiff = desiredX - r.x;
+      const targetSteer = Math.max(-1, Math.min(1, xDiff * 2.2 + rCurSeg.curve * 0.22));
+      r.steer += (targetSteer - (r.steer || 0)) * Math.min(1, dt * 7.0);
+      r.velX += (xDiff * 2.6 - r.velX) * Math.min(1, dt * 6.0);
+      r.x = Math.max(-0.88, Math.min(0.88, r.x + r.velX * dt));
+
+      // (C) 점프대 구간 통과 시 라이벌도 자연스럽게 점프
+      if (rSegIdx % 32 === 16 && r.y <= 1) {
         r.velY = 420;
         r.boostVisualTimer = 0.8;
       }
@@ -2963,60 +3088,39 @@
         }
       }
 
-      // 너무 멀리 뒤처지거나 보이지 않는 곳으로 사라지지 않도록 부드러운 탄성 범위 유지 (-320 ~ +1450)
-      if (r.z < state.posZ - 340) {
-        r.z += (state.posZ - 260 - r.z) * Math.min(1, dt * 2.5);
-        r.speed = Math.max(r.speed, state.speed * 1.15);
-      } else if (r.z > state.posZ + 1480) {
-        r.z += (state.posZ + 1320 - r.z) * Math.min(1, dt * 2.5);
-      }
-
-      // 자연스러운 차선 변경 및 와이드 코너링
-      if (Math.random() < 0.022) {
-        r.targetLane = (Math.random() - 0.5) * 1.45;
-      }
-      r.x += (r.targetLane - r.x) * 2.8 * dt;
-      r.x = Math.max(-0.88, Math.min(0.88, r.x));
-
-      // 플레이어와 라이벌 카트 근접 접촉/추월 물리 상호작용
+      // 플레이어와 라이벌 카트 근접 접촉 물리
       const newRelZ = r.z - state.posZ;
       if (Math.abs(newRelZ) < 52 && Math.abs(r.x - state.playerX) < 0.34 && state.playerY < 30) {
         if (isInvincible) {
-          // 내가 무적 스타/거대버섯/킬러로켓 상태면 부딪힌 라이벌이 하늘로 붕 날아가며 스핀!
           if (r.spinTimer <= 0.2) {
             r.spinTimer = 1.6;
             r.velY = 390;
             sfx.playShellHit();
             vibrateDevice(60);
-            showFloatingText(`⭐💥 ${r.racer.shortName} 날려버림!!`, '#ffea00');
+            spawnBoostParticles(14);
           }
         } else {
-          // 일반 상태에서는 범퍼카처럼 서로 살짝 튕기며 불꽃 스파크!
           const pushDir = state.playerX >= r.x ? 1 : -1;
-          state.velX += pushDir * 0.55;
-          r.targetLane = Math.max(-0.85, Math.min(0.85, r.x - pushDir * 0.45));
+          state.velX += pushDir * 0.52;
+          r.velX -= pushDir * 0.52;
         }
       }
 
       const isAheadNow = r.z > state.posZ;
       if (r.wasAhead && !isAheadNow) {
-        // 내가 앞차를 추월함!
         sfx.playOvertakeWhoosh();
-        showFloatingText(`💨 ${r.racer.shortName} 추월 성공!!`, '#00e676');
       } else if (!r.wasAhead && isAheadNow && state.posZ > 250) {
-        // 뒤에서 달리던 라이벌이 부스터를 켜고 나를 추월해 앞으로 치고 나감!
         if (r.passSoundCooldown <= 0) {
           sfx.playRivalPassBy();
           r.passSoundCooldown = 2.5;
-          showFloatingText(`⚡ ${r.racer.shortName} 카트가 앞서 나가요!`, '#ff9100');
         }
       }
       r.wasAhead = isAheadNow;
 
       if (isAheadNow) aheadCount++;
 
-      // 내 바로 뒤(-240 ~ +15)에서 무섭게 달려오는 라이벌 감지 -> 후방 추월 경보 미러 표시!
-      if (newRelZ > -240 && newRelZ < 15 && r.speed >= state.speed * 0.96) {
+      // 후방 추월 경보 미러 (글자 없이 화살표 + 카트 아이콘만 표시)
+      if (newRelZ > -220 && newRelZ < 10 && r.speed >= state.speed * 0.97) {
         if (newRelZ > closestRearDist) {
           closestRearDist = newRelZ;
           rearChallenger = r;
@@ -3031,8 +3135,8 @@
 
     if (rearChallenger) {
       rearAlertBar.style.display = 'flex';
-      const dirArrow = rearChallenger.x < state.playerX - 0.15 ? '↙️ 왼쪽 뒤' : (rearChallenger.x > state.playerX + 0.15 ? '↘️ 오른쪽 뒤' : '⬇️ 바로 뒤');
-      rearAlertBar.textContent = `⚠️ ${dirArrow}에서 ${rearChallenger.racer.shortName} 카트 맹추격·추월 중! 💨`;
+      const dirIcon = rearChallenger.x < state.playerX - 0.15 ? '↙️' : (rearChallenger.x > state.playerX + 0.15 ? '↘️' : '⬇️');
+      rearAlertBar.textContent = `🪞 ${dirIcon} 🏎️💨`;
     } else {
       rearAlertBar.style.display = 'none';
     }
@@ -3040,15 +3144,14 @@
     state.rank = 1 + aheadCount;
     rankNumEl.textContent = String(state.rank);
 
-    // 13. 바퀴(Lap) 및 결승선 골인 체크
+    // 13. 바퀴(Lap) 및 결승선 골인 체크 (화면 글자 없이 음성과 아이콘만 업데이트)
     const currentLap = Math.min(state.totalLaps, Math.floor(state.posZ / state.trackLength) + 1);
     if (currentLap !== state.lap) {
       state.lap = currentLap;
       sfx.playFanfare();
-      showCenterBanner('🎉 FINAL LAP! 마지막 바퀴!', 1300);
-      speakKR('마지막 바퀴예요! 슈퍼 부스터로 일등으로 골인해 봐요!', true);
+      speakKR('마지막 바퀴예요! 화이팅!', true);
     }
-    lapBoxEl.textContent = `바퀴 ${state.lap} / ${state.totalLaps}`;
+    lapBoxEl.textContent = `🏁 ${state.lap}/${state.totalLaps}`;
 
     const progressPct = Math.min(100, (state.posZ / totalRaceDist) * 100);
     progressFill.style.width = `${progressPct.toFixed(1)}%`;
@@ -3065,12 +3168,6 @@
       p.y += p.vy * dt;
       p.life -= dt;
       if (p.life <= 0) state.particles.splice(i, 1);
-    }
-    for (let i = state.floatingTexts.length - 1; i >= 0; i--) {
-      const ft = state.floatingTexts[i];
-      ft.y -= 52 * dt;
-      ft.life -= dt * 0.92;
-      if (ft.life <= 0) state.floatingTexts.splice(i, 1);
     }
   }
 
@@ -3278,15 +3375,15 @@
       const jumpLift = r.y * kScale * 0.45;
 
       drawKartCharacter(ctx, rx, pt.y - jumpLift, kScale, r.racer, {
-        steer: Math.sin(timeMs * 0.005 + r.racer.id) * 0.32,
+        steer: r.steer || 0,
         boosting: r.boostVisualTimer > 0,
-        drifting: r.spinTimer > 0,
+        drifting: r.drifting || r.spinTimer > 0,
+        driftStage: r.drifting ? 2 : 0,
         spinning: r.spinTimer > 0,
         star: false,
         bullet: false,
         ufo: false,
         shield: false,
-        label: r.boostVisualTimer > 0 ? `🔥 ${r.racer.shortName}` : r.racer.shortName,
         timeMs
       });
     });
@@ -3303,7 +3400,7 @@
       drawSpeedLines(ctx, W, H, timeMs);
     }
 
-    // 플레이어 주인공 카트 렌더링 (화면 좌우로 자유롭게 이동 + 점프 높이 + 거대버섯/슈퍼스타/킬러로켓 변신!)
+    // 플레이어 주인공 카트 렌더링 (화면 좌우로 자유롭게 이동 + 점프 높이 + 거대버섯/슈퍼스타/하늘고래로켓 변신!)
     const playerRacer = RACERS[state.selectedRacer];
     const kartX = W * 0.5 + state.screenXOffset;
     const bounceY = Math.sin(timeMs * 0.03) * (state.speed > 20 && state.playerY <= 1 ? 3.5 : 0.5);
@@ -3325,7 +3422,7 @@
       shield: state.shieldTimer > 0,
       airborne: state.playerY > 5,
       groundYOffset: -jumpOffset,
-      label: '⭐ 나 (MY KART)',
+      heldItem: state.heldItem,
       isPlayer: true,
       timeMs
     });
@@ -3337,19 +3434,6 @@
       ctx.beginPath();
       ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
       ctx.fill();
-      ctx.restore();
-    });
-
-    state.floatingTexts.forEach(ft => {
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, ft.life);
-      ctx.font = '900 28px "Apple SD Gothic Neo", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.strokeStyle = '#000';
-      ctx.lineWidth = 6;
-      ctx.strokeText(ft.text, ft.x, ft.y);
-      ctx.fillStyle = ft.color;
-      ctx.fillText(ft.text, ft.x, ft.y);
       ctx.restore();
     });
 
@@ -3380,66 +3464,158 @@
   }
 
   function drawHorizonScenery(c, W, horizonY, track, timeMs) {
-    if (track.sceneryType === 'rainbow') {
-      // 레인보우 우주 로드 별빛 & 행성 배경
+    const type = track.sceneryType;
+    if (type === 'rainbow') {
+      // 레인보우 우주 로드 반짝이는 별빛 & 귀여운 고리 행성 배경
       c.fillStyle = '#ffffff';
-      for (let i = 0; i < 28; i++) {
-        const sx = (i * 97 + Math.floor(timeMs * 0.015)) % W;
+      for (let i = 0; i < 32; i++) {
+        const sx = (i * 97 + Math.floor(timeMs * 0.018)) % W;
         const sy = (i * 43) % (horizonY - 15);
-        const r = (i % 3) + 1.2;
+        const r = (i % 3) + 1.4;
         c.beginPath();
         c.arc(sx, sy, r, 0, Math.PI * 2);
         c.fill();
       }
+      // 귀여운 파스텔 토성 행성
+      c.save();
+      c.translate(W * 0.78, horizonY * 0.36);
+      c.fillStyle = '#ff80ab';
+      c.beginPath();
+      c.arc(0, 0, 28, 0, Math.PI * 2);
+      c.fill();
+      c.strokeStyle = '#ffea00';
+      c.lineWidth = 6;
+      c.beginPath();
+      c.ellipse(0, 0, 48, 12, -0.25, 0, Math.PI * 2);
+      c.stroke();
+      c.restore();
+    } else if (type === 'snow') {
+      // 펭귄 아이스 밸리 하늘에서 내리는 귀여운 눈송이
+      c.fillStyle = 'rgba(255, 255, 255, 0.88)';
+      for (let i = 0; i < 26; i++) {
+        const sx = (i * 83 + Math.sin(timeMs * 0.002 + i) * 25) % W;
+        const sy = (i * 37 + timeMs * 0.04) % horizonY;
+        c.beginPath();
+        c.arc((sx + W) % W, sy, (i % 3) + 2, 0, Math.PI * 2);
+        c.fill();
+      }
+    } else if (type === 'sakura') {
+      // 벚꽃 스프링 가든 흩날리는 분홍 벚꽃잎
+      c.fillStyle = '#f8bbd0';
+      for (let i = 0; i < 24; i++) {
+        const sx = (i * 89 + timeMs * 0.03) % W;
+        const sy = (i * 41 + timeMs * 0.025) % horizonY;
+        c.beginPath();
+        c.ellipse(sx, sy, 5, 3, (timeMs * 0.003 + i), 0, Math.PI * 2);
+        c.fill();
+      }
+    } else if (type === 'castle') {
+      // 쿠파 용암 캐슬 붉은 불티 & 보름달
+      c.fillStyle = '#ffea00';
+      c.beginPath();
+      c.arc(W * 0.82, horizonY * 0.32, 30, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = 'rgba(255, 110, 64, 0.75)';
+      for (let i = 0; i < 18; i++) {
+        const sx = (i * 107 + timeMs * 0.02) % W;
+        const sy = horizonY - ((i * 29 + timeMs * 0.04) % horizonY);
+        c.beginPath();
+        c.arc(sx, sy, 2.5, 0, Math.PI * 2);
+        c.fill();
+      }
     }
 
-    const grad = c.createRadialGradient(W * 0.5, horizonY + 40, 80, W * 0.5, horizonY + 40, 280);
+    const grad = c.createRadialGradient(W * 0.5, horizonY + 40, 80, W * 0.5, horizonY + 40, 290);
     grad.addColorStop(0, 'rgba(255,255,255,0)');
-    grad.addColorStop(0.65, 'rgba(255,234,0,0.24)');
-    grad.addColorStop(0.82, 'rgba(255,64,129,0.24)');
+    grad.addColorStop(0.65, 'rgba(255,234,0,0.22)');
+    grad.addColorStop(0.82, 'rgba(255,64,129,0.22)');
     grad.addColorStop(1, 'rgba(0,229,255,0)');
     c.fillStyle = grad;
     c.fillRect(0, 0, W, horizonY);
 
-    c.fillStyle = 'rgba(255,255,255,0.86)';
-    for (let i = 0; i < 5; i++) {
-      const cx = ((i * 290 + timeMs * 0.02) % (W + 200)) - 100;
-      const cy = 42 + (i % 2) * 34;
-      c.beginPath();
-      c.arc(cx, cy, 26, 0, Math.PI * 2);
-      c.arc(cx + 22, cy - 8, 32, 0, Math.PI * 2);
-      c.arc(cx + 48, cy, 24, 0, Math.PI * 2);
-      c.fill();
+    // 아기자기한 스마일 뭉게구름
+    if (type !== 'castle') {
+      for (let i = 0; i < 5; i++) {
+        const cx = ((i * 290 + timeMs * 0.02) % (W + 200)) - 100;
+        const cy = 42 + (i % 2) * 34;
+        c.fillStyle = type === 'candy' ? 'rgba(255, 240, 245, 0.92)' : 'rgba(255, 255, 255, 0.90)';
+        c.beginPath();
+        c.arc(cx, cy, 24, 0, Math.PI * 2);
+        c.arc(cx + 22, cy - 8, 30, 0, Math.PI * 2);
+        c.arc(cx + 46, cy, 22, 0, Math.PI * 2);
+        c.fill();
+        // 구름의 귀여운 눈과 볼터치
+        c.fillStyle = '#37474f';
+        c.beginPath();
+        c.arc(cx + 16, cy - 6, 2.6, 0, Math.PI * 2);
+        c.arc(cx + 28, cy - 6, 2.6, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = 'rgba(255, 128, 171, 0.65)';
+        c.beginPath();
+        c.arc(cx + 11, cy - 2, 3.5, 0, Math.PI * 2);
+        c.arc(cx + 33, cy - 2, 3.5, 0, Math.PI * 2);
+        c.fill();
+      }
     }
 
+    // 코스 테마별 원경 산/언덕/바다 실루엣
     c.fillStyle = track.grass2;
     for (let i = -1; i < 6; i++) {
       const hx = i * (W / 4);
       c.beginPath();
-      c.arc(hx, horizonY + 35, 160, Math.PI, 0);
+      if (type === 'snow' || type === 'castle' || type === 'dino') {
+        c.moveTo(hx - 170, horizonY + 10);
+        c.lineTo(hx, horizonY - 82 - (i % 2) * 24);
+        c.lineTo(hx + 170, horizonY + 10);
+        c.closePath();
+      } else {
+        c.arc(hx, horizonY + 35, 160, Math.PI, 0);
+      }
       c.fill();
     }
   }
 
-  function drawArchGate(c, x, y, w, label) {
+  function drawArchGate(c, x, y, w) {
     if (w < 25) return;
     const archH = w * 0.72;
     c.save();
-    c.fillStyle = '#e53935';
-    c.fillRect(x - w * 0.95, y - archH, w * 0.12, archH);
-    c.fillRect(x + w * 0.83, y - archH, w * 0.12, archH);
-    c.fillStyle = '#1e88e5';
-    c.strokeStyle = '#ffea00';
-    c.lineWidth = Math.max(2, w * 0.025);
-    c.fillRect(x - w * 0.98, y - archH - w * 0.22, w * 1.96, w * 0.24);
-    c.strokeRect(x - w * 0.98, y - archH - w * 0.22, w * 1.96, w * 0.24);
+    // 아기자기한 파스텔 기둥
+    c.fillStyle = '#ff4081';
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(1.5, w * 0.02);
+    c.beginPath();
+    c.roundRect(x - w * 0.95, y - archH, w * 0.12, archH, w * 0.04);
+    c.roundRect(x + w * 0.83, y - archH, w * 0.12, archH, w * 0.04);
+    c.fill();
+    c.stroke();
 
-    if (w > 70) {
-      c.fillStyle = '#ffffff';
-      c.font = `900 ${Math.floor(w * 0.12)}px sans-serif`;
-      c.textAlign = 'center';
-      c.fillText(label, x, y - archH - w * 0.06);
+    // 상단 체크무늬 & 별 엠블럼 배너 (글자 없이 직관적이고 아기자기하게!)
+    const bx = x - w * 0.98;
+    const by = y - archH - w * 0.22;
+    const bw = w * 1.96;
+    const bh = w * 0.22;
+    c.fillStyle = '#29b6f6';
+    c.beginPath();
+    c.roundRect(bx, by, bw, bh, bh * 0.35);
+    c.fill();
+    c.stroke();
+
+    // 체크무늬 장식 블록
+    const cols = 10;
+    const cellW = (bw * 0.88) / cols;
+    for (let i = 0; i < cols; i++) {
+      c.fillStyle = i % 2 === 0 ? '#ffffff' : '#1e293b';
+      c.fillRect(bx + bw * 0.06 + i * cellW, by + bh * 0.2, cellW, bh * 0.6);
     }
+
+    // 중앙 귀여운 황금 별 메달
+    c.fillStyle = '#ffea00';
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(2, w * 0.025);
+    c.beginPath();
+    c.arc(x, by + bh * 0.5, bh * 0.62, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
     c.restore();
   }
 
@@ -3448,90 +3624,264 @@
     c.save();
     if (type === 'mario') {
       if (variant === 0) {
-        // 슈퍼마리오 빨간 점박이 버섯 나무
+        // 아기자기한 웃는 얼굴의 슈퍼마리오 버섯 나무
         c.fillStyle = '#fff8e1';
-        c.fillRect(x - size * 0.18, y - size * 0.55, size * 0.36, size * 0.55);
+        c.strokeStyle = '#ffffff';
+        c.lineWidth = Math.max(1.2, size * 0.05);
+        c.beginPath();
+        c.roundRect(x - size * 0.22, y - size * 0.55, size * 0.44, size * 0.55, size * 0.1);
+        c.fill();
         c.fillStyle = '#ff1744';
         c.beginPath();
-        c.arc(x, y - size * 0.65, size * 0.52, Math.PI, 0);
+        c.arc(x, y - size * 0.62, size * 0.54, Math.PI, 0);
+        c.closePath();
+        c.fill();
+        c.stroke();
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.arc(x - size * 0.22, y - size * 0.82, size * 0.13, 0, Math.PI * 2);
+        c.arc(x + size * 0.22, y - size * 0.82, size * 0.13, 0, Math.PI * 2);
+        c.arc(x, y - size * 0.95, size * 0.11, 0, Math.PI * 2);
+        c.fill();
+        if (size > 16) {
+          c.fillStyle = '#263238';
+          c.beginPath();
+          c.arc(x - size * 0.09, y - size * 0.34, size * 0.04, 0, Math.PI * 2);
+          c.arc(x + size * 0.09, y - size * 0.34, size * 0.04, 0, Math.PI * 2);
+          c.fill();
+        }
+      } else {
+        // 동글동글 열매가 달린 버섯 왕국 나무
+        c.fillStyle = '#8d6e63';
+        c.fillRect(x - size * 0.14, y - size * 0.7, size * 0.28, size * 0.7);
+        c.fillStyle = '#66bb6a';
+        c.beginPath();
+        c.arc(x, y - size * 0.95, size * 0.46, 0, Math.PI * 2);
+        c.arc(x - size * 0.28, y - size * 0.75, size * 0.34, 0, Math.PI * 2);
+        c.arc(x + size * 0.28, y - size * 0.75, size * 0.34, 0, Math.PI * 2);
+        c.fill();
+      }
+    } else if (type === 'candy') {
+      if (variant === 0) {
+        // 슈가 캔디 랜드: 롤리팝 막대사탕 나무
+        c.fillStyle = '#ffffff';
+        c.fillRect(x - size * 0.07, y - size * 0.85, size * 0.14, size * 0.85);
+        c.fillStyle = '#ff4081';
+        c.strokeStyle = '#ffffff';
+        c.lineWidth = Math.max(2, size * 0.08);
+        c.beginPath();
+        c.arc(x, y - size * 0.95, size * 0.46, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+        c.strokeStyle = '#ffea00';
+        c.lineWidth = Math.max(1.5, size * 0.07);
+        c.beginPath();
+        c.arc(x, y - size * 0.95, size * 0.24, 0, Math.PI * 1.5);
+        c.stroke();
+      } else {
+        // 체리가 올라간 핑크 컵케이크
+        c.fillStyle = '#ffd54f';
+        c.beginPath();
+        c.moveTo(x - size * 0.32, y);
+        c.lineTo(x + size * 0.32, y);
+        c.lineTo(x + size * 0.42, y - size * 0.45);
+        c.lineTo(x - size * 0.42, y - size * 0.45);
+        c.closePath();
+        c.fill();
+        c.fillStyle = '#f48fb1';
+        c.beginPath();
+        c.arc(x, y - size * 0.52, size * 0.42, Math.PI, 0);
+        c.fill();
+        c.fillStyle = '#ff1744';
+        c.beginPath();
+        c.arc(x, y - size * 0.96, size * 0.13, 0, Math.PI * 2);
+        c.fill();
+      }
+    } else if (type === 'beach') {
+      if (variant === 0) {
+        // 돌핀 비치 아일랜드: 야자수 나무와 코코넛
+        c.fillStyle = '#8d6e63';
+        c.fillRect(x - size * 0.1, y - size * 0.95, size * 0.2, size * 0.95);
+        c.fillStyle = '#00e676';
+        [-0.5, 0, 0.5].forEach(ang => {
+          c.beginPath();
+          c.ellipse(x + ang * size * 0.55, y - size * 0.98, size * 0.48, size * 0.16, ang, 0, Math.PI * 2);
+          c.fill();
+        });
+      } else {
+        // 알록달록 비치 파라솔
+        c.fillStyle = '#ffffff';
+        c.fillRect(x - size * 0.05, y - size * 0.85, size * 0.1, size * 0.85);
+        c.fillStyle = '#00b0ff';
+        c.strokeStyle = '#ffea00';
+        c.lineWidth = Math.max(1.5, size * 0.07);
+        c.beginPath();
+        c.arc(x, y - size * 0.78, size * 0.52, Math.PI, 0);
+        c.closePath();
+        c.fill();
+        c.stroke();
+      }
+    } else if (type === 'snow') {
+      if (variant === 0) {
+        // 펭귄 아이스 밸리: 빨간 목도리를 한 귀여운 눈사람
+        c.fillStyle = '#ffffff';
+        c.strokeStyle = '#80d8ff';
+        c.lineWidth = Math.max(1.5, size * 0.05);
+        c.beginPath();
+        c.arc(x, y - size * 0.35, size * 0.36, 0, Math.PI * 2);
+        c.arc(x, y - size * 0.82, size * 0.26, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+        // 빨간 목도리 & 모자
+        c.fillStyle = '#ff1744';
+        c.fillRect(x - size * 0.24, y - size * 0.62, size * 0.48, size * 0.1);
+        c.fillRect(x - size * 0.2, y - size * 1.18, size * 0.4, size * 0.16);
+      } else {
+        // 눈 덮인 전나무
+        c.fillStyle = '#26a69a';
+        c.beginPath();
+        c.moveTo(x, y - size * 1.25);
+        c.lineTo(x + size * 0.48, y - size * 0.15);
+        c.lineTo(x - size * 0.48, y - size * 0.15);
         c.closePath();
         c.fill();
         c.fillStyle = '#ffffff';
         c.beginPath();
-        c.arc(x - size * 0.2, y - size * 0.82, size * 0.12, 0, Math.PI * 2);
-        c.arc(x + size * 0.2, y - size * 0.82, size * 0.12, 0, Math.PI * 2);
-        c.fill();
-      } else {
-        // 초록 마리오 언덕 나무
-        c.fillStyle = '#6d4c41';
-        c.fillRect(x - size * 0.14, y - size * 0.7, size * 0.28, size * 0.7);
-        c.fillStyle = '#43a047';
-        c.beginPath();
-        c.arc(x, y - size * 0.85, size * 0.52, 0, Math.PI * 2);
+        c.moveTo(x, y - size * 1.25);
+        c.lineTo(x + size * 0.24, y - size * 0.72);
+        c.lineTo(x - size * 0.24, y - size * 0.72);
+        c.closePath();
         c.fill();
       }
+    } else if (type === 'dino') {
+      if (variant === 0) {
+        // 요시 공룡 정글: 초록 점박이 요시 알
+        c.fillStyle = '#ffffff';
+        c.strokeStyle = '#66bb6a';
+        c.lineWidth = Math.max(2, size * 0.07);
+        c.beginPath();
+        c.ellipse(x, y - size * 0.48, size * 0.38, size * 0.48, 0, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+        c.fillStyle = '#00e676';
+        c.beginPath();
+        c.arc(x - size * 0.12, y - size * 0.55, size * 0.11, 0, Math.PI * 2);
+        c.arc(x + size * 0.14, y - size * 0.38, size * 0.09, 0, Math.PI * 2);
+        c.arc(x, y - size * 0.72, size * 0.08, 0, Math.PI * 2);
+        c.fill();
+      } else {
+        // 정글 거대 열대 야자수
+        c.fillStyle = '#5d4037';
+        c.fillRect(x - size * 0.12, y - size * 0.88, size * 0.24, size * 0.88);
+        c.fillStyle = '#00c853';
+        c.beginPath();
+        c.ellipse(x, y - size * 0.96, size * 0.68, size * 0.32, 0, 0, Math.PI * 2);
+        c.fill();
+      }
+    } else if (type === 'sakura') {
+      if (variant === 0) {
+        // 벚꽃 스프링 가든: 풍성한 분홍 벚꽃 나무
+        c.fillStyle = '#6d4c41';
+        c.fillRect(x - size * 0.13, y - size * 0.72, size * 0.26, size * 0.72);
+        c.fillStyle = '#f48fb1';
+        c.beginPath();
+        c.arc(x, y - size * 0.96, size * 0.5, 0, Math.PI * 2);
+        c.arc(x - size * 0.3, y - size * 0.76, size * 0.36, 0, Math.PI * 2);
+        c.arc(x + size * 0.3, y - size * 0.76, size * 0.36, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#fce4ec';
+        c.beginPath();
+        c.arc(x - size * 0.12, y - size * 1.02, size * 0.18, 0, Math.PI * 2);
+        c.fill();
+      } else {
+        // 아기자기한 핑크 봄꽃 등불 기둥
+        c.fillStyle = '#ad1457';
+        c.fillRect(x - size * 0.1, y - size * 0.75, size * 0.2, size * 0.75);
+        c.fillStyle = '#ffeb3b';
+        c.strokeStyle = '#ff4081';
+        c.lineWidth = Math.max(1.5, size * 0.06);
+        c.beginPath();
+        c.arc(x, y - size * 0.85, size * 0.28, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+      }
     } else if (type === 'rainbow') {
-      // 회전하는 황금 스타 링 기둥
+      // 레인보우 스타 로드: 반짝이는 황금 스타 링 기둥
       c.strokeStyle = variant % 2 === 0 ? '#ffea00' : '#00e5ff';
-      c.lineWidth = Math.max(2, size * 0.12);
+      c.lineWidth = Math.max(2.5, size * 0.12);
       c.beginPath();
       c.arc(x, y - size * 0.75, size * 0.48, 0, Math.PI * 2);
       c.stroke();
+      c.fillStyle = '#ff80ab';
+      c.beginPath();
+      c.arc(x, y - size * 0.75, size * 0.18, 0, Math.PI * 2);
+      c.fill();
     } else if (type === 'castle') {
-      // 쿠파 성 횃불 기둥
+      // 쿠파 용암 캐슬: 타오르는 불꽃 성벽 기둥
       c.fillStyle = '#455a64';
       c.fillRect(x - size * 0.22, y - size * 0.8, size * 0.44, size * 0.8);
       c.fillStyle = (Math.floor(timeMs * 0.01) + variant) % 2 === 0 ? '#ffea00' : '#ff3d00';
       c.beginPath();
-      c.arc(x, y - size * 0.95, size * 0.32, 0, Math.PI * 2);
-      c.fill();
-    } else {
-      c.fillStyle = '#5d4037';
-      c.fillRect(x - size * 0.12, y - size * 0.85, size * 0.24, size * 0.85);
-      c.fillStyle = '#00c853';
-      c.beginPath();
-      c.ellipse(x, y - size * 0.95, size * 0.7, size * 0.32, 0, 0, Math.PI * 2);
+      c.arc(x, y - size * 0.95, size * 0.34, 0, Math.PI * 2);
       c.fill();
     }
     c.restore();
   }
 
+  // 아기자기한 파스텔 3D 선물상자 아이템 큐브 (리본 + 반짝이 별)
   function drawItemCube(c, x, y, size, timeMs) {
     if (size < 5) return;
-    const floatY = y - size * 0.9 + Math.sin(timeMs * 0.008 + x) * (size * 0.22);
+    const floatY = y - size * 0.92 + Math.sin(timeMs * 0.008 + x) * (size * 0.22);
     c.save();
     c.translate(x, floatY);
-    c.rotate(Math.sin(timeMs * 0.004) * 0.35);
+    c.rotate(Math.sin(timeMs * 0.004 + x * 0.01) * 0.22);
 
-    const g = c.createLinearGradient(-size, -size, size, size);
-    g.addColorStop(0, 'rgba(255, 23, 68, 0.94)');
-    g.addColorStop(0.5, 'rgba(255, 234, 0, 0.94)');
-    g.addColorStop(1, 'rgba(0, 229, 255, 0.94)');
+    // 바닥 핑크 빛 그림자
+    const g = c.createLinearGradient(-size * 0.7, -size * 0.7, size * 0.7, size * 0.7);
+    g.addColorStop(0, '#ff80ab');
+    g.addColorStop(0.5, '#ffea00');
+    g.addColorStop(1, '#80d8ff');
     c.fillStyle = g;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(1.5, size * 0.12);
+    c.lineWidth = Math.max(2, size * 0.12);
     c.beginPath();
-    c.roundRect(-size * 0.65, -size * 0.65, size * 1.3, size * 1.3, size * 0.22);
+    c.roundRect(-size * 0.66, -size * 0.66, size * 1.32, size * 1.32, size * 0.32);
     c.fill();
     c.stroke();
 
-    if (size > 11) {
-      c.fillStyle = '#ffffff';
-      c.font = `900 ${Math.floor(size * 0.88)}px sans-serif`;
-      c.textAlign = 'center';
-      c.textBaseline = 'middle';
-      c.fillText('?', 0, 2);
-    }
+    // 선물상자 십자 리본 끈
+    c.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    c.fillRect(-size * 0.14, -size * 0.64, size * 0.28, size * 1.28);
+    c.fillRect(-size * 0.64, -size * 0.14, size * 1.28, size * 0.28);
+
+    // 상단 귀여운 핑크 리본 매듭
+    c.fillStyle = '#ff4081';
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(1.2, size * 0.07);
+    c.beginPath();
+    c.ellipse(-size * 0.24, -size * 0.72, size * 0.24, size * 0.14, -0.35, 0, Math.PI * 2);
+    c.ellipse(size * 0.24, -size * 0.72, size * 0.24, size * 0.14, 0.35, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    // 정중앙 귀여운 황금 별 엠블럼 (글자 대신 아기자기한 아이콘!)
+    c.fillStyle = '#ffea00';
+    c.strokeStyle = '#f57f17';
+    c.lineWidth = Math.max(1.2, size * 0.06);
+    c.beginPath();
+    c.arc(0, 0, size * 0.26, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
     c.restore();
   }
 
-  // 마리오 카트 무지개 점프대 (Jump Ramp)
+  // 마리오 카트 무지개 점프대 (텍스트 없이 화살표 셰브론 그래픽으로 깔끔하게!)
   function drawJumpRamp(c, x, y, w, timeMs) {
     if (w < 12) return;
     const h = w * 0.28;
     c.save();
     const grad = c.createLinearGradient(x - w, y, x + w, y - h);
-    grad.addColorStop(0, '#ff1744');
+    grad.addColorStop(0, '#ff4081');
     grad.addColorStop(0.35, '#ffea00');
     grad.addColorStop(0.7, '#00e676');
     grad.addColorStop(1, '#00e5ff');
@@ -3547,66 +3897,126 @@
     c.fill();
     c.stroke();
 
-    // 점프 화살표 표시
-    if (w > 35) {
-      c.fillStyle = (Math.floor(timeMs * 0.01) % 2 === 0) ? '#ffffff' : '#ffea00';
-      c.font = `900 ${Math.floor(h * 0.75)}px sans-serif`;
-      c.textAlign = 'center';
-      c.fillText('▲ JUMP ▲', x, y - h * 0.22);
+    // 반짝이는 3연속 점프 셰브론 화살표 (글자 제거!)
+    if (w > 24) {
+      const pulse = (Math.floor(timeMs * 0.012) % 2 === 0) ? '#ffffff' : '#fff59d';
+      c.strokeStyle = pulse;
+      c.lineWidth = Math.max(2.5, w * 0.045);
+      c.lineCap = 'round';
+      [-0.42, 0, 0.42].forEach(ox => {
+        const cx = x + ox * w;
+        c.beginPath();
+        c.moveTo(cx - w * 0.12, y - h * 0.22);
+        c.lineTo(cx, y - h * 0.74);
+        c.lineTo(cx + w * 0.12, y - h * 0.22);
+        c.stroke();
+      });
     }
     c.restore();
   }
 
-  // 슈퍼마리오 초록 토관 (Green Warp Pipe)
+  // 슈퍼마리오 초록 토관 + 귀여운 꽃 장식
   function drawMarioPipe(c, x, y, size) {
     if (size < 6) return;
     c.save();
     const w = size * 0.95;
-    const h = size * 1.15;
-    c.fillStyle = '#00c853';
-    c.strokeStyle = '#1b5e20';
+    const h = size * 1.12;
+    const pg = c.createLinearGradient(x - w * 0.5, y - h, x + w * 0.5, y);
+    pg.addColorStop(0, '#69f0ae');
+    pg.addColorStop(0.45, '#00e676');
+    pg.addColorStop(1, '#00a152');
+    c.fillStyle = pg;
+    c.strokeStyle = '#ffffff';
     c.lineWidth = Math.max(1.5, size * 0.08);
-    c.fillRect(x - w * 0.42, y - h, w * 0.84, h);
-    c.strokeRect(x - w * 0.42, y - h, w * 0.84, h);
-    c.fillStyle = '#69f0ae';
-    c.fillRect(x - w * 0.5, y - h, w, h * 0.28);
-    c.strokeRect(x - w * 0.5, y - h, w, h * 0.28);
+    c.beginPath();
+    c.roundRect(x - w * 0.42, y - h, w * 0.84, h, size * 0.1);
+    c.fill();
+    c.stroke();
+    c.beginPath();
+    c.roundRect(x - w * 0.52, y - h, w * 1.04, h * 0.3, size * 0.12);
+    c.fill();
+    c.stroke();
     c.restore();
   }
 
-  // 바나나 껍질 (Banana Peel)
+  // 아기자기한 웃는 바나나 요정 (Kawaii Smiling Banana)
   function drawBananaPeel(c, x, y, size, timeMs) {
     if (size < 5) return;
-    const wobble = Math.sin(timeMs * 0.01 + x) * 0.12;
+    const wobble = Math.sin(timeMs * 0.012 + x) * 0.14;
     c.save();
-    c.translate(x, y - size * 0.35);
+    c.translate(x, y - size * 0.42);
     c.rotate(wobble);
-    c.fillStyle = '#ffea00';
-    c.strokeStyle = '#f57f17';
-    c.lineWidth = Math.max(1.5, size * 0.1);
+
+    // 탱글탱글 노란 바나나 몸통
+    const bg = c.createRadialGradient(-size * 0.15, -size * 0.25, size * 0.05, 0, 0, size * 0.75);
+    bg.addColorStop(0, '#ffff8d');
+    bg.addColorStop(0.6, '#ffea00');
+    bg.addColorStop(1, '#fbc02d');
+    c.fillStyle = bg;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(1.8, size * 0.1);
     c.beginPath();
-    c.moveTo(0, -size * 0.7);
-    c.lineTo(size * 0.55, size * 0.35);
-    c.lineTo(0, size * 0.15);
-    c.lineTo(-size * 0.55, size * 0.35);
-    c.closePath();
+    c.moveTo(0, -size * 0.75);
+    c.quadraticCurveTo(size * 0.62, -size * 0.15, size * 0.55, size * 0.42);
+    c.quadraticCurveTo(0, size * 0.22, -size * 0.55, size * 0.42);
+    c.quadraticCurveTo(-size * 0.62, -size * 0.15, 0, -size * 0.75);
     c.fill();
     c.stroke();
+
+    // 귀여운 눈과 발그레 볼터치
+    if (size > 10) {
+      c.fillStyle = '#263238';
+      c.beginPath();
+      c.arc(-size * 0.15, -size * 0.1, size * 0.075, 0, Math.PI * 2);
+      c.arc(size * 0.15, -size * 0.1, size * 0.075, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = '#ff80ab';
+      c.beginPath();
+      c.arc(-size * 0.26, 0, size * 0.09, 0, Math.PI * 2);
+      c.arc(size * 0.26, 0, size * 0.09, 0, Math.PI * 2);
+      c.fill();
+    }
     c.restore();
   }
 
-  // 빨강 거북이 등껍질 (Red Homing Shell)
+  // 천사 날개가 달린 아기자기한 빨강 거북이 등껍질 (Winged Cute Shell)
   function drawRedShell(c, x, y, size, timeMs) {
     c.save();
-    c.translate(x, y - size * 0.55);
-    c.rotate(timeMs * 0.025);
-    c.fillStyle = '#ff1744';
+    c.translate(x, y - size * 0.58);
+    const flap = Math.sin(timeMs * 0.03) * 0.25;
+
+    // 좌우 하얀 천사 날개
+    c.fillStyle = '#ffffff';
+    c.strokeStyle = '#80d8ff';
+    c.lineWidth = Math.max(1.5, size * 0.08);
+    [-1, 1].forEach(dir => {
+      c.save();
+      c.rotate(dir * flap);
+      c.beginPath();
+      c.ellipse(dir * size * 0.72, -size * 0.15, size * 0.38, size * 0.2, dir * -0.3, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+      c.restore();
+    });
+
+    // 둥근 3D 빨강 등껍질 본체
+    const sg = c.createRadialGradient(-size * 0.2, -size * 0.2, size * 0.1, 0, 0, size * 0.68);
+    sg.addColorStop(0, '#ff8a80');
+    sg.addColorStop(0.45, '#ff1744');
+    sg.addColorStop(1, '#b71c1c');
+    c.fillStyle = sg;
     c.strokeStyle = '#ffffff';
-    c.lineWidth = Math.max(2, size * 0.15);
+    c.lineWidth = Math.max(2, size * 0.14);
     c.beginPath();
-    c.arc(0, 0, size * 0.65, 0, Math.PI * 2);
+    c.arc(0, 0, size * 0.62, 0, Math.PI * 2);
     c.fill();
     c.stroke();
+
+    // 등껍질 육각 무늬 하이라이트
+    c.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    c.beginPath();
+    c.arc(-size * 0.18, -size * 0.18, size * 0.18, 0, Math.PI * 2);
+    c.fill();
     c.restore();
   }
 
@@ -3615,26 +4025,43 @@
     c.save();
     const glow = (Math.sin(timeMs * 0.018) + 1) * 0.5;
     c.fillStyle = glow > 0.5 ? '#00e5ff' : '#ffea00';
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(1.5, size * 0.08);
     c.beginPath();
-    c.moveTo(x, y - size * 0.48);
-    c.lineTo(x + size * 0.68, y);
-    c.lineTo(x - size * 0.68, y);
+    c.moveTo(x, y - size * 0.54);
+    c.lineTo(x + size * 0.72, y);
+    c.lineTo(x, y - size * 0.16);
+    c.lineTo(x - size * 0.72, y);
     c.closePath();
     c.fill();
+    c.stroke();
     c.restore();
   }
 
+  // 아기자기한 스마일 황금 별 코인 (Kawaii Star Coin)
   function drawGoldCoin(c, x, y, size, timeMs) {
     if (size < 4) return;
     const bounce = Math.sin(timeMs * 0.01 + x) * size * 0.2;
+    const cy = y - size * 0.72 + bounce;
     c.save();
-    c.fillStyle = '#ffd600';
-    c.strokeStyle = '#fff9c4';
-    c.lineWidth = Math.max(1.5, size * 0.15);
+    const cg = c.createRadialGradient(x - size * 0.18, cy - size * 0.18, size * 0.08, x, cy, size * 0.62);
+    cg.addColorStop(0, '#ffffff');
+    cg.addColorStop(0.35, '#ffee58');
+    cg.addColorStop(1, '#f57f17');
+    c.fillStyle = cg;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(1.8, size * 0.14);
     c.beginPath();
-    c.arc(x, y - size * 0.7 + bounce, size * 0.55, 0, Math.PI * 2);
+    c.arc(x, cy, size * 0.58, 0, Math.PI * 2);
     c.fill();
     c.stroke();
+
+    // 코인 안쪽 귀여운 일자 눈
+    if (size > 9) {
+      c.fillStyle = '#5d4037';
+      c.fillRect(x - size * 0.18, cy - size * 0.16, size * 0.08, size * 0.28);
+      c.fillRect(x + size * 0.10, cy - size * 0.16, size * 0.08, size * 0.28);
+    }
     c.restore();
   }
 
@@ -3709,6 +4136,31 @@
     c.restore();
   }
 
+  // 플레이어 카트 옆에 둥실둥실 떠다니는 아기자기한 3D 보유 아이템 프리뷰 렌더링!
+  function drawHeldItem3D(c, item, timeMs) {
+    if (!item) return;
+    const orbitX = 68 + Math.cos(timeMs * 0.006) * 6;
+    const orbitY = -48 + Math.sin(timeMs * 0.008) * 7;
+    c.save();
+    c.translate(orbitX, orbitY);
+
+    // 반짝이는 버블 홀더 캡슐
+    c.fillStyle = 'rgba(255, 255, 255, 0.78)';
+    c.strokeStyle = item.color || '#ffea00';
+    c.lineWidth = 3;
+    c.beginPath();
+    c.arc(0, 0, 22, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    // 아이템 아이콘을 아기자기하게 표시
+    c.font = '24px "Apple Color Emoji", sans-serif';
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText(item.icon, 0, 1);
+    c.restore();
+  }
+
   function drawKartCharacter(c, x, y, scale, racer, opts = {}) {
     c.save();
     c.translate(x, y);
@@ -3733,34 +4185,57 @@
     const tilt = steer * 0.16 + (opts.drifting ? Math.sign(steer || 1) * 0.18 : 0) + spinAngle + trickAngle;
     c.rotate(tilt);
 
-    // 킬러 로켓(Bullet Bill) 변신 모드일 때는 3D 원통형 광택 거대 로켓으로 렌더링!
+    // 하늘 고래 로켓(Bullet) 변신 모드일 때는 아기자기한 파스텔 하늘색 3D 고래 비행선으로 렌더링!
     if (opts.bullet) {
-      const rGrad = c.createRadialGradient(-16, -42, 8, 0, -30, 62);
-      rGrad.addColorStop(0, '#616161');
-      rGrad.addColorStop(0.45, '#212121');
-      rGrad.addColorStop(1, '#000000');
+      // 좌우 귀여운 고래 지느러미 날개
+      c.fillStyle = '#4fc3f7';
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 3;
+      [-1, 1].forEach(dir => {
+        c.beginPath();
+        c.ellipse(dir * 54, -26, 22, 12, dir * 0.35, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+      });
+
+      // 포동포동 입체 하늘 고래 본체
+      const rGrad = c.createRadialGradient(-16, -48, 10, 0, -32, 66);
+      rGrad.addColorStop(0, '#ffffff');
+      rGrad.addColorStop(0.32, '#80d8ff');
+      rGrad.addColorStop(0.78, '#039be5');
+      rGrad.addColorStop(1, '#0277bd');
       c.fillStyle = rGrad;
-      c.strokeStyle = '#ffea00';
+      c.strokeStyle = '#ffffff';
       c.lineWidth = 4;
       c.beginPath();
-      c.roundRect(-48, -72, 96, 78, 38);
+      c.roundRect(-50, -76, 100, 82, 42);
       c.fill();
       c.stroke();
 
-      // 로켓 눈과 날개
+      // 고래의 초롱초롱 눈과 핑크 볼터치
+      c.fillStyle = '#1e293b';
+      c.beginPath();
+      c.arc(-22 + yaw * 0.35, -42, 7.5, 0, Math.PI * 2);
+      c.arc(22 + yaw * 0.35, -42, 7.5, 0, Math.PI * 2);
+      c.fill();
       c.fillStyle = '#ffffff';
       c.beginPath();
-      c.arc(-20 + yaw * 0.4, -38, 11, 0, Math.PI * 2);
-      c.arc(20 + yaw * 0.4, -38, 11, 0, Math.PI * 2);
+      c.arc(-24 + yaw * 0.35, -44, 3, 0, Math.PI * 2);
+      c.arc(20 + yaw * 0.35, -44, 3, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = '#ff80ab';
+      c.beginPath();
+      c.arc(-34 + yaw * 0.35, -34, 7, 0, Math.PI * 2);
+      c.arc(34 + yaw * 0.35, -34, 7, 0, Math.PI * 2);
       c.fill();
 
-      // 거대 로켓 제트 불꽃
-      const fLen = 62 + Math.sin((opts.timeMs || 0) * 0.08) * 16;
+      // 무지개 별빛 로켓 제트 불꽃
+      const fLen = 64 + Math.sin((opts.timeMs || 0) * 0.08) * 16;
       const fg = c.createLinearGradient(0, 6, 0, fLen);
       fg.addColorStop(0, '#ffffff');
       fg.addColorStop(0.35, '#ffea00');
-      fg.addColorStop(0.75, '#ff1744');
-      fg.addColorStop(1, 'rgba(255,23,68,0)');
+      fg.addColorStop(0.75, '#ff4081');
+      fg.addColorStop(1, 'rgba(255,64,129,0)');
       c.fillStyle = fg;
       c.beginPath();
       c.moveTo(-34, 6);
@@ -3783,9 +4258,9 @@
       c.fill();
       c.stroke();
     } else if (opts.shield) {
-      c.strokeStyle = 'rgba(0, 229, 255, 0.85)';
-      c.fillStyle = 'rgba(128, 216, 255, 0.22)';
-      c.lineWidth = 4;
+      c.strokeStyle = 'rgba(255, 128, 171, 0.90)';
+      c.fillStyle = 'rgba(248, 187, 208, 0.28)';
+      c.lineWidth = 5;
       c.beginPath();
       c.arc(0, -32, 78, 0, Math.PI * 2);
       c.fill();
@@ -4026,6 +4501,11 @@
     c.textBaseline = 'middle';
     c.fillText(racer.number, rearX, -8);
 
+    // 플레이어가 아이템을 보유 중이면 카트 옆에 아기자기한 버블 아이템 표시!
+    if (opts.isPlayer && opts.heldItem) {
+      drawHeldItem3D(c, opts.heldItem, opts.timeMs || 0);
+    }
+
     // 11. [상단 깊이 레이어] 3D 구체 쉐이딩 캐릭터 헬멧 & 입체 귀/리본/공룡뿔 & 고글
     c.save();
     c.translate(yaw * 0.55, -54);
@@ -4133,21 +4613,6 @@
       c.font = '900 18px sans-serif';
       c.textAlign = 'center';
       c.fillText('💫⭐💫', 0, -42);
-    }
-
-    if (opts.label && !opts.isPlayer) {
-      c.fillStyle = 'rgba(255, 255, 255, 0.94)';
-      c.strokeStyle = racer.primary;
-      c.lineWidth = 3;
-      c.beginPath();
-      c.roundRect(-42, -68, 84, 23, 12);
-      c.fill();
-      c.stroke();
-      c.fillStyle = '#1e293b';
-      c.font = '900 13px sans-serif';
-      c.textAlign = 'center';
-      c.textBaseline = 'middle';
-      c.fillText(opts.label, 0, -56);
     }
 
     c.restore();

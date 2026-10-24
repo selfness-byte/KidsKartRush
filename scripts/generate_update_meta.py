@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.3.0.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.4.0.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,19 +15,20 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.3.0.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.4.0.apk"
     notes = (
-        "• [삭제] 🚫 코너 도우미 버튼 및 자동 조향 개입 완전 삭제 (100% 직관적이고 자유로운 핸들 조작)\n"
-        "• [디자인] 🧸 파스텔 장난감 캡슐 & 3D 젤리 버튼 스타일로 로비·HUD·핸들·아이템/부스터 버튼 UI가 훨씬 더 아기자기하고 귀엽게 업그레이드!\n"
-        "• [그래픽] 🏎️ 3D 다층 시차(Yaw Parallax) 입체 카트 렌더링: 조향 각도에 따라 꺾이는 앞바퀴·노즈콘, 3D 원통형 광폭 타이어&휠 림, 입체 사이드 포드, 운전석 핸들 잡은 양손, 3D 리어 스포일러 윙, 구체 광택 헬멧 적용\n"
-        "• [사운드] 🔊 경박한 고음 반복음을 완전히 제거하고, 중후하고 부드러운 저음 V8 배기음(36~110Hz) + 서브베이스 + 도로 주행 풍절음으로 고급스러운 주행 사운드 구현"
+        "• [사운드] 🔊 속도가 빨라질수록 엔진음(V8 배기음·서브베이스·하모닉 오버드라이브·공명 필터)이 웅장하고 강력하게 증폭되도록 업그레이드!\n"
+        "• [UI/UX] ✨ 주행 화면의 복잡한 글자들을 모두 없애고 직관적인 아기자기 아이콘만으로 깔끔하게 플레이하도록 개선\n"
+        "• [아이템] 🎁 선물상자 리본 아이템 큐브, 웃는 바나나 요정, 천사 날개 등껍질, 스마일 별 코인, 하늘 고래 로켓 변신, 카트 옆 버블 아이템 프리뷰 등 아기자기한 3D 그래픽 적용\n"
+        "• [AI 주행] 🏎️ 다른 차량들이 코너 라인을 따라 자연스럽게 조향·드리프트·추월하며 앞뒤로 실감 나게 경쟁하도록 물리 주행 개선\n"
+        "• [8개 코스] 🗺️ 마리오 버섯 왕국, 슈가 캔디 랜드, 돌핀 비치 아일랜드, 펭귄 아이스 밸리, 요시 공룡 정글, 벚꽃 스프링 가든, 쿠파 용암 캐슬, 레인보우 스타 로드 총 8개 테마 코스로 대폭 확장!"
     )
 
     update_payload = {
         "appName": "키즈 카트 러쉬! (Kids Kart Rush+)",
         "packageId": "com.mj.kidskart",
-        "versionCode": 4,
-        "versionName": "1.3.0",
+        "versionCode": 5,
+        "versionName": "1.4.0",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -54,17 +55,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "키즈 카트 러쉬!",
-                "latest_version": "1.3.0",
-                "version_code": 4,
+                "latest_version": "1.4.0",
+                "version_code": 5,
                 "force_update": False,
-                "release_notes": "코너 도우미 완전 삭제, 파스텔 장난감 캡슐 & 3D 젤리 버튼 귀여운 UI 개편, 3D 다층 시차 입체 카트 그래픽 업그레이드, 경박한 고음을 제거한 중후하고 부드러운 저음 V8 배기음 적용.",
+                "release_notes": "가속할수록 강해지는 웅장한 V8 엔진 사운드, 주행 화면 글자 제거(클린 아이콘 HUD), 아기자기한 3D 아이템 그래픽, 자연스러운 라이벌 AI 코너링/추월 주행, 8종 테마 코스 확장.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.3.0 (build 4), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.4.0 (build 5), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
