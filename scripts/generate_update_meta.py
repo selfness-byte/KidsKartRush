@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.5.5.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.5.6.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,18 +15,18 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.5.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.6.apk"
     notes = (
-        "• [장애물 vs 아이템 시각 구분 100% 명확화] ⚠️ 피해야 하는 모든 장애물(토관·바나나·오일·꽃게·얼음블록·가시바위알·쿵쿵이) 바닥에 빨간·노란 위험 경고 존(Red Danger Zone)과 머리 위 빨간 삼각형 '!' 경고 표지판을 띄우고, 먹는 아이템(무지개 '?' 박스·3D 회전 코인)은 시안·황금 빛기둥 오라로 한눈에 구분!\n"
-        "• [8대 코스 다층 파노라마 랜드마크 배경 대폭 강화] 🏰 피치 성·거대 도넛산·해안 등대와 요트·오로라와 얼음궁전·화산과 브라키오 공룡·대관람차·쿠파 마왕성·은하수 유성우 및 하늘의 레이싱 비행선·열기구·2겹 응원 깃발 추가!\n"
-        "• [역동적인 3D 코너 카메라 뱅크 롤 & 서스펜션 주행감] 🏎️💨 코너를 돌 때 화면과 지평선이 코너 안쪽으로 기울어지는 3D 카메라 롤링, 고저차 피칭, 연석 진동, 고속 배기 백파이어 불꽃 및 타이어 노면 먼지 이펙트 탑재!"
+        "• [인공 경기장 트랙 대신 8대 대자연 모험 월드 표현] 🌍 회색 아스팔트·3차선 점선·흰색 실선·적백 연석·반사봉을 모두 걷어내고, 구불구불한 자연 지형(버섯 왕국 들판·스위트 디저트 동산·코랄 오션 해변 파도거품·오로라 빙하 설원·공룡 정글 사파리·로얄 벚꽃 동산·드래곤 화산 협곡·은하수 별빛 하늘길)으로 표현!\n"
+        "• [경적 완전 제거 & 부스터🔥·아이템🎁 2버튼 메뉴 단순화] 핸들 중앙 경적(📯)과 우측 드리프트 버튼·상단 중복 슬롯을 모두 없애고, 오직 '아이템 던지는 버튼(🎁)'과 '부스터 아이콘 버튼(🔥)' 2개만 남겨 훨씬 깔끔하고 직관적인 조작 완성!\n"
+        "• [핸들 조향 자동 코너 드리프트 & 미니터보] 별도 드리프트 버튼 없이도 코너에서 핸들을 꺾으면 자연스럽게 드리프트 슬라이딩하며 N2O 게이지 충전 및 코너 탈출 미니터보가 자동 발동됩니다!"
     )
 
     update_payload = {
         "appName": "키즈 카트 러쉬! (Kids Kart Rush+)",
         "packageId": "com.mj.kidskart",
-        "versionCode": 11,
-        "versionName": "1.5.5",
+        "versionCode": 12,
+        "versionName": "1.5.6",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -53,17 +53,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "키즈 카트 러쉬!",
-                "latest_version": "1.5.5",
-                "version_code": 11,
+                "latest_version": "1.5.6",
+                "version_code": 12,
                 "force_update": False,
-                "release_notes": "장애물(빨간 위험 경고 링 & '!' 배지)과 아이템(시안·황금 빛기둥 & '?' 큐브) 완벽 시각 구분, 8대 코스별 대형 랜드마크·비행선·열기구 다층 배경, 코너 3D 카메라 뱅크 롤링 및 역동적 주행 연출 강화.",
+                "release_notes": "인공 트랙 대신 8대 대자연 모험 월드(들판·해변 파도·설원·정글·화산·은하수) 지형 표현, 경적 완전 제거, 우측 메뉴를 부스터(🔥)와 아이템 던지기(🎁) 2버튼으로 단순화 및 핸들 자동 코너 드리프트 적용.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.5.5 (build 11), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.5.6 (build 12), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()

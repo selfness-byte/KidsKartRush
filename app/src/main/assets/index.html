@@ -530,8 +530,7 @@
     box-shadow: 0 5px 0 rgba(2, 136, 209, 0.35), 0 8px 16px rgba(0,0,0,0.2);
   }
   .item-slots {
-    display: flex;
-    gap: 8px;
+    display: none !important;
   }
   .item-slot {
     position: relative;
@@ -774,38 +773,16 @@
     pointer-events: none;
   }
   #hornBtn {
-    position: absolute;
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 32% 28%, #fff9c4 0%, #ffeb3b 45%, #ff9800 100%);
-    border: 4.5px solid #fff;
-    box-shadow: 0 6px 0 #e65100, 0 8px 16px rgba(0,0,0,0.35), inset 0 3px 0 rgba(255,255,255,0.8);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    color: #bf360c;
-    font-size: 13px;
-    z-index: 3;
-    pointer-events: auto;
-  }
-  #hornBtn span {
-    font-size: 25px;
-    line-height: 1;
-  }
-  #hornBtn:active {
-    transform: scale(0.92) translateY(2px);
+    display: none !important;
   }
 
-  /* ==================== 우측 하단: 말랑말랑 젤리 캡슐 액션 버튼들 ==================== */
+  /* ==================== 우측 하단: 부스터 아이콘 & 아이템 던지는 메뉴 2종만 깔끔하게 배치 ==================== */
   .action-zone {
     position: absolute;
     right: 20px;
     bottom: 16px;
     width: 290px;
-    height: 250px;
+    height: 170px;
     pointer-events: none;
   }
   .big-action-btn {
@@ -873,10 +850,10 @@
   }
 
   #itemBtn {
-    right: 146px;
-    bottom: 108px;
-    width: 116px;
-    height: 116px;
+    right: 152px;
+    bottom: 14px;
+    width: 126px;
+    height: 126px;
     background: radial-gradient(circle at 35% 30%, #80d8ff 0%, #29b6f6 65%, #0288d1 100%);
     box-shadow: 0 7px 0 #01579b, 0 10px 20px rgba(0,0,0,0.32);
   }
@@ -887,12 +864,7 @@
   }
 
   #driftBtn {
-    right: 152px;
-    bottom: 4px;
-    width: 98px;
-    height: 98px;
-    background: radial-gradient(circle at 35% 30%, #b9f6ca 0%, #00e676 65%, #00bfa5 100%);
-    box-shadow: 0 7px 0 #00897b, 0 10px 18px rgba(0,0,0,0.32);
+    display: none !important;
   }
 
   /* ==================== 결승 골인 시상대 모달 ==================== */
@@ -982,7 +954,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.5.5</span>
+      <span class="lobby-badge" id="verBadge">v1.5.6</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
@@ -1050,64 +1022,64 @@
       </div>
     </div>
 
-    <!-- 트랙 선택 (마리오 카트 명작 8대 코스!) -->
+    <!-- 모험 월드 선택 (경기장 트랙 대신 8가지 대자연·판타지 오픈 모험 월드!) -->
     <div class="panel-card">
-      <div class="panel-title">🗺️ 마리오 카트 8대 시그니처 코스</div>
+      <div class="panel-title">🌍 8가지 신나는 모험 월드</div>
       <div class="track-list" id="trackList">
         <div class="track-card selected" data-track="0">
           <div class="track-icon">🍄</div>
           <div class="track-info">
-            <div class="track-name">마리오 서킷</div>
-            <div class="track-sub">S자 시케인·토관 슬라럼·헤어핀</div>
+            <div class="track-name">버섯 왕국 들판</div>
+            <div class="track-sub">꽃밭 오솔길·피치 성 대모험</div>
           </div>
         </div>
         <div class="track-card" data-track="1">
           <div class="track-icon">🍩</div>
           <div class="track-info">
-            <div class="track-name">도넛 평원·초코섬</div>
-            <div class="track-sub">초코 진흙 웅덩이·연속 굴절</div>
+            <div class="track-name">스위트 디저트 동산</div>
+            <div class="track-sub">쿠키 언덕·초코 강변 탐험</div>
           </div>
         </div>
         <div class="track-card" data-track="2">
           <div class="track-icon">🏖️</div>
           <div class="track-info">
-            <div class="track-name">엉금엉금 비치</div>
-            <div class="track-sub">해안 절벽 코너·해변 물웅덩이</div>
+            <div class="track-name">코랄 오션 해변</div>
+            <div class="track-sub">파도 치는 모래사장·산호 섬</div>
           </div>
         </div>
         <div class="track-card" data-track="3">
           <div class="track-icon">⛄</div>
           <div class="track-info">
-            <div class="track-name">바닐라 아이스 레이크</div>
-            <div class="track-sub">미끄러운 빙판·얼음 블록 슬라럼</div>
+            <div class="track-name">오로라 빙하 설원</div>
+            <div class="track-sub">눈 덮인 빙판 들판·얼음 궁전</div>
           </div>
         </div>
         <div class="track-card" data-track="4">
           <div class="track-icon">🦕</div>
           <div class="track-info">
-            <div class="track-name">요시 밸리·디노 정글</div>
-            <div class="track-sub">협곡 헤어핀·거대 요시알 주의</div>
+            <div class="track-name">공룡 정글 사파리</div>
+            <div class="track-sub">원시림 통나무 다리·화산 정글</div>
           </div>
         </div>
         <div class="track-card" data-track="5">
           <div class="track-icon">🌸</div>
           <div class="track-info">
-            <div class="track-name">피치 로얄 가든</div>
-            <div class="track-sub">직각 정원 미로 시케인·대점프</div>
+            <div class="track-name">로얄 벚꽃 동산</div>
+            <div class="track-sub">분홍 꽃길 산책로·대관람차</div>
           </div>
         </div>
         <div class="track-card" data-track="6">
           <div class="track-icon">🌋</div>
           <div class="track-info">
-            <div class="track-name">쿠파 성 (Bowser Castle)</div>
-            <div class="track-sub">90도 석조 코너·쿵쿵이 바위</div>
+            <div class="track-name">드래곤 화산 협곡</div>
+            <div class="track-sub">용암 강 바위길·마왕 성채</div>
           </div>
         </div>
         <div class="track-card" data-track="7">
           <div class="track-icon">🌈</div>
           <div class="track-info">
-            <div class="track-name">무지개 로드 (Rainbow)</div>
-            <div class="track-sub">우주 급커브 웨이브·스타 쿵쿵이</div>
+            <div class="track-name">은하수 별빛 하늘길</div>
+            <div class="track-sub">우주 성운 오로라·별구름 길</div>
           </div>
         </div>
       </div>
@@ -1116,7 +1088,7 @@
 
   <div class="lobby-footer">
     <div class="lobby-tip">
-      🎈 8가지 신나는 코스를 골라 <b>동그란 핸들</b>과 <b>젤리 버튼</b>으로 달려보세요!
+      🎈 8가지 신나는 모험 월드를 골라 <b>동그란 핸들</b>과 <b>부스터·아이템 버튼</b>으로 달려보세요!
     </div>
     <button id="startRaceBtn" class="start-race-btn">🏁 출발하기!</button>
   </div>
@@ -1194,26 +1166,25 @@
       <circle cx="110" cy="24" r="14" fill="#ffeb3b" stroke="#ffffff" stroke-width="3" />
       <polygon points="20,110 32,99 32,121" fill="#ffffff" />
       <polygon points="200,110 188,99 188,121" fill="#ffffff" />
+      <!-- 경적 버튼 제거 후 깔끔하고 귀여운 핸들 중앙 별 엠블럼 캡 -->
+      <circle cx="110" cy="110" r="26" fill="#0288d1" stroke="#ffffff" stroke-width="4.5" />
+      <circle cx="110" cy="110" r="12" fill="#ffeb3b" />
     </svg>
 
-    <button id="hornBtn" type="button" aria-label="Horn">
-      <span style="font-size:34px;">📯</span>
-    </button>
+    <button id="hornBtn" type="button" aria-label="Horn" style="display:none !important;"></button>
   </div>
 
-  <!-- 우측 하단: 글자 없는 직관적 아이콘 젤리 버튼 3종 -->
+  <!-- 우측 하단: 오직 아이템 던지는 버튼(🎁)과 부스터 아이콘 버튼(🔥) 2개만 깔끔하게 배치! -->
   <div class="action-zone">
     <button id="itemBtn" class="big-action-btn" type="button" aria-label="Item">
-      <div id="itemBtnIcon" class="btn-icon" style="font-size:50px;">🎁</div>
+      <div id="itemBtnIcon" class="btn-icon" style="font-size:52px;">🎁</div>
       <div id="itemBtnLabel" style="display:none;"></div>
     </button>
 
-    <button id="driftBtn" class="big-action-btn" type="button" aria-label="Drift">
-      <div class="btn-icon" style="font-size:42px;">🤸</div>
-    </button>
+    <button id="driftBtn" class="big-action-btn" type="button" aria-label="Drift" style="display:none !important;"></button>
 
     <button id="boostBtn" class="big-action-btn ready" type="button" aria-label="Boost">
-      <div class="btn-icon" style="font-size:56px;">🔥</div>
+      <div class="btn-icon" style="font-size:58px;">🔥</div>
       <div id="boostCountText" style="display:none;"></div>
     </button>
   </div>
@@ -2052,106 +2023,106 @@
   const TRACKS = [
     {
       id: 0,
-      name: '마리오 서킷',
+      name: '버섯 왕국 들판',
       skyTop: '#29b6f6',
       skyBottom: '#e1f5fe',
       grass1: '#43a047',
       grass2: '#66bb6a',
-      road1: '#546e7a',
-      road2: '#455a64',
-      kerb1: '#ff1744',
-      kerb2: '#ffffff',
+      road1: '#e6c280',
+      road2: '#ddb368',
+      kerb1: '#7cb342',
+      kerb2: '#9ccc65',
       sceneryType: 'mario'
     },
     {
       id: 1,
-      name: '도넛 평원·초코섬',
+      name: '스위트 디저트 동산',
       skyTop: '#f57c00',
       skyBottom: '#fff3e0',
-      grass1: '#8d6e63',
-      grass2: '#a1887f',
-      road1: '#5d4037',
-      road2: '#4e342e',
-      kerb1: '#ffca28',
-      kerb2: '#6d4c41',
+      grass1: '#f06292',
+      grass2: '#f48fb1',
+      road1: '#f3c68f',
+      road2: '#e5b376',
+      kerb1: '#ff80ab',
+      kerb2: '#fff8e1',
       sceneryType: 'candy'
     },
     {
       id: 2,
-      name: '엉금엉금 비치',
+      name: '코랄 오션 해변',
       skyTop: '#00acc1',
       skyBottom: '#e0f7fa',
-      grass1: '#26c6da',
-      grass2: '#80deea',
+      grass1: '#0097a7',
+      grass2: '#26c6da',
       road1: '#ffe082',
       road2: '#ffd54f',
-      kerb1: '#ff7043',
-      kerb2: '#ffffff',
+      kerb1: '#e0f7fa',
+      kerb2: '#80deea',
       sceneryType: 'beach'
     },
     {
       id: 3,
-      name: '바닐라 아이스 레이크',
+      name: '오로라 빙하 설원',
       skyTop: '#1565c0',
       skyBottom: '#e3f2fd',
-      grass1: '#e1f5fe',
-      grass2: '#ffffff',
-      road1: '#4fc3f7',
-      road2: '#29b6f6',
-      kerb1: '#0288d1',
-      kerb2: '#ffffff',
+      grass1: '#81d4fa',
+      grass2: '#b3e5fc',
+      road1: '#e1f5fe',
+      road2: '#cdeffd',
+      kerb1: '#ffffff',
+      kerb2: '#b3e5fc',
       sceneryType: 'snow'
     },
     {
       id: 4,
-      name: '요시 밸리·디노 정글',
+      name: '공룡 정글 사파리',
       skyTop: '#00897b',
       skyBottom: '#b2dfdb',
       grass1: '#2e7d32',
-      grass2: '#4caf50',
-      road1: '#6d4c41',
-      road2: '#5d4037',
-      kerb1: '#ffea00',
-      kerb2: '#00e676',
+      grass2: '#43a047',
+      road1: '#b89778',
+      road2: '#a38262',
+      kerb1: '#689f38',
+      kerb2: '#8bc34a',
       sceneryType: 'dino'
     },
     {
       id: 5,
-      name: '피치 로얄 가든',
+      name: '로얄 벚꽃 동산',
       skyTop: '#f06292',
       skyBottom: '#fff3e0',
       grass1: '#66bb6a',
       grass2: '#81c784',
-      road1: '#78909c',
-      road2: '#607d8b',
-      kerb1: '#ff80ab',
-      kerb2: '#ffffff',
+      road1: '#fce4ec',
+      road2: '#f8bbd0',
+      kerb1: '#f48fb1',
+      kerb2: '#a5d6a7',
       sceneryType: 'sakura'
     },
     {
       id: 6,
-      name: '쿠파 성',
+      name: '드래곤 화산 협곡',
       skyTop: '#3e1008',
       skyBottom: '#bf360c',
       grass1: '#b71c1c',
-      grass2: '#ff6d00',
-      road1: '#37474f',
-      road2: '#263238',
-      kerb1: '#ffab00',
-      kerb2: '#d50000',
+      grass2: '#e64a19',
+      road1: '#5d4037',
+      road2: '#4e342e',
+      kerb1: '#ff9100',
+      kerb2: '#ff3d00',
       sceneryType: 'castle'
     },
     {
       id: 7,
-      name: '무지개 로드',
+      name: '은하수 별빛 하늘길',
       skyTop: '#070b24',
       skyBottom: '#311b92',
       grass1: '#1a103c',
       grass2: '#28185a',
       road1: '#5e35b1',
       road2: '#3949ab',
-      kerb1: '#00e5ff',
-      kerb2: '#ffea00',
+      kerb1: '#80d8ff',
+      kerb2: '#ea80fc',
       sceneryType: 'rainbow'
     }
   ];
@@ -2767,17 +2738,16 @@
         seg.items.push({ type: 'coin', x: lane, takenTimer: 0 });
       }
 
-      // 풍성하고 입체적인 2겹(근경 + 중원경) 트랙 주변 배경 오브젝트 배치 (빠르게 스쳐 지나가는 역동적 주행감!)
+      // 풍성하고 입체적인 다층(기슭 근경 + 들판 중경 + 언덕 원경) 자연 생태계 오브젝트 배치!
       if (i % 2 === 0) {
-        seg.scenery.push({ side: -1, offset: -1.42 - (i % 3) * 0.18, variant: i % 4, scaleMult: 1.0 });
-        seg.scenery.push({ side: 1, offset: 1.42 + ((i + 1) % 3) * 0.18, variant: (i + 1) % 4, scaleMult: 1.0 });
+        const organicLeft = -1.26 - Math.abs(Math.sin(i * 0.73)) * 0.48;
+        const organicRight = 1.26 + Math.abs(Math.cos(i * 0.67)) * 0.48;
+        seg.scenery.push({ side: -1, offset: organicLeft, variant: i % 4, scaleMult: 0.96 + (i % 3) * 0.12 });
+        seg.scenery.push({ side: 1, offset: organicRight, variant: (i + 1) % 4, scaleMult: 0.96 + ((i + 1) % 3) * 0.12 });
         if (i % 4 === 0) {
-          seg.scenery.push({ side: -1, offset: -2.28 - (i % 2) * 0.35, variant: (i + 2) % 4, scaleMult: 1.38 });
-          seg.scenery.push({ side: 1, offset: 2.28 + ((i + 1) % 2) * 0.35, variant: (i + 3) % 4, scaleMult: 1.38 });
+          seg.scenery.push({ side: -1, offset: -2.18 - Math.abs(Math.cos(i * 0.41)) * 0.55, variant: (i + 2) % 4, scaleMult: 1.42 });
+          seg.scenery.push({ side: 1, offset: 2.18 + Math.abs(Math.sin(i * 0.53)) * 0.55, variant: (i + 3) % 4, scaleMult: 1.42 });
         }
-      }
-      if (i % 55 === 0) {
-        seg.arch = i === 0 ? 'start' : 'checkpoint';
       }
 
       segs.push(seg);
@@ -2884,23 +2854,10 @@
     if (e.code === 'ShiftLeft' || e.code === 'KeyX') endDrift();
   });
 
-  // ==================== 클락션 / 부스터 / 마리오 카트 아이템 / 점프·드리프트 액션 ====================
-  function triggerHorn(e) {
-    if (e) e.stopPropagation();
-    sfx.playHorn();
-    vibrateDevice(55);
-    if (state.playerY <= 1) state.velY = Math.max(state.velY, 150);
-    showFloatingText('📯', '#ffea00');
-    state.rivals.forEach(r => {
-      const dist = r.z - state.posZ;
-      if (dist > -120 && dist < 1400) {
-        r.targetLane = r.x >= state.playerX ? 0.72 : -0.72;
-        r.spinTimer = Math.max(r.spinTimer, 0.45);
-      }
-    });
+  // ==================== 부스터 / 마리오 카트 아이템 액션 (경적 완전 제거) ====================
+  function triggerHorn(_e) {
+    // 경적 기능 완전 비활성화 (핸들 전 영역 부드러운 조향 전용)
   }
-  hornBtn.addEventListener('touchstart', (e) => { e.preventDefault(); triggerHorn(e); }, { passive: false });
-  hornBtn.addEventListener('click', triggerHorn);
 
   function spawnBoostShockwave(isSuper = true) {
     state.boostFlash = isSuper ? 1.0 : 0.65;
@@ -3448,21 +3405,35 @@
     const segIdx = Math.floor(state.posZ / SEG_LEN) % state.segments.length;
     const currentSeg = state.segments[segIdx];
 
-    // 5. 굴절 코너 자동 슬립 & 수동 드리프트 통합 처리 (드리프트 되듯이 미끄러지는 효과!)
+    // 5. 핸들 조향만으로 자연스럽게 작동하는 자동 코너 드리프트 & 미니터보 해방 (드리프트 버튼 없이 부스터·아이템 2버튼 체제 완벽 지원!)
     const autoCornerSlide = !state.driftActive
-      && Math.abs(state.smoothSteer) > 0.48
-      && Math.abs(currentSeg.curve) > 1.35
-      && state.speed > state.maxSpeed * 0.45;
+      && Math.abs(state.smoothSteer) > 0.32
+      && Math.abs(currentSeg.curve) > 0.95
+      && state.speed > state.maxSpeed * 0.38;
     const isSliding = state.driftActive || autoCornerSlide;
 
     if (isSliding) {
-      state.driftChargeTime += dt * (1 + Math.abs(state.smoothSteer) * 0.85);
-      if (state.driftChargeTime > 1.50) state.driftStage = 3;
-      else if (state.driftChargeTime > 0.72) state.driftStage = 2;
+      state.driftChargeTime += dt * (1.15 + Math.abs(state.smoothSteer) * 0.95);
+      if (state.driftChargeTime > 1.35) state.driftStage = 3;
+      else if (state.driftChargeTime > 0.62) state.driftStage = 2;
       else state.driftStage = 1;
     } else if (!state.driftActive && state.driftChargeTime > 0) {
-      if (state.driftChargeTime > 0.70) {
-        state.n2oGauge = Math.min(100, state.n2oGauge + 18);
+      const prevStage = state.driftStage;
+      if (state.driftChargeTime > 0.55) {
+        const bonusGauge = prevStage === 3 ? 38 : (prevStage === 2 ? 24 : 12);
+        state.n2oGauge = Math.min(100, state.n2oGauge + bonusGauge);
+        if (state.n2oGauge >= 100 && state.boostCount < 1) {
+          state.boostCount = 1;
+          state.n2oGauge = 0;
+          sfx.playCoin();
+        }
+      }
+      if (prevStage >= 2) {
+        const miniDur = prevStage === 3 ? 0.80 : 0.48;
+        state.boostTimer = Math.max(state.boostTimer, miniDur);
+        spawnBoostShockwave(prevStage === 3);
+        sfx.playBoost(prevStage === 3);
+        spawnBoostParticles(prevStage * 7);
       }
       state.driftChargeTime = 0;
       state.driftStage = 0;
@@ -3639,8 +3610,8 @@
       });
     }
 
-    // 9. N2O 게이지 충전 (직선 가만히 주행 시 자동 충전 0! 오직 코너 드리프트/슬라이딩과 코인으로만 부스터 획득!)
-    const chargeRate = isSliding ? 28 : 0;
+    // 9. N2O 게이지 충전 (직선 가만히 주행 시 자동 충전 0! 코너에서 핸들을 꺾어 미끄러지듯 돌 때와 코인 획득으로 충전!)
+    const chargeRate = isSliding ? 36 : 0;
     state.n2oGauge = Math.min(100, state.n2oGauge + chargeRate * dt);
     if (state.n2oGauge >= 100) {
       if (state.boostCount < 1) {
@@ -4059,7 +4030,8 @@
       }
     }
 
-    // 도로 폴리곤 렌더링 (원거리 소실점에서 근거리 전경까지 정확한 1/Z 원근 사다리꼴 렌더링!)
+    // 인공 경기장 아스팔트 트랙 대신 탁 트인 대자연 모험 월드(들판·해변·설원·정글·화산·은하수) 지형 렌더링!
+    const animWave = timeMs * 0.004;
     for (let i = projected.length - 1; i >= 1; i--) {
       const p1 = projected[i - 1];
       const p2 = projected[i];
@@ -4069,114 +4041,145 @@
       const stripe = (p2.seg.index % 2) === 0;
       const fastStripe = (p2.seg.index % 4) < 2;
 
-      // 1) 좌우 지형(잔디/설원/해변/용암) 원근 스트라이프 + 코스 외곽 지형 디테일 벨트(강물/꽃밭/모래톱/용암천)
+      // 자연 지형 특유의 구불구불한 유기적 경계선 파동(Organic Shoreline / Meadow Bank Wave) 계산
+      const waveX1 = Math.sin(p1.seg.index * 0.45) * p1.w * 0.048;
+      const waveX2 = Math.sin(p2.seg.index * 0.45) * p2.w * 0.048;
+      const waveW1 = 1.0 + Math.cos(p1.seg.index * 0.62) * 0.045;
+      const waveW2 = 1.0 + Math.cos(p2.seg.index * 0.62) * 0.045;
+      const cx1 = p1.x + waveX1;
+      const cx2 = p2.x + waveX2;
+      const rw1 = p1.w * waveW1;
+      const rw2 = p2.w * waveW2;
+
+      // 1) 광활한 대자연 베이스 필드 (초원 / 산호바다 / 빙하 / 정글숲 / 용암대지 / 우주성운)
       ctx.fillStyle = stripe ? track.grass1 : track.grass2;
       ctx.fillRect(-60, p2.y, W + 120, Math.max(1, p1.y - p2.y + 1.4));
 
-      // 트랙 바깥쪽이 단조롭지 않도록 양옆 외곽 지형 장식 띠(Outer Terrain Accent Strip) 렌더링!
+      // 2) 양옆 자연 경관 벨트 (해변 파도물결, 들판 야생화 언덕, 딸기크림 강물, 만년설 빙하, 정글 시냇물, 활화산 용암천)
       const outerTerrainCol = track.sceneryType === 'beach'
-        ? (stripe ? '#00acc1' : '#26c6da')
+        ? (stripe ? '#00acc1' : '#00bcd4')
         : (track.sceneryType === 'castle'
-          ? (stripe ? '#ff3d00' : '#dd2c00')
+          ? (stripe ? '#ff3d00' : '#ff6d00')
           : (track.sceneryType === 'snow'
-            ? (stripe ? '#b3e5fc' : '#81d4fa')
-            : (track.sceneryType === 'rainbow'
-              ? (stripe ? 'rgba(0, 229, 255, 0.22)' : 'rgba(224, 64, 251, 0.22)')
-              : (stripe ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.07)'))));
+            ? (stripe ? '#81d4fa' : '#4fc3f7')
+            : (track.sceneryType === 'candy'
+              ? (stripe ? '#f48fb1' : '#ff80ab')
+              : (track.sceneryType === 'rainbow'
+                ? (stripe ? 'rgba(0, 229, 255, 0.20)' : 'rgba(224, 64, 251, 0.20)')
+                : (stripe ? 'rgba(255, 255, 255, 0.11)' : 'rgba(0, 0, 0, 0.05)')))));
       ctx.fillStyle = outerTerrainCol;
-      drawTrapezoid(ctx, p1.x - p1.w * 1.95, p1.y, p1.w * 0.48, p2.x - p2.w * 1.95, p2.y, p2.w * 0.48);
-      drawTrapezoid(ctx, p1.x + p1.w * 1.95, p1.y, p1.w * 0.48, p2.x + p2.w * 1.95, p2.y, p2.w * 0.48);
+      drawTrapezoid(ctx, cx1 - rw1 * 1.75, p1.y, rw1 * 0.55, cx2 - rw2 * 1.75, p2.y, rw2 * 0.55);
+      drawTrapezoid(ctx, cx1 + rw1 * 1.75, p1.y, rw1 * 0.55, cx2 + rw2 * 1.75, p2.y, rw2 * 0.55);
 
-      // 2) 도로 외곽 3D 입체 갓길 그림자 & 두꺼운 연석(Curb) 베벨
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.32)';
-      drawTrapezoid(ctx, p1.x, p1.y, p1.w * 1.22, p2.x, p2.y, p2.w * 1.22);
-
-      const k1 = p1.w * 1.15;
-      const k2 = p2.w * 1.15;
+      // 3) 인공 연석(Curb) 대신 자연스러운 풀숲 둔덕 / 해변 파도 거품 / 눈더미 / 이끼 / 마그마 기슭 / 별구름 경계
+      const bank1 = rw1 * (1.16 + Math.sin(p1.seg.index * 0.8 + animWave) * 0.03);
+      const bank2 = rw2 * (1.16 + Math.sin(p2.seg.index * 0.8 + animWave) * 0.03);
+      if (track.sceneryType !== 'rainbow') {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.16)';
+        drawTrapezoid(ctx, cx1, p1.y, bank1 * 1.04, cx2, p2.y, bank2 * 1.04);
+      }
       ctx.fillStyle = stripe ? track.kerb1 : track.kerb2;
-      drawTrapezoid(ctx, p1.x, p1.y, k1, p2.x, p2.y, k2);
+      drawTrapezoid(ctx, cx1, p1.y, bank1, cx2, p2.y, bank2);
 
-      // 3) 메인 아스팔트/테마 노면 사다리꼴
+      // 4) 메인 대자연 주행 지면 (들판 흙길 / 쿠키 언덕길 / 백사장 모래 / 오로라 눈밭 / 정글 통나무·흙길 / 꽃잎 동산 / 화산 바위 / 별빛 오로라 길)
       if (track.sceneryType === 'rainbow') {
         ctx.fillStyle = RAINBOW_COLORS[p2.seg.index % RAINBOW_COLORS.length];
-        ctx.globalAlpha = 0.90;
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
+        ctx.globalAlpha = 0.82;
+        drawTrapezoid(ctx, cx1, p1.y, rw1, cx2, p2.y, rw2);
         ctx.globalAlpha = 1.0;
       } else {
         ctx.fillStyle = stripe ? track.road1 : track.road2;
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
+        drawTrapezoid(ctx, cx1, p1.y, rw1, cx2, p2.y, rw2);
       }
 
-      // 3-B) 달리는 속도감을 극대화하는 노면 고속 러쉬 트랙 결(Asphalt Speed Grain Strips)
-      if (!fastStripe && p2.n < 52) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.065)';
-        drawTrapezoid(ctx, p1.x - p1.w * 0.24, p1.y, p1.w * 0.14, p2.x - p2.w * 0.24, p2.y, p2.w * 0.14);
-        drawTrapezoid(ctx, p1.x + p1.w * 0.24, p1.y, p1.w * 0.14, p2.x + p2.w * 0.24, p2.y, p2.w * 0.14);
-      }
-
-      // 4) 도로 양옆 엣지 화이트 실선 (소실점으로 모이는 뚜렷한 원근 가이드라인!)
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
-      drawTrapezoid(ctx, p1.x - p1.w * 0.96, p1.y, p1.w * 0.026, p2.x - p2.w * 0.96, p2.y, p2.w * 0.026);
-      drawTrapezoid(ctx, p1.x + p1.w * 0.96, p1.y, p1.w * 0.026, p2.x + p2.w * 0.96, p2.y, p2.w * 0.026);
-
-      // 5) 코스 테마별 특색 있는 노면 디테일
-      if (track.sceneryType === 'candy' && stripe) {
-        ctx.fillStyle = 'rgba(255, 193, 227, 0.25)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.72, p2.x, p2.y, p2.w * 0.72);
+      // 5) 인공 차선/흰 실선을 없애고, 각 모험 월드에 어울리는 자연 지면 질감 & 생동감 있는 지형 디테일 표현!
+      if (track.sceneryType === 'mario') {
+        // 버섯 왕국 들판: 부드러운 오솔길 수레바퀴 자국과 양옆 클로버·민들레 꽃송이
+        ctx.fillStyle = stripe ? 'rgba(212, 163, 89, 0.45)' : 'rgba(196, 145, 70, 0.38)';
+        drawTrapezoid(ctx, cx1 - rw1 * 0.34, p1.y, rw1 * 0.16, cx2 - rw2 * 0.34, p2.y, rw2 * 0.16);
+        drawTrapezoid(ctx, cx1 + rw1 * 0.34, p1.y, rw1 * 0.16, cx2 + rw2 * 0.34, p2.y, rw2 * 0.16);
+        if (stripe && p2.n < 46) {
+          ctx.fillStyle = (p2.seg.index % 4 === 0) ? '#fff176' : '#ff80ab';
+          drawTrapezoid(ctx, cx1 - rw1 * 1.02, p1.y, rw1 * 0.06, cx2 - rw2 * 1.02, p2.y, rw2 * 0.06);
+          drawTrapezoid(ctx, cx1 + rw1 * 1.02, p1.y, rw1 * 0.06, cx2 + rw2 * 1.02, p2.y, rw2 * 0.06);
+        }
+      } else if (track.sceneryType === 'beach') {
+        // 코랄 오션 해변: 찰랑거리는 하얀 파도 물거품(Surf Foam)과 젖은 모래사장 물결
+        const surfShift = Math.sin(p2.seg.index * 0.6 - animWave * 1.8) * 0.06;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
+        drawTrapezoid(ctx, cx1 - rw1 * (0.98 + surfShift), p1.y, rw1 * 0.08, cx2 - rw2 * (0.98 + surfShift), p2.y, rw2 * 0.08);
+        drawTrapezoid(ctx, cx1 + rw1 * (0.98 - surfShift), p1.y, rw1 * 0.08, cx2 + rw2 * (0.98 - surfShift), p2.y, rw2 * 0.08);
+        if (stripe) {
+          ctx.fillStyle = 'rgba(255, 213, 79, 0.48)';
+          drawTrapezoid(ctx, cx1, p1.y, rw1 * 0.65, cx2, p2.y, rw2 * 0.65);
+        }
+      } else if (track.sceneryType === 'candy') {
+        // 스위트 디저트 동산: 달콤한 시럽 물결과 알록달록 스프링클 쿠키 길
+        ctx.fillStyle = stripe ? 'rgba(255, 248, 225, 0.48)' : 'rgba(255, 128, 171, 0.25)';
+        drawTrapezoid(ctx, cx1, p1.y, rw1 * 0.68, cx2, p2.y, rw2 * 0.68);
       } else if (track.sceneryType === 'snow') {
-        ctx.fillStyle = stripe ? 'rgba(255, 255, 255, 0.34)' : 'rgba(179, 229, 252, 0.20)';
-        drawTrapezoid(ctx, p1.x - p1.w * 0.45, p1.y, p1.w * 0.12, p2.x - p2.w * 0.45, p2.y, p2.w * 0.12);
-        drawTrapezoid(ctx, p1.x + p1.w * 0.45, p1.y, p1.w * 0.12, p2.x + p2.w * 0.45, p2.y, p2.w * 0.12);
-      } else if (track.sceneryType === 'dino' && p2.seg.index % 3 === 0) {
-        ctx.fillStyle = 'rgba(62, 39, 35, 0.35)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.94, p2.x, p2.y, p2.w * 0.94);
-      } else if (track.sceneryType === 'castle' && stripe) {
-        ctx.fillStyle = 'rgba(255, 109, 0, 0.35)';
-        drawTrapezoid(ctx, p1.x - p1.w * 0.88, p1.y, p1.w * 0.06, p2.x - p2.w * 0.88, p2.y, p2.w * 0.06);
-        drawTrapezoid(ctx, p1.x + p1.w * 0.88, p1.y, p1.w * 0.06, p2.x + p2.w * 0.88, p2.y, p2.w * 0.06);
-      } else if (track.sceneryType === 'sakura' && stripe) {
-        ctx.fillStyle = 'rgba(248, 187, 208, 0.30)';
-        drawTrapezoid(ctx, p1.x - p1.w * 0.82, p1.y, p1.w * 0.08, p2.x - p2.w * 0.82, p2.y, p2.w * 0.08);
-        drawTrapezoid(ctx, p1.x + p1.w * 0.82, p1.y, p1.w * 0.08, p2.x + p2.w * 0.82, p2.y, p2.w * 0.08);
+        // 오로라 빙하 설원: 뽀드득 눈썰매 자국과 반짝이는 얼음 결정 결
+        ctx.fillStyle = stripe ? 'rgba(255, 255, 255, 0.65)' : 'rgba(129, 212, 250, 0.35)';
+        drawTrapezoid(ctx, cx1 - rw1 * 0.36, p1.y, rw1 * 0.14, cx2 - rw2 * 0.36, p2.y, rw2 * 0.14);
+        drawTrapezoid(ctx, cx1 + rw1 * 0.36, p1.y, rw1 * 0.14, cx2 + rw2 * 0.36, p2.y, rw2 * 0.14);
+      } else if (track.sceneryType === 'dino') {
+        // 공룡 정글 사파리: 정글 통나무 다리 결 & 탐험대 흙길
+        if (p2.seg.index % 2 === 0) {
+          ctx.fillStyle = 'rgba(93, 64, 55, 0.34)';
+          drawTrapezoid(ctx, cx1, p1.y, rw1 * 0.88, cx2, p2.y, rw2 * 0.88);
+        }
+        ctx.fillStyle = 'rgba(139, 195, 74, 0.42)';
+        drawTrapezoid(ctx, cx1 - rw1 * 0.96, p1.y, rw1 * 0.08, cx2 - rw2 * 0.96, p2.y, rw2 * 0.08);
+        drawTrapezoid(ctx, cx1 + rw1 * 0.96, p1.y, rw1 * 0.08, cx2 + rw2 * 0.96, p2.y, rw2 * 0.08);
+      } else if (track.sceneryType === 'sakura') {
+        // 로얄 벚꽃 동산: 흩날려 쌓인 연분홍 꽃잎 융단과 잔디 꽃길
+        ctx.fillStyle = stripe ? 'rgba(255, 255, 255, 0.50)' : 'rgba(244, 143, 177, 0.36)';
+        drawTrapezoid(ctx, cx1 - rw1 * 0.42, p1.y, rw1 * 0.18, cx2 - rw2 * 0.42, p2.y, rw2 * 0.18);
+        drawTrapezoid(ctx, cx1 + rw1 * 0.42, p1.y, rw1 * 0.18, cx2 + rw2 * 0.42, p2.y, rw2 * 0.18);
+      } else if (track.sceneryType === 'castle') {
+        // 드래곤 화산 협곡: 대지 양옆으로 흐르는 황금빛 마그마 줄기
+        ctx.fillStyle = stripe ? 'rgba(255, 171, 0, 0.52)' : 'rgba(255, 61, 0, 0.42)';
+        drawTrapezoid(ctx, cx1 - rw1 * 0.90, p1.y, rw1 * 0.09, cx2 - rw2 * 0.90, p2.y, rw2 * 0.09);
+        drawTrapezoid(ctx, cx1 + rw1 * 0.90, p1.y, rw1 * 0.09, cx2 + rw2 * 0.90, p2.y, rw2 * 0.09);
+      } else if (track.sceneryType === 'rainbow') {
+        // 은하수 별빛 하늘길: 반짝이는 성운 오로라 결
+        if (stripe) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.28)';
+          drawTrapezoid(ctx, cx1, p1.y, rw1 * 0.55, cx2, p2.y, rw2 * 0.55);
+        }
       }
 
-      // 6) 원근감을 극대화하는 3차선 레이싱 점선
-      if (stripe) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.86)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.026, p2.x, p2.y, p2.w * 0.026);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.56)';
-        drawTrapezoid(ctx, p1.x - p1.w * 0.46, p1.y, p1.w * 0.018, p2.x - p2.w * 0.46, p2.y, p2.w * 0.018);
-        drawTrapezoid(ctx, p1.x + p1.w * 0.46, p1.y, p1.w * 0.018, p2.x + p2.w * 0.46, p2.y, p2.w * 0.018);
-      }
-
-      // 7) 노면 위 원근 스피드 셰브론(화살표 마크) & 부스터 발동 시 아스팔트 초고속 잔상 스트리크
-      if (p2.seg.index % 3 === 0 && p2.n < 48) {
-        ctx.fillStyle = boostVis > 0.1 ? 'rgba(0, 229, 255, 0.72)' : 'rgba(0, 229, 255, 0.42)';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.16, p2.x, p2.y, p2.w * 0.032);
+      // 6) 자연스러운 지면 속도감 표현: 바람결/모래결/눈보라/별빛이 뒤로 스쳐 지나가는 자연 스트림
+      if (!fastStripe && p2.n < 46) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+        drawTrapezoid(ctx, cx1 - rw1 * 0.28, p1.y, rw1 * 0.08, cx2 - rw2 * 0.28, p2.y, rw2 * 0.08);
+        drawTrapezoid(ctx, cx1 + rw1 * 0.28, p1.y, rw1 * 0.08, cx2 + rw2 * 0.28, p2.y, rw2 * 0.08);
       }
       if ((boostVis > 0.06 || speedRatio > 0.68) && p2.n < 38 && (p2.seg.index % 2 === 0)) {
-        const streakAlpha = boostVis > 0.06 ? (boostVis * 0.46) : ((speedRatio - 0.65) * 0.45);
-        ctx.fillStyle = `rgba(128, 216, 255, ${Math.min(0.5, streakAlpha).toFixed(2)})`;
-        drawTrapezoid(ctx, p1.x - p1.w * 0.72, p1.y, p1.w * 0.024, p2.x - p2.w * 0.72, p2.y, p2.w * 0.024);
-        drawTrapezoid(ctx, p1.x + p1.w * 0.72, p1.y, p1.w * 0.024, p2.x + p2.w * 0.72, p2.y, p2.w * 0.024);
-      }
-      if (p2.seg.index === 0) {
-        ctx.fillStyle = '#ffffff';
-        drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
+        const streakAlpha = boostVis > 0.06 ? (boostVis * 0.42) : ((speedRatio - 0.65) * 0.38);
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(0.45, streakAlpha).toFixed(2)})`;
+        drawTrapezoid(ctx, cx1 - rw1 * 0.64, p1.y, rw1 * 0.03, cx2 - rw2 * 0.64, p2.y, rw2 * 0.03);
+        drawTrapezoid(ctx, cx1 + rw1 * 0.64, p1.y, rw1 * 0.03, cx2 + rw2 * 0.64, p2.y, rw2 * 0.03);
       }
 
-      // 8) 원거리 대기 원근감(Atmospheric Depth Fog): 지평선 쪽으로 갈수록 하늘빛 안개가 은은하게 섞여 깊이감 형성!
+      // 출발/체크포인트 지점도 인위적인 경기장 결승선 대신 반짝이는 꽃·별빛 가랜드 라인으로 자연스럽게 표현
+      if (p2.seg.index === 0) {
+        ctx.fillStyle = 'rgba(255, 245, 157, 0.65)';
+        drawTrapezoid(ctx, cx1, p1.y, rw1 * 0.95, cx2, p2.y, rw2 * 0.95);
+      }
+
+      // 7) 원거리 대기 원근감(Atmospheric Depth Fog): 지평선 쪽으로 갈수록 하늘빛 안개가 은은하게 섞여 깊이감 형성!
       if (p2.n > 44) {
         const fogRatio = Math.min(0.62, ((p2.n - 44) / (drawDistance - 44)) * 0.62);
         ctx.save();
         ctx.globalAlpha = fogRatio;
         ctx.fillStyle = track.skyBottom;
-        drawTrapezoid(ctx, p1.x, p1.y, k1, p2.x, p2.y, k2);
+        drawTrapezoid(ctx, cx1, p1.y, bank1, cx2, p2.y, bank2);
         ctx.restore();
       }
     }
 
-    // 지평선 경계선 소프트 글로우 블렌딩 (하늘과 원경 도로가 자연스럽게 이어지도록 처리)
+    // 지평선 경계선 소프트 글로우 블렌딩 (하늘과 원경 대지가 자연스럽게 이어지도록 처리)
     const horizonMist = ctx.createLinearGradient(0, horizonY - 12, 0, horizonY + 26);
     horizonMist.addColorStop(0, 'rgba(255,255,255,0)');
     horizonMist.addColorStop(0.5, track.skyBottom);
@@ -4201,64 +4204,14 @@
       };
     }
 
-    // 트랙 기믹 & 가로수 & 3D 가드레일 포스트 렌더링 (뒤에서 앞으로 원근 크기 비례)
+    // 대자연 오브젝트(나무·야자수·산호·눈사람·공룡·벚나무·화산암·별똥별) & 아이템·장애물 렌더링 (인공 반사봉·철제 표지판·경기장 아치 제거!)
     for (let i = projected.length - 1; i >= 1; i--) {
       const p = projected[i];
       if (p.n < 0 || p.y < horizonY) continue;
 
-      // 도로 양옆 3D 원근 반사봉(Delinator Posts)으로 거리감·입체감 강화
-      if (p.seg.index % 2 === 0 && p.w > 12) {
-        const postH = p.w * 0.12;
-        const postW = Math.max(2.2, p.w * 0.026);
-        [-1.18, 1.18].forEach(side => {
-          const px = p.x + side * p.w;
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(px - postW * 0.5, p.y - postH, postW, postH);
-          ctx.fillStyle = (p.seg.index % 4 === 0) ? '#ff1744' : '#00e5ff';
-          ctx.fillRect(px - postW * 0.5, p.y - postH * 0.85, postW, postH * 0.38);
-        });
-      }
-
-      // 급커브 굴절 구간 바깥쪽 3D 갈매기 코너 유도 표지판(Chevron Sign) 렌더링
-      if (p.seg.chevronSign && p.w > 16 && p.n < 64) {
-        const signSide = p.seg.chevronSign; // -1(왼쪽 바깥) or +1(오른쪽 바깥)
-        const sx = p.x + signSide * p.w * 1.28;
-        const signW = Math.max(8, p.w * 0.14);
-        const signH = Math.max(8, p.w * 0.12);
-        const poleH = Math.max(6, p.w * 0.09);
-        ctx.save();
-        ctx.fillStyle = '#455a64';
-        ctx.fillRect(sx - signW * 0.08, p.y - poleH, signW * 0.16, poleH);
-        ctx.fillStyle = '#ffea00';
-        ctx.strokeStyle = '#11171a';
-        ctx.lineWidth = Math.max(1.2, signW * 0.08);
-        ctx.beginPath();
-        ctx.roundRect(sx - signW * 0.5, p.y - poleH - signH, signW, signH, 3);
-        ctx.fill();
-        ctx.stroke();
-
-        // 코너 회전 방향 화살표 (signSide === -1이면 오른쪽 회전 '>', +1이면 왼쪽 회전 '<')
-        const dir = signSide === -1 ? 1 : -1;
-        ctx.strokeStyle = '#d50000';
-        ctx.lineWidth = Math.max(1.8, signW * 0.18);
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        const cy = p.y - poleH - signH * 0.5;
-        ctx.moveTo(sx - dir * signW * 0.18, cy - signH * 0.26);
-        ctx.lineTo(sx + dir * signW * 0.20, cy);
-        ctx.lineTo(sx - dir * signW * 0.18, cy + signH * 0.26);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      if (p.seg.arch && p.n < 68) {
-        drawArchGate(ctx, p.x, p.y, p.w, p.seg.arch);
-      }
-
       p.seg.scenery.forEach(sc => {
         const sx = p.x + sc.offset * p.w;
-        drawRoadsideProp(ctx, sx, p.y, p.w * 0.45 * (sc.scaleMult || 1.0), track.sceneryType, sc.variant, timeMs);
+        drawRoadsideProp(ctx, sx, p.y, p.w * 0.48 * (sc.scaleMult || 1.0), track.sceneryType, sc.variant, timeMs);
       });
 
       p.seg.items.forEach(it => {
