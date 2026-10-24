@@ -1,0 +1,11 @@
+{
+  "appName": "키즈 카트 러쉬! (Kids Kart Rush+)",
+  "packageId": "com.mj.kidskart",
+  "versionCode": 2,
+  "versionName": "1.1.0",
+  "apkUrl": "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.1.0.apk",
+  "sha256": "0403f047788692f7ed2c3f79da87903120c276071d86a17e2f76c0fd01c56a9c",
+  "sizeBytes": 868031,
+  "updatedAt": "2026-10-24",
+  "notes": "• [신규] 🏎️ 5대의 라이벌 카트(다오·디지니·배찌·우니·마리드·모비)가 내 바로 앞에서 앞서 달리며 경쟁하고 부스터로 추월하는 스마트 페이스메이커 AI 탑재\n• [신규] 🔊 리얼 자동차 레이싱 효과음 합성 엔진(시동 크랭킹 & V6 배기 레브업, 1~5단 기어 변속 연동 실시간 연속 RPM 엔진음, 드리프트 타이어 스키드 마찰음, 터보 블로우오프 & 니트로 제트 화염 부스터음, 듀얼톤 자동차 클락션)\n• [신규] 🔄 앱 시작 시 자동 업데이트 확인 및 대기실 상단 [🔄 업데이트] 원클릭 다운로드·설치 지원\n• ⛑️ 어린이 맞춤 3중 터치 핸들(Steering Wheel) 컨트롤러 & 코너 자동 유도 도우미"
+}

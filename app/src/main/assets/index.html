@@ -1,0 +1,3092 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>키즈 카트 러쉬! (Kids Kart Rush+)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0d1b2a;
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+    touch-action: none;
+  }
+  #gameCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* ==================== 로비 화면 (카트라이더 러쉬플러스 스타일) ==================== */
+  #lobbyScreen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: linear-gradient(160deg, rgba(14,42,92,0.88) 0%, rgba(25,118,210,0.75) 50%, rgba(13,27,42,0.92) 100%);
+    z-index: 30;
+    color: #fff;
+  }
+  .lobby-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.38);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    padding: 8px 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    gap: 8px;
+  }
+  .lobby-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lobby-badge {
+    background: linear-gradient(135deg, #ff3d00, #ff9100);
+    padding: 5px 11px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: -0.3px;
+    box-shadow: 0 3px 8px rgba(255,61,0,0.5);
+  }
+  .lobby-title h1 {
+    font-size: 24px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 3px 0 #0d47a1, 0 5px 12px rgba(0,0,0,0.5);
+  }
+  .assist-pills {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .pill-btn {
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.12s, background 0.15s;
+  }
+  .pill-btn.active {
+    background: linear-gradient(135deg, #00e676, #00bfa5);
+    color: #042b1c;
+    border-color: #b9f6ca;
+    box-shadow: 0 0 12px rgba(0,230,118,0.6);
+  }
+  .pill-btn.update-btn {
+    background: linear-gradient(135deg, #40c4ff, #0288d1);
+    border-color: #b3e5fc;
+    color: #fff;
+  }
+  .pill-btn:active {
+    transform: scale(0.94);
+  }
+
+  .lobby-body {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1.1fr;
+    gap: 16px;
+    align-items: stretch;
+    flex: 1;
+    margin: 12px 0;
+    min-height: 0;
+  }
+  .panel-card {
+    background: rgba(10, 25, 49, 0.76);
+    border: 2px solid rgba(100, 181, 246, 0.4);
+    border-radius: 22px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .panel-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: #ffd54f;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+  .racer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    flex: 1;
+  }
+  .racer-card {
+    border-radius: 16px;
+    border: 3px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .racer-card.selected {
+    border-color: #ffea00;
+    background: linear-gradient(145deg, rgba(255,234,0,0.28), rgba(255,145,0,0.25));
+    box-shadow: 0 0 16px rgba(255,234,0,0.55);
+    transform: translateY(-2px);
+  }
+  .racer-emoji {
+    font-size: 30px;
+    margin-bottom: 3px;
+  }
+  .racer-name {
+    font-size: 15px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .racer-desc {
+    font-size: 11px;
+    color: #b3e5fc;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+
+  /* 중앙 프리뷰 스테이지 */
+  .preview-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background: radial-gradient(circle at 50% 65%, rgba(41,182,246,0.38) 0%, rgba(10,25,49,0.55) 75%);
+    border: 2px solid rgba(129, 212, 250, 0.45);
+    border-radius: 24px;
+    padding: 12px;
+    overflow: hidden;
+  }
+  #previewCanvas {
+    width: 100%;
+    height: 100%;
+    max-height: 220px;
+    display: block;
+  }
+  .speed-selector {
+    width: 100%;
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .speed-btn {
+    flex: 1;
+    padding: 8px 4px;
+    border-radius: 13px;
+    border: 2px solid rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.35);
+    color: #fff;
+    font-weight: 900;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .speed-btn.selected {
+    background: linear-gradient(135deg, #ffca28, #ff6f00);
+    color: #1a0f00;
+    border-color: #fff8e1;
+    box-shadow: 0 0 12px rgba(255,202,40,0.65);
+  }
+
+  /* 우측 트랙 선택 */
+  .track-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .track-card {
+    flex: 1;
+    border-radius: 16px;
+    border: 3px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .track-card.selected {
+    border-color: #00e5ff;
+    background: linear-gradient(135deg, rgba(0,229,255,0.26), rgba(41,121,255,0.26));
+    box-shadow: 0 0 16px rgba(0,229,255,0.5);
+  }
+  .track-icon {
+    font-size: 32px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .track-info {
+    flex: 1;
+  }
+  .track-name {
+    font-size: 16px;
+    font-weight: 900;
+  }
+  .track-sub {
+    font-size: 12px;
+    color: #e1f5fe;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+
+  .lobby-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .lobby-tip {
+    background: rgba(0,0,0,0.45);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff9c4;
+    flex: 1;
+  }
+  .start-race-btn {
+    background: linear-gradient(180deg, #ffea00 0%, #ff9100 50%, #ff3d00 100%);
+    border: 4px solid #fff;
+    border-radius: 24px;
+    padding: 14px 38px;
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 2px 0 #b71c1c, 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 0 #bf360c, 0 12px 28px rgba(255,61,0,0.65);
+    cursor: pointer;
+    animation: pulseBtn 1.3s infinite ease-in-out;
+  }
+  .start-race-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #bf360c;
+  }
+  @keyframes pulseBtn {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+
+  /* ==================== 인게임 HUD & 컨트롤러 ==================== */
+  #hudLayer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 15;
+    display: none;
+  }
+
+  .top-hud {
+    position: absolute;
+    top: 10px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .hud-left-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: auto;
+  }
+  .rank-box {
+    background: linear-gradient(145deg, rgba(13,27,42,0.88), rgba(27,38,59,0.88));
+    border: 3px solid #ffd54f;
+    border-radius: 20px;
+    padding: 6px 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+  }
+  .rank-num {
+    font-size: 38px;
+    font-weight: 900;
+    color: #ffea00;
+    text-shadow: 0 3px 0 #e65100;
+    line-height: 1;
+  }
+  .rank-label {
+    font-size: 16px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .lap-box {
+    background: rgba(13,27,42,0.82);
+    border: 2px solid rgba(255,255,255,0.35);
+    border-radius: 16px;
+    padding: 8px 14px;
+    color: #fff;
+    font-weight: 900;
+    font-size: 17px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  }
+  .item-slots {
+    display: flex;
+    gap: 8px;
+  }
+  .item-slot {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    background: radial-gradient(circle, rgba(64,196,255,0.45) 0%, rgba(13,27,42,0.88) 85%);
+    border: 3px solid #80d8ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  }
+
+  /* 중앙 상단 진행도 바 (라이벌 마커 포함) */
+  .hud-center-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 430px;
+    margin: 0 12px;
+  }
+  .progress-track {
+    width: 100%;
+    height: 22px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 999px;
+    position: relative;
+    overflow: visible;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00e676, #ffea00, #ff3d00);
+    border-radius: 999px;
+    transition: width 0.1s linear;
+  }
+  .progress-kart-icon {
+    position: absolute;
+    top: -10px;
+    left: 0%;
+    transform: translateX(-50%);
+    font-size: 26px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.7));
+    z-index: 3;
+  }
+  .rival-dot {
+    position: absolute;
+    top: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  #turnPrompt {
+    background: rgba(0, 0, 0, 0.72);
+    border: 3px solid #ffea00;
+    border-radius: 999px;
+    padding: 6px 20px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.18s, transform 0.18s;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+  }
+  #turnPrompt.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .hud-right-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+  }
+  .mini-hud-btn {
+    background: rgba(13,27,42,0.82);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 14px;
+    padding: 8px 12px;
+    color: #fff;
+    font-weight: 900;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .mini-hud-btn.active {
+    background: #00c853;
+    border-color: #b9f6ca;
+    color: #00251a;
+  }
+
+  #centerBanner {
+    position: absolute;
+    top: 34%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 54px;
+    font-weight: 900;
+    color: #ffea00;
+    text-shadow: 0 5px 0 #d50000, 0 10px 25px rgba(0,0,0,0.75);
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 20;
+  }
+
+  #startBoostBtn {
+    position: absolute;
+    bottom: 26%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #00e5ff, #2979ff);
+    border: 4px solid #fff;
+    border-radius: 999px;
+    padding: 14px 34px;
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    box-shadow: 0 0 30px rgba(0,229,255,0.95);
+    pointer-events: auto;
+    display: none;
+    cursor: pointer;
+    animation: pulseBtn 0.45s infinite alternate;
+  }
+
+  /* 하단 중앙 속도계 & 기어 단수 표시 */
+  .speedometer-box {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 22, 40, 0.86);
+    border: 2px solid rgba(128, 216, 255, 0.55);
+    border-radius: 22px;
+    padding: 8px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 220px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  }
+  .speed-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  #gearBadge {
+    background: #ff9100;
+    color: #111;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 2px 7px;
+    border-radius: 8px;
+  }
+  #speedText {
+    font-size: 34px;
+    font-weight: 900;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 10px rgba(0,229,255,0.8);
+  }
+  .speed-unit {
+    font-size: 14px;
+    font-weight: 800;
+    color: #80d8ff;
+  }
+  .n2o-gauge-wrap {
+    width: 175px;
+    height: 13px;
+    background: rgba(255,255,255,0.16);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 4px;
+    border: 1px solid rgba(255,255,255,0.35);
+  }
+  #n2oGaugeFill {
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, #00e5ff, #ffea00, #ff1744);
+    border-radius: 999px;
+    transition: width 0.08s linear;
+  }
+
+  /* ==================== 좌측 하단: 핸들(Steering Wheel) 컨트롤러 ==================== */
+  #wheelZone {
+    position: absolute;
+    left: 18px;
+    bottom: 12px;
+    width: 268px;
+    height: 268px;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+  }
+  .wheel-guide-ring {
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 3px dashed rgba(255, 255, 255, 0.32);
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.28) 72%);
+    pointer-events: none;
+  }
+  .wheel-dir-labels {
+    position: absolute;
+    top: -12px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 18px;
+    font-size: 15px;
+    font-weight: 900;
+    color: #ffea00;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.85);
+    pointer-events: none;
+  }
+  #wheelGraphic {
+    width: 224px;
+    height: 224px;
+    position: relative;
+    will-change: transform;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.6));
+    pointer-events: none;
+  }
+  #hornBtn {
+    position: absolute;
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffeb3b, #ff9800 75%, #e65100 100%);
+    border: 4px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    color: #3e2723;
+    font-size: 13px;
+    z-index: 3;
+    pointer-events: auto;
+  }
+  #hornBtn span {
+    font-size: 24px;
+    line-height: 1;
+  }
+  #hornBtn:active {
+    transform: scale(0.9);
+  }
+
+  /* ==================== 우측 하단: 어린이용 왕큰 액션 버튼들 ==================== */
+  .action-zone {
+    position: absolute;
+    right: 22px;
+    bottom: 18px;
+    width: 290px;
+    height: 250px;
+    pointer-events: none;
+  }
+  .big-action-btn {
+    position: absolute;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    color: #fff;
+    font-weight: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.55);
+    touch-action: none;
+    transition: transform 0.08s;
+  }
+  .big-action-btn:active, .big-action-btn.pressed {
+    transform: scale(0.91);
+  }
+
+  #boostBtn {
+    right: 0;
+    bottom: 8px;
+    width: 138px;
+    height: 138px;
+    background: radial-gradient(circle at 35% 30%, #ff5252 0%, #d50000 65%, #7f0000 100%);
+  }
+  #boostBtn.ready {
+    background: radial-gradient(circle at 35% 30%, #ffea00 0%, #ff3d00 58%, #dd2c00 100%);
+    box-shadow: 0 0 32px rgba(255, 61, 0, 0.95), 0 0 12px #ffea00;
+    animation: pulseBoost 0.7s infinite alternate;
+  }
+  @keyframes pulseBoost {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+  }
+  .btn-icon {
+    font-size: 42px;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.45));
+  }
+  .btn-title {
+    font-size: 20px;
+    margin-top: 3px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.65);
+  }
+  .btn-sub {
+    font-size: 12px;
+    color: #fff9c4;
+  }
+
+  #itemBtn {
+    right: 146px;
+    bottom: 108px;
+    width: 116px;
+    height: 116px;
+    background: radial-gradient(circle at 35% 30%, #40c4ff 0%, #0288d1 70%, #01579b 100%);
+  }
+  #itemBtn.has-item {
+    background: radial-gradient(circle at 35% 30%, #e040fb 0%, #7c4dff 65%, #311b92 100%);
+    box-shadow: 0 0 26px rgba(224, 64, 251, 0.9);
+    animation: pulseBoost 0.8s infinite alternate;
+  }
+
+  #driftBtn {
+    right: 152px;
+    bottom: 4px;
+    width: 98px;
+    height: 98px;
+    background: radial-gradient(circle at 35% 30%, #69f0ae 0%, #00c853 70%, #1b5e20 100%);
+  }
+
+  /* ==================== 결승 골인 시상대 모달 ==================== */
+  #finishModal {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 20, 42, 0.86);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 40;
+    color: #fff;
+    padding: 20px;
+  }
+  .podium-card {
+    background: linear-gradient(160deg, #1a237e 0%, #0d47a1 55%, #01579b 100%);
+    border: 4px solid #ffea00;
+    border-radius: 30px;
+    padding: 24px 36px;
+    text-align: center;
+    max-width: 580px;
+    width: 92%;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.65);
+  }
+  .trophy-big {
+    font-size: 74px;
+    line-height: 1;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 6px 14px rgba(255,215,0,0.65));
+  }
+  #finishTitle {
+    font-size: 38px;
+    font-weight: 900;
+    color: #ffea00;
+    text-shadow: 0 4px 0 #e65100;
+  }
+  #finishSub {
+    font-size: 20px;
+    font-weight: 800;
+    color: #e1f5fe;
+    margin: 10px 0 18px;
+  }
+  .reward-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  .reward-pill {
+    background: rgba(0,0,0,0.35);
+    border: 2px solid rgba(255,255,255,0.35);
+    border-radius: 18px;
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff9c4;
+  }
+  .finish-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+  }
+  .finish-btn {
+    border: 3px solid #fff;
+    border-radius: 20px;
+    padding: 14px 28px;
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    cursor: pointer;
+  }
+  .finish-btn.replay {
+    background: linear-gradient(135deg, #00e676, #00bfa5);
+    color: #00251a;
+  }
+  .finish-btn.lobby {
+    background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  }
+</style>
+</head>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+
+<!-- ==================== 1. 로비 화면 ==================== -->
+<div id="lobbyScreen">
+  <div class="lobby-header">
+    <div class="lobby-title">
+      <span class="lobby-badge" id="verBadge">v1.1.0</span>
+      <h1>🏎️ 키즈 카트 러쉬!</h1>
+    </div>
+    <div class="assist-pills">
+      <button id="toggleAssistBtn" class="pill-btn active">⛑️ 코너 도우미 ON</button>
+      <button id="toggleAutoBoostBtn" class="pill-btn active">🚀 자동 부스터 ON</button>
+      <button id="toggleTiltBtn" class="pill-btn">📱 기울이기 핸들 OFF</button>
+      <button id="checkUpdateBtn" class="pill-btn update-btn">🔄 업데이트</button>
+    </div>
+  </div>
+
+  <div class="lobby-body">
+    <!-- 캐릭터/카트 선택 -->
+    <div class="panel-card">
+      <div class="panel-title">🧒 귀여운 레이서 & 카트 고르기</div>
+      <div class="racer-grid" id="racerGrid">
+        <div class="racer-card selected" data-racer="0">
+          <div class="racer-emoji">🔵🏎️</div>
+          <div class="racer-name">다오 블루</div>
+          <div class="racer-desc">번개 세이버 카트</div>
+        </div>
+        <div class="racer-card" data-racer="1">
+          <div class="racer-emoji">🩷🎀</div>
+          <div class="racer-name">디지니 핑크</div>
+          <div class="racer-desc">구름 솜사탕 카트</div>
+        </div>
+        <div class="racer-card" data-racer="2">
+          <div class="racer-emoji">🟡🐻</div>
+          <div class="racer-name">배찌 옐로우</div>
+          <div class="racer-desc">튼튼 범퍼 카트</div>
+        </div>
+        <div class="racer-card" data-racer="3">
+          <div class="racer-emoji">🟢🦖</div>
+          <div class="racer-name">우니 다이노</div>
+          <div class="racer-desc">공룡 로켓 카트</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 중앙 3D 카트 프리뷰 & 속도 선택 -->
+    <div class="preview-stage">
+      <canvas id="previewCanvas" width="320" height="200"></canvas>
+      <div class="speed-selector" id="speedSelector">
+        <button class="speed-btn" data-speed="slow">🐢 천천히<br/><span style="font-size:11px;font-weight:700;">유아용</span></button>
+        <button class="speed-btn selected" data-speed="normal">🚗 신나게<br/><span style="font-size:11px;font-weight:700;">어린이 추천</span></button>
+        <button class="speed-btn" data-speed="fast">🚀 초고속<br/><span style="font-size:11px;font-weight:700;">스피드왕</span></button>
+      </div>
+    </div>
+
+    <!-- 트랙 선택 -->
+    <div class="panel-card">
+      <div class="panel-title">🗺️ 달릴 코스 고르기</div>
+      <div class="track-list" id="trackList">
+        <div class="track-card selected" data-track="0">
+          <div class="track-icon">🌳</div>
+          <div class="track-info">
+            <div class="track-name">햇살 빌리지 트랙</div>
+            <div class="track-sub">⭐ 아주 쉬움 · 넓고 평탄한 마을 길</div>
+          </div>
+        </div>
+        <div class="track-card" data-track="1">
+          <div class="track-icon">🍭</div>
+          <div class="track-info">
+            <div class="track-name">달콤 캔디 랜드</div>
+            <div class="track-sub">⭐⭐ 재미있음 · 무지개 부스터 가득!</div>
+          </div>
+        </div>
+        <div class="track-card" data-track="2">
+          <div class="track-icon">🦖</div>
+          <div class="track-info">
+            <div class="track-name">공룡 정글 파크</div>
+            <div class="track-sub">⭐⭐ 신나는 모험 · 황금 코인 대폭발!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lobby-footer">
+    <div class="lobby-tip">
+      💡 <b>조작법:</b> 친구 차들과 함께 <b>부르릉~</b> 달려요! 왼쪽 <b>핸들</b>을 돌리고 오른쪽 <b>부스터·아이템</b>으로 앞차를 추월해 보세요!
+    </div>
+    <button id="startRaceBtn" class="start-race-btn">🏁 출발하기!</button>
+  </div>
+</div>
+
+<!-- ==================== 2. 인게임 HUD 및 핸들 컨트롤러 ==================== -->
+<div id="hudLayer">
+  <div class="top-hud">
+    <div class="hud-left-group">
+      <div class="rank-box">
+        <span id="rankNum" class="rank-num">1</span>
+        <span class="rank-label">위 / 6</span>
+      </div>
+      <div id="lapBox" class="lap-box">바퀴 1 / 2</div>
+      <div class="item-slots">
+        <div id="itemSlot1" class="item-slot">🎁</div>
+        <div id="itemSlot2" class="item-slot">🔥</div>
+      </div>
+    </div>
+
+    <div class="hud-center-group">
+      <div class="progress-track" id="progressTrack">
+        <div id="progressFill" class="progress-fill"></div>
+        <div id="rivalDotsContainer"></div>
+        <div id="progressKart" class="progress-kart-icon">🏎️</div>
+      </div>
+      <div id="turnPrompt">⬅️ 왼쪽으로 핸들!</div>
+    </div>
+
+    <div class="hud-right-group">
+      <button id="hudSoundBtn" class="mini-hud-btn active">🔊 엔진음 ON</button>
+      <button id="hudSpeedBtn" class="mini-hud-btn">🚗 속도: 보통</button>
+      <button id="hudAssistBtn" class="mini-hud-btn active">⛑️ 도우미 ON</button>
+      <button id="hudHomeBtn" class="mini-hud-btn">🏠 대기실</button>
+    </div>
+  </div>
+
+  <div id="centerBanner"></div>
+  <button id="startBoostBtn">🚀 출발 부스터 터치!</button>
+
+  <!-- 하단 중앙 디지털 속도계 & 기어 단수 & N2O 게이지 -->
+  <div class="speedometer-box">
+    <div class="speed-value-row">
+      <span id="gearBadge">3단</span>
+      <span id="speedText">120</span>
+      <span class="speed-unit">km/h</span>
+    </div>
+    <div class="n2o-gauge-wrap">
+      <div id="n2oGaugeFill"></div>
+    </div>
+  </div>
+
+  <!-- 좌측 하단: 인터랙티브 핸들(Steering Wheel) 컨트롤러 -->
+  <div id="wheelZone">
+    <div class="wheel-dir-labels">
+      <span>◀ 왼쪽</span>
+      <span>오른쪽 ▶</span>
+    </div>
+    <div class="wheel-guide-ring"></div>
+
+    <svg id="wheelGraphic" viewBox="0 0 220 220">
+      <defs>
+        <radialGradient id="rimGrad" cx="50%" cy="40%" r="55%">
+          <stop offset="0%" stop-color="#546e7a" />
+          <stop offset="70%" stop-color="#263238" />
+          <stop offset="100%" stop-color="#11171a" />
+        </radialGradient>
+        <linearGradient id="spokeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#eceff1" />
+          <stop offset="100%" stop-color="#90a4ae" />
+        </linearGradient>
+      </defs>
+      <path d="M 32 102 L 188 102 L 188 122 L 32 122 Z" fill="url(#spokeGrad)" stroke="#37474f" stroke-width="3" />
+      <path d="M 96 112 L 124 112 L 128 192 L 92 192 Z" fill="url(#spokeGrad)" stroke="#37474f" stroke-width="3" />
+      <circle cx="110" cy="110" r="88" fill="none" stroke="url(#rimGrad)" stroke-width="28" />
+      <circle cx="110" cy="110" r="88" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="4" />
+      <path d="M 32 68 A 88 88 0 0 0 32 152" fill="none" stroke="#29b6f6" stroke-width="26" stroke-linecap="round" />
+      <path d="M 188 68 A 88 88 0 0 1 188 152" fill="none" stroke="#ff5252" stroke-width="26" stroke-linecap="round" />
+      <rect x="98" y="8" width="24" height="28" rx="6" fill="#ffea00" stroke="#fff" stroke-width="2" />
+      <polygon points="18,110 30,98 30,122" fill="#ffffff" />
+      <polygon points="202,110 190,98 190,122" fill="#ffffff" />
+    </svg>
+
+    <button id="hornBtn" type="button">
+      <span>📯</span>
+      빵빵!
+    </button>
+  </div>
+
+  <!-- 우측 하단: 왕큰 액션 버튼 3종 -->
+  <div class="action-zone">
+    <button id="itemBtn" class="big-action-btn" type="button">
+      <div id="itemBtnIcon" class="btn-icon">🎁</div>
+      <div id="itemBtnLabel" class="btn-title">아이템</div>
+    </button>
+
+    <button id="driftBtn" class="big-action-btn" type="button">
+      <div class="btn-icon">💨</div>
+      <div class="btn-title" style="font-size:16px;">드리프트</div>
+    </button>
+
+    <button id="boostBtn" class="big-action-btn ready" type="button">
+      <div class="btn-icon">🔥</div>
+      <div class="btn-title">N2O 부스터</div>
+      <div id="boostCountText" class="btn-sub">터치!</div>
+    </button>
+  </div>
+</div>
+
+<!-- ==================== 3. 골인 시상대 모달 ==================== -->
+<div id="finishModal">
+  <div class="podium-card">
+    <div id="finishTrophy" class="trophy-big">🏆</div>
+    <div id="finishTitle">우와! 1등 골인!!</div>
+    <div id="finishSub">최고의 꼬마 레이서예요! 정말 잘했어요!</div>
+    <div class="reward-row">
+      <div class="reward-pill">⭐ 별 3개 획득!</div>
+      <div id="finishCoinText" class="reward-pill">🪙 코인 +35</div>
+    </div>
+    <div class="finish-actions">
+      <button id="replayBtn" class="finish-btn replay">🔄 한 판 더 달리기!</button>
+      <button id="backLobbyBtn" class="finish-btn lobby">🏠 카트·코스 바꾸기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ==================== 네이티브 브릿지 (TTS 한국어 음성, 진동, 자동 업데이트) ====================
+  function speakKR(text, flush = true) {
+    try {
+      if (window.AndroidBridge && typeof window.AndroidBridge.speak === 'function') {
+        window.AndroidBridge.speak(text, !!flush);
+        return;
+      }
+      if ('speechSynthesis' in window) {
+        if (flush) window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'ko-KR';
+        u.pitch = 1.2;
+        u.rate = 1.08;
+        window.speechSynthesis.speak(u);
+      }
+    } catch (_) {}
+  }
+
+  function vibrateDevice(ms = 45) {
+    try {
+      if (window.AndroidBridge && typeof window.AndroidBridge.vibrate === 'function') {
+        window.AndroidBridge.vibrate(ms);
+      } else if (navigator.vibrate) {
+        navigator.vibrate(ms);
+      }
+    } catch (_) {}
+  }
+
+  function getNativeTilt() {
+    try {
+      if (window.AndroidBridge && typeof window.AndroidBridge.getTiltSteer === 'function') {
+        return Number(window.AndroidBridge.getTiltSteer()) || 0;
+      }
+    } catch (_) {}
+    return 0;
+  }
+
+  // 앱 버전 표시 및 수동 업데이트 버튼 연결
+  try {
+    if (window.AndroidBridge && typeof window.AndroidBridge.getAppVersion === 'function') {
+      const v = window.AndroidBridge.getAppVersion();
+      if (v) document.getElementById('verBadge').textContent = `v${v}`;
+    }
+  } catch (_) {}
+
+  document.getElementById('checkUpdateBtn').addEventListener('click', () => {
+    try {
+      if (window.AndroidBridge && typeof window.AndroidBridge.checkUpdate === 'function') {
+        window.AndroidBridge.checkUpdate();
+      } else {
+        window.open('https://inanimals-1977.web.app/kidskart/', '_blank');
+      }
+    } catch (_) {}
+  });
+
+  // ==================== 리얼 자동차 & 카트 레이싱 사운드 합성 엔진 (CarSoundEngine) ====================
+  class CarSoundEngine {
+    constructor() {
+      this.ctx = null;
+      this.muted = false;
+      this.bgmTimer = null;
+      this.step = 0;
+
+      // 연속 엔진 사운드 노드 (실린더 배기음 + 서브베이스 + 터보 휘슬)
+      this.engineRunning = false;
+      this.engOsc1 = null;
+      this.engOsc2 = null;
+      this.turboOsc = null;
+      this.engFilter = null;
+      this.engGain = null;
+      this.turboGain = null;
+
+      // 타이어 스키드(드리프트 마찰음) 노드
+      this.skidNode = null;
+      this.skidFilter = null;
+      this.skidGain = null;
+      this.noiseBuffer = null;
+
+      this.currentGear = 1;
+      this.gearShiftCooldown = 0;
+    }
+
+    init() {
+      if (!this.ctx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) {
+          this.ctx = new AC();
+          this.createNoiseBuffer();
+        }
+      }
+      if (this.ctx && this.ctx.state === 'suspended') {
+        this.ctx.resume();
+      }
+    }
+
+    createNoiseBuffer() {
+      if (!this.ctx) return;
+      const sr = this.ctx.sampleRate;
+      const len = sr * 2;
+      const buf = this.ctx.createBuffer(1, len, sr);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      this.noiseBuffer = buf;
+    }
+
+    // 1. 자동차 시동 크랭킹 & 부르릉 배기음 ("큐르르릉~ 부르르릉! 브아앙~!")
+    playEngineStart() {
+      if (this.muted) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        // 크랭킹 후 우렁찬 배기 레브(Rev)
+        const osc = this.ctx.createOscillator();
+        const sub = this.ctx.createOscillator();
+        const filter = this.ctx.createBiquadFilter();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sawtooth';
+        sub.type = 'triangle';
+        filter.type = 'lowpass';
+        filter.Q.value = 5.5;
+
+        // 시동 모터 -> 점화 폭발 -> 브아앙 레브업 -> 아이들링
+        osc.frequency.setValueAtTime(42, now);
+        osc.frequency.linearRampToValueAtTime(68, now + 0.18);
+        osc.frequency.exponentialRampToValueAtTime(175, now + 0.48);
+        osc.frequency.exponentialRampToValueAtTime(82, now + 0.92);
+
+        sub.frequency.setValueAtTime(21, now);
+        sub.frequency.exponentialRampToValueAtTime(88, now + 0.48);
+        sub.frequency.exponentialRampToValueAtTime(41, now + 0.92);
+
+        filter.frequency.setValueAtTime(260, now);
+        filter.frequency.exponentialRampToValueAtTime(1400, now + 0.48);
+        filter.frequency.exponentialRampToValueAtTime(450, now + 0.92);
+
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.26, now + 0.22);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
+
+        osc.connect(filter);
+        sub.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now);
+        sub.start(now);
+        osc.stop(now + 0.96);
+        sub.stop(now + 0.96);
+      } catch (_) {}
+    }
+
+    // 2. 주행 중 연속 자동차 엔진음 & 기어 변속 & 타이어 스키드 시작
+    startContinuousEngine() {
+      this.init();
+      if (!this.ctx || this.engineRunning) return;
+      try {
+        const now = this.ctx.currentTime;
+        this.engOsc1 = this.ctx.createOscillator();
+        this.engOsc2 = this.ctx.createOscillator();
+        this.turboOsc = this.ctx.createOscillator();
+        this.engFilter = this.ctx.createBiquadFilter();
+        this.engGain = this.ctx.createGain();
+        this.turboGain = this.ctx.createGain();
+
+        this.engOsc1.type = 'sawtooth';
+        this.engOsc2.type = 'square';
+        this.turboOsc.type = 'sine';
+
+        this.engFilter.type = 'lowpass';
+        this.engFilter.frequency.setValueAtTime(380, now);
+        this.engFilter.Q.setValueAtTime(4.2, now);
+
+        this.engGain.gain.setValueAtTime(0.001, now);
+        this.turboGain.gain.setValueAtTime(0.0001, now);
+
+        this.engOsc1.connect(this.engFilter);
+        this.engOsc2.connect(this.engFilter);
+        this.engFilter.connect(this.engGain);
+        this.engGain.connect(this.ctx.destination);
+
+        this.turboOsc.connect(this.turboGain);
+        this.turboGain.connect(this.ctx.destination);
+
+        this.engOsc1.start(now);
+        this.engOsc2.start(now);
+        this.turboOsc.start(now);
+
+        // 타이어 스키드 노이즈 루프
+        if (this.noiseBuffer) {
+          this.skidNode = this.ctx.createBufferSource();
+          this.skidNode.buffer = this.noiseBuffer;
+          this.skidNode.loop = true;
+
+          this.skidFilter = this.ctx.createBiquadFilter();
+          this.skidFilter.type = 'bandpass';
+          this.skidFilter.frequency.setValueAtTime(1450, now);
+          this.skidFilter.Q.setValueAtTime(6.5, now);
+
+          this.skidGain = this.ctx.createGain();
+          this.skidGain.gain.setValueAtTime(0.0001, now);
+
+          this.skidNode.connect(this.skidFilter);
+          this.skidFilter.connect(this.skidGain);
+          this.skidGain.connect(this.ctx.destination);
+          this.skidNode.start(now);
+        }
+
+        this.engineRunning = true;
+      } catch (_) {}
+    }
+
+    // 매 프레임 자동차 속도(km/h), 기어 변속, 부스터, 드리프트 상태에 맞춰 엔진음 업데이트
+    updateContinuousEngine(speed, maxSpeed, isBoosting, isDrifting, steerIntensity, dt) {
+      if (!this.engineRunning || !this.ctx) return;
+      if (this.muted || state.mode !== 'racing') {
+        this.engGain.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.05);
+        if (this.turboGain) this.turboGain.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.05);
+        if (this.skidGain) this.skidGain.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.05);
+        return;
+      }
+
+      const now = this.ctx.currentTime;
+      // 1단~5단 기어 계산 및 기어 변속 사운드 효과
+      let newGear = 1;
+      if (speed > 210) newGear = 5;
+      else if (speed > 160) newGear = 4;
+      else if (speed > 110) newGear = 3;
+      else if (speed > 55) newGear = 2;
+
+      if (newGear !== this.currentGear) {
+        if (newGear > this.currentGear) {
+          this.gearShiftCooldown = 0.14; // 기어 변속 순간 RPM 블립("철컥- 부아앙!")
+        }
+        this.currentGear = newGear;
+      }
+      if (this.gearShiftCooldown > 0) this.gearShiftCooldown = Math.max(0, this.gearShiftCooldown - dt);
+
+      // 기어 내 RPM 비율 계산 (실제 자동차처럼 단수마다 RPM이 솟구쳤다 내려감)
+      const gearRanges = [0, 55, 110, 160, 210, 320];
+      const gMin = gearRanges[this.currentGear - 1];
+      const gMax = gearRanges[this.currentGear];
+      const gearRpm = Math.max(0.15, Math.min(1.15, (speed - gMin) / Math.max(20, gMax - gMin)));
+
+      const shiftDip = this.gearShiftCooldown > 0 ? 0.68 : 1.0;
+      const baseFreq = (48 + gearRpm * 92 + (speed / maxSpeed) * 45) * shiftDip * (isBoosting ? 1.24 : 1.0);
+
+      this.engOsc1.frequency.setTargetAtTime(baseFreq, now, 0.03);
+      this.engOsc2.frequency.setTargetAtTime(baseFreq * 0.5, now, 0.03);
+
+      const filterFreq = isBoosting ? 1650 : (360 + gearRpm * 680);
+      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.04);
+
+      const targetVol = speed < 5 ? 0.04 : (isBoosting ? 0.15 : 0.105);
+      this.engGain.gain.setTargetAtTime(targetVol, now, 0.04);
+
+      // 터보차저 고주파 휘슬 (부스터 시 "위이이잉~ 슈우웅!")
+      if (this.turboOsc && this.turboGain) {
+        const turboFreq = 680 + (speed / maxSpeed) * 950 + (isBoosting ? 550 : 0);
+        this.turboOsc.frequency.setTargetAtTime(turboFreq, now, 0.04);
+        this.turboGain.gain.setTargetAtTime(isBoosting ? 0.055 : 0.008, now, 0.05);
+      }
+
+      // 드리프트 / 급조향 타이어 스키드 마찰음 ("끼이이익~!")
+      if (this.skidGain && this.skidFilter) {
+        const skidding = (isDrifting || steerIntensity > 0.72) && speed > 60;
+        const skidVol = skidding ? (isDrifting ? 0.16 : 0.07) : 0.0001;
+        const skidPitch = 1250 + Math.sin(now * 24) * 180 + steerIntensity * 320;
+        this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.03);
+        this.skidGain.gain.setTargetAtTime(skidVol, now, 0.03);
+      }
+    }
+
+    stopContinuousEngine() {
+      try {
+        if (this.engOsc1) { this.engOsc1.stop(); this.engOsc1.disconnect(); }
+        if (this.engOsc2) { this.engOsc2.stop(); this.engOsc2.disconnect(); }
+        if (this.turboOsc) { this.turboOsc.stop(); this.turboOsc.disconnect(); }
+        if (this.skidNode) { this.skidNode.stop(); this.skidNode.disconnect(); }
+      } catch (_) {}
+      this.engineRunning = false;
+    }
+
+    // 3. 터보 블로우오프 밸브 + 니트로 제트 화염 폭발음 ("푸쉬익! 쿠아아앙~ 슈우우웅!!")
+    playBoost() {
+      if (this.muted) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        // (A) 저음 배기 백파이어 펀치 ("쿠앙!")
+        const boom = this.ctx.createOscillator();
+        const boomGain = this.ctx.createGain();
+        boom.type = 'sawtooth';
+        boom.frequency.setValueAtTime(135, now);
+        boom.frequency.exponentialRampToValueAtTime(34, now + 0.35);
+        boomGain.gain.setValueAtTime(0.28, now);
+        boomGain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+        boom.connect(boomGain);
+        boomGain.connect(this.ctx.destination);
+        boom.start(now);
+        boom.stop(now + 0.37);
+
+        // (B) 제트 애프터버너 화염 노이즈 스윕 ("슈우우웅~!")
+        if (this.noiseBuffer) {
+          const jet = this.ctx.createBufferSource();
+          jet.buffer = this.noiseBuffer;
+          const jetFilter = this.ctx.createBiquadFilter();
+          jetFilter.type = 'bandpass';
+          jetFilter.Q.value = 1.8;
+          jetFilter.frequency.setValueAtTime(2400, now);
+          jetFilter.frequency.exponentialRampToValueAtTime(420, now + 0.55);
+
+          const jetGain = this.ctx.createGain();
+          jetGain.gain.setValueAtTime(0.25, now);
+          jetGain.gain.exponentialRampToValueAtTime(0.001, now + 0.56);
+
+          jet.connect(jetFilter);
+          jetFilter.connect(jetGain);
+          jetGain.connect(this.ctx.destination);
+          jet.start(now);
+          jet.stop(now + 0.58);
+        }
+
+        // (C) 터보 차저 상승 휘슬
+        this.playTone(320, 0.42, 'sawtooth', 0.14, 1180);
+      } catch (_) {}
+    }
+
+    // 4. 실제 자동차 듀얼톤 클락션 ("빠아앙~! 빠앙!")
+    playHorn() {
+      if (this.muted) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        const playDualChord = (startOffset, duration) => {
+          const t0 = this.ctx.currentTime + startOffset;
+          const f1 = this.ctx.createOscillator();
+          const f2 = this.ctx.createOscillator();
+          const filter = this.ctx.createBiquadFilter();
+          const g = this.ctx.createGain();
+
+          // 실제 자동차 혼 화음 (G#4 415Hz + C5 523Hz)
+          f1.type = 'sawtooth';
+          f2.type = 'sawtooth';
+          f1.frequency.setValueAtTime(415.3, t0);
+          f2.frequency.setValueAtTime(523.25, t0);
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(1850, t0);
+          filter.Q.setValueAtTime(3.0, t0);
+
+          g.gain.setValueAtTime(0.001, t0);
+          g.gain.linearRampToValueAtTime(0.20, t0 + 0.02);
+          g.gain.setValueAtTime(0.18, t0 + duration - 0.03);
+          g.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+
+          f1.connect(filter);
+          f2.connect(filter);
+          filter.connect(g);
+          g.connect(this.ctx.destination);
+
+          f1.start(t0);
+          f2.start(t0);
+          f1.stop(t0 + duration + 0.01);
+          f2.stop(t0 + duration + 0.01);
+        };
+        playDualChord(0, 0.16);
+        playDualChord(0.20, 0.26);
+      } catch (_) {}
+    }
+
+    // 5. 앞차 추월 시 도플러 패싱 효과음 ("슈우욱~!")
+    playOvertakeWhoosh() {
+      if (this.muted || !this.ctx || !this.noiseBuffer) return;
+      try {
+        const now = this.ctx.currentTime;
+        const src = this.ctx.createBufferSource();
+        src.buffer = this.noiseBuffer;
+        const filt = this.ctx.createBiquadFilter();
+        filt.type = 'bandpass';
+        filt.Q.value = 3.2;
+        filt.frequency.setValueAtTime(950, now);
+        filt.frequency.exponentialRampToValueAtTime(260, now + 0.28);
+
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.16, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.30);
+
+        src.connect(filt);
+        filt.connect(g);
+        g.connect(this.ctx.destination);
+        src.start(now);
+        src.stop(now + 0.31);
+      } catch (_) {}
+    }
+
+    playTone(freq, dur = 0.14, type = 'triangle', vol = 0.14, slideTo = null) {
+      if (this.muted) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        if (slideTo) {
+          osc.frequency.exponentialRampToValueAtTime(Math.max(40, slideTo), now + dur);
+        }
+        gain.gain.setValueAtTime(vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + dur);
+      } catch (_) {}
+    }
+
+    playCoin() {
+      this.playTone(987.77, 0.08, 'sine', 0.15);
+      setTimeout(() => this.playTone(1318.5, 0.14, 'sine', 0.15), 65);
+    }
+
+    playItemBox() {
+      const notes = [523, 659, 784, 1046];
+      notes.forEach((n, i) => setTimeout(() => this.playTone(n, 0.09, 'triangle', 0.15), i * 50));
+    }
+
+    playFanfare() {
+      const melody = [523, 659, 784, 1046, 784, 1046];
+      const times = [0, 130, 260, 390, 560, 720];
+      melody.forEach((n, i) => setTimeout(() => this.playTone(n, 0.22, 'triangle', 0.2), times[i]));
+    }
+
+    startBGM() {
+      this.stopBGM();
+      this.startContinuousEngine();
+      const notes = [261.6, 329.6, 392.0, 523.3, 392.0, 329.6, 293.7, 349.2, 440.0, 587.3, 440.0, 349.2];
+      this.step = 0;
+      this.bgmTimer = setInterval(() => {
+        if (state.mode !== 'racing' || this.muted) return;
+        const n = notes[this.step % notes.length];
+        this.playTone(n, 0.12, 'triangle', 0.04);
+        this.step++;
+      }, 185);
+    }
+
+    stopBGM() {
+      if (this.bgmTimer) {
+        clearInterval(this.bgmTimer);
+        this.bgmTimer = null;
+      }
+      this.stopContinuousEngine();
+    }
+  }
+  const sfx = new CarSoundEngine();
+
+  // ==================== 레이서(캐릭터 & 카트 6종) 및 트랙 데이터 ====================
+  const RACERS = [
+    {
+      id: 0,
+      name: '다오 블루',
+      shortName: '다오',
+      kartName: '번개 세이버 카트',
+      primary: '#1e88e5',
+      secondary: '#e53935',
+      helmet: '#1565c0',
+      visor: '#00e5ff',
+      earType: 'visor',
+      number: '7'
+    },
+    {
+      id: 1,
+      name: '디지니 핑크',
+      shortName: '디지니',
+      kartName: '구름 솜사탕 카트',
+      primary: '#f06292',
+      secondary: '#fff176',
+      helmet: '#ec407a',
+      visor: '#fce4ec',
+      earType: 'ribbon',
+      number: '1'
+    },
+    {
+      id: 2,
+      name: '배찌 옐로우',
+      shortName: '배찌',
+      kartName: '튼튼 범퍼 카트',
+      primary: '#fdd835',
+      secondary: '#fb8c00',
+      helmet: '#ffee58',
+      visor: '#3e2723',
+      earType: 'bear',
+      number: '8'
+    },
+    {
+      id: 3,
+      name: '우니 다이노',
+      shortName: '우니',
+      kartName: '공룡 로켓 카트',
+      primary: '#00e676',
+      secondary: '#00b0ff',
+      helmet: '#00c853',
+      visor: '#e8f5e9',
+      earType: 'dino',
+      number: '3'
+    },
+    {
+      id: 4,
+      name: '마리드 퍼플',
+      shortName: '마리드',
+      kartName: '스타 슈팅 카트',
+      primary: '#ab47bc',
+      secondary: '#ff4081',
+      helmet: '#8e24aa',
+      visor: '#f3e5f5',
+      earType: 'ribbon',
+      number: '5'
+    },
+    {
+      id: 5,
+      name: '모비 오렌지',
+      shortName: '모비',
+      kartName: '터보 불꽃 카트',
+      primary: '#ff7043',
+      secondary: '#ffca28',
+      helmet: '#f4511e',
+      visor: '#263238',
+      earType: 'visor',
+      number: '9'
+    }
+  ];
+
+  const TRACKS = [
+    {
+      id: 0,
+      name: '햇살 빌리지 트랙',
+      skyTop: '#29b6f6',
+      skyBottom: '#b3e5fc',
+      grass1: '#43a047',
+      grass2: '#66bb6a',
+      road1: '#546e7a',
+      road2: '#455a64',
+      kerb1: '#ff5252',
+      kerb2: '#ffffff',
+      sceneryType: 'village'
+    },
+    {
+      id: 1,
+      name: '달콤 캔디 랜드',
+      skyTop: '#f48fb1',
+      skyBottom: '#fff9c4',
+      grass1: '#f8bbd0',
+      grass2: '#fce4ec',
+      road1: '#7e57c2',
+      road2: '#673ab7',
+      kerb1: '#ffea00',
+      kerb2: '#ff4081',
+      sceneryType: 'candy'
+    },
+    {
+      id: 2,
+      name: '공룡 정글 파크',
+      skyTop: '#26a69a',
+      skyBottom: '#c8e6c9',
+      grass1: '#2e7d32',
+      grass2: '#388e3c',
+      road1: '#6d4c41',
+      road2: '#5d4037',
+      kerb1: '#ffab00',
+      kerb2: '#ffffff',
+      sceneryType: 'dino'
+    }
+  ];
+
+  const ITEMS = [
+    { id: 'ufo', icon: '🛸', name: '우주선 비행!', voice: '우주선 변신! 앞차들을 모두 추월해요!' },
+    { id: 'magnet', icon: '🧲', name: '슈퍼 자석!', voice: '슈퍼 자석 발동! 일등 차를 향해 슝 끌려가요!' },
+    { id: 'missile', icon: '🚀', name: '황금 미사일!', voice: '황금 미사일 발사! 앞차 명중!' },
+    { id: 'lightning', icon: '⚡', name: '무지개 번개!', voice: '번개 파워! 앞차들이 작아졌어요!' },
+    { id: 'shield', icon: '🛡️', name: '천사 날개!', voice: '천사 날개 부스터! 신나게 달려요!' }
+  ];
+
+  // ==================== 게임 전역 상태 ====================
+  const state = {
+    mode: 'lobby',
+    selectedRacer: 0,
+    selectedTrack: 0,
+    speedPreset: 'normal',
+    cornerAssist: true,
+    autoBoost: true,
+    tiltSteer: false,
+
+    segments: [],
+    trackLength: 0,
+    totalLaps: 2,
+
+    posZ: 0,
+    playerX: 0,
+    speed: 0,
+    maxSpeed: 210,
+    steerInput: 0,
+    wheelAngleDeg: 0,
+    driftActive: false,
+    driftDir: 0,
+
+    n2oGauge: 65,
+    boostCount: 1,
+    boostTimer: 0,
+    ufoTimer: 0,
+    shieldTimer: 0,
+    lightningTimer: 0,
+    heldItem: null,
+    coins: 0,
+    lap: 1,
+    rank: 1,
+
+    countdownTimer: 0,
+    countdownStage: 3,
+    startBoostWindow: false,
+
+    rivals: [],
+    particles: [],
+    confetti: [],
+    floatingTexts: []
+  };
+
+  // ==================== DOM 요소 ====================
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const previewCanvas = document.getElementById('previewCanvas');
+  const pctx = previewCanvas.getContext('2d');
+
+  const lobbyScreen = document.getElementById('lobbyScreen');
+  const hudLayer = document.getElementById('hudLayer');
+  const finishModal = document.getElementById('finishModal');
+
+  const wheelZone = document.getElementById('wheelZone');
+  const wheelGraphic = document.getElementById('wheelGraphic');
+  const hornBtn = document.getElementById('hornBtn');
+  const boostBtn = document.getElementById('boostBtn');
+  const itemBtn = document.getElementById('itemBtn');
+  const itemBtnIcon = document.getElementById('itemBtnIcon');
+  const itemBtnLabel = document.getElementById('itemBtnLabel');
+  const driftBtn = document.getElementById('driftBtn');
+  const startBoostBtn = document.getElementById('startBoostBtn');
+
+  const rankNumEl = document.getElementById('rankNum');
+  const lapBoxEl = document.getElementById('lapBox');
+  const itemSlot1 = document.getElementById('itemSlot1');
+  const itemSlot2 = document.getElementById('itemSlot2');
+  const progressFill = document.getElementById('progressFill');
+  const progressKart = document.getElementById('progressKart');
+  const rivalDotsContainer = document.getElementById('rivalDotsContainer');
+  const turnPrompt = document.getElementById('turnPrompt');
+  const centerBanner = document.getElementById('centerBanner');
+  const gearBadge = document.getElementById('gearBadge');
+  const speedText = document.getElementById('speedText');
+  const n2oGaugeFill = document.getElementById('n2oGaugeFill');
+  const boostCountText = document.getElementById('boostCountText');
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  // ==================== 트랙 생성 ====================
+  const SEG_LEN = 100;
+  function buildTrack(trackId) {
+    const segs = [];
+    const totalSegs = 280;
+
+    for (let i = 0; i < totalSegs; i++) {
+      let curve = 0;
+      let y = 0;
+
+      if (trackId === 0) {
+        if (i > 30 && i < 65) curve = 1.6;
+        else if (i > 95 && i < 130) curve = -1.7;
+        else if (i > 165 && i < 205) curve = 1.9;
+        else if (i > 225 && i < 255) curve = -1.4;
+        y = Math.sin(i * 0.08) * 180;
+      } else if (trackId === 1) {
+        if (i > 25 && i < 60) curve = -2.1;
+        else if (i > 70 && i < 110) curve = 2.2;
+        else if (i > 140 && i < 185) curve = -2.0;
+        else if (i > 205 && i < 245) curve = 2.1;
+        y = Math.sin(i * 0.11) * 260;
+      } else {
+        if (i > 20 && i < 55) curve = 2.3;
+        else if (i > 80 && i < 125) curve = -2.4;
+        else if (i > 150 && i < 190) curve = 2.2;
+        else if (i > 210 && i < 255) curve = -2.0;
+        y = Math.sin(i * 0.09) * 320;
+      }
+
+      const seg = {
+        index: i,
+        curve,
+        y,
+        items: [],
+        scenery: []
+      };
+
+      if (i > 15 && i % 30 === 0) {
+        [-0.55, 0, 0.55].forEach(ox => {
+          seg.items.push({ type: 'itemBox', x: ox, takenTimer: 0 });
+        });
+      } else if (i > 18 && i % 26 === 13) {
+        seg.items.push({ type: 'dashPad', x: (i % 52 === 13) ? -0.32 : 0.32 });
+      } else if (i > 10 && i % 10 === 0) {
+        const lane = Math.sin(i * 0.25) * 0.45;
+        seg.items.push({ type: 'coin', x: lane, takenTimer: 0 });
+      }
+
+      if (i % 6 === 0) {
+        seg.scenery.push({ side: -1, offset: -1.65 - (i % 3) * 0.25, variant: i % 3 });
+        seg.scenery.push({ side: 1, offset: 1.65 + ((i + 1) % 3) * 0.25, variant: (i + 1) % 3 });
+      }
+      if (i % 45 === 0) {
+        seg.arch = i === 0 ? 'START / FINISH' : 'KART RUSH+';
+      }
+
+      segs.push(seg);
+    }
+
+    state.segments = segs;
+    state.trackLength = segs.length * SEG_LEN;
+  }
+
+  // ==================== 핸들(Steering Wheel) 멀티터치 조작 ====================
+  let wheelTouchId = null;
+  let wheelStartX = 0;
+
+  function updateSteerFromPoint(clientX, clientY, isInitial = false) {
+    const rect = wheelZone.getBoundingClientRect();
+    const cx = rect.left + rect.width * 0.5;
+    const cy = rect.top + rect.height * 0.5;
+    const dx = clientX - cx;
+    const dy = clientY - cy;
+
+    if (isInitial) wheelStartX = clientX;
+
+    const positional = dx / (rect.width * 0.36);
+    const slide = (clientX - wheelStartX) / (rect.width * 0.32);
+    const angleRad = Math.atan2(dx, Math.max(25, -dy + rect.height * 0.25));
+    const angular = angleRad / 1.05;
+
+    const raw = positional * 0.58 + slide * 0.27 + angular * 0.15;
+    state.steerInput = Math.max(-1, Math.min(1, raw));
+    state.wheelAngleDeg = state.steerInput * 75;
+    wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
+  }
+
+  function resetWheel() {
+    wheelTouchId = null;
+    state.steerInput = 0;
+  }
+
+  wheelZone.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    sfx.init();
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      const t = e.changedTouches[i];
+      if (e.target === hornBtn || hornBtn.contains(e.target)) continue;
+      wheelTouchId = t.identifier;
+      updateSteerFromPoint(t.clientX, t.clientY, true);
+      break;
+    }
+  }, { passive: false });
+
+  wheelZone.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      const t = e.changedTouches[i];
+      if (t.identifier === wheelTouchId) {
+        updateSteerFromPoint(t.clientX, t.clientY, false);
+        break;
+      }
+    }
+  }, { passive: false });
+
+  wheelZone.addEventListener('touchend', (e) => {
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      if (e.changedTouches[i].identifier === wheelTouchId) {
+        resetWheel();
+        break;
+      }
+    }
+  });
+  wheelZone.addEventListener('touchcancel', resetWheel);
+
+  let mouseWheelDown = false;
+  wheelZone.addEventListener('mousedown', (e) => {
+    if (e.target === hornBtn || hornBtn.contains(e.target)) return;
+    mouseWheelDown = true;
+    updateSteerFromPoint(e.clientX, e.clientY, true);
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (mouseWheelDown) updateSteerFromPoint(e.clientX, e.clientY, false);
+  });
+  window.addEventListener('mouseup', () => {
+    if (mouseWheelDown) {
+      mouseWheelDown = false;
+      resetWheel();
+    }
+  });
+
+  const keys = {};
+  window.addEventListener('keydown', (e) => {
+    keys[e.code] = true;
+    if (e.code === 'Space') triggerBoost();
+    if (e.code === 'KeyZ' || e.code === 'ControlLeft') useHeldItem();
+  });
+  window.addEventListener('keyup', (e) => {
+    keys[e.code] = false;
+  });
+
+  // ==================== 클락션 / 부스터 / 아이템 / 드리프트 액션 ====================
+  function triggerHorn(e) {
+    if (e) e.stopPropagation();
+    sfx.playHorn();
+    vibrateDevice(50);
+    showFloatingText('📯 빠아앙~!! 비켜주세요!', '#ffea00');
+    // 내 앞의 라이벌 차들이 깜짝 놀라며 양옆으로 비켜주고 살짝 감속
+    state.rivals.forEach(r => {
+      const dist = r.z - state.posZ;
+      if (dist > -100 && dist < 1400) {
+        r.targetLane = r.x >= state.playerX ? 0.68 : -0.68;
+        r.spinTimer = Math.max(r.spinTimer, 0.45);
+      }
+    });
+  }
+  hornBtn.addEventListener('touchstart', (e) => { e.preventDefault(); triggerHorn(e); }, { passive: false });
+  hornBtn.addEventListener('click', triggerHorn);
+
+  function triggerBoost() {
+    if (state.mode !== 'racing') return;
+    sfx.playBoost();
+    vibrateDevice(75);
+
+    if (state.boostCount > 0 || state.n2oGauge >= 45) {
+      if (state.boostCount > 0) state.boostCount--;
+      else state.n2oGauge = Math.max(0, state.n2oGauge - 45);
+      state.boostTimer = 2.8;
+      showCenterBanner('🔥 슈퍼 N2O 부스터!!', 950);
+      if (Math.random() < 0.45) speakKR('슈퍼 부스터 발동!', false);
+    } else {
+      state.boostTimer = Math.max(state.boostTimer, 1.25);
+      showFloatingText('🔥 터보 부스터 슝~!', '#ff9100');
+    }
+    spawnBoostParticles(20);
+    updateBoostUI();
+  }
+  boostBtn.addEventListener('touchstart', (e) => { e.preventDefault(); triggerBoost(); }, { passive: false });
+  boostBtn.addEventListener('mousedown', (e) => { e.preventDefault(); triggerBoost(); });
+
+  function useHeldItem() {
+    if (state.mode !== 'racing') return;
+    if (!state.heldItem) {
+      sfx.playBoost();
+      state.boostTimer = Math.max(state.boostTimer, 0.9);
+      showFloatingText('✨ 점프 터보 가속!', '#80d8ff');
+      return;
+    }
+    const item = state.heldItem;
+    state.heldItem = null;
+    updateItemUI();
+    vibrateDevice(85);
+    sfx.playBoost();
+    speakKR(item.voice, true);
+    showCenterBanner(`${item.icon} ${item.name}`, 1200);
+
+    if (item.id === 'ufo') {
+      state.ufoTimer = 3.8;
+      state.boostTimer = 3.8;
+    } else if (item.id === 'magnet') {
+      state.boostTimer = 3.2;
+    } else if (item.id === 'missile') {
+      state.boostTimer = 2.2;
+      state.rivals.forEach(r => {
+        if (r.z > state.posZ && r.z - state.posZ < 2400) {
+          r.spinTimer = 2.0;
+        }
+      });
+    } else if (item.id === 'lightning') {
+      state.lightningTimer = 4.5;
+      state.boostTimer = 2.5;
+      state.rivals.forEach(r => { r.shrinkTimer = 4.5; });
+    } else if (item.id === 'shield') {
+      state.shieldTimer = 5.0;
+      state.boostTimer = 2.4;
+    }
+    spawnBoostParticles(24);
+  }
+  itemBtn.addEventListener('touchstart', (e) => { e.preventDefault(); useHeldItem(); }, { passive: false });
+  itemBtn.addEventListener('mousedown', (e) => { e.preventDefault(); useHeldItem(); });
+
+  function startDrift(e) {
+    if (e) e.preventDefault();
+    if (state.mode !== 'racing') return;
+    state.driftActive = true;
+    driftBtn.classList.add('pressed');
+    state.driftDir = state.steerInput !== 0 ? Math.sign(state.steerInput) : 1;
+    vibrateDevice(35);
+  }
+  function endDrift(e) {
+    if (e) e.preventDefault();
+    if (!state.driftActive) return;
+    state.driftActive = false;
+    driftBtn.classList.remove('pressed');
+    state.n2oGauge = Math.min(100, state.n2oGauge + 42);
+    if (state.n2oGauge >= 100 && state.boostCount < 2) {
+      state.boostCount++;
+      state.n2oGauge = 25;
+    }
+    state.boostTimer = Math.max(state.boostTimer, 1.45);
+    sfx.playBoost();
+    showFloatingText('💨 드리프트 순간 부스터!!', '#00e5ff');
+    updateBoostUI();
+  }
+  driftBtn.addEventListener('touchstart', startDrift, { passive: false });
+  driftBtn.addEventListener('touchend', endDrift, { passive: false });
+  driftBtn.addEventListener('touchcancel', endDrift, { passive: false });
+  driftBtn.addEventListener('mousedown', startDrift);
+  window.addEventListener('mouseup', endDrift);
+
+  startBoostBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    activateStartBoost();
+  }, { passive: false });
+  startBoostBtn.addEventListener('click', activateStartBoost);
+
+  function activateStartBoost() {
+    if (!state.startBoostWindow) return;
+    state.startBoostWindow = false;
+    startBoostBtn.style.display = 'none';
+    state.boostTimer = 2.6;
+    sfx.playBoost();
+    vibrateDevice(80);
+    showCenterBanner('🚀 슈퍼 출발 부스터 성공!!', 1100);
+    speakKR('우와! 출발 부스터 성공!', true);
+    spawnBoostParticles(25);
+  }
+
+  // ==================== UI 업데이트 헬퍼 ====================
+  let bannerTimeout = null;
+  function showCenterBanner(text, duration = 1000) {
+    centerBanner.textContent = text;
+    if (bannerTimeout) clearTimeout(bannerTimeout);
+    if (duration > 0) {
+      bannerTimeout = setTimeout(() => {
+        if (centerBanner.textContent === text) centerBanner.textContent = '';
+      }, duration);
+    }
+  }
+
+  function showFloatingText(text, color = '#ffea00') {
+    state.floatingTexts.push({
+      text,
+      color,
+      x: canvas.width * 0.5,
+      y: canvas.height * 0.45,
+      life: 1.0
+    });
+  }
+
+  function updateBoostUI() {
+    n2oGaugeFill.style.width = `${Math.round(state.n2oGauge)}%`;
+    itemSlot2.textContent = state.boostCount > 0 ? '🔥' : '⚡';
+    if (state.boostCount > 0 || state.n2oGauge >= 50) {
+      boostBtn.classList.add('ready');
+      boostCountText.textContent = state.boostCount > 0 ? `N2O x${state.boostCount} 준비!` : '부스터 준비!';
+    } else {
+      boostBtn.classList.remove('ready');
+      boostCountText.textContent = `${Math.round(state.n2oGauge)}%`;
+    }
+  }
+
+  function updateItemUI() {
+    if (state.heldItem) {
+      itemSlot1.textContent = state.heldItem.icon;
+      itemBtnIcon.textContent = state.heldItem.icon;
+      itemBtnLabel.textContent = state.heldItem.name;
+      itemBtn.classList.add('has-item');
+    } else {
+      itemSlot1.textContent = '🎁';
+      itemBtnIcon.textContent = '🎁';
+      itemBtnLabel.textContent = '아이템';
+      itemBtn.classList.remove('has-item');
+    }
+  }
+
+  // ==================== 로비 & HUD 버튼 이벤트 ====================
+  document.querySelectorAll('.racer-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.racer-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      state.selectedRacer = Number(card.dataset.racer);
+      sfx.playEngineStart();
+      speakKR(`${RACERS[state.selectedRacer].name}, ${RACERS[state.selectedRacer].kartName}!`, true);
+    });
+  });
+
+  document.querySelectorAll('.track-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.track-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      state.selectedTrack = Number(card.dataset.track);
+      sfx.playCoin();
+      speakKR(TRACKS[state.selectedTrack].name, true);
+    });
+  });
+
+  document.querySelectorAll('.speed-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      state.speedPreset = btn.dataset.speed;
+      syncSpeedButtonLabel();
+      sfx.playCoin();
+    });
+  });
+
+  const toggleAssistBtn = document.getElementById('toggleAssistBtn');
+  const toggleAutoBoostBtn = document.getElementById('toggleAutoBoostBtn');
+  const toggleTiltBtn = document.getElementById('toggleTiltBtn');
+  const hudSoundBtn = document.getElementById('hudSoundBtn');
+  const hudSpeedBtn = document.getElementById('hudSpeedBtn');
+  const hudAssistBtn = document.getElementById('hudAssistBtn');
+  const hudHomeBtn = document.getElementById('hudHomeBtn');
+
+  function syncAssistButtons() {
+    toggleAssistBtn.classList.toggle('active', state.cornerAssist);
+    toggleAssistBtn.textContent = state.cornerAssist ? '⛑️ 코너 도우미 ON' : '⛑️ 코너 도우미 OFF';
+    hudAssistBtn.classList.toggle('active', state.cornerAssist);
+    hudAssistBtn.textContent = state.cornerAssist ? '⛑️ 도우미 ON' : '⛑️ 도우미 OFF';
+
+    toggleAutoBoostBtn.classList.toggle('active', state.autoBoost);
+    toggleAutoBoostBtn.textContent = state.autoBoost ? '🚀 자동 부스터 ON' : '🚀 자동 부스터 OFF';
+
+    toggleTiltBtn.classList.toggle('active', state.tiltSteer);
+    toggleTiltBtn.textContent = state.tiltSteer ? '📱 기울이기 핸들 ON' : '📱 기울이기 핸들 OFF';
+  }
+
+  function syncSpeedButtonLabel() {
+    const map = { slow: '🐢 속도: 천천히', normal: '🚗 속도: 보통', fast: '🚀 속도: 빠르게' };
+    hudSpeedBtn.textContent = map[state.speedPreset] || map.normal;
+    if (state.speedPreset === 'slow') state.maxSpeed = 160;
+    else if (state.speedPreset === 'normal') state.maxSpeed = 210;
+    else state.maxSpeed = 260;
+  }
+
+  hudSoundBtn.addEventListener('click', () => {
+    sfx.muted = !sfx.muted;
+    hudSoundBtn.classList.toggle('active', !sfx.muted);
+    hudSoundBtn.textContent = sfx.muted ? '🔇 소리 꺼짐' : '🔊 엔진음 ON';
+  });
+
+  toggleAssistBtn.addEventListener('click', () => {
+    state.cornerAssist = !state.cornerAssist;
+    syncAssistButtons();
+    sfx.playCoin();
+  });
+  hudAssistBtn.addEventListener('click', () => {
+    state.cornerAssist = !state.cornerAssist;
+    syncAssistButtons();
+    sfx.playCoin();
+  });
+  toggleAutoBoostBtn.addEventListener('click', () => {
+    state.autoBoost = !state.autoBoost;
+    syncAssistButtons();
+    sfx.playCoin();
+  });
+  toggleTiltBtn.addEventListener('click', () => {
+    state.tiltSteer = !state.tiltSteer;
+    syncAssistButtons();
+    sfx.playCoin();
+  });
+  hudSpeedBtn.addEventListener('click', () => {
+    const order = ['slow', 'normal', 'fast'];
+    const next = order[(order.indexOf(state.speedPreset) + 1) % order.length];
+    state.speedPreset = next;
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.toggle('selected', b.dataset.speed === next));
+    syncSpeedButtonLabel();
+    sfx.playCoin();
+  });
+  hudHomeBtn.addEventListener('click', goToLobby);
+
+  document.getElementById('startRaceBtn').addEventListener('click', startRace);
+  document.getElementById('replayBtn').addEventListener('click', startRace);
+  document.getElementById('backLobbyBtn').addEventListener('click', goToLobby);
+
+  window.onBackKey = () => {
+    if (state.mode !== 'lobby') goToLobby();
+  };
+
+  function goToLobby() {
+    state.mode = 'lobby';
+    sfx.stopBGM();
+    hudLayer.style.display = 'none';
+    finishModal.style.display = 'none';
+    lobbyScreen.style.display = 'flex';
+  }
+
+  // ==================== 레이스 시작 초기화 (5대의 경쟁 AI 카트 배치) ====================
+  function startRace() {
+    sfx.init();
+    sfx.playEngineStart(); // 우렁찬 자동차 시동 & 배기 사운드!
+    buildTrack(state.selectedTrack);
+    syncSpeedButtonLabel();
+
+    state.mode = 'racing';
+    state.posZ = 0;
+    state.playerX = 0;
+    state.speed = 0;
+    state.steerInput = 0;
+    state.wheelAngleDeg = 0;
+    wheelGraphic.style.transform = 'rotate(0deg)';
+    state.driftActive = false;
+    state.n2oGauge = 70;
+    state.boostCount = 1;
+    state.boostTimer = 0;
+    state.ufoTimer = 0;
+    state.shieldTimer = 0;
+    state.lightningTimer = 0;
+    state.heldItem = null;
+    state.coins = 0;
+    state.lap = 1;
+    state.rank = 4;
+    state.particles = [];
+    state.floatingTexts = [];
+
+    // 5대의 라이벌 카트를 내 바로 앞과 옆에 촘촘히 배치 (출발 직후부터 눈앞에서 앞서 달리며 경쟁!)
+    const otherRacers = RACERS.filter((_, idx) => idx !== state.selectedRacer);
+    const startOffsetsZ = [140, 290, 460, 680, 920];
+    const startLanes = [-0.52, 0.48, -0.22, 0.56, 0.08];
+    // 각 라이벌이 평소 유지하려는 목표 거리 오프셋 (양수면 플레이어보다 앞서 달리고, 부스터 쓰면 추월당함!)
+    const paceTargetOffsets = [-120, 140, 320, 540, 780];
+
+    rivalDotsContainer.innerHTML = '';
+    state.rivals = otherRacers.map((rc, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'rival-dot';
+      dot.style.background = rc.primary;
+      rivalDotsContainer.appendChild(dot);
+
+      return {
+        racer: rc,
+        z: startOffsetsZ[i],
+        x: startLanes[i],
+        targetLane: startLanes[i],
+        paceOffset: paceTargetOffsets[i],
+        speed: 0,
+        boosting: false,
+        boostVisualTimer: 0,
+        spinTimer: 0,
+        shrinkTimer: 0,
+        wasAhead: true,
+        dotEl: dot
+      };
+    });
+
+    updateBoostUI();
+    updateItemUI();
+
+    lobbyScreen.style.display = 'none';
+    finishModal.style.display = 'none';
+    hudLayer.style.display = 'block';
+
+    state.countdownTimer = 2.5;
+    state.countdownStage = 3;
+    state.startBoostWindow = false;
+    startBoostBtn.style.display = 'none';
+    showCenterBanner('3', 0);
+    sfx.playTone(440, 0.18, 'triangle', 0.18);
+    speakKR('부르릉! 삼, 이, 일, 출발!', true);
+  }
+
+  function spawnBoostParticles(count = 10) {
+    for (let i = 0; i < count; i++) {
+      state.particles.push({
+        x: canvas.width * 0.5 + (Math.random() - 0.5) * 90,
+        y: canvas.height * 0.82 + (Math.random() - 0.5) * 30,
+        vx: (Math.random() - 0.5) * 220,
+        vy: 120 + Math.random() * 240,
+        size: 8 + Math.random() * 14,
+        color: Math.random() < 0.5 ? '#00e5ff' : '#ffea00',
+        life: 0.45 + Math.random() * 0.35
+      });
+    }
+  }
+
+  // ==================== 물리 & 스마트 라이벌 레이싱 업데이트 (60fps) ====================
+  function updateRace(dt) {
+    // 1. 출발 신호등 카운트다운
+    if (state.countdownTimer > 0) {
+      state.countdownTimer -= dt;
+      const stage = Math.ceil(state.countdownTimer / 0.82);
+      if (stage !== state.countdownStage && stage >= 1) {
+        state.countdownStage = stage;
+        showCenterBanner(String(stage), 0);
+        sfx.playTone(440, 0.18, 'triangle', 0.18);
+      }
+      if (state.countdownTimer <= 0) {
+        showCenterBanner('🏁 START!! 출발!', 900);
+        sfx.playTone(880, 0.35, 'triangle', 0.24);
+        sfx.playEngineStart();
+        state.startBoostWindow = true;
+        startBoostBtn.style.display = 'block';
+        setTimeout(() => {
+          state.startBoostWindow = false;
+          startBoostBtn.style.display = 'none';
+        }, 2200);
+        sfx.startBGM();
+      }
+      return;
+    }
+
+    // 2. 핸들 입력 업데이트
+    if (keys['ArrowLeft'] || keys['KeyA']) {
+      state.steerInput = -0.85;
+    } else if (keys['ArrowRight'] || keys['KeyD']) {
+      state.steerInput = 0.85;
+    } else if (wheelTouchId === null && !mouseWheelDown) {
+      if (state.tiltSteer) {
+        const tilt = getNativeTilt();
+        state.steerInput = Math.max(-1, Math.min(1, tilt));
+      } else {
+        state.steerInput *= Math.pow(0.08, dt);
+        if (Math.abs(state.steerInput) < 0.01) state.steerInput = 0;
+      }
+    }
+    state.wheelAngleDeg = state.steerInput * 75;
+    wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
+
+    // 3. 부스터/아이템 타이머 감소
+    if (state.boostTimer > 0) state.boostTimer = Math.max(0, state.boostTimer - dt);
+    if (state.ufoTimer > 0) state.ufoTimer = Math.max(0, state.ufoTimer - dt);
+    if (state.shieldTimer > 0) state.shieldTimer = Math.max(0, state.shieldTimer - dt);
+    if (state.lightningTimer > 0) state.lightningTimer = Math.max(0, state.lightningTimer - dt);
+
+    const isBoosting = state.boostTimer > 0 || state.ufoTimer > 0;
+    const boostMult = state.ufoTimer > 0 ? 1.48 : (state.boostTimer > 0 ? 1.38 : 1.0);
+    const targetSpeed = state.maxSpeed * boostMult;
+    state.speed += (targetSpeed - state.speed) * Math.min(1, dt * 4.5);
+
+    const moveDist = state.speed * 3.1 * dt;
+    state.posZ += moveDist;
+
+    // 연속 자동차 엔진 사운드 & 기어 변속 & 타이어 스키드 실시간 반영
+    sfx.updateContinuousEngine(
+      state.speed,
+      state.maxSpeed,
+      isBoosting,
+      state.driftActive,
+      Math.abs(state.steerInput),
+      dt
+    );
+    gearBadge.textContent = `${sfx.currentGear}단`;
+
+    const segIdx = Math.floor(state.posZ / SEG_LEN) % state.segments.length;
+    const currentSeg = state.segments[segIdx];
+    const lookAheadSeg = state.segments[(segIdx + 8) % state.segments.length];
+
+    if (Math.abs(lookAheadSeg.curve) > 1.1) {
+      turnPrompt.classList.add('show');
+      turnPrompt.textContent = lookAheadSeg.curve < 0 ? '⬅️ 왼쪽으로 핸들 돌리기!' : '➡️ 오른쪽으로 핸들 돌리기!';
+    } else {
+      turnPrompt.classList.remove('show');
+    }
+
+    // 4. 조향 및 어린이 코너 어시스트
+    const driftFactor = state.driftActive ? 1.45 : 1.0;
+    state.playerX += state.steerInput * 1.65 * driftFactor * dt;
+
+    const centrifugal = (currentSeg.curve * 0.16) * (state.speed / state.maxSpeed) * dt;
+    if (state.ufoTimer > 0) {
+      state.playerX += (0 - state.playerX) * 5 * dt;
+    } else if (state.cornerAssist) {
+      state.playerX -= centrifugal * 0.25;
+      if (Math.abs(state.steerInput) < 0.15) {
+        state.playerX += (0 - state.playerX) * 1.4 * dt;
+      }
+    } else {
+      state.playerX -= centrifugal * 0.75;
+    }
+    state.playerX = Math.max(-0.92, Math.min(0.92, state.playerX));
+
+    // 5. 자동 N2O 게이지 충전
+    const chargeRate = state.driftActive ? 44 : 18;
+    state.n2oGauge = Math.min(100, state.n2oGauge + chargeRate * dt);
+    if (state.n2oGauge >= 100) {
+      if (state.boostCount < 2) {
+        state.boostCount++;
+        state.n2oGauge = 22;
+        sfx.playCoin();
+        showFloatingText('🔥 N2O 부스터 충전 완료!', '#ffea00');
+      }
+      if (state.autoBoost && state.boostTimer <= 0.1) {
+        triggerBoost();
+      }
+    }
+    updateBoostUI();
+
+    // 6. 도로 위 아이템 박스 / 부스터 패드 / 코인 충돌 체크
+    for (let offset = 0; offset <= 2; offset++) {
+      const s = state.segments[(segIdx + offset) % state.segments.length];
+      s.items.forEach(it => {
+        if (it.takenTimer && it.takenTimer > 0) {
+          it.takenTimer = Math.max(0, it.takenTimer - dt);
+          return;
+        }
+        const hitWidth = it.type === 'itemBox' ? 0.38 : 0.36;
+        if (Math.abs(state.playerX - it.x) < hitWidth) {
+          if (it.type === 'itemBox') {
+            it.takenTimer = 4.0;
+            sfx.playItemBox();
+            vibrateDevice(35);
+            const picked = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+            state.heldItem = picked;
+            updateItemUI();
+            showFloatingText(`${picked.icon} ${picked.name} 획득!`, '#e040fb');
+          } else if (it.type === 'dashPad') {
+            it.takenTimer = 1.5;
+            state.boostTimer = Math.max(state.boostTimer, 1.7);
+            sfx.playBoost();
+            vibrateDevice(45);
+            showFloatingText('⚡ 바닥 부스터 패드!!', '#00e5ff');
+            spawnBoostParticles(14);
+          } else if (it.type === 'coin') {
+            it.takenTimer = 5.0;
+            state.coins++;
+            state.n2oGauge = Math.min(100, state.n2oGauge + 14);
+            sfx.playCoin();
+            showFloatingText('🪙 코인 +1', '#ffd54f');
+          }
+        }
+      });
+    }
+
+    // 7. 5대의 라이벌 AI 카트 업데이트 (내 바로 앞에서 앞서 달리거나 엎치락뒤치락 경쟁!)
+    const totalRaceDist = state.trackLength * state.totalLaps;
+    const raceProgressRatio = state.posZ / totalRaceDist;
+    let aheadCount = 0;
+
+    state.rivals.forEach((r, idx) => {
+      if (r.spinTimer > 0) r.spinTimer = Math.max(0, r.spinTimer - dt);
+      if (r.shrinkTimer > 0) r.shrinkTimer = Math.max(0, r.shrinkTimer - dt);
+      if (r.boostVisualTimer > 0) r.boostVisualTimer = Math.max(0, r.boostVisualTimer - dt);
+
+      // 레이스 중반까지는 라이벌들이 내 앞(+100 ~ +750)에서 앞서 달리고,
+      // 내가 부스터를 쓰거나 레이스 후반부(75% 이후)가 되면 목표 오프셋이 줄어들어 신나게 추월 가능!
+      let dynamicTargetOffset = r.paceOffset;
+      if (isBoosting) {
+        // 플레이어가 부스터를 쓰면 앞차들을 휙휙 제칠 수 있도록 목표 오프셋 감소
+        r.paceOffset = Math.max(-420 + idx * 85, r.paceOffset - 290 * dt);
+      } else {
+        // 평소 주행 시에는 앞차들이 다시 힘내서 내 바로 앞 시야(+80 ~ +650)로 치고 나감!
+        const desired = (-100 + idx * 190) * (raceProgressRatio > 0.78 ? 0.35 : 1.0);
+        r.paceOffset += (desired - r.paceOffset) * 0.45 * dt;
+      }
+      dynamicTargetOffset = r.paceOffset;
+
+      const desiredZ = state.posZ + dynamicTargetOffset;
+      const diffZ = desiredZ - r.z;
+
+      // 라이벌 속도 결정: 목표 지점보다 뒤에 있으면 부스터 불꽃을 켜고 빠르게 앞서 나감!
+      let aiSpeed = state.maxSpeed * (1.0 + Math.clamp ? 0 : 0);
+      const speedAdjust = Math.max(-75, Math.min(85, diffZ * 0.38));
+      aiSpeed = state.maxSpeed + speedAdjust;
+
+      if (diffZ > 110 && r.spinTimer <= 0) {
+        r.boostVisualTimer = 0.4;
+      }
+      if (r.spinTimer > 0) aiSpeed = state.maxSpeed * 0.32;
+      else if (r.shrinkTimer > 0) aiSpeed = state.maxSpeed * 0.58;
+
+      r.z += aiSpeed * 3.1 * dt;
+
+      // 시야 범위(-350 ~ +1650)를 절대 벗어나지 않도록 소프트 바운딩하여 항상 눈앞에 차들이 보이게 보장!
+      if (r.z < state.posZ - 380) {
+        r.z = state.posZ - 380;
+      } else if (r.z > state.posZ + 1650) {
+        r.z = state.posZ + 1650;
+      }
+
+      // 차선 변경 및 부드러운 코너링
+      if (Math.random() < 0.015) {
+        r.targetLane = (Math.random() - 0.5) * 1.3;
+      }
+      r.x += (r.targetLane - r.x) * 2.2 * dt;
+      r.x = Math.max(-0.78, Math.min(0.78, r.x));
+
+      const isAheadNow = r.z > state.posZ;
+      if (r.wasAhead && !isAheadNow) {
+        // 방금 앞차를 추월함! 도플러 효과음 + 칭찬 메시지!
+        sfx.playOvertakeWhoosh();
+        showFloatingText(`💨 ${r.racer.shortName} 추월 성공!!`, '#00e676');
+      }
+      r.wasAhead = isAheadNow;
+
+      if (isAheadNow) aheadCount++;
+
+      // 상단 진행도 바에 라이벌 위치 표시
+      if (r.dotEl) {
+        const rPct = Math.max(0, Math.min(100, (r.z / totalRaceDist) * 100));
+        r.dotEl.style.left = `${rPct.toFixed(1)}%`;
+      }
+    });
+
+    state.rank = 1 + aheadCount;
+    rankNumEl.textContent = String(state.rank);
+
+    // 8. 바퀴(Lap) 및 결승선 골인 체크
+    const currentLap = Math.min(state.totalLaps, Math.floor(state.posZ / state.trackLength) + 1);
+    if (currentLap !== state.lap) {
+      state.lap = currentLap;
+      sfx.playFanfare();
+      showCenterBanner('🎉 마지막 바퀴! 스퍼트!', 1300);
+      speakKR('마지막 바퀴예요! 부스터를 눌러 일등으로 달려봐요!', true);
+    }
+    lapBoxEl.textContent = `바퀴 ${state.lap} / ${state.totalLaps}`;
+
+    const progressPct = Math.min(100, (state.posZ / totalRaceDist) * 100);
+    progressFill.style.width = `${progressPct.toFixed(1)}%`;
+    progressKart.style.left = `${progressPct.toFixed(1)}%`;
+    speedText.textContent = String(Math.round(state.speed));
+
+    if (state.posZ >= totalRaceDist) {
+      finishRace();
+    }
+
+    for (let i = state.particles.length - 1; i >= 0; i--) {
+      const p = state.particles[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.life -= dt;
+      if (p.life <= 0) state.particles.splice(i, 1);
+    }
+    for (let i = state.floatingTexts.length - 1; i >= 0; i--) {
+      const ft = state.floatingTexts[i];
+      ft.y -= 48 * dt;
+      ft.life -= dt * 0.9;
+      if (ft.life <= 0) state.floatingTexts.splice(i, 1);
+    }
+  }
+
+  function finishRace() {
+    state.mode = 'finished';
+    sfx.stopBGM();
+    sfx.playFanfare();
+    vibrateDevice(140);
+
+    state.confetti = [];
+    const colors = ['#ffea00', '#ff3d00', '#00e5ff', '#00e676', '#e040fb', '#ffffff'];
+    for (let i = 0; i < 85; i++) {
+      state.confetti.push({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * canvas.height * 0.5,
+        vy: 120 + Math.random() * 180,
+        vx: (Math.random() - 0.5) * 90,
+        color: colors[i % colors.length],
+        size: 8 + Math.random() * 10,
+        rot: Math.random() * Math.PI
+      });
+    }
+
+    document.getElementById('finishTitle').textContent = `우와! ${state.rank}등으로 골인!!`;
+    document.getElementById('finishCoinText').textContent = `🪙 코인 +${state.coins + 35}`;
+    finishModal.style.display = 'flex';
+    speakKR(`우와! ${state.rank}등으로 골인했어요! 정말 최고예요! 축하합니다!`, true);
+  }
+
+  // ==================== 3D 트랙 & 라이벌 카트 렌더링 엔진 ====================
+  function drawScene(timeMs) {
+    const W = canvas.width;
+    const H = canvas.height;
+    const track = TRACKS[state.selectedTrack];
+
+    const horizonY = Math.floor(H * 0.40);
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
+    skyGrad.addColorStop(0, track.skyTop);
+    skyGrad.addColorStop(1, track.skyBottom);
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, W, horizonY);
+
+    drawHorizonScenery(ctx, W, horizonY, track, timeMs);
+
+    ctx.fillStyle = track.grass1;
+    ctx.fillRect(0, horizonY, W, H - horizonY);
+
+    if (state.segments.length === 0) return;
+
+    const drawDistance = 68;
+    const baseIndex = Math.floor(state.posZ / SEG_LEN);
+    const basePercent = (state.posZ % SEG_LEN) / SEG_LEN;
+
+    let dx = -(state.segments[baseIndex % state.segments.length].curve * basePercent);
+    let x = 0;
+    const projected = [];
+
+    for (let n = 0; n < drawDistance; n++) {
+      const seg = state.segments[(baseIndex + n) % state.segments.length];
+      const z = (n - basePercent) * SEG_LEN;
+      const clampedZ = Math.max(12, z);
+      const scale = 190 / clampedZ;
+
+      const projX = W * 0.5 + (x - state.playerX * 260) * scale;
+      const projY = horizonY + (210 - seg.y * 0.18) * scale;
+      const projW = 680 * scale;
+
+      projected.push({
+        seg,
+        n,
+        x: projX,
+        y: projY,
+        w: projW,
+        scale
+      });
+
+      x += dx;
+      dx += seg.curve * 1.45;
+    }
+
+    for (let i = projected.length - 1; i >= 1; i--) {
+      const p1 = projected[i - 1];
+      const p2 = projected[i];
+      if (p1.y <= horizonY && p2.y <= horizonY) continue;
+
+      const stripe = Math.floor(p2.seg.index / 2) % 2 === 0;
+
+      ctx.fillStyle = stripe ? track.grass1 : track.grass2;
+      ctx.fillRect(0, p2.y, W, Math.max(1, p1.y - p2.y + 1));
+
+      const k1 = p1.w * 1.13;
+      const k2 = p2.w * 1.13;
+      ctx.fillStyle = stripe ? track.kerb1 : track.kerb2;
+      drawTrapezoid(ctx, p1.x, p1.y, k1, p2.x, p2.y, k2);
+
+      ctx.fillStyle = stripe ? track.road1 : track.road2;
+      drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
+
+      if (stripe) {
+        ctx.fillStyle = 'rgba(255,255,255,0.65)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.035, p2.x, p2.y, p2.w * 0.035);
+      }
+      if (p2.seg.index % 6 === 0 && p2.n < 35) {
+        ctx.fillStyle = 'rgba(0, 230, 118, 0.55)';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w * 0.16, p2.x, p2.y, p2.w * 0.04);
+      }
+      if (p2.seg.index === 0) {
+        ctx.fillStyle = '#ffffff';
+        drawTrapezoid(ctx, p1.x, p1.y, p1.w, p2.x, p2.y, p2.w);
+      }
+    }
+
+    // 뒤에서 앞으로 오브젝트 및 앞서 달리는 라이벌 카트 렌더링 (소수점 보간으로 아주 매끄럽게!)
+    for (let i = projected.length - 1; i >= 1; i--) {
+      const p = projected[i];
+      if (p.y < horizonY) continue;
+
+      if (p.seg.arch && p.n < 45) {
+        drawArchGate(ctx, p.x, p.y, p.w, p.seg.arch);
+      }
+
+      p.seg.scenery.forEach(sc => {
+        const sx = p.x + sc.offset * p.w;
+        drawRoadsideProp(ctx, sx, p.y, p.w * 0.35, track.sceneryType, sc.variant);
+      });
+
+      p.seg.items.forEach(it => {
+        if (it.takenTimer && it.takenTimer > 0) return;
+        const ix = p.x + it.x * p.w * 0.78;
+        if (it.type === 'itemBox') {
+          drawItemCube(ctx, ix, p.y, p.w * 0.16, timeMs);
+        } else if (it.type === 'dashPad') {
+          drawDashPad(ctx, ix, p.y, p.w * 0.24, timeMs);
+        } else if (it.type === 'coin') {
+          drawGoldCoin(ctx, ix, p.y, p.w * 0.12, timeMs);
+        }
+      });
+
+      // 전방 라이벌 카트 매끄러운 보간 렌더링
+      state.rivals.forEach(r => {
+        const relZ = r.z - state.posZ;
+        if (relZ < 20 || relZ > 3200) return;
+        const floatSeg = relZ / SEG_LEN;
+        const segFloor = Math.floor(floatSeg);
+        if (segFloor === p.n && p.n >= 1 && p.n < projected.length - 1) {
+          const frac = floatSeg - segFloor;
+          const pNext = projected[p.n + 1];
+          const interpX = p.x + (pNext.x - p.x) * frac;
+          const interpY = p.y + (pNext.y - p.y) * frac;
+          const interpW = p.w + (pNext.w - p.w) * frac;
+
+          const rx = interpX + r.x * interpW * 0.75;
+          const shrinkScale = r.shrinkTimer > 0 ? 0.58 : 1.0;
+          const kScale = Math.min(1.18, Math.max(0.22, (interpW / 285))) * shrinkScale;
+
+          drawKartCharacter(ctx, rx, interpY, kScale, r.racer, {
+            steer: Math.sin(timeMs * 0.005 + r.racer.id) * 0.28,
+            boosting: r.boostVisualTimer > 0,
+            drifting: r.spinTimer > 0,
+            ufo: false,
+            shield: false,
+            label: `${r.racer.shortName}`,
+            timeMs
+          });
+        }
+      });
+    }
+
+    if (state.boostTimer > 0 || state.ufoTimer > 0) {
+      drawSpeedLines(ctx, W, H, timeMs);
+    }
+
+    // 플레이어 주인공 카트 렌더링
+    const playerRacer = RACERS[state.selectedRacer];
+    const kartX = W * 0.5 + state.steerInput * 34;
+    const bounceY = Math.sin(timeMs * 0.028) * (state.speed > 20 ? 3.5 : 1);
+    const ufoLift = state.ufoTimer > 0 ? -42 + Math.sin(timeMs * 0.01) * 8 : 0;
+    const kartY = H * 0.80 + bounceY + ufoLift;
+
+    drawKartCharacter(ctx, kartX, kartY, 1.25, playerRacer, {
+      steer: state.steerInput,
+      boosting: state.boostTimer > 0,
+      drifting: state.driftActive,
+      ufo: state.ufoTimer > 0,
+      shield: state.shieldTimer > 0,
+      label: '⭐ 나 (MY KART)',
+      isPlayer: true,
+      timeMs
+    });
+
+    state.particles.forEach(pt => {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, pt.life);
+      ctx.fillStyle = pt.color;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    state.floatingTexts.forEach(ft => {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, ft.life);
+      ctx.font = '900 28px "Apple SD Gothic Neo", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 6;
+      ctx.strokeText(ft.text, ft.x, ft.y);
+      ctx.fillStyle = ft.color;
+      ctx.fillText(ft.text, ft.x, ft.y);
+      ctx.restore();
+    });
+
+    if (state.mode === 'finished') {
+      state.confetti.forEach(c => {
+        c.y += c.vy * 0.016;
+        c.x += c.vx * 0.016;
+        c.rot += 0.08;
+        if (c.y > H + 20) c.y = -20;
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        ctx.rotate(c.rot);
+        ctx.fillStyle = c.color;
+        ctx.fillRect(-c.size * 0.5, -c.size * 0.5, c.size, c.size * 0.6);
+        ctx.restore();
+      });
+    }
+  }
+
+  function drawTrapezoid(c, x1, y1, w1, x2, y2, w2) {
+    c.beginPath();
+    c.moveTo(x1 - w1, y1);
+    c.lineTo(x1 + w1, y1);
+    c.lineTo(x2 + w2, y2);
+    c.lineTo(x2 - w2, y2);
+    c.closePath();
+    c.fill();
+  }
+
+  function drawHorizonScenery(c, W, horizonY, track, timeMs) {
+    const grad = c.createRadialGradient(W * 0.5, horizonY + 40, 80, W * 0.5, horizonY + 40, 260);
+    grad.addColorStop(0, 'rgba(255,255,255,0)');
+    grad.addColorStop(0.7, 'rgba(255,234,0,0.22)');
+    grad.addColorStop(0.85, 'rgba(255,64,129,0.22)');
+    grad.addColorStop(1, 'rgba(0,229,255,0)');
+    c.fillStyle = grad;
+    c.fillRect(0, 0, W, horizonY);
+
+    c.fillStyle = 'rgba(255,255,255,0.85)';
+    for (let i = 0; i < 5; i++) {
+      const cx = ((i * 290 + timeMs * 0.02) % (W + 200)) - 100;
+      const cy = 42 + (i % 2) * 34;
+      c.beginPath();
+      c.arc(cx, cy, 26, 0, Math.PI * 2);
+      c.arc(cx + 22, cy - 8, 32, 0, Math.PI * 2);
+      c.arc(cx + 48, cy, 24, 0, Math.PI * 2);
+      c.fill();
+    }
+
+    c.fillStyle = track.grass2;
+    for (let i = -1; i < 6; i++) {
+      const hx = i * (W / 4);
+      c.beginPath();
+      c.arc(hx, horizonY + 35, 160, Math.PI, 0);
+      c.fill();
+    }
+  }
+
+  function drawArchGate(c, x, y, w, label) {
+    if (w < 25) return;
+    const archH = w * 0.72;
+    c.save();
+    c.fillStyle = '#ff3d00';
+    c.fillRect(x - w * 0.95, y - archH, w * 0.12, archH);
+    c.fillRect(x + w * 0.83, y - archH, w * 0.12, archH);
+    c.fillStyle = '#1e88e5';
+    c.strokeStyle = '#ffea00';
+    c.lineWidth = Math.max(2, w * 0.025);
+    c.fillRect(x - w * 0.98, y - archH - w * 0.22, w * 1.96, w * 0.24);
+    c.strokeRect(x - w * 0.98, y - archH - w * 0.22, w * 1.96, w * 0.24);
+
+    if (w > 70) {
+      c.fillStyle = '#ffffff';
+      c.font = `900 ${Math.floor(w * 0.13)}px sans-serif`;
+      c.textAlign = 'center';
+      c.fillText(label, x, y - archH - w * 0.06);
+    }
+    c.restore();
+  }
+
+  function drawRoadsideProp(c, x, y, size, type, variant) {
+    if (size < 6) return;
+    c.save();
+    if (type === 'village') {
+      c.fillStyle = '#6d4c41';
+      c.fillRect(x - size * 0.14, y - size * 0.7, size * 0.28, size * 0.7);
+      c.fillStyle = variant === 0 ? '#2e7d32' : '#43a047';
+      c.beginPath();
+      c.arc(x, y - size * 0.85, size * 0.55, 0, Math.PI * 2);
+      c.fill();
+    } else if (type === 'candy') {
+      c.fillStyle = '#ffffff';
+      c.fillRect(x - size * 0.08, y - size * 0.9, size * 0.16, size * 0.9);
+      c.fillStyle = variant % 2 === 0 ? '#ff4081' : '#00e5ff';
+      c.beginPath();
+      c.arc(x, y - size * 1.0, size * 0.5, 0, Math.PI * 2);
+      c.fill();
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = Math.max(2, size * 0.08);
+      c.stroke();
+    } else {
+      c.fillStyle = '#5d4037';
+      c.fillRect(x - size * 0.12, y - size * 0.85, size * 0.24, size * 0.85);
+      c.fillStyle = '#00c853';
+      c.beginPath();
+      c.ellipse(x, y - size * 0.95, size * 0.7, size * 0.32, 0, 0, Math.PI * 2);
+      c.fill();
+    }
+    c.restore();
+  }
+
+  function drawItemCube(c, x, y, size, timeMs) {
+    if (size < 5) return;
+    const floatY = y - size * 0.9 + Math.sin(timeMs * 0.008 + x) * (size * 0.22);
+    c.save();
+    c.translate(x, floatY);
+    c.rotate(Math.sin(timeMs * 0.004) * 0.35);
+
+    const g = c.createLinearGradient(-size, -size, size, size);
+    g.addColorStop(0, 'rgba(255, 64, 129, 0.92)');
+    g.addColorStop(0.5, 'rgba(255, 234, 0, 0.92)');
+    g.addColorStop(1, 'rgba(0, 229, 255, 0.92)');
+    c.fillStyle = g;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = Math.max(1.5, size * 0.12);
+    c.beginPath();
+    c.roundRect(-size * 0.65, -size * 0.65, size * 1.3, size * 1.3, size * 0.22);
+    c.fill();
+    c.stroke();
+
+    if (size > 12) {
+      c.fillStyle = '#ffffff';
+      c.font = `900 ${Math.floor(size * 0.85)}px sans-serif`;
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      c.fillText('?', 0, 2);
+    }
+    c.restore();
+  }
+
+  function drawDashPad(c, x, y, size, timeMs) {
+    if (size < 6) return;
+    c.save();
+    const glow = (Math.sin(timeMs * 0.015) + 1) * 0.5;
+    c.fillStyle = glow > 0.5 ? '#00e5ff' : '#ffea00';
+    c.beginPath();
+    c.moveTo(x, y - size * 0.45);
+    c.lineTo(x + size * 0.65, y);
+    c.lineTo(x - size * 0.65, y);
+    c.closePath();
+    c.fill();
+    c.restore();
+  }
+
+  function drawGoldCoin(c, x, y, size, timeMs) {
+    if (size < 4) return;
+    const bounce = Math.sin(timeMs * 0.01 + x) * size * 0.2;
+    c.save();
+    c.fillStyle = '#ffd600';
+    c.strokeStyle = '#fff9c4';
+    c.lineWidth = Math.max(1.5, size * 0.15);
+    c.beginPath();
+    c.arc(x, y - size * 0.7 + bounce, size * 0.55, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+    c.restore();
+  }
+
+  function drawSpeedLines(c, W, H, timeMs) {
+    c.save();
+    c.strokeStyle = 'rgba(255, 255, 255, 0.48)';
+    c.lineWidth = 4;
+    for (let i = 0; i < 14; i++) {
+      const angle = (i / 14) * Math.PI * 2 + (timeMs * 0.003);
+      const r1 = Math.min(W, H) * 0.36;
+      const r2 = Math.max(W, H) * 0.72;
+      c.beginPath();
+      c.moveTo(W * 0.5 + Math.cos(angle) * r1, H * 0.5 + Math.sin(angle) * r1);
+      c.lineTo(W * 0.5 + Math.cos(angle) * r2, H * 0.5 + Math.sin(angle) * r2);
+      c.stroke();
+    }
+    c.restore();
+  }
+
+  function drawKartCharacter(c, x, y, scale, racer, opts = {}) {
+    c.save();
+    c.translate(x, y);
+    c.scale(scale, scale);
+
+    const steer = opts.steer || 0;
+    const tilt = steer * 0.16 + (opts.drifting ? Math.sign(steer || 1) * 0.22 : 0);
+    c.rotate(tilt);
+
+    c.fillStyle = 'rgba(0, 0, 0, 0.38)';
+    c.beginPath();
+    c.ellipse(0, 12, 68, 18, 0, 0, Math.PI * 2);
+    c.fill();
+
+    if (opts.shield) {
+      c.strokeStyle = 'rgba(0, 229, 255, 0.85)';
+      c.fillStyle = 'rgba(128, 216, 255, 0.22)';
+      c.lineWidth = 4;
+      c.beginPath();
+      c.arc(0, -32, 78, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+    }
+
+    if (opts.ufo) {
+      c.fillStyle = 'rgba(224, 64, 251, 0.45)';
+      c.strokeStyle = '#ffea00';
+      c.lineWidth = 4;
+      c.beginPath();
+      c.ellipse(0, 4, 84, 22, 0, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+    }
+
+    c.fillStyle = '#212121';
+    c.strokeStyle = '#424242';
+    c.lineWidth = 3;
+    c.beginPath();
+    c.roundRect(-64, -22, 22, 32, 7);
+    c.roundRect(42, -22, 22, 32, 7);
+    c.fill();
+    c.stroke();
+
+    c.fillStyle = '#263238';
+    c.beginPath();
+    c.roundRect(-56 + steer * 5, -42, 16, 22, 5);
+    c.roundRect(40 + steer * 5, -42, 16, 22, 5);
+    c.fill();
+
+    c.fillStyle = racer.secondary;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 2.5;
+    c.beginPath();
+    c.roundRect(-52, -40, 104, 12, 6);
+    c.fill();
+    c.stroke();
+
+    const bodyGrad = c.createLinearGradient(0, -48, 0, 12);
+    bodyGrad.addColorStop(0, racer.primary);
+    bodyGrad.addColorStop(1, racer.secondary);
+    c.fillStyle = bodyGrad;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 3;
+    c.beginPath();
+    c.moveTo(-48, 8);
+    c.lineTo(48, 8);
+    c.lineTo(56, -18);
+    c.lineTo(36, -36);
+    c.lineTo(-36, -36);
+    c.lineTo(-56, -18);
+    c.closePath();
+    c.fill();
+    c.stroke();
+
+    c.fillStyle = '#37474f';
+    c.strokeStyle = '#cfd8dc';
+    c.lineWidth = 2;
+    c.beginPath();
+    c.arc(-22, -2, 8, 0, Math.PI * 2);
+    c.arc(22, -2, 8, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    if (opts.boosting || opts.ufo) {
+      const flameLen = 28 + Math.sin((opts.timeMs || 0) * 0.05) * 10;
+      [-22, 22].forEach(mx => {
+        const fg = c.createLinearGradient(mx, -2, mx, flameLen);
+        fg.addColorStop(0, '#ffffff');
+        fg.addColorStop(0.4, '#00e5ff');
+        fg.addColorStop(1, 'rgba(255, 23, 68, 0)');
+        c.fillStyle = fg;
+        c.beginPath();
+        c.moveTo(mx - 10, -2);
+        c.lineTo(mx + 10, -2);
+        c.lineTo(mx, flameLen);
+        c.closePath();
+        c.fill();
+      });
+    } else if (opts.drifting) {
+      c.fillStyle = '#00e5ff';
+      c.beginPath();
+      c.arc(-48, 10, 9, 0, Math.PI * 2);
+      c.arc(48, 10, 9, 0, Math.PI * 2);
+      c.fill();
+    }
+
+    c.fillStyle = '#ffffff';
+    c.beginPath();
+    c.arc(0, -14, 12, 0, Math.PI * 2);
+    c.fill();
+    c.fillStyle = '#111';
+    c.font = '900 15px sans-serif';
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText(racer.number, 0, -13);
+
+    c.save();
+    c.translate(steer * 8, -54);
+    c.rotate(steer * 0.14);
+
+    if (racer.earType === 'bear') {
+      c.fillStyle = racer.helmet;
+      c.strokeStyle = '#fff';
+      c.lineWidth = 2.5;
+      c.beginPath();
+      c.arc(-22, -20, 11, 0, Math.PI * 2);
+      c.arc(22, -20, 11, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+    } else if (racer.earType === 'ribbon') {
+      c.fillStyle = '#ffea00';
+      c.beginPath();
+      c.moveTo(0, -28);
+      c.lineTo(-18, -38);
+      c.lineTo(-14, -20);
+      c.lineTo(18, -38);
+      c.lineTo(14, -20);
+      c.closePath();
+      c.fill();
+    } else if (racer.earType === 'dino') {
+      c.fillStyle = '#ffea00';
+      c.beginPath();
+      c.moveTo(-8, -28);
+      c.lineTo(0, -42);
+      c.lineTo(8, -28);
+      c.closePath();
+      c.fill();
+    }
+
+    c.fillStyle = racer.helmet;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 3;
+    c.beginPath();
+    c.arc(0, -4, 28, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    c.fillStyle = racer.visor;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 2;
+    c.beginPath();
+    c.roundRect(-22, -22, 44, 14, 7);
+    c.fill();
+    c.stroke();
+
+    // 머리 위 이름표 태그 (라이벌 차들이 눈앞에서 달릴 때 누구인지 선명하게 표시)
+    if (opts.label && !opts.isPlayer) {
+      c.fillStyle = 'rgba(13, 27, 42, 0.85)';
+      c.strokeStyle = racer.primary;
+      c.lineWidth = 2.5;
+      c.beginPath();
+      c.roundRect(-36, -64, 72, 22, 10);
+      c.fill();
+      c.stroke();
+      c.fillStyle = '#ffffff';
+      c.font = '900 13px sans-serif';
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      c.fillText(opts.label, 0, -53);
+    }
+
+    c.restore();
+    c.restore();
+  }
+
+  function drawLobbyPreview(timeMs) {
+    const W = previewCanvas.width;
+    const H = previewCanvas.height;
+    pctx.clearRect(0, 0, W, H);
+
+    pctx.fillStyle = 'rgba(0, 229, 255, 0.22)';
+    pctx.strokeStyle = '#00e5ff';
+    pctx.lineWidth = 3;
+    pctx.beginPath();
+    pctx.ellipse(W * 0.5, H * 0.78, 95, 24, 0, 0, Math.PI * 2);
+    pctx.fill();
+    pctx.stroke();
+
+    const racer = RACERS[state.selectedRacer];
+    const hoverY = Math.sin(timeMs * 0.005) * 5;
+    const demoSteer = Math.sin(timeMs * 0.003) * 0.45;
+
+    drawKartCharacter(pctx, W * 0.5, H * 0.70 + hoverY, 1.18, racer, {
+      steer: demoSteer,
+      boosting: true,
+      drifting: false,
+      ufo: false,
+      shield: false,
+      timeMs
+    });
+
+    pctx.fillStyle = '#ffffff';
+    pctx.font = '900 18px "Apple SD Gothic Neo", sans-serif';
+    pctx.textAlign = 'center';
+    pctx.fillText(`${racer.name} · ${racer.kartName}`, W * 0.5, 26);
+  }
+
+  let lastTime = performance.now();
+  function loop(now) {
+    const dt = Math.min(0.05, (now - lastTime) / 1000);
+    lastTime = now;
+
+    if (state.mode === 'lobby') {
+      drawLobbyPreview(now);
+    } else if (state.mode === 'racing') {
+      updateRace(dt);
+      drawScene(now);
+    } else if (state.mode === 'finished') {
+      drawScene(now);
+    }
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
