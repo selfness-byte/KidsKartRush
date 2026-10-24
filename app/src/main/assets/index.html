@@ -954,7 +954,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.5.6</span>
+      <span class="lobby-badge" id="verBadge">v1.5.7</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
@@ -1259,21 +1259,11 @@
 
 <script>
 (() => {
-  // ==================== 네이티브 브릿지 (TTS 한국어 음성, 진동, 자동 업데이트) ====================
-  function speakKR(text, flush = true) {
+  // ==================== 네이티브 브릿지 (여성 음성 TTS 완전 제거, 진동, 자동 업데이트) ====================
+  function speakKR(_text, _flush = true) {
+    // 사용자 요청에 따라 여성 음성(TTS) 완전 제거: 음성 합성을 호출하지 않고 진행 중인 음성도 즉시 취소
     try {
-      if (window.AndroidBridge && typeof window.AndroidBridge.speak === 'function') {
-        window.AndroidBridge.speak(text, !!flush);
-        return;
-      }
-      if ('speechSynthesis' in window) {
-        if (flush) window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'ko-KR';
-        u.pitch = 1.2;
-        u.rate = 1.08;
-        window.speechSynthesis.speak(u);
-      }
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     } catch (_) {}
   }
 
@@ -1636,12 +1626,42 @@
       }
 
       if (this.skidGain && this.skidFilter) {
-        const skidding = (isDrifting || steerIntensity > 0.78) && speed > 65 && state.playerY <= 2;
-        const skidVol = skidding ? (isDrifting ? 0.075 : 0.035) : 0.0001;
-        const skidPitch = 510 + Math.sin(now * 16) * 45 + steerIntensity * 110;
-        this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.05);
-        this.skidGain.gain.setTargetAtTime(skidVol, now, 0.05);
+        const skidding = (isDrifting || steerIntensity > 0.65) && speed > 55 && state.playerY <= 4;
+        const skidVol = skidding ? (isDrifting ? 0.145 : 0.048) : 0.0001;
+        const skidPitch = 620 + Math.sin(now * 22) * 55 + steerIntensity * 165;
+        this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.04);
+        this.skidGain.gain.setTargetAtTime(skidVol, now, 0.04);
       }
+    }
+
+    // 카트라이더 시그니처 드리프트 진입 타이어 마찰음 ("끼이이익~!")
+    playDriftScreech() {
+      if (this.muted || this.appPaused) return;
+      try {
+        this.init();
+        if (!this.ctx || !this.noiseBuffer) return;
+        const now = this.ctx.currentTime;
+        const src = this.ctx.createBufferSource();
+        src.buffer = this.noiseBuffer;
+
+        const bp = this.ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.Q.setValueAtTime(5.2, now);
+        bp.frequency.setValueAtTime(780, now);
+        bp.frequency.exponentialRampToValueAtTime(640, now + 0.18);
+        bp.frequency.exponentialRampToValueAtTime(720, now + 0.34);
+
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.01, now);
+        g.gain.linearRampToValueAtTime(0.16, now + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.002, now + 0.36);
+
+        src.connect(bp);
+        bp.connect(g);
+        g.connect(this.ctx.destination);
+        src.start(now);
+        src.stop(now + 0.38);
+      } catch (_) {}
     }
 
     stopContinuousEngine() {
@@ -2757,8 +2777,76 @@
     state.trackLength = segs.length * SEG_LEN;
   }
 
-  // ==================== 직관적인 핸들(Steering Wheel) 1:1 조향 컨트롤 ====================
+  // ==================== 직관적인 핸들(Steering Wheel) 1:1 조향 & 카트라이더 정통 드리프트 컨트롤 ====================
   let wheelTouchId = null;
+  let lastSteerTime = performance.now();
+
+  // 카트라이더식 드리프트 진입: 핸들을 깊게 꺾거나(|steer| >= 0.54) 빠르게 꺾을 때 언제 어디서나 즉시 드리프트 슬라이딩 시작!
+  function engageKartRiderDrift(dir) {
+    if (state.mode !== 'racing' || state.speed < state.maxSpeed * 0.30) return;
+    const d = dir || Math.sign(state.steerInput) || 1;
+    if (!state.driftActive) {
+      state.driftActive = true;
+      state.driftDir = d;
+      state.driftChargeTime = 0;
+      state.driftStage = 1;
+      if (state.playerY <= 2) {
+        state.velY = 145;
+      }
+      sfx.playDriftScreech();
+      vibrateDevice(28);
+    } else if (state.driftDir !== d && Math.abs(state.steerInput) >= 0.68) {
+      // 연속 S자 커브에서 반대 방향으로 핸들을 끝까지 꺾으면 카트라이더 '연타/트위스트 드리프트'로 즉시 전환!
+      finishKartRiderDrift(true);
+      state.driftActive = true;
+      state.driftDir = d;
+      state.driftChargeTime = 0.15;
+      state.driftStage = 1;
+      sfx.playDriftScreech();
+      vibrateDevice(28);
+    }
+  }
+
+  // 카트라이더식 드리프트 탈출 & '순간 부스터(순부)' 점화!
+  function finishKartRiderDrift(silentTransition = false) {
+    if (!state.driftActive) return;
+    const stage = state.driftStage;
+    const chargedTime = state.driftChargeTime;
+    state.driftActive = false;
+    state.driftChargeTime = 0;
+    state.driftStage = 0;
+    driftBtn.classList.remove('pressed');
+    driftStageBadge.style.display = 'none';
+
+    // 드리프트 끌기 시간에 비례해 카트라이더 N2O 부스터 게이지 대폭 충전 (최대 2개까지 부스터 토큰 스택!)
+    if (chargedTime > 0.22) {
+      const gainGauge = stage === 3 ? 42 : (stage === 2 ? 26 : 14);
+      state.n2oGauge += gainGauge;
+      while (state.n2oGauge >= 100) {
+        if (state.boostCount < 2) {
+          state.boostCount++;
+          state.n2oGauge -= 100;
+          sfx.playCoin();
+        } else {
+          state.n2oGauge = 100;
+          break;
+        }
+      }
+    }
+
+    // 카트라이더 시그니처 '순간 부스터(Instant Boost / 순부)': 드리프트 후 핸들을 반대/중앙으로 풀면 즉시 짧은 순부 점화!
+    if (!silentTransition && chargedTime >= 0.36) {
+      const isSuperInstant = stage >= 3;
+      const instantDur = isSuperInstant ? 0.78 : (stage >= 2 ? 0.54 : 0.36);
+      state.boostTimer = Math.max(state.boostTimer, instantDur);
+      state.instantBoostWindow = 0.65;
+      spawnBoostShockwave(isSuperInstant);
+      sfx.playBoost(isSuperInstant);
+      vibrateDevice(isSuperInstant ? 55 : 35);
+      spawnBoostParticles(stage * 7 + 6);
+    }
+    updateBoostUI();
+  }
 
   function updateSteerFromPoint(clientX, _clientY) {
     const rect = wheelZone.getBoundingClientRect();
@@ -2768,14 +2856,38 @@
     // 직관적인 1:1 좌우 위치 비례 조향 (핸들 왼쪽을 누르면 왼쪽, 오른쪽을 누르면 오른쪽으로 정확히 조향!)
     const raw = dx / (rect.width * 0.28);
     const cleaned = Math.abs(raw) < 0.04 ? 0 : raw;
-    state.steerInput = Math.max(-1, Math.min(1, cleaned));
-    state.wheelAngleDeg = state.steerInput * 75;
+    const prevSteer = state.steerInput || 0;
+    const nextSteer = Math.max(-1, Math.min(1, cleaned));
+    const nowT = performance.now();
+    const dtSteer = Math.max(0.008, (nowT - lastSteerTime) * 0.001);
+    lastSteerTime = nowT;
+    const steerDelta = nextSteer - prevSteer;
+
+    state.steerInput = nextSteer;
+    state.wheelAngleDeg = state.steerInput * 82;
     wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
+
+    // 카트라이더 드리프트 조작:
+    // 1) 핸들을 깊게 꺾거나(|steerInput| >= 0.54) 빠르게 휙 꺾으면(|steerDelta|/dt > 3.2 && |steerInput| >= 0.38) 즉시 드리프트 진입!
+    if (Math.abs(nextSteer) >= 0.54 || (Math.abs(steerDelta) / dtSteer > 3.2 && Math.abs(nextSteer) >= 0.38)) {
+      engageKartRiderDrift(Math.sign(nextSteer));
+    }
+    // 2) 드리프트 중 반대 방향으로 카운터 스티어링(카트라이더 드리프트 끊기!)하거나 핸들을 중앙으로 풀면 드리프트 완료 & 순간 부스터 발동!
+    else if (state.driftActive) {
+      const counterSteered = (nextSteer * state.driftDir) < -0.06;
+      const centeredWheel = Math.abs(nextSteer) < 0.20;
+      if (counterSteered || centeredWheel) {
+        finishKartRiderDrift(false);
+      }
+    }
   }
 
   function resetWheel() {
     wheelTouchId = null;
     state.steerInput = 0;
+    if (state.driftActive) {
+      finishKartRiderDrift(false);
+    }
   }
 
   wheelZone.addEventListener('touchstart', (e) => {
@@ -2874,7 +2986,18 @@
 
   function triggerBoost() {
     if (state.mode !== 'racing') return;
-    // 부스터만 눌러서 쉽게 이기지 못하도록, 코너 드리프트와 코인으로 100% 모아 획득한 부스터 토큰(boostCount > 0)이 있을 때만 발동!
+    // 1) 카트라이더 '순간 부스터(순부)' 타이밍 윈도우에 부스터 버튼을 누르면 토큰 소모 없이 순부 점화!
+    if (state.instantBoostWindow && state.instantBoostWindow > 0 && state.boostCount <= 0) {
+      state.instantBoostWindow = 0;
+      sfx.playBoost(false);
+      vibrateDevice(45);
+      state.boostTimer = Math.max(state.boostTimer, 0.56);
+      spawnBoostShockwave(false);
+      spawnBoostParticles(16);
+      updateBoostUI();
+      return;
+    }
+    // 2) 드리프트와 코인으로 N2O 게이지를 100% 모아 획득한 부스터 토큰(boostCount > 0) 발동!
     if (state.boostCount <= 0) {
       sfx.playHop();
       return;
@@ -2968,49 +3091,12 @@
   function startDrift(e) {
     if (e) e.preventDefault();
     if (state.mode !== 'racing') return;
-    if (!state.driftActive) {
-      state.driftActive = true;
-      state.driftChargeTime = 0;
-      state.driftStage = 1;
-      if (state.playerY <= 2) {
-        state.velY = 210;
-        sfx.playHop();
-      }
-    }
-    driftBtn.classList.add('pressed');
-    state.driftDir = Math.abs(state.steerInput) > 0.08 ? Math.sign(state.steerInput) : (state.driftDir || 1);
-    vibrateDevice(35);
+    engageKartRiderDrift(Math.abs(state.steerInput) > 0.05 ? Math.sign(state.steerInput) : (state.driftDir || 1));
   }
 
   function endDrift(e) {
     if (e) e.preventDefault();
-    if (!state.driftActive) return;
-    const stage = state.driftStage;
-    const chargedTime = state.driftChargeTime;
-    state.driftActive = false;
-    state.driftChargeTime = 0;
-    state.driftStage = 0;
-    driftBtn.classList.remove('pressed');
-    driftStageBadge.style.display = 'none';
-
-    // 단순 짧은 탭 드리프트로는 부스터가 남발되지 않고, 실제 코너에서 충분히 미끄러진 2단(주황)·3단(보라) 미니터보만 가속 발동!
-    const gainGauge = stage === 3 ? 45 : (stage === 2 ? 28 : (chargedTime > 0.35 ? 12 : 4));
-    state.n2oGauge = Math.min(100, state.n2oGauge + gainGauge);
-    if (state.n2oGauge >= 100 && state.boostCount < 1) {
-      state.boostCount = 1;
-      state.n2oGauge = 0;
-      sfx.playCoin();
-    }
-
-    if (stage >= 2) {
-      const boostDur = stage === 3 ? 0.82 : 0.50;
-      state.boostTimer = Math.max(state.boostTimer, boostDur);
-      spawnBoostShockwave(stage === 3);
-      sfx.playBoost(stage === 3);
-      showFloatingText('', stage === 3 ? '#e040fb' : '#00e5ff');
-      spawnBoostParticles(stage * 8);
-    }
-    updateBoostUI();
+    finishKartRiderDrift(false);
   }
   driftBtn.addEventListener('touchstart', startDrift, { passive: false });
   driftBtn.addEventListener('touchend', endDrift, { passive: false });
@@ -3067,7 +3153,7 @@
   function updateBoostUI() {
     n2oGaugeFill.style.width = `${Math.round(state.n2oGauge)}%`;
     itemSlot2.textContent = state.boostCount > 0 ? '🔥' : '⚡';
-    if (state.boostCount > 0) {
+    if (state.boostCount > 0 || (state.instantBoostWindow && state.instantBoostWindow > 0)) {
       boostBtn.classList.add('ready');
     } else {
       boostBtn.classList.remove('ready');
@@ -3372,27 +3458,39 @@
       }
     }
 
-    // 3. 핸들 입력 업데이트 (1:1 직관적 반응 & 부드러운 보간)
+    // 3. 핸들 입력 업데이트 (1:1 직관적 반응 & 키보드/자이로 카트라이더 드리프트 연동)
     if (keys['ArrowLeft'] || keys['KeyA']) {
-      state.steerInput = -0.85;
+      state.steerInput = -0.88;
+      if (keys['ShiftLeft'] || keys['KeyX'] || Math.abs(state.smoothSteer) > 0.52) {
+        engageKartRiderDrift(-1);
+      }
     } else if (keys['ArrowRight'] || keys['KeyD']) {
-      state.steerInput = 0.85;
+      state.steerInput = 0.88;
+      if (keys['ShiftLeft'] || keys['KeyX'] || Math.abs(state.smoothSteer) > 0.52) {
+        engageKartRiderDrift(1);
+      }
     } else if (wheelTouchId === null && !mouseWheelDown) {
       if (state.tiltSteer) {
         const tilt = getNativeTilt();
         state.steerInput = Math.max(-1, Math.min(1, tilt));
+        if (Math.abs(state.steerInput) >= 0.56) engageKartRiderDrift(Math.sign(state.steerInput));
+        else if (state.driftActive && Math.abs(state.steerInput) < 0.22) finishKartRiderDrift(false);
       } else {
         state.steerInput *= Math.pow(0.015, dt);
         if (Math.abs(state.steerInput) < 0.01) state.steerInput = 0;
+        if (state.driftActive && !keys['ShiftLeft'] && !keys['KeyX']) {
+          finishKartRiderDrift(false);
+        }
       }
     }
-    state.smoothSteer += (state.steerInput - state.smoothSteer) * Math.min(1, dt * 14.0);
+    state.smoothSteer += (state.steerInput - state.smoothSteer) * Math.min(1, dt * 15.0);
     if (Math.abs(state.smoothSteer) < 0.005 && state.steerInput === 0) state.smoothSteer = 0;
-    state.wheelAngleDeg = state.smoothSteer * 75;
+    state.wheelAngleDeg = state.smoothSteer * 82;
     wheelGraphic.style.transform = `rotate(${state.wheelAngleDeg.toFixed(1)}deg)`;
 
     // 4. 타이머 업데이트 & 슈퍼부스터 화면 워프/충격파 이펙트 보간
     if (state.boostTimer > 0) state.boostTimer = Math.max(0, state.boostTimer - dt);
+    if (state.instantBoostWindow > 0) state.instantBoostWindow = Math.max(0, state.instantBoostWindow - dt);
     if (state.starTimer > 0) state.starTimer = Math.max(0, state.starTimer - dt);
     if (state.megaTimer > 0) state.megaTimer = Math.max(0, state.megaTimer - dt);
     if (state.bulletTimer > 0) state.bulletTimer = Math.max(0, state.bulletTimer - dt);
@@ -3405,38 +3503,21 @@
     const segIdx = Math.floor(state.posZ / SEG_LEN) % state.segments.length;
     const currentSeg = state.segments[segIdx];
 
-    // 5. 핸들 조향만으로 자연스럽게 작동하는 자동 코너 드리프트 & 미니터보 해방 (드리프트 버튼 없이 부스터·아이템 2버튼 체제 완벽 지원!)
+    // 5. 카트라이더(KartRider) 정통 드리프트 물리 & 드리프트 끌기 게이지 차지 & 순간 부스터(순부) 시스템!
     const autoCornerSlide = !state.driftActive
-      && Math.abs(state.smoothSteer) > 0.32
-      && Math.abs(currentSeg.curve) > 0.95
-      && state.speed > state.maxSpeed * 0.38;
-    const isSliding = state.driftActive || autoCornerSlide;
+      && Math.abs(state.smoothSteer) > 0.30
+      && Math.abs(currentSeg.curve) > 0.85
+      && state.speed > state.maxSpeed * 0.34;
+    if (autoCornerSlide) {
+      engageKartRiderDrift(Math.sign(state.smoothSteer));
+    }
+    const isSliding = state.driftActive;
 
     if (isSliding) {
-      state.driftChargeTime += dt * (1.15 + Math.abs(state.smoothSteer) * 0.95);
-      if (state.driftChargeTime > 1.35) state.driftStage = 3;
-      else if (state.driftChargeTime > 0.62) state.driftStage = 2;
+      state.driftChargeTime += dt * (1.35 + Math.abs(state.smoothSteer) * 0.95);
+      if (state.driftChargeTime > 0.95) state.driftStage = 3;
+      else if (state.driftChargeTime > 0.42) state.driftStage = 2;
       else state.driftStage = 1;
-    } else if (!state.driftActive && state.driftChargeTime > 0) {
-      const prevStage = state.driftStage;
-      if (state.driftChargeTime > 0.55) {
-        const bonusGauge = prevStage === 3 ? 38 : (prevStage === 2 ? 24 : 12);
-        state.n2oGauge = Math.min(100, state.n2oGauge + bonusGauge);
-        if (state.n2oGauge >= 100 && state.boostCount < 1) {
-          state.boostCount = 1;
-          state.n2oGauge = 0;
-          sfx.playCoin();
-        }
-      }
-      if (prevStage >= 2) {
-        const miniDur = prevStage === 3 ? 0.80 : 0.48;
-        state.boostTimer = Math.max(state.boostTimer, miniDur);
-        spawnBoostShockwave(prevStage === 3);
-        sfx.playBoost(prevStage === 3);
-        spawnBoostParticles(prevStage * 7);
-      }
-      state.driftChargeTime = 0;
-      state.driftStage = 0;
     }
 
     const isInvincible = state.starTimer > 0 || state.megaTimer > 0 || state.bulletTimer > 0;
@@ -3507,33 +3588,33 @@
       dt
     );
 
-    // 8. 드리프트 되듯이 미끄러지는(Sliding Drift) 횡방향 관성 물리 & 코너에서 무작정 부스터 사용 시 원심력 이탈 리스크!
+    // 8. 카트라이더(KartRider) 정통 드리프트 횡방향 슬라이딩 물리 (차체가 대각선으로 깊게 꺾이며 코너 안쪽을 예리하게 파고듦!)
     const slideDir = state.driftActive
       ? (state.driftDir || Math.sign(state.smoothSteer || 1))
       : Math.sign(state.smoothSteer || currentSeg.curve || 1);
     const targetDriftAngle = isSliding
-      ? Math.max(-1.25, Math.min(1.25, slideDir * 0.58 + state.smoothSteer * 0.55 - currentSeg.curve * 0.12))
+      ? Math.max(-1.32, Math.min(1.32, slideDir * 0.76 + state.smoothSteer * 0.56 - currentSeg.curve * 0.08))
       : (Math.abs(currentSeg.curve) > 1.8 ? state.smoothSteer * 0.28 : 0);
-    state.driftAngle = (state.driftAngle || 0) + (targetDriftAngle - (state.driftAngle || 0)) * Math.min(1, dt * (isSliding ? 7.5 : 9.0));
+    state.driftAngle = (state.driftAngle || 0) + (targetDriftAngle - (state.driftAngle || 0)) * Math.min(1, dt * (isSliding ? 9.5 : 10.5));
     if (Math.abs(state.driftAngle) < 0.01 && !isSliding) state.driftAngle = 0;
 
-    // 급커브에서 부스터를 켜고 달리면 원심력이 크게 증가하여, 드리프트로 코너를 공략하지 않으면 바깥 갓길/벽으로 밀려남!
+    // 카트라이더 드리프트 코너링: 드리프트 없이 부스터만 켜면 원심력으로 바깥으로 밀려나지만, 드리프트를 넣으면 코너 안쪽 인코스를 날카롭게 파고듦!
     const speedRatio = state.speed / Math.max(1, state.maxSpeed);
-    const boostCornerPush = (state.boostTimer > 0 && !isSliding) ? 1.42 : 1.0;
+    const boostCornerPush = (state.boostTimer > 0 && !isSliding) ? 1.42 : (isSliding ? 0.62 : 1.0);
     const curveSlideForce = -(currentSeg.curve * 0.26 * boostCornerPush) * Math.pow(speedRatio, 1.35);
     const steerForce = isSliding
-      ? (state.smoothSteer * 1.72 + slideDir * 0.24)
+      ? (state.smoothSteer * 1.75 + slideDir * 0.42)
       : (state.smoothSteer * 1.42);
     const desiredVelX = steerForce + (state.bulletTimer > 0 ? 0 : curveSlideForce);
-    // 바닐라 아이스 레이크(track 3)는 빙판 슬라이딩 그립, 일반 코스는 드리프트 시 슬라이딩 관성 적용!
-    const baseGrip = state.selectedTrack === 3 ? 3.4 : 4.5;
-    const gripFactor = isSliding ? baseGrip : (state.selectedTrack === 3 ? 6.2 : 9.2);
+    // 설원(track 3)은 빙판 슬라이딩 그립, 일반 코스는 카트라이더 드리프트 슬라이딩 관성 적용!
+    const baseGrip = state.selectedTrack === 3 ? 3.6 : 5.2;
+    const gripFactor = isSliding ? baseGrip : (state.selectedTrack === 3 ? 6.2 : 9.4);
     state.velX += (desiredVelX - state.velX) * Math.min(1, dt * gripFactor);
     state.playerX += state.velX * dt;
 
-    // 드리프트 슬라이딩 시 차체가 화면에서 옆으로 미끄러지는 시각적 관성 오프셋
-    const targetScreenOffset = state.smoothSteer * 14 + state.driftAngle * 24;
-    state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 7.5);
+    // 드리프트 슬라이딩 시 차체가 화면에서 옆으로 시원하게 미끄러지는 시각적 관성 오프셋
+    const targetScreenOffset = state.smoothSteer * 15 + state.driftAngle * 28;
+    state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 8.2);
 
     // 원경 산맥/구름 3D 시차(Parallax) 회전값 누적
     state.skyYaw = ((state.skyYaw || 0) - currentSeg.curve * speedRatio * 185 * dt);
@@ -3552,45 +3633,48 @@
       }
     }
 
-    // 미끄러지는 동안 도로 위 2줄 타이어 스키드마크(Skid Marks) 기록 & 하얀 타이어 마찰 연기 생성!
-    if (Math.abs(state.driftAngle) > 0.20 && state.playerY <= 4) {
+    // 카트라이더 드리프트 시 지면에 선명하게 새겨지는 2줄 블랙 타이어 스키드마크(Skid Marks) & 타이어 연기·스파크 생성!
+    if (Math.abs(state.driftAngle) > 0.16 && state.playerY <= 4) {
       if (!state.skidMarks) state.skidMarks = [];
       const lastMark = state.skidMarks[state.skidMarks.length - 1];
-      if (!lastMark || Math.abs(state.posZ - lastMark.z) >= 24) {
+      if (!lastMark || Math.abs(state.posZ - lastMark.z) >= 18) {
         state.skidMarks.push({
-          z: state.posZ - 8,
+          z: state.posZ - 6,
           x: state.playerX,
           driftAngle: state.driftAngle,
-          alpha: 0.72
+          alpha: 0.85
         });
-        if (state.skidMarks.length > 70) state.skidMarks.shift();
+        if (state.skidMarks.length > 90) state.skidMarks.shift();
       }
-      if (Math.random() < 0.75) {
+      if (Math.random() < 0.88) {
         const kartX = canvas.width * 0.5 + state.screenXOffset;
         const kartY = canvas.height * 0.81;
-        [-54, 54].forEach(tx => {
+        const sparkCol = state.driftStage === 3
+          ? 'rgba(224, 64, 251, 0.85)'
+          : (state.driftStage === 2 ? 'rgba(255, 171, 0, 0.85)' : 'rgba(236, 239, 241, 0.78)');
+        [-56, 56].forEach(tx => {
           state.particles.push({
-            x: kartX + tx - state.driftAngle * 14 + (Math.random() - 0.5) * 14,
+            x: kartX + tx - state.driftAngle * 18 + (Math.random() - 0.5) * 14,
             y: kartY + 6 + (Math.random() - 0.5) * 8,
-            vx: -state.velX * 95 + (Math.random() - 0.5) * 65,
-            vy: -18 - Math.random() * 45,
-            size: 9 + Math.random() * 10,
-            color: 'rgba(236, 239, 241, 0.72)',
-            life: 0.34 + Math.random() * 0.20
+            vx: -state.velX * 105 - state.driftAngle * 65 + (Math.random() - 0.5) * 70,
+            vy: -16 - Math.random() * 48,
+            size: 10 + Math.random() * 11,
+            color: Math.random() < 0.45 ? sparkCol : 'rgba(245, 247, 250, 0.78)',
+            life: 0.36 + Math.random() * 0.22
           });
         });
       }
     }
     if (state.skidMarks && state.skidMarks.length > 0) {
       for (let i = state.skidMarks.length - 1; i >= 0; i--) {
-        state.skidMarks[i].alpha -= dt * 0.38;
-        if (state.skidMarks[i].alpha <= 0 || state.posZ - state.skidMarks[i].z > 900) {
+        state.skidMarks[i].alpha -= dt * 0.34;
+        if (state.skidMarks[i].alpha <= 0 || state.posZ - state.skidMarks[i].z > 1050) {
           state.skidMarks.splice(i, 1);
         }
       }
     }
 
-    // 고속 주행 시 타이어 뒤쪽 아스팔트 바람 먼지 & 연석(Curb)/오프로드 주행 시 역동적인 노면 파편 파티클 생성!
+    // 고속 주행 시 타이어 뒤쪽 바람 먼지 & 오프로드 주행 시 역동적인 지면 파편 파티클 생성!
     if (speedRatio > 0.52 && state.playerY <= 4 && Math.random() < (isBoosting ? 0.92 : 0.58)) {
       const kartX = canvas.width * 0.5 + state.screenXOffset;
       const kartY = canvas.height * 0.81;
@@ -3610,13 +3694,13 @@
       });
     }
 
-    // 9. N2O 게이지 충전 (직선 가만히 주행 시 자동 충전 0! 코너에서 핸들을 꺾어 미끄러지듯 돌 때와 코인 획득으로 충전!)
-    const chargeRate = isSliding ? 36 : 0;
-    state.n2oGauge = Math.min(100, state.n2oGauge + chargeRate * dt);
+    // 9. 카트라이더 N2O 부스터 게이지 충전 (드리프트 끌기 중 고속 충전 -> 100% 도달 시 부스터🔥 토큰 최대 2개까지 획득!)
+    const chargeRate = isSliding ? 48 : 0;
+    state.n2oGauge += chargeRate * dt;
     if (state.n2oGauge >= 100) {
-      if (state.boostCount < 1) {
-        state.boostCount = 1;
-        state.n2oGauge = 0;
+      if (state.boostCount < 2) {
+        state.boostCount++;
+        state.n2oGauge -= 100;
         sfx.playCoin();
       } else {
         state.n2oGauge = 100;
@@ -5668,9 +5752,9 @@
     const spinAngle = opts.spinning ? Math.sin((opts.timeMs || 0) * 0.035) * 1.4 : 0;
     const trickAngle = opts.trickRot || 0;
 
-    // 드리프트/코너 슬라이딩 시 카트 앞코는 안쪽을 향하고 뒷바퀴는 바깥쪽으로 미끄러지는 리얼 3D 사선 드리프트 요잉 + 차체 롤링!
-    const yaw = steer * 9.5 + driftAngle * 18.5;
-    const bodyRoll = steer * 0.055 + driftAngle * 0.105;
+    // 카트라이더 정통 드리프트 시 차체 앞코는 코너 안쪽을 깊게 파고들고 뒷바퀴는 바깥쪽으로 시원하게 미끄러지는 3D 사선 요잉 + 롤링!
+    const yaw = steer * 10.5 + driftAngle * 28.5;
+    const bodyRoll = steer * 0.055 + driftAngle * 0.135;
     if (spinAngle !== 0 || trickAngle !== 0 || Math.abs(bodyRoll) > 0.005) {
       c.rotate(spinAngle + trickAngle + bodyRoll);
     }
@@ -5974,16 +6058,25 @@
         c.stroke();
       });
     } else if (opts.drifting) {
+      // 카트라이더 시그니처 뒷바퀴 드리프트 마찰 불꽃 스파크 & 하얀 타이어 연기 구름
       const stageCol = opts.driftStage === 3 ? '#e040fb' : (opts.driftStage === 2 ? '#ff9100' : '#00e5ff');
-      const sparkR = 9 + (opts.driftStage || 1) * 3.5;
-      [-52, 52].forEach(sx => {
+      const sparkR = 11 + (opts.driftStage || 1) * 4.2;
+      const flicker = Math.sin((opts.timeMs || 0) * 0.08) * 3;
+      [-54, 54].forEach(sx => {
+        const tx = sx + rearX;
+        // 타이어 연기 볼륨
+        c.fillStyle = 'rgba(255, 255, 255, 0.55)';
+        c.beginPath();
+        c.arc(tx - driftAngle * 10, 14, sparkR * 1.15, 0, Math.PI * 2);
+        c.fill();
+        // 드리프트 단계별 스파크 코어
         c.fillStyle = stageCol;
         c.beginPath();
-        c.arc(sx + rearX, 12, sparkR, 0, Math.PI * 2);
+        c.arc(tx, 10, sparkR + flicker * 0.5, 0, Math.PI * 2);
         c.fill();
         c.fillStyle = '#ffffff';
         c.beginPath();
-        c.arc(sx + rearX, 12, sparkR * 0.45, 0, Math.PI * 2);
+        c.arc(tx, 10, sparkR * 0.48, 0, Math.PI * 2);
         c.fill();
       });
     } else if ((opts.speedRatio || 0) > 0.58) {

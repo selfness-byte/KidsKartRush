@@ -50,7 +50,7 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        tts = TextToSpeech(this, this)
+        // 여성 음성(TTS) 엔진 초기화 제거 (순수 자동차 엔진·드리프트·효과음만 재생)
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as? SensorManager
         accelSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_GRAVITY)
             ?: sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
@@ -143,20 +143,14 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
     }
 
     override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            val res = tts?.setLanguage(Locale.KOREAN)
-            tts?.setPitch(1.18f)
-            tts?.setSpeechRate(1.08f)
-            ttsReady = (res != TextToSpeech.LANG_MISSING_DATA && res != TextToSpeech.LANG_NOT_SUPPORTED)
-        }
+        // 여성 음성(TTS) 완전 비활성화
+        ttsReady = false
     }
 
     inner class KartBridge {
         @JavascriptInterface
         fun speak(text: String, flush: Boolean) {
-            if (!ttsReady) return
-            val queueMode = if (flush) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD
-            tts?.speak(text, queueMode, null, "kart_tts_${System.currentTimeMillis()}")
+            // 여성 음성(TTS) 출력 완전 차단
         }
 
         @JavascriptInterface
