@@ -172,22 +172,36 @@
     box-shadow: 0 4px 0 #fb8c00, 0 0 14px rgba(255, 193, 7, 0.55);
     transform: translateY(-2px);
   }
+  /* 얼굴 나오는 UI: 테두리·원형 액자 배경을 완전히 없애고 얼굴만 둥실둥실 재미있게 표현! */
+  @keyframes funFaceBobble {
+    0% { transform: translateY(0px) rotate(-3deg) scale(1.0, 1.0); }
+    50% { transform: translateY(-3px) rotate(3deg) scale(1.04, 0.97); }
+    100% { transform: translateY(0px) rotate(-3deg) scale(1.0, 1.0); }
+  }
   .racer-face-wrap {
     position: relative;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    border: 3px solid #ffffff;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.22);
-    overflow: hidden;
-    background: #e1f5fe;
-    margin-bottom: 3px;
+    width: 64px;
+    height: 64px;
+    border-radius: 0;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible;
+    background: transparent !important;
+    margin-bottom: 2px;
   }
   .racer-face-wrap img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
+    border: none !important;
+    background: transparent !important;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.24));
+    animation: funFaceBobble 1.6s ease-in-out infinite;
+  }
+  .racer-card.selected .racer-face-wrap img {
+    animation-duration: 0.85s;
+    filter: drop-shadow(0 5px 9px rgba(255, 111, 0, 0.42));
   }
   .card-photo-btn {
     position: absolute;
@@ -296,18 +310,22 @@
     box-shadow: 0 4px 0 #81d4fa;
   }
   .photo-slot-avatar {
-    width: 74px;
-    height: 74px;
-    border-radius: 50%;
-    border: 3.5px solid #ff80ab;
-    overflow: hidden;
-    background: #e1f5fe;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.20);
+    width: 82px;
+    height: 82px;
+    border-radius: 0;
+    border: none !important;
+    overflow: visible;
+    background: transparent !important;
+    box-shadow: none !important;
   }
   .photo-slot-avatar img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    border: none !important;
+    background: transparent !important;
+    filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.25));
+    animation: funFaceBobble 1.5s ease-in-out infinite;
   }
   .photo-slot-btn {
     border: 2px solid #fff;
@@ -954,7 +972,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.5.7</span>
+      <span class="lobby-badge" id="verBadge">v1.5.8</span>
       <h1>🍄 키즈 마리오·카트 러쉬!</h1>
     </div>
     <div class="assist-pills">
@@ -2232,72 +2250,180 @@
   let photoTargetIndex = 0;
   let photoTargetMode = 'single'; // 'single' | 'myAndEmptyRivals'
 
+  // 통통한 볼살과 귀여운 귀가 살아있는 '테두리 없는 얼굴 전용 실루엣' 패스 생성기
+  function traceFunFaceSilhouette(c, cx, cy, rx, ry) {
+    c.beginPath();
+    // 정수리에서 시작해 오른쪽 이마 -> 오른쪽 귀 -> 통통한 오른쪽 볼살 -> 턱 -> 왼쪽 볼살 -> 왼쪽 귀 -> 정수리로 이어지는 유기적 얼굴 윤곽
+    c.moveTo(cx, cy - ry * 0.98);
+    c.bezierCurveTo(cx + rx * 0.62, cy - ry * 0.98, cx + rx * 0.92, cy - ry * 0.58, cx + rx * 0.92, cy - ry * 0.16);
+    // 오른쪽 귀 볼록
+    c.bezierCurveTo(cx + rx * 1.14, cy - ry * 0.18, cx + rx * 1.15, cy + ry * 0.22, cx + rx * 0.94, cy + ry * 0.24);
+    // 오른쪽 통통한 볼살(Chubby Cheek)과 턱선
+    c.bezierCurveTo(cx + rx * 1.02, cy + ry * 0.68, cx + rx * 0.56, cy + ry * 1.02, cx, cy + ry * 1.02);
+    // 왼쪽 통통한 볼살과 왼쪽 귀
+    c.bezierCurveTo(cx - rx * 0.56, cy + ry * 1.02, cx - rx * 1.02, cy + ry * 0.68, cx - rx * 0.94, cy + ry * 0.24);
+    c.bezierCurveTo(cx - rx * 1.15, cy + ry * 0.22, cx - rx * 1.14, cy - ry * 0.18, cx - rx * 0.92, cy - ry * 0.16);
+    c.bezierCurveTo(cx - rx * 0.92, cy - ry * 0.58, cx - rx * 0.62, cy - ry * 0.98, cx, cy - ry * 0.98);
+    c.closePath();
+  }
+
+  // 업로드된 사진을 테두리·원형 액자 배경 없이 오직 '얼굴만 재미있게' 오려낸 투명 PNG 캔버스로 변환!
+  function buildFunFaceCutoutCanvas(img, sx = 0, sy = 0, sWidth = img.width, sHeight = img.height) {
+    const cnv = document.createElement('canvas');
+    cnv.width = 320;
+    cnv.height = 320;
+    const c = cnv.getContext('2d');
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = 'high';
+
+    // 배경을 100% 투명하게 비우고, 테두리 선 없이 통통한 얼굴 윤곽 모양으로만 클리핑!
+    c.clearRect(0, 0, 320, 320);
+    c.save();
+    traceFunFaceSilhouette(c, 160, 164, 128, 134);
+    c.clip();
+
+    try {
+      c.filter = 'contrast(1.10) brightness(1.06) saturate(1.14)';
+    } catch (_e) {}
+    c.drawImage(img, sx, sy, sWidth, sHeight, 14, 18, 292, 292);
+    c.filter = 'none';
+
+    // 사진 가장자리가 칼같이 잘리지 않고 자연스러운 입체 얼굴처럼 보이도록 부드러운 3D 볼륨 셰이딩 & 발그레 코믹 볼터치 추가!
+    const shade = c.createRadialGradient(145, 135, 65, 160, 164, 148);
+    shade.addColorStop(0, 'rgba(255, 255, 255, 0)');
+    shade.addColorStop(0.78, 'rgba(255, 224, 189, 0.04)');
+    shade.addColorStop(1, 'rgba(30, 41, 59, 0.18)');
+    c.fillStyle = shade;
+    c.fillRect(0, 0, 320, 320);
+
+    // 귀여운 코믹 핑크 볼터치 (얼굴 중심은 가리지 않고 양 볼 가장자리에만 은은하게!)
+    c.fillStyle = 'rgba(255, 105, 160, 0.28)';
+    c.beginPath();
+    c.ellipse(78, 204, 24, 14, -0.12, 0, Math.PI * 2);
+    c.ellipse(242, 204, 24, 14, 0.12, 0, Math.PI * 2);
+    c.fill();
+    c.restore();
+
+    return cnv;
+  }
+
   function createDefaultFaceCanvas(idx) {
     const cnv = document.createElement('canvas');
-    cnv.width = 180;
-    cnv.height = 180;
+    cnv.width = 220;
+    cnv.height = 220;
     const c = cnv.getContext('2d');
-    const rc = RACERS[idx] || RACERS[0];
 
-    // 배경 파스텔 원형 그라데이션
-    const bg = c.createRadialGradient(70, 55, 15, 90, 90, 90);
-    bg.addColorStop(0, '#ffffff');
-    bg.addColorStop(0.55, rc.secondary);
-    bg.addColorStop(1, rc.primary);
-    c.fillStyle = bg;
-    c.fillRect(0, 0, 180, 180);
+    // 원형 배경이나 테두리 액자를 완전히 없애고 100% 투명 배경 위에 익살스럽고 귀여운 얼굴만 렌더링!
+    c.clearRect(0, 0, 220, 220);
 
-    // 귀여운 귀와 얼굴 윤곽 (따뜻한 살구빛 피부톤)
     const skins = ['#ffe0bd', '#ffdfc4', '#f9d4b4', '#ffe4c8', '#ffd8be', '#f7cfa8'];
-    c.fillStyle = skins[idx % skins.length];
-    c.beginPath();
-    c.arc(36, 98, 16, 0, Math.PI * 2);
-    c.arc(144, 98, 16, 0, Math.PI * 2);
+    const skinCol = skins[idx % skins.length];
+
+    // 통통한 볼살과 양쪽 귀가 일체형으로 이어진 테두리 없는 얼굴 베이스
+    c.fillStyle = skinCol;
+    traceFunFaceSilhouette(c, 110, 118, 76, 78);
     c.fill();
 
+    // 귓바퀴 안쪽 귀여운 분홍 음영
+    c.fillStyle = 'rgba(255, 138, 128, 0.45)';
     c.beginPath();
-    c.arc(90, 98, 56, 0, Math.PI * 2);
+    c.arc(32, 120, 8, 0, Math.PI * 2);
+    c.arc(188, 120, 8, 0, Math.PI * 2);
     c.fill();
 
-    // 캐릭터별 개성 있는 앞머리/모자 스타일
-    const hairColors = ['#1e3a8a', '#880e4f', '#b71c1c', '#1b5e20', '#4a148c', '#e65100'];
+    // 캐릭터별 개성 만점 입체 헤어스타일 (테두리 없이 자연스럽게 뻗친 머리결!)
+    const hairColors = ['#1e3a8a', '#ad1457', '#d84315', '#1b5e20', '#6a1b9a', '#e65100'];
     c.fillStyle = hairColors[idx % hairColors.length];
     c.beginPath();
-    c.arc(90, 82, 58, Math.PI * 1.05, Math.PI * 1.95);
-    c.quadraticCurveTo(120, 66, 90, 74);
-    c.quadraticCurveTo(60, 66, 33, 76);
+    c.arc(110, 96, 78, Math.PI * 1.02, Math.PI * 1.98);
+    // 통통 튀는 앞머리 바보털(아호게) & 삐죽 머리결
+    c.lineTo(192, 92);
+    c.quadraticCurveTo(155, 72, 132, 86);
+    c.quadraticCurveTo(110, 68, 88, 86);
+    c.quadraticCurveTo(65, 72, 28, 92);
     c.closePath();
     c.fill();
 
-    // 초롱초롱 큰 눈동자와 반짝이 하이라이트
-    [-22, 22].forEach(ox => {
+    // 정수리 위쪽으로 삐죽 솟은 귀여운 코믹 머리카락 두 가닥
+    c.beginPath();
+    c.moveTo(102, 22);
+    c.quadraticCurveTo(118, 2, 136, 14);
+    c.quadraticCurveTo(120, 22, 114, 28);
+    c.fill();
+
+    // 캐릭터마다 다르게 살아있는 재미있는 코믹 눈 표정!
+    if (idx === 1 || idx === 4) {
+      // 윙크 + 초롱초롱 별눈 표정
+      c.strokeStyle = '#1e293b';
+      c.lineWidth = 5.5;
+      c.lineCap = 'round';
+      c.beginPath();
+      c.moveTo(64, 116);
+      c.quadraticCurveTo(80, 102, 94, 116);
+      c.stroke();
+
       c.fillStyle = '#1e293b';
       c.beginPath();
-      c.ellipse(90 + ox, 98, 9.5, 11.5, 0, 0, Math.PI * 2);
+      c.ellipse(138, 114, 12, 14.5, 0, 0, Math.PI * 2);
       c.fill();
       c.fillStyle = '#ffffff';
       c.beginPath();
-      c.arc(90 + ox - 3, 94, 4, 0, Math.PI * 2);
-      c.arc(90 + ox + 3, 102, 2, 0, Math.PI * 2);
+      c.arc(134, 109, 5, 0, Math.PI * 2);
+      c.arc(142, 119, 2.5, 0, Math.PI * 2);
       c.fill();
-    });
+    } else if (idx === 2 || idx === 5) {
+      // 신나게 질주하는 반달 웃음눈(> <) 표정
+      c.strokeStyle = '#1e293b';
+      c.lineWidth = 6;
+      c.lineCap = 'round';
+      c.lineJoin = 'round';
+      c.beginPath();
+      c.moveTo(64, 106);
+      c.lineTo(86, 115);
+      c.lineTo(64, 124);
+      c.moveTo(156, 106);
+      c.lineTo(134, 115);
+      c.lineTo(156, 124);
+      c.stroke();
+    } else {
+      // 왕방울 초롱초롱 개구쟁이 눈동자
+      [-28, 28].forEach(ox => {
+        c.fillStyle = '#1e293b';
+        c.beginPath();
+        c.ellipse(110 + ox, 114, 12.5, 15, 0, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.arc(110 + ox - 4, 108, 5.2, 0, Math.PI * 2);
+        c.arc(110 + ox + 4, 119, 2.6, 0, Math.PI * 2);
+        c.fill();
+      });
+    }
 
-    // 발그레 핑크 볼터치
-    c.fillStyle = 'rgba(255, 105, 160, 0.55)';
+    // 발그레 핑크 볼터치 & 귀여운 빗금 홍조
+    c.fillStyle = 'rgba(255, 82, 140, 0.58)';
     c.beginPath();
-    c.ellipse(54, 112, 12, 7.5, 0, 0, Math.PI * 2);
-    c.ellipse(126, 112, 12, 7.5, 0, 0, Math.PI * 2);
+    c.ellipse(62, 136, 16, 10, -0.1, 0, Math.PI * 2);
+    c.ellipse(158, 136, 16, 10, 0.1, 0, Math.PI * 2);
     c.fill();
 
-    // 활짝 웃는 입
-    c.fillStyle = '#e91e63';
+    // 장난꾸러기처럼 활짝 웃거나 혀를 살짝 내민 재미있는 입 모양!
+    c.fillStyle = '#d81b60';
     c.beginPath();
-    c.arc(90, 114, 14, 0.08 * Math.PI, 0.92 * Math.PI);
+    c.arc(110, 138, 20, 0.05 * Math.PI, 0.95 * Math.PI);
     c.closePath();
     c.fill();
+
+    // 하얀 앞니 포인트
+    c.fillStyle = '#ffffff';
+    c.beginPath();
+    c.roundRect(100, 139, 20, 6, 2);
+    c.fill();
+
+    // 귀여운 분홍 혀
     c.fillStyle = '#ff80ab';
     c.beginPath();
-    c.arc(90, 121, 7, 0, Math.PI, true);
+    c.arc(110 + (idx % 2 === 0 ? 4 : -4), 152, 10, 0, Math.PI, false);
     c.fill();
 
     return cnv;
@@ -2346,15 +2472,11 @@
     }
     const img = new Image();
     img.onload = () => {
-      const cnv = document.createElement('canvas');
-      cnv.width = 320;
-      cnv.height = 320;
-      const c = cnv.getContext('2d');
-      c.imageSmoothingEnabled = true;
-      c.imageSmoothingQuality = 'high';
-      c.drawImage(img, 0, 0, 320, 320);
-      customFaceCanvases[idx] = cnv;
-      customFaceDataUrls[idx] = dataUrl;
+      // 기존에 저장된 사진이나 새로 올린 사진 모두 테두리·배경이 없는 '얼굴 전용 컷아웃' 캔버스로 변환!
+      const cutoutCnv = buildFunFaceCutoutCanvas(img, 0, 0, img.width, img.height);
+      const cutoutPngUrl = cutoutCnv.toDataURL('image/png');
+      customFaceCanvases[idx] = cutoutCnv;
+      customFaceDataUrls[idx] = cutoutPngUrl;
       refreshAllFaceThumbnails();
       if (save) saveFacesToStorage();
     };
@@ -2382,18 +2504,11 @@
     reader.onload = (ev) => {
       const img = new Image();
       img.onload = async () => {
-        const cnv = document.createElement('canvas');
-        cnv.width = 320;
-        cnv.height = 320;
-        const c = cnv.getContext('2d');
-        c.imageSmoothingEnabled = true;
-        c.imageSmoothingQuality = 'high';
-
         const minDim = Math.min(img.width, img.height);
-        // 기본 인물 클로즈업 크롭: 배경/어깨를 줄이고 얼굴이 꽉 차서 누구인지 한눈에 알아보도록 64% 영역으로 스마트 줌인!
-        let cropSide = minDim * 0.64;
+        // 기본 인물 클로즈업 크롭: 배경/어깨를 줄이고 얼굴만 꽉 차게 클로즈업!
+        let cropSide = minDim * 0.60;
         let sx = (img.width - cropSide) * 0.5;
-        let sy = (img.height - cropSide) * 0.26;
+        let sy = (img.height - cropSide) * 0.25;
 
         // 브라우저/WebView 내장 FaceDetector 지원 시 실제 얼굴 위치를 정밀 감지하여 얼굴 중심으로 클로즈업!
         if ('FaceDetector' in window) {
@@ -2404,8 +2519,8 @@
               const box = faces[0].boundingBox;
               const faceCenterX = box.x + box.width * 0.5;
               const faceCenterY = box.y + box.height * 0.46;
-              cropSide = Math.max(box.width, box.height) * 1.48;
-              cropSide = Math.min(minDim, Math.max(minDim * 0.28, cropSide));
+              cropSide = Math.max(box.width, box.height) * 1.38;
+              cropSide = Math.min(minDim, Math.max(minDim * 0.26, cropSide));
               sx = faceCenterX - cropSide * 0.5;
               sy = faceCenterY - cropSide * 0.5;
             }
@@ -2415,12 +2530,8 @@
         sx = Math.max(0, Math.min(img.width - cropSide, sx));
         sy = Math.max(0, Math.min(img.height - cropSide, sy));
 
-        try {
-          c.filter = 'contrast(1.08) brightness(1.05) saturate(1.08)';
-        } catch (_e) {}
-        c.drawImage(img, sx, sy, cropSide, cropSide, 0, 0, 320, 320);
-        c.filter = 'none';
-        callback(cnv.toDataURL('image/jpeg', 0.92));
+        const cutoutCnv = buildFunFaceCutoutCanvas(img, sx, sy, cropSide, cropSide);
+        callback(cutoutCnv.toDataURL('image/png'));
       };
       img.src = ev.target.result;
     };
@@ -6117,139 +6228,124 @@
       drawHeldItem3D(c, opts.heldItem, opts.timeMs || 0);
     }
 
-    // 11. [상단 깊이 레이어] 한눈에 누구인지 알아볼 수 있는 큼직하고 선명한 빅헤드(SD 대두) 얼굴 사진 포트레이트!
+    // 11. [상단 깊이 레이어] 테두리·헬멧 액자 없이 오직 '얼굴만 큼직하고 재미있게' 살아 움직이는 코믹 보블헤드(Bobblehead) 캐릭터 표현!
     c.save();
-    // 내 캐릭터는 1.24배, 멀리 달리는 라이벌 캐릭터는 거리에 따라 최대 2.15배까지 헤드 크기를 키워 멀리서도 얼굴 사진을 선명하게 식별!
+    // 내 캐릭터는 1.28배, 멀리 달리는 라이벌 캐릭터는 거리에 따라 최대 2.20배까지 얼굴을 키워 멀리서도 한눈에 식별!
     const headBoost = opts.isPlayer
-      ? 1.24
-      : Math.min(2.15, Math.max(1.22, 0.90 / Math.max(0.30, scale)));
-    c.translate(yaw * 0.24, -64);
+      ? 1.28
+      : Math.min(2.20, Math.max(1.25, 0.92 / Math.max(0.30, scale)));
+    const tMs = opts.timeMs || 0;
+    // 주행·조향·드리프트·부스터에 따라 통통 튀고 갸우뚱거리는 재미있는 보블헤드 탄성 모션!
+    const bobbleY = Math.sin(tMs * 0.016 + (racer.id || 0)) * (opts.boosting ? 3.2 : 1.8);
+    const headTilt = steer * 0.18 + driftAngle * 0.22 + Math.sin(tMs * 0.012 + (racer.id || 0)) * 0.05;
+    const squashX = opts.spinning
+      ? (1.0 + Math.sin(tMs * 0.045) * 0.16)
+      : (opts.boosting ? (1.05 + Math.sin(tMs * 0.04) * 0.04) : (1.0 + Math.abs(driftAngle) * 0.05));
+    const squashY = opts.spinning
+      ? (1.0 - Math.sin(tMs * 0.045) * 0.14)
+      : (opts.boosting ? (0.96 - Math.sin(tMs * 0.04) * 0.03) : (1.0 - Math.abs(driftAngle) * 0.03));
+
+    c.translate(yaw * 0.24, -62 + bobbleY);
     c.scale(headBoost, headBoost);
 
-    // 캐릭터 어깨/레이싱 수트 입체 토르소
+    // 캐릭터 어깨/레이싱 수트 (얼굴 아래쪽 목·어깨 받침, 테두리 선 제거)
     const suitGrad = c.createLinearGradient(0, 6, 0, 26);
     suitGrad.addColorStop(0, secondaryCol);
     suitGrad.addColorStop(1, primaryCol);
     c.fillStyle = suitGrad;
-    c.strokeStyle = '#ffffff';
-    c.lineWidth = 2.5;
     c.beginPath();
-    c.ellipse(0, 20, 24, 12, 0, Math.PI, 0);
+    c.ellipse(0, 20, 22, 11, 0, Math.PI, 0);
     c.fill();
-    c.stroke();
 
-    // 귀여운 3D 입체 귀 / 리본 / 공룡 볏 (얼굴 사진 바깥쪽 상단에 배치하여 사진을 전혀 가리지 않음!)
+    // 보블헤드 회전 및 말랑말랑 스쿼시·스트레치 적용
+    c.save();
+    c.rotate(headTilt);
+    c.scale(squashX, squashY);
+
+    // 귀여운 머리 위 포인트 장식 (테두리 없이 얼굴 위쪽에 살짝 얹혀 재미를 더함)
     if (racer.earType === 'bear') {
-      [-28, 28].forEach(ex => {
+      [-25, 25].forEach(ex => {
         c.fillStyle = racer.helmet;
-        c.strokeStyle = '#ffffff';
-        c.lineWidth = 2.5;
         c.beginPath();
-        c.arc(ex, -27, 13, 0, Math.PI * 2);
+        c.arc(ex, -31, 11, 0, Math.PI * 2);
         c.fill();
-        c.stroke();
         c.fillStyle = '#fff59d';
         c.beginPath();
-        c.arc(ex, -27, 6.5, 0, Math.PI * 2);
+        c.arc(ex, -31, 5.5, 0, Math.PI * 2);
         c.fill();
       });
     } else if (racer.earType === 'ribbon') {
       c.fillStyle = '#ffea00';
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = 2.2;
       c.beginPath();
-      c.moveTo(0, -37);
-      c.lineTo(-24, -50);
-      c.lineTo(-18, -28);
-      c.lineTo(24, -50);
-      c.lineTo(18, -28);
+      c.moveTo(0, -39);
+      c.lineTo(-20, -50);
+      c.lineTo(-15, -31);
+      c.lineTo(20, -50);
+      c.lineTo(15, -31);
       c.closePath();
       c.fill();
-      c.stroke();
       c.fillStyle = '#ff4081';
       c.beginPath();
-      c.arc(0, -38, 6.5, 0, Math.PI * 2);
+      c.arc(0, -40, 5.5, 0, Math.PI * 2);
       c.fill();
     } else if (racer.earType === 'dino') {
       c.fillStyle = '#ffea00';
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = 2;
-      [-11, 0, 11].forEach((dx, idx) => {
+      [-10, 0, 10].forEach((dx, idx) => {
         const h = idx === 1 ? -53 : -45;
         c.beginPath();
-        c.moveTo(dx - 7, -34);
+        c.moveTo(dx - 6, -35);
         c.lineTo(dx, h);
-        c.lineTo(dx + 7, -34);
+        c.lineTo(dx + 6, -35);
         c.closePath();
         c.fill();
-        c.stroke();
       });
     }
 
-    // 얼굴 사진을 돋보이게 받쳐주는 슬림 헬멧 림 테두리 (반지름 38px)
-    const helmGrad = c.createRadialGradient(-12, -18, 6, 0, -4, 39);
-    helmGrad.addColorStop(0, '#ffffff');
-    helmGrad.addColorStop(0.28, primaryCol);
-    helmGrad.addColorStop(0.85, racer.helmet);
-    helmGrad.addColorStop(1, '#0f172a');
-    c.fillStyle = helmGrad;
-    c.strokeStyle = '#ffffff';
-    c.lineWidth = 3.2;
-    c.beginPath();
-    c.arc(0, -4, 38, 0, Math.PI * 2);
-    c.fill();
-    c.stroke();
-
-    // 헬멧 중앙 대형 고선명 얼굴 사진(반지름 34px = 지름 68px * headBoost, 고글 가림 없이 얼굴 전체 100% 노출!)
+    // 헬멧 림·원형 테두리·하얀 배경 패드를 100% 제거하고, 오직 통통한 얼굴 컷아웃만 그대로 렌더링!
     const rId = racer.id || 0;
     const faceCanvas = getRacerFaceCanvas(rId);
-    const hasCustomPhoto = !!customFaceCanvases[rId];
-    const faceOffsetX = steer * 1.8;
+    const faceOffsetX = steer * 2.2;
     if (faceCanvas) {
       c.save();
-      c.beginPath();
-      c.arc(faceOffsetX, -4, 34, 0, Math.PI * 2);
-      c.clip();
-      // 밝은 배경 패드를 깔고 고해상도 얼굴 캔버스를 꽉 차게 렌더링
-      c.fillStyle = '#ffffff';
-      c.fillRect(-36 + faceOffsetX, -38, 72, 72);
-      c.drawImage(faceCanvas, -34 + faceOffsetX, -38, 68, 68);
+      c.shadowColor = 'rgba(0, 0, 0, 0.28)';
+      c.shadowBlur = 8;
+      c.shadowOffsetY = 4;
+      c.drawImage(faceCanvas, -40 + faceOffsetX, -44, 80, 80);
       c.restore();
 
-      // 얼굴 사진이 더욱 선명하게 눈에 띄도록 2중 화이트·골드 액자 링 적용
-      c.strokeStyle = hasCustomPhoto ? '#ffea00' : '#ffffff';
-      c.lineWidth = 3.2;
-      c.beginPath();
-      c.arc(faceOffsetX, -4, 34, 0, Math.PI * 2);
-      c.stroke();
-
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = 1.6;
-      c.beginPath();
-      c.arc(faceOffsetX, -4, 31.5, 0, Math.PI * 2);
-      c.stroke();
+      // 부스터/드리프트 시 양 볼이 발그레하게 달아오르는 재미있는 코믹 홍조 연출!
+      if (opts.boosting || opts.drifting || opts.star) {
+        const blushAlpha = 0.32 + Math.sin(tMs * 0.025) * 0.14;
+        c.fillStyle = `rgba(255, 64, 129, ${blushAlpha.toFixed(2)})`;
+        c.beginPath();
+        c.ellipse(-20 + faceOffsetX, 5, 8.5, 5, -0.1, 0, Math.PI * 2);
+        c.ellipse(20 + faceOffsetX, 5, 8.5, 5, 0.1, 0, Math.PI * 2);
+        c.fill();
+      }
     }
 
-    // 커스텀 사진이 아닐 때만 정수리 맨 위쪽에 아주 작은 포인트 뱃지 표시 (얼굴/이마는 절대 가리지 않음!)
-    if (!hasCustomPhoto) {
-      const visorShift = steer * 1.8;
-      c.fillStyle = racer.visor;
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = 1.8;
-      c.beginPath();
-      c.roundRect(-13 + visorShift, -41, 26, 6, 3);
-      c.fill();
-      c.stroke();
-    }
-
-    // 스핀 중일 때 머리 위 별 표시
+    // 상황별 재미있는 코믹 표정 이펙트 (얼굴은 절대 가리지 않고 머리 주변에 익살스럽게 연출!)
     if (opts.spinning) {
       c.fillStyle = '#ffea00';
       c.font = '900 18px sans-serif';
       c.textAlign = 'center';
-      c.fillText('💫⭐💫', 0, -52);
+      c.fillText('💫⭐💫', 0, -50);
+    } else if (opts.boosting || opts.star) {
+      // 부스터 질주 시 머리 양옆으로 반짝이는 코믹 스타 & 바람에 날리는 속도선!
+      const sparkleY = -28 + Math.sin(tMs * 0.03) * 3;
+      c.font = '900 15px sans-serif';
+      c.textAlign = 'center';
+      c.fillText('✨', -42, sparkleY);
+      c.fillText('✨', 42, sparkleY);
+    } else if (opts.drifting) {
+      // 카트라이더 드리프트 시 코너 바깥쪽으로 땀방울/번개 스파크가 튀는 재미있는 리액션!
+      const sideSign = driftAngle >= 0 ? -1 : 1;
+      c.font = '900 15px sans-serif';
+      c.textAlign = 'center';
+      c.fillText((opts.driftStage || 1) >= 2 ? '⚡' : '💦', sideSign * 42, -24);
     }
 
+    c.restore();
     c.restore();
     c.restore();
   }
