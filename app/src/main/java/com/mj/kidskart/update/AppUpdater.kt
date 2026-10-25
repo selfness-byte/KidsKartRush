@@ -45,7 +45,7 @@ object AppUpdater {
     private val mainHandler = Handler(Looper.getMainLooper())
 
     @Volatile
-    private var checkedThisSession = false
+    private var lastCheckTimeMs = 0L
 
     @Volatile
     private var pendingInstallFile: File? = null
@@ -65,21 +65,25 @@ object AppUpdater {
     }.getOrDefault("1.0.0")
 
     fun resumePendingInstallIfAllowed(activity: Activity) {
-        val file = pendingInstallFile ?: return
-        if (!file.exists()) {
-            pendingInstallFile = null
-            return
+        val file = pendingInstallFile
+        if (file != null) {
+            if (!file.exists()) {
+                pendingInstallFile = null
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || activity.packageManager.canRequestPackageInstalls()) {
+                pendingInstallFile = null
+                launchInstaller(activity, file)
+                return
+            }
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || activity.packageManager.canRequestPackageInstalls()) {
-            pendingInstallFile = null
-            launchInstaller(activity, file)
-        }
+        // 앱이 백그라운드에서 다시 포그라운드로 돌아올 때도 자동 업데이트 확인 (최소 15초 간격)
+        checkOnStartup(activity)
     }
 
-    /** 앱 시작 시 백그라운드 자동 업데이트 확인 (세션당 1회) */
+    /** 앱 시작 및 포그라운드 복귀 시 백그라운드 자동 업데이트 확인 */
     fun checkOnStartup(activity: Activity) {
-        if (checkedThisSession) return
-        checkedThisSession = true
+        val now = System.currentTimeMillis()
+        if (now - lastCheckTimeMs < 15_000L) return
+        lastCheckTimeMs = now
         executor.execute {
             cleanOldApks(activity.applicationContext)
             val info = fetchLatestUpdate(activity) ?: return@execute
@@ -213,55 +217,79 @@ object AppUpdater {
 
         val uaVersion = installedVersionName(activity)
         executor.execute {
-            val outFile = runCatching {
-                val dir = File(activity.cacheDir, "updates").apply { mkdirs() }
-                val target = File(dir, "KidsKartRush-${info.versionName}-b${info.versionCode}.apk")
-                val sep = if (info.apkUrl.contains("?")) "&" else "?"
-                val downloadUrl = "${info.apkUrl}${sep}t=${System.currentTimeMillis()}"
-                val conn = (URL(downloadUrl).openConnection() as HttpURLConnection).apply {
-                    connectTimeout = 12_000
-                    readTimeout = 25_000
-                    useCaches = false
-                    instanceFollowRedirects = true
-                    setRequestProperty("Cache-Control", "no-cache, no-store, max-age=0")
-                    setRequestProperty("Pragma", "no-cache")
-                    setRequestProperty("User-Agent", "KidsKartRush/$uaVersion")
+            val dir = File(activity.cacheDir, "updates").apply { mkdirs() }
+            val target = File(dir, "KidsKartRush-${info.versionName}-b${info.versionCode}.apk")
+
+            // 이미 유효한 동일 버전 APK가 받아져 있다면 재다운로드 없이 즉시 재사용
+            if (target.exists() && isValidApkFile(target)) {
+                mainHandler.post {
+                    if (dlg.isShowing) dlg.dismiss()
+                    if (!cancelled.get() && !activity.isFinishing && !activity.isDestroyed) {
+                        proceedToInstall(activity, target)
+                    }
                 }
-                try {
-                    if (conn.responseCode !in 200..299) return@runCatching null
-                    val total = conn.contentLengthLong
-                    conn.inputStream.use { input ->
-                        FileOutputStream(target).use { output ->
-                            val buf = ByteArray(16 * 1024)
-                            var downloaded = 0L
-                            while (!cancelled.get()) {
-                                val r = input.read(buf)
-                                if (r < 0) break
-                                output.write(buf, 0, r)
-                                downloaded += r
-                                if (total > 0) {
-                                    val pct = ((downloaded * 100L) / total).toInt().coerceIn(0, 100)
-                                    mainHandler.post {
-                                        progressBar.progress = pct
-                                        statusTv.text = "다운로드 중… $pct% (${downloaded / 1024}KB / ${total / 1024}KB)"
+                return@execute
+            }
+
+            val candidateUrls = linkedSetOf(
+                info.apkUrl,
+                "https://inanimals-1977.web.app/kidskart/KidsKartRush-${info.versionName}.apk",
+                "https://www.inanimals.co.kr/kidskart/KidsKartRush-${info.versionName}.apk",
+                "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-${info.versionName}.apk",
+            ).filter { it.startsWith("https://") }
+
+            var outFile: File? = null
+            for (rawUrl in candidateUrls) {
+                if (cancelled.get()) break
+                outFile = runCatching {
+                    val sep = if (rawUrl.contains("?")) "&" else "?"
+                    val downloadUrl = "${rawUrl}${sep}t=${System.currentTimeMillis()}"
+                    val conn = (URL(downloadUrl).openConnection() as HttpURLConnection).apply {
+                        connectTimeout = 15_000
+                        readTimeout = 30_000
+                        useCaches = false
+                        instanceFollowRedirects = true
+                        setRequestProperty("Cache-Control", "no-cache, no-store, max-age=0")
+                        setRequestProperty("Pragma", "no-cache")
+                        setRequestProperty("User-Agent", "KidsKartRush/$uaVersion")
+                    }
+                    try {
+                        if (conn.responseCode !in 200..299) return@runCatching null
+                        val total = conn.contentLengthLong
+                        conn.inputStream.use { input ->
+                            FileOutputStream(target).use { output ->
+                                val buf = ByteArray(16 * 1024)
+                                var downloaded = 0L
+                                while (!cancelled.get()) {
+                                    val r = input.read(buf)
+                                    if (r < 0) break
+                                    output.write(buf, 0, r)
+                                    downloaded += r
+                                    if (total > 0) {
+                                        val pct = ((downloaded * 100L) / total).toInt().coerceIn(0, 100)
+                                        mainHandler.post {
+                                            progressBar.progress = pct
+                                            statusTv.text = "다운로드 중… $pct% (${downloaded / 1024}KB / ${total / 1024}KB)"
+                                        }
                                     }
                                 }
                             }
                         }
+                        if (cancelled.get()) {
+                            target.delete()
+                            return@runCatching null
+                        }
+                        if (!isValidApkFile(target)) {
+                            target.delete()
+                            return@runCatching null
+                        }
+                        target
+                    } finally {
+                        conn.disconnect()
                     }
-                    if (cancelled.get()) {
-                        target.delete()
-                        return@runCatching null
-                    }
-                    if (!isValidApkFile(target)) {
-                        target.delete()
-                        return@runCatching null
-                    }
-                    target
-                } finally {
-                    conn.disconnect()
-                }
-            }.getOrNull()
+                }.getOrNull()
+                if (outFile != null && outFile.exists()) break
+            }
 
             mainHandler.post {
                 if (dlg.isShowing) dlg.dismiss()
@@ -275,17 +303,20 @@ object AppUpdater {
                     return@post
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !activity.packageManager.canRequestPackageInstalls()) {
-                    pendingInstallFile = outFile
-                    Toast.makeText(activity, "'출처를 알 수 없는 앱 설치' 허용 후 즉시 설치됩니다.", Toast.LENGTH_LONG).show()
-                    val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:${activity.packageName}"))
-                    activity.startActivity(intent)
-                    return@post
-                }
-
-                launchInstaller(activity, outFile)
+                proceedToInstall(activity, outFile)
             }
         }
+    }
+
+    private fun proceedToInstall(activity: Activity, outFile: File) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !activity.packageManager.canRequestPackageInstalls()) {
+            pendingInstallFile = outFile
+            Toast.makeText(activity, "'출처를 알 수 없는 앱 설치' 허용 후 즉시 설치됩니다.", Toast.LENGTH_LONG).show()
+            val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:${activity.packageName}"))
+            activity.startActivity(intent)
+            return
+        }
+        launchInstaller(activity, outFile)
     }
 
     private fun launchInstaller(context: Context, apkFile: File) {
@@ -294,10 +325,7 @@ object AppUpdater {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, "application/vnd.android.package-archive")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                if (context !is Activity) {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(intent)
         }.onFailure { err ->
@@ -319,10 +347,14 @@ object AppUpdater {
     private fun cleanOldApks(context: Context) {
         runCatching {
             val pending = pendingInstallFile?.canonicalPath
+            val now = System.currentTimeMillis()
             val dir = File(context.cacheDir, "updates")
             if (dir.exists()) {
                 dir.listFiles()?.forEach { f ->
-                    if (f.canonicalPath != pending) f.delete()
+                    // 방금 받은 파일(30분 이내)이나 설치 대기 중인 파일은 보존하여 권한 허용 후 재설치 보장
+                    if (f.canonicalPath != pending && (now - f.lastModified() > 30 * 60 * 1000L)) {
+                        f.delete()
+                    }
                 }
             }
         }

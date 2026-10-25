@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.6.0.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.8.0.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,18 +15,18 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.6.0.apk"
+    apk_url = "https://inanimals-1977.web.app/kidskart/KidsKartRush-1.8.0.apk"
     notes = (
-        "• [스킬 기반 드리프트 & 주행 물리 전면 개선] 진입 각도·유지 시간(GOOD/PERFECT/OVER)·해제 타이밍에 따라 탈출 부스트와 감속/라인 밀림이 갈리는 손맛 구현, 가드레일 비점착 탄성 리바운드 적용!\n"
-        "• [대표 코스 '선셋 캐니언 에어로 서킷' 3랩 & 분기 지름길 완성] 직선 슬립스트림 추월 구간, 연속 S자 코너, 고저차 능선 분기(안전 본선 vs 위험 고속 협곡 데크 지름길), 180도 헤어핀 구간 탑재!\n"
-        "• [경쟁형 AI 5대 & 핵심 전술 아이템 3종(터보 셀·쇼크 볼트·에너지 실드)] 고무줄 바인딩 제거, 공격형/안정형 AI 라인 선택 및 실수·회복, 후방 공격 경보(1.3초)와 실드 카운터 부스트/드리프트 회피 및 연속 피격 방지(2.5초 면역) 완성!"
+        "• [급코스 드리프트 & 카빙 코너링 대폭 강화] S자 코너·헤어핀·능선 분기·결승 코너 곡률(±2.65~3.45)을 다이나믹한 급코너로 업그레이드하고, 드리프트 시 안쪽 에이펙스를 날카롭게 파고드는 카빙 그립과 3단 드리프트 부스트(청색·주황·보라) 완성!\n"
+        "• [캐릭터 얼굴 크기 대폭 확대 (108x108 + 최대 2.85배)] 내 캐릭터(1.56배)와 라이벌 캐릭터(최대 2.85배)의 얼굴 컷아웃 크기를 대폭 키워 주행 중 누구의 얼굴인지 한눈에 선명하게 식별!\n"
+        "• [상대편 AI 경쟁력 상향 & 투척·발사형 공격 아이템 5종 전면 개편] AI 주행 페이스(1.018~1.058) 및 코너 공략 속도를 높여 치열한 접전을 구현하고, 아이템을 주로 던지거나 쏘는 5종(🚀유도 로켓·💣왕폭탄 던지기·🐢3연발 등껍질·❄️얼음대포·🍌바나나 전방 투척)으로 전면 개편!"
     )
 
     update_payload = {
         "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
         "packageId": "com.mj.kidskart",
-        "versionCode": 15,
-        "versionName": "1.6.0",
+        "versionCode": 17,
+        "versionName": "1.8.0",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -53,17 +53,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "에어로 카트 GP: 선셋 캐니언 에디션",
-                "latest_version": "1.6.0",
-                "version_code": 15,
+                "latest_version": "1.8.0",
+                "version_code": 17,
                 "force_update": False,
-                "release_notes": "스킬 드리프트 물리(진입각·유지시간·해제타이밍 차등 보상), 대표 코스 '선셋 캐니언 에어로 서킷' 3랩 & 협곡 데크 지름길, 경쟁형 AI 5대(공격형/안정형), 핵심 전술 아이템 3종(터보 셀·쇼크 볼트·에너지 실드) 및 후방 경보·방어 카운터 완성.",
+                "release_notes": "급코스 드리프트 카빙 물리, 캐릭터 얼굴 대폭 확대(108x108 + 최대 2.85배), 상대편 AI 속도·코너링 상향, 투척·발사형 공격 아이템 5종(유도로켓·왕폭탄·3연발등껍질·얼음대포·왕바나나투척) 및 자동 업데이트 개선 완성.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.6.0 (build 15), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.8.0 (build 17), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
