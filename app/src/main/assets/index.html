@@ -972,7 +972,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.8.0</span>
+      <span class="lobby-badge" id="verBadge">v1.9.0</span>
       <h1>🌅 선셋 캐니언 에어로 카트 GP</h1>
     </div>
     <div class="assist-pills">
@@ -1057,7 +1057,7 @@
           <div>🔹 <b>구간 3 (레드락 180° 급헤어핀)</b>: 180° 급회전 헤어핀 인코스 깊숙이 파고드는 풀 드리프트</div>
           <div>🔹 <b>구간 4 (메사 분기·합류)</b>: 우측 안전 본선 vs 좌측 고속 현수교 지름길(현 단축 +24%)</div>
           <div>🔹 <b>구간 5·6 (스카이 점프 & 급코너 결승)</b>: 점프 착지 후 급커브 → 최종 180° 역전 코너</div>
-          <div style="margin-top:3px;color:#0277bd;">🎯 <b>투척·발사 아이템 5종</b>: 🚀유도로켓 · 💣왕폭탄투척 · 🐢3연발등껍질 · ❄️얼음대포 · 🍌바나나투척</div>
+          <div style="margin-top:3px;color:#0277bd;">🔫 <b>전방 총격 배틀 & 5대 중화기</b>: 기본 기관총 연사(🔫) + 개틀링6연사·레이저저격총·아이스샷건·유도로켓·바주카포!</div>
         </div>
       </div>
     </div>
@@ -1065,7 +1065,7 @@
 
   <div class="lobby-footer">
     <div class="lobby-tip">
-      🏎️ <b>드리프트</b>(핸들 깊게 꺾기 후 타이밍 맞춰 풀기)와 <b>지름길·아이템 판단</b>으로 3랩 그랑프리를 제패하세요!
+      🏎️ <b>"끼이익!" 급코스 드리프트</b>로 가속하고, <b>앞으로 치고 나가는 상대들을 총(🔫)으로 격추</b>하며 적의 사격을 회피해 1위를 차지하세요!
     </div>
     <button id="startRaceBtn" class="start-race-btn">🏁 3랩 그랑프리 출발!</button>
   </div>
@@ -1077,11 +1077,11 @@
     <div class="hud-left-group">
       <div class="rank-box">
         <span style="font-size:24px;">👑</span>
-        <span id="rankNum" class="rank-num">1</span>
+        <span id="rankNum" class="rank-num">6</span>
       </div>
       <div id="lapBox" class="lap-box">🏁 1/2</div>
       <div class="item-slots">
-        <div id="itemSlot1" class="item-slot">🎁</div>
+        <div id="itemSlot1" class="item-slot">🔫</div>
         <div id="itemSlot2" class="item-slot">🔥</div>
       </div>
     </div>
@@ -1152,10 +1152,10 @@
     <button id="hornBtn" type="button" aria-label="Horn" style="display:none !important;"></button>
   </div>
 
-  <!-- 우측 하단: 오직 아이템 던지는 버튼(🎁)과 부스터 아이콘 버튼(🔥) 2개만 깔끔하게 배치! -->
+  <!-- 우측 하단: 전방 총격/중화기 발사 버튼(🔫)과 부스터 아이콘 버튼(🔥) 2개만 깔끔하게 배치! -->
   <div class="action-zone">
-    <button id="itemBtn" class="big-action-btn" type="button" aria-label="Item">
-      <div id="itemBtnIcon" class="btn-icon" style="font-size:52px;">🎁</div>
+    <button id="itemBtn" class="big-action-btn" type="button" aria-label="Shoot Gun">
+      <div id="itemBtnIcon" class="btn-icon" style="font-size:52px;">🔫</div>
       <div id="itemBtnLabel" style="display:none;"></div>
     </button>
 
@@ -1511,7 +1511,7 @@
           this.roadNoiseNode.start(now);
         }
 
-        // 드리프트 유지 시 분명하게 들리는 2레이어 연속 타이어 스키드 신디사이저 (매 프레임 재생성 없이 단일 지속 노드 제어)
+        // 드리프트 유지 시 "끼이이익~!" 하고 선명하게 미끄러지는 3레이어 리얼 타이어 스키드 신디사이저 (아스팔트 마찰 노이즈 + 듀얼 디튠 고무 비명 오실레이터 + /i/ 모음 포먼트 공명 필터)
         if (this.noiseBuffer) {
           this.skidNode = this.ctx.createBufferSource();
           this.skidNode.buffer = this.noiseBuffer;
@@ -1519,8 +1519,8 @@
 
           this.skidFilter = this.ctx.createBiquadFilter();
           this.skidFilter.type = 'bandpass';
-          this.skidFilter.frequency.setValueAtTime(1120, now);
-          this.skidFilter.Q.setValueAtTime(3.6, now);
+          this.skidFilter.frequency.setValueAtTime(2180, now);
+          this.skidFilter.Q.setValueAtTime(6.2, now);
 
           this.skidGain = this.ctx.createGain();
           this.skidGain.gain.setValueAtTime(0.0001, now);
@@ -1530,23 +1530,29 @@
           this.skidGain.connect(this.ctx.destination);
           this.skidNode.start(now);
 
-          // 타이어 고무 공명 배음(Squeal Resonator) 레이어: 엔진 저음에 묻히지 않는 중고역 마찰 질감
+          // "끼이익~!" 리얼 타이어 고무 스퀴얼(Squeal) 듀얼 오실레이터: 1.7~2.4kHz 포먼트 대역에서 아스팔트 스틱-슬립(Stick-Slip) 마찰음 생성!
           this.skidToneOsc = this.ctx.createOscillator();
           this.skidToneOsc.type = 'sawtooth';
-          this.skidToneOsc.frequency.setValueAtTime(680, now);
+          this.skidToneOsc.frequency.setValueAtTime(1860, now);
+
+          this.skidToneOsc2 = this.ctx.createOscillator();
+          this.skidToneOsc2.type = 'triangle';
+          this.skidToneOsc2.frequency.setValueAtTime(1938, now);
 
           this.skidToneFilter = this.ctx.createBiquadFilter();
           this.skidToneFilter.type = 'bandpass';
-          this.skidToneFilter.frequency.setValueAtTime(860, now);
-          this.skidToneFilter.Q.setValueAtTime(4.8, now);
+          this.skidToneFilter.frequency.setValueAtTime(2150, now);
+          this.skidToneFilter.Q.setValueAtTime(6.8, now);
 
           this.skidToneGain = this.ctx.createGain();
           this.skidToneGain.gain.setValueAtTime(0.0001, now);
 
           this.skidToneOsc.connect(this.skidToneFilter);
+          this.skidToneOsc2.connect(this.skidToneFilter);
           this.skidToneFilter.connect(this.skidToneGain);
           this.skidToneGain.connect(this.ctx.destination);
           this.skidToneOsc.start(now);
+          this.skidToneOsc2.start(now);
         }
 
         this.engineRunning = true;
@@ -1606,9 +1612,9 @@
       this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.07);
       this.engFilter.Q.setTargetAtTime(filterQ, now, 0.07);
 
-      // 드리프트 중에는 스키드음이 엔진 저음에 묻히지 않도록 엔진·노면 볼륨을 22% 덕킹(Ducking) 믹싱!
+      // 드리프트 중에는 "끼이익~!" 타이어 마찰음이 가장 선명하게 들리도록 엔진·노면 저음을 50% 덕킹(Ducking) 믹싱!
       const activeDriftGround = Boolean(isDrifting && speed > 55 && state.playerY <= 4);
-      const driftDuck = activeDriftGround ? 0.78 : 1.0;
+      const driftDuck = activeDriftGround ? 0.50 : 1.0;
 
       const targetVol = (speed < 5 ? 0.022 : Math.min(0.32, 0.032 + powerCurve * 0.175 + (isBoosting ? 0.070 : 0))) * driftDuck;
       this.engGain.gain.setTargetAtTime(targetVol, now, 0.06);
@@ -1624,89 +1630,182 @@
         this.roadGain.gain.setTargetAtTime(roadVol, now, 0.06);
       }
 
-      // 일반 핸들 조향(!isDrifting)과 실제 드리프트 상태(isDrifting)를 엄격히 구분!
-      // - 진입/유지 시: 속도(speedNorm)와 미끄러짐 각도(slipMag)에 비례해 음량·피치가 상승
-      // - 종료 시: 0.14s 시정수(Exponential Release Decay)로 자연스럽게 감쇠
+      // 드리프트 시 "끼이이익~!" 미끄러지는 리얼 타이어 고무 마찰 사운드 제어:
+      // - 진입 직후(0~0.14초) "끼-이-" 하고 피치가 날카롭게 치솟으며, 유지 중 스틱-슬립 비브라토로 "-이익~!" 질감 유지!
       if (this.skidGain && this.skidFilter) {
-        const slipMag = Math.min(1.2, Math.abs(state.driftAngle || 0) + steerIntensity * 0.35);
-        const stageBoost = (state.driftStage === 3) ? 1.18 : ((state.driftStage === 2) ? 1.08 : 1.0);
+        const slipMag = Math.min(1.25, Math.abs(state.driftAngle || 0) + steerIntensity * 0.42);
+        const stageBoost = (state.driftStage === 3) ? 1.16 : ((state.driftStage === 2) ? 1.08 : 1.0);
         if (activeDriftGround) {
-          const skidVol = Math.min(0.30, (0.13 + speedNorm * 0.08 + slipMag * 0.07) * stageBoost);
-          const skidPitch = (920 + speedNorm * 340 + slipMag * 260 + Math.sin(now * 28) * 42) * stageBoost;
-          this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.035);
-          this.skidGain.gain.setTargetAtTime(skidVol, now, 0.03);
+          const entryRamp = Math.min(1.0, (state.driftChargeTime || 0) / 0.14);
+          const vibrato = Math.sin(now * 38) * 58 + Math.cos(now * 67) * 32;
+          const skidVol = Math.min(0.26, (0.14 + speedNorm * 0.06 + slipMag * 0.06) * stageBoost);
+          const skidPitch = (1780 + entryRamp * 320 + speedNorm * 220 + slipMag * 210 + vibrato) * stageBoost;
+          this.skidFilter.frequency.setTargetAtTime(skidPitch, now, 0.025);
+          this.skidGain.gain.setTargetAtTime(skidVol, now, 0.022);
 
           if (this.skidToneOsc && this.skidToneFilter && this.skidToneGain) {
-            const squealFreq = (610 + speedNorm * 190 + slipMag * 175 + Math.sin(now * 36) * 24) * stageBoost;
-            const squealVol = Math.min(0.14, (0.045 + slipMag * 0.055 + speedNorm * 0.03));
-            this.skidToneOsc.frequency.setTargetAtTime(squealFreq, now, 0.035);
-            this.skidToneFilter.frequency.setTargetAtTime(squealFreq * 1.18, now, 0.035);
-            this.skidToneGain.gain.setTargetAtTime(squealVol, now, 0.03);
+            // "끼이익"의 핵심인 1,720 ~ 2,360 Hz 고무 비명 주파수 + 듀얼 타이어 간섭 배음
+            const squealFreq = (1640 + entryRamp * 280 + speedNorm * 195 + slipMag * 185 + vibrato) * stageBoost;
+            const squealVol = Math.min(0.32, (0.18 + slipMag * 0.08 + speedNorm * 0.05) * stageBoost);
+            this.skidToneOsc.frequency.setTargetAtTime(squealFreq, now, 0.025);
+            if (this.skidToneOsc2) {
+              this.skidToneOsc2.frequency.setTargetAtTime(squealFreq * 1.042 + Math.sin(now * 51) * 24, now, 0.025);
+            }
+            this.skidToneFilter.frequency.setTargetAtTime(squealFreq * 1.12, now, 0.025);
+            this.skidToneGain.gain.setTargetAtTime(squealVol, now, 0.022);
           }
         } else {
-          // 드리프트 해제 시 끊기지 않고 0.14s 감쇠 곡선으로 자연스럽게 사라짐
-          this.skidGain.gain.setTargetAtTime(0.0001, now, 0.14);
+          // 드리프트 해제 시 자연스럽게 감쇠
+          this.skidGain.gain.setTargetAtTime(0.0001, now, 0.11);
           if (this.skidToneGain) {
-            this.skidToneGain.gain.setTargetAtTime(0.0001, now, 0.12);
+            this.skidToneGain.gain.setTargetAtTime(0.0001, now, 0.10);
           }
         }
       }
     }
 
-    // 드리프트 진입 시 짧은 타이어 초기 그립 파열 마찰음 (중복 중첩 방지 쿨다운 적용)
+    // 드리프트 진입 순간 "끼이익~!" 하고 아스팔트를 날카롭게 긁으며 미끄러지는 타이어 초기 파열 마찰음
     playDriftScreech() {
       if (this.muted || this.appPaused) return;
       try {
         this.init();
         if (!this.ctx || !this.noiseBuffer) return;
         const now = this.ctx.currentTime;
-        if (this.lastDriftChirpTime && (now - this.lastDriftChirpTime) < 0.15) return;
+        if (this.lastDriftChirpTime && (now - this.lastDriftChirpTime) < 0.14) return;
         this.lastDriftChirpTime = now;
 
+        // 1) "끼-이-익!" 모음(/i/) 제2포먼트(2,180Hz) 대역 고공명 듀얼 고무 비명 오실레이터
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        osc1.type = 'sawtooth';
+        osc2.type = 'triangle';
+        // "끼(1,520Hz) -> 이(2,320Hz) -> 익(1,940Hz)" 피치 굴곡
+        osc1.frequency.setValueAtTime(1520, now);
+        osc1.frequency.exponentialRampToValueAtTime(2320, now + 0.065);
+        osc1.frequency.exponentialRampToValueAtTime(1940, now + 0.25);
+
+        osc2.frequency.setValueAtTime(1590, now);
+        osc2.frequency.exponentialRampToValueAtTime(2415, now + 0.065);
+        osc2.frequency.exponentialRampToValueAtTime(2020, now + 0.25);
+
+        const formantBp = this.ctx.createBiquadFilter();
+        formantBp.type = 'bandpass';
+        formantBp.Q.setValueAtTime(7.2, now);
+        formantBp.frequency.setValueAtTime(1850, now);
+        formantBp.frequency.exponentialRampToValueAtTime(2380, now + 0.07);
+        formantBp.frequency.exponentialRampToValueAtTime(2080, now + 0.25);
+
+        const toneGain = this.ctx.createGain();
+        toneGain.gain.setValueAtTime(0.01, now);
+        toneGain.gain.linearRampToValueAtTime(0.32, now + 0.016);
+        toneGain.gain.setValueAtTime(0.28, now + 0.12);
+        toneGain.gain.exponentialRampToValueAtTime(0.002, now + 0.27);
+
+        osc1.connect(formantBp);
+        osc2.connect(formantBp);
+        formantBp.connect(toneGain);
+        toneGain.connect(this.ctx.destination);
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.28);
+        osc2.stop(now + 0.28);
+
+        // 2) 아스팔트 노면 마찰 치찰음 레이어 ("칙-끼이익!")
         const src = this.ctx.createBufferSource();
         src.buffer = this.noiseBuffer;
 
         const bp = this.ctx.createBiquadFilter();
         bp.type = 'bandpass';
-        bp.Q.setValueAtTime(6.0, now);
-        bp.frequency.setValueAtTime(1380, now);
-        bp.frequency.exponentialRampToValueAtTime(860, now + 0.14);
+        bp.Q.setValueAtTime(5.8, now);
+        bp.frequency.setValueAtTime(2450, now);
+        bp.frequency.exponentialRampToValueAtTime(1950, now + 0.24);
 
         const g = this.ctx.createGain();
         g.gain.setValueAtTime(0.01, now);
-        g.gain.linearRampToValueAtTime(0.22, now + 0.018);
-        g.gain.exponentialRampToValueAtTime(0.002, now + 0.16);
+        g.gain.linearRampToValueAtTime(0.26, now + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.002, now + 0.25);
 
         src.connect(bp);
         bp.connect(g);
         g.connect(this.ctx.destination);
         src.start(now);
-        src.stop(now + 0.17);
+        src.stop(now + 0.26);
       } catch (_) {}
     }
 
-    // 드리프트 종료 시 타이어가 접지력을 회복하며 스쳐 지나가는 짧은 감쇠 여운음
+    // 드리프트 종료 시 타이어가 접지력을 회복하며 "끼익!" 하고 끊어지는 짧은 감쇠 마찰음
     playDriftReleaseTail(slipMag = 0.6) {
       if (this.muted || this.appPaused || !this.ctx || !this.noiseBuffer) return;
       try {
         const now = this.ctx.currentTime;
-        const src = this.ctx.createBufferSource();
-        src.buffer = this.noiseBuffer;
+        const osc = this.ctx.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(1980, now);
+        osc.frequency.exponentialRampToValueAtTime(1320, now + 0.17);
+
         const bp = this.ctx.createBiquadFilter();
         bp.type = 'bandpass';
-        bp.Q.setValueAtTime(3.2, now);
-        bp.frequency.setValueAtTime(880, now);
-        bp.frequency.exponentialRampToValueAtTime(380, now + 0.22);
+        bp.Q.setValueAtTime(6.0, now);
+        bp.frequency.setValueAtTime(2050, now);
+        bp.frequency.exponentialRampToValueAtTime(1400, now + 0.17);
 
         const g = this.ctx.createGain();
-        g.gain.setValueAtTime(Math.min(0.16, 0.07 + slipMag * 0.06), now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+        g.gain.setValueAtTime(Math.min(0.24, 0.12 + slipMag * 0.08), now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
 
+        const src = this.ctx.createBufferSource();
+        src.buffer = this.noiseBuffer;
         src.connect(bp);
+        osc.connect(bp);
         bp.connect(g);
         g.connect(this.ctx.destination);
+        osc.start(now);
         src.start(now);
-        src.stop(now + 0.25);
+        osc.stop(now + 0.20);
+        src.stop(now + 0.20);
+      } catch (_) {}
+    }
+
+    // 전방 기관총 / 레이저 총 / 적 사격 효과음 ("타타탕! / 피융!")
+    playGunShot(isEnemy = false, burstCount = 1) {
+      if (this.muted || this.appPaused) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        const shots = Math.max(1, Math.min(5, burstCount));
+        for (let b = 0; b < shots; b++) {
+          const t0 = this.ctx.currentTime + b * 0.055;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = isEnemy ? 'square' : 'sawtooth';
+          osc.frequency.setValueAtTime(isEnemy ? 740 : 920, t0);
+          osc.frequency.exponentialRampToValueAtTime(isEnemy ? 165 : 195, t0 + 0.075);
+
+          gain.gain.setValueAtTime(isEnemy ? 0.15 : 0.20, t0);
+          gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.08);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t0);
+          osc.stop(t0 + 0.085);
+
+          if (this.noiseBuffer) {
+            const nSrc = this.ctx.createBufferSource();
+            nSrc.buffer = this.noiseBuffer;
+            const nBp = this.ctx.createBiquadFilter();
+            nBp.type = 'bandpass';
+            nBp.frequency.setValueAtTime(isEnemy ? 1600 : 2200, t0);
+            nBp.Q.setValueAtTime(2.5, t0);
+            const nGain = this.ctx.createGain();
+            nGain.gain.setValueAtTime(isEnemy ? 0.12 : 0.18, t0);
+            nGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.055);
+            nSrc.connect(nBp);
+            nBp.connect(nGain);
+            nGain.connect(this.ctx.destination);
+            nSrc.start(t0);
+            nSrc.stop(t0 + 0.06);
+          }
+        }
       } catch (_) {}
     }
 
@@ -1739,6 +1838,7 @@
         if (this.roadNoiseNode) { this.roadNoiseNode.stop(); this.roadNoiseNode.disconnect(); this.roadNoiseNode = null; }
         if (this.skidNode) { this.skidNode.stop(); this.skidNode.disconnect(); this.skidNode = null; }
         if (this.skidToneOsc) { this.skidToneOsc.stop(); this.skidToneOsc.disconnect(); this.skidToneOsc = null; }
+        if (this.skidToneOsc2) { this.skidToneOsc2.stop(); this.skidToneOsc2.disconnect(); this.skidToneOsc2 = null; }
       } catch (_) {}
       this.engineRunning = false;
     }
@@ -2214,13 +2314,13 @@
     }
   ];
 
-  // ==================== 주로 던지거나 쏘는 액티브 투척·발사 아이템 5종 완성 ====================
+  // ==================== 앞에서 총을 쏘는 전방 총격 배틀 & 5대 중화기 아이템 완성 ====================
   const ITEMS = [
-    { id: 'rocket', icon: '🚀', name: '유도 로켓 발사', color: '#ff1744', voice: '' },
-    { id: 'bomb', icon: '💣', name: '왕폭탄 던지기', color: '#ff9100', voice: '' },
-    { id: 'tripleShell', icon: '🐢', name: '3연발 등껍질 쏘기', color: '#00e676', voice: '' },
-    { id: 'iceBall', icon: '❄️', name: '얼음대포 쏘기', color: '#00e5ff', voice: '' },
-    { id: 'bananaThrow', icon: '🍌', name: '바나나 앞으로 투척', color: '#ffea00', voice: '' }
+    { id: 'gatlingGun', icon: '🔫', name: '개틀링 기관총 6연사', color: '#ffea00', voice: '' },
+    { id: 'laserRifle', icon: '⚡', name: '플라즈마 스나이퍼 총', color: '#00e5ff', voice: '' },
+    { id: 'iceShotgun', icon: '❄️', name: '아이스 3열 산탄총', color: '#80d8ff', voice: '' },
+    { id: 'rocket', icon: '🚀', name: '유도 미사일 런처', color: '#ff1744', voice: '' },
+    { id: 'bomb', icon: '💣', name: '헤비 바주카 유탄포', color: '#ff9100', voice: '' }
   ];
 
   // ==================== 게임 전역 상태 ====================
@@ -2259,6 +2359,8 @@
     shortcutFailedRecovering: false,
     incomingAttackTimer: 0,
     incomingAttackSource: null,
+    gunCooldown: 0,
+    muzzleFlashTimer: 0,
     lapStartTimeMs: 0,
     currentLapTimeSec: 0,
     bestLapTimeSec: 0,
@@ -3410,114 +3512,155 @@
       state.rouletteTimer = 0.01;
       return;
     }
+
+    // [기본 전방 기관총 사격]: 특수 아이템이 없을 때도 🔫 버튼을 누르면 카트 전면 트윈 기관총에서 앞차를 향해 3점사 고속 탄환 발사!
     if (!state.heldItem) {
-      sfx.playHop();
-      if (state.playerY <= 2) state.velY = 250;
+      if ((state.gunCooldown || 0) > 0) return;
+      state.gunCooldown = 0.62;
+      state.muzzleFlashTimer = 0.22;
+      sfx.playGunShot(false, 3);
+      vibrateDevice(45);
+
+      [-0.08, 0, 0.08].forEach((offsetX, bIdx) => {
+        state.projectiles.push({
+          type: 'bullet',
+          isEnemy: false,
+          z: state.posZ + 66 + bIdx * 28,
+          x: state.playerX + offsetX + state.smoothSteer * 0.12,
+          vx: state.smoothSteer * 0.14,
+          y: 14,
+          velY: 0,
+          gravity: 0,
+          homing: 7.2,
+          speed: state.maxSpeed * 2.55 + 260,
+          life: 2.6
+        });
+      });
+      showDrivingFeedback('🔫 전방 트윈 기관총 3점사 발사! 타타탕!', '#ffea00', 0.65);
+      spawnBoostParticles(10);
       return;
     }
 
     const item = state.heldItem;
     state.heldItem = null;
+    state.muzzleFlashTimer = 0.30;
     updateItemUI();
     vibrateDevice(75);
 
-    // 후방 공격 경보(⚠️)가 떴을 때 아이템을 던지거나 쏘면 후방 공격을 요격하면서 동시에 전방 발사!
+    // 전방/후방 적 사격 경보가 떴을 때 중화기를 발사하면 적 탄환을 즉시 맞대응 요격!
     if (state.incomingAttackTimer > 0) {
       state.incomingAttackTimer = 0;
       state.boostTimer = Math.max(state.boostTimer, 0.55);
       spawnBoostShockwave(false);
     }
 
-    if (item.id === 'rocket') {
-      // [아이템 1: 🚀 유도 로켓 발사]
-      // 전방 라이벌을 강력하게 자동 추적하는 초고속 로켓 발사! 발사 반동 부스트 + 명중 시 추가 가속!
-      sfx.playShellShoot();
+    if (item.id === 'gatlingGun') {
+      // [중화기 1: 🔫 개틀링 기관총 6연사]
+      // 카트 전면 트윈 개틀링 포신에서 대구경 고속 철갑탄 6발을 연속 난사하여 앞선 라이벌들을 줄줄이 타격!
+      sfx.playGunShot(false, 5);
+      state.boostTimer = Math.max(state.boostTimer, 0.45);
+      for (let b = 0; b < 6; b++) {
+        const spreadX = ((b % 3) - 1) * 0.12;
+        state.projectiles.push({
+          type: 'bullet',
+          heavy: true,
+          isEnemy: false,
+          z: state.posZ + 68 + b * 26,
+          x: state.playerX + spreadX,
+          vx: spreadX * 0.35,
+          y: 15,
+          velY: 0,
+          gravity: 0,
+          homing: 9.2,
+          speed: state.maxSpeed * 2.68 + 280,
+          life: 3.1
+        });
+      }
+      showDrivingFeedback('🔫 개틀링 기관총 6연사 난사! 앞차 집중 사격!', '#ffea00', 0.95);
+    } else if (item.id === 'laserRifle') {
+      // [중화기 2: ⚡ 플라즈마 스나이퍼 총]
+      // 초고속 직사 플라즈마 레이저 탄환 2발을 발사해 멀리 앞서가는 선두 라이벌까지 즉시 저격!
+      sfx.playGunShot(false, 2);
       sfx.playBoost(false);
       state.boostTimer = Math.max(state.boostTimer, 0.52);
+      [-0.06, 0.06].forEach((ox, idx) => {
+        state.projectiles.push({
+          type: 'laser',
+          isEnemy: false,
+          z: state.posZ + 75 + idx * 32,
+          x: state.playerX + ox,
+          vx: 0,
+          y: 16,
+          velY: 0,
+          gravity: 0,
+          homing: 12.5,
+          speed: state.maxSpeed * 3.10 + 340,
+          life: 3.4
+        });
+      });
+      showDrivingFeedback('⚡ 플라즈마 스나이퍼 총 발사! 선두 차량 저격!', '#00e5ff', 0.95);
+    } else if (item.id === 'iceShotgun' || item.id === 'iceBall' || item.id === 'tripleShell') {
+      // [중화기 3: ❄️ 아이스 3열 산탄총 (샷건)]
+      // 좌·중·우 3갈래 부채꼴로 냉기 산탄 총알을 동시에 발사해 앞차들을 한꺼번에 얼리고 감속!
+      sfx.playGunShot(false, 3);
+      sfx.playShellShoot();
+      [-0.34, 0, 0.34].forEach((fanVx, idx) => {
+        state.projectiles.push({
+          type: 'iceBall',
+          isEnemy: false,
+          z: state.posZ + 70 + (idx === 1 ? 16 : 0),
+          x: state.playerX + fanVx * 0.26,
+          vx: fanVx,
+          y: 15,
+          velY: 0,
+          gravity: 0,
+          homing: idx === 1 ? 9.5 : 6.2,
+          speed: state.maxSpeed * 2.42 + 240,
+          life: 3.2
+        });
+      });
+      showDrivingFeedback('❄️ 아이스 3열 산탄총 발사! 전방 광역 빙결!', '#80d8ff', 0.95);
+    } else if (item.id === 'rocket') {
+      // [중화기 4: 🚀 유도 미사일 런처]
+      // 전방 라이벌을 강력하게 자동 추적하는 초고속 로켓 발사!
+      sfx.playGunShot(false, 2);
+      sfx.playShellShoot();
+      sfx.playBoost(false);
+      state.boostTimer = Math.max(state.boostTimer, 0.55);
       state.projectiles.push({
         type: 'rocket',
+        isEnemy: false,
         z: state.posZ + 72,
         x: state.playerX,
         vx: 0,
         y: 16,
         velY: 0,
         gravity: 0,
-        homing: 10.5,
-        speed: state.maxSpeed * 2.38 + 230,
+        homing: 11.2,
+        speed: state.maxSpeed * 2.48 + 250,
         life: 3.4
       });
-      showDrivingFeedback('🚀 유도 로켓 발사! 앞차 락온 추격!', '#ff1744', 0.95);
-    } else if (item.id === 'bomb') {
-      // [아이템 2: 💣 왕폭탄 던지기]
-      // 높이 포물선을 그리며 전방으로 묵직한 왕폭탄 투척! 착탄 시 대폭발 충격파로 주변 라이벌 일망타진!
+      showDrivingFeedback('🚀 유도 미사일 런처 발사! 앞차 락온 격추!', '#ff1744', 0.95);
+    } else if (item.id === 'bomb' || item.id === 'bananaThrow') {
+      // [중화기 5: 💣 헤비 바주카 유탄포]
+      // 전방 아치 탄도로 대구경 폭발 유탄을 발사! 착탄 시 대폭발 충격파로 주변 라이벌 일망타진!
+      sfx.playGunShot(false, 2);
       sfx.playShellShoot();
+      state.boostTimer = Math.max(state.boostTimer, 0.48);
       state.projectiles.push({
         type: 'bomb',
+        isEnemy: false,
         z: state.posZ + 68,
         x: state.playerX + state.smoothSteer * 0.16,
         vx: state.smoothSteer * 0.22,
         y: 26,
-        velY: 490,
+        velY: 470,
         gravity: 910,
-        homing: 5.4,
-        speed: state.maxSpeed * 1.78 + 175,
-        life: 2.8
+        homing: 6.2,
+        speed: state.maxSpeed * 1.92 + 195,
+        life: 2.9
       });
-      showDrivingFeedback('💣 왕폭탄 포물선 투척! 전방 광역 폭발!', '#ff9100', 0.95);
-    } else if (item.id === 'tripleShell') {
-      // [아이템 3: 🐢 3연발 등껍질 쏘기]
-      // 좌·중·우 3갈래 부채꼴로 고속 등껍질 탄환 3발을 동시에 발사하여 코너와 직선 모두 광역 제압!
-      sfx.playShellShoot();
-      [-0.36, 0, 0.36].forEach((fanVx, idx) => {
-        state.projectiles.push({
-          type: 'shell',
-          z: state.posZ + 68 + (idx === 1 ? 14 : 0),
-          x: state.playerX + fanVx * 0.28,
-          vx: fanVx,
-          y: 10,
-          velY: 0,
-          gravity: 0,
-          homing: idx === 1 ? 7.8 : 4.6,
-          speed: state.maxSpeed * 2.18 + 205,
-          life: 3.2
-        });
-      });
-      showDrivingFeedback('🐢 3연발 등껍질 동시 발사!', '#00e676', 0.95);
-    } else if (item.id === 'iceBall') {
-      // [아이템 4: ❄️ 얼음대포 쏘기]
-      // 거대한 냉기 대포알을 전방으로 발사해 명중한 상대를 꽁꽁 얼려 축소·감속!
-      sfx.playShellShoot();
-      state.projectiles.push({
-        type: 'iceBall',
-        z: state.posZ + 70,
-        x: state.playerX,
-        vx: 0,
-        y: 16,
-        velY: 0,
-        gravity: 0,
-        homing: 9.2,
-        speed: state.maxSpeed * 2.28 + 215,
-        life: 3.3
-      });
-      showDrivingFeedback('❄️ 얼음대포 발사! 앞차 빙결 타격!', '#00e5ff', 0.95);
-    } else if (item.id === 'bananaThrow') {
-      // [아이템 5: 🍌 바나나 앞으로 투척]
-      // 뒤가 아니라 앞차 진로 머리 위로 포물선 투척! 직격 시 즉시 스핀, 바닥 착지 시 전방 함정 설치 + 투척 가속!
-      sfx.playShellShoot();
-      state.boostTimer = Math.max(state.boostTimer, 0.45);
-      state.projectiles.push({
-        type: 'bananaThrow',
-        z: state.posZ + 66,
-        x: state.playerX + state.smoothSteer * 0.18,
-        vx: state.smoothSteer * 0.20,
-        y: 24,
-        velY: 460,
-        gravity: 930,
-        homing: 4.5,
-        speed: state.maxSpeed * 1.72 + 160,
-        life: 2.6
-      });
-      showDrivingFeedback('🍌 왕바나나 전방 투척! 앞차 진로 봉쇄!', '#ffea00', 0.95);
+      showDrivingFeedback('💣 헤비 바주카 유탄포 발사! 전방 광역 폭발!', '#ff9100', 0.95);
     }
     spawnBoostParticles(18);
   }
@@ -3602,8 +3745,8 @@
       itemBtnIcon.textContent = state.heldItem.icon;
       itemBtn.classList.add('has-item');
     } else {
-      itemSlot1.textContent = '🎁';
-      itemBtnIcon.textContent = '🎁';
+      itemSlot1.textContent = '🔫';
+      itemBtnIcon.textContent = '🔫';
       itemBtn.classList.remove('has-item');
     }
   }
@@ -3805,6 +3948,8 @@
     state.driftFeedbackTimer = 0;
     state.incomingAttackTimer = 0;
     state.incomingAttackSource = null;
+    state.gunCooldown = 0;
+    state.muzzleFlashTimer = 0;
     state.raceElapsedSec = 0;
     state.currentLapTimeSec = 0;
     state.bestLapTimeSec = 0;
@@ -3812,7 +3957,7 @@
     state.heldItem = null;
     state.coins = 0;
     state.lap = 1;
-    state.rank = 4;
+    state.rank = 6;
     state.projectiles = [];
     state.particles = [];
     state.skidMarks = [];
@@ -3822,7 +3967,8 @@
     driftStageBadge.style.display = 'none';
 
     const otherRacers = RACERS.filter((_, idx) => idx !== state.selectedRacer);
-    const startOffsetsZ = [-95, -40, 65, 145, 230];
+    // [핵심 개선] 상대 5대 모두가 출발부터 플레이어 앞으로 치고 나가며 전방 총격 배틀을 유도!
+    const startOffsetsZ = [115, 205, 305, 415, 535];
     const startLanes = [-0.52, 0.48, -0.28, 0.38, 0.04];
 
     rivalDotsContainer.innerHTML = '';
@@ -3835,8 +3981,8 @@
       // 3가지 주행 성향 구분: 공격형(aggressive 2대) / 코너 강자(corner_master 2대) / 안정형(stable 1대)
       const personaList = ['aggressive', 'corner_master', 'stable', 'aggressive', 'corner_master'];
       const persona = personaList[i % personaList.length];
-      // 상대편 AI 경쟁력 대폭 강화 (basePace: 1.018 ~ 1.058): 플레이어가 급코너 드리프트와 투척·발사 무기를 적극 활용해야 이길 수 있는 긴장감 있는 속도!
-      const basePace = 1.018 + (i % 3) * 0.014 + (persona === 'aggressive' ? 0.012 : (persona === 'corner_master' ? 0.008 : 0));
+      // [난이도 대폭 상향] 상대편 AI 기본 주행 페이스(1.125 ~ 1.185): 플레이어가 급코너 드리프트와 전방 총격을 모두 활용해야만 이길 수 있는 매운맛 난이도!
+      const basePace = 1.125 + (i % 3) * 0.018 + (persona === 'aggressive' ? 0.016 : (persona === 'corner_master' ? 0.012 : 0));
       const personalBias = [-0.42, 0.40, -0.18, 0.22, 0.03][i % 5];
 
       return {
@@ -3854,18 +4000,19 @@
         velY: 0,
         preferredLane: startLanes[i],
         laneTimer: 1.1 + i * 0.35,
-        speed: state.maxSpeed * 0.96,
-        n2oGauge: 45 + i * 10,
+        speed: state.maxSpeed * 1.06,
+        n2oGauge: 65 + i * 8,
         heldItem: null,
         itemUseTimer: 0,
-        boostVisualTimer: 0,
+        boostVisualTimer: 0.65,
+        muzzleFlashTimer: 0,
         spinTimer: 0,
         shrinkTimer: 0,
         shieldTimer: 0,
         mistakeTimer: 0,
         recoverTimer: 0,
-        mistakeCooldown: 6.5 + i * 1.5,
-        attackCooldown: 4.2 + i * 1.2,
+        mistakeCooldown: 9.5 + i * 1.5,
+        attackCooldown: 1.6 + i * 0.65,
         overtakeState: 'none',
         overtakeLane: 0,
         overtakeTimer: 0,
@@ -3876,7 +4023,7 @@
         lastCheckpointIdx: 0,
         lapCount: 1,
         passSoundCooldown: 0,
-        wasAhead: startOffsetsZ[i] > 0,
+        wasAhead: true,
         dotEl: dot
       };
     });
@@ -4021,6 +4168,8 @@
     if (state.driftPenaltyTimer > 0) state.driftPenaltyTimer = Math.max(0, state.driftPenaltyTimer - dt);
     if (state.driftFeedbackTimer > 0) state.driftFeedbackTimer = Math.max(0, state.driftFeedbackTimer - dt);
     if (state.driftReleaseTailTimer > 0) state.driftReleaseTailTimer = Math.max(0, state.driftReleaseTailTimer - dt);
+    if (state.gunCooldown > 0) state.gunCooldown = Math.max(0, state.gunCooldown - dt);
+    if (state.muzzleFlashTimer > 0) state.muzzleFlashTimer = Math.max(0, state.muzzleFlashTimer - dt);
     if (state.boostFlash > 0) state.boostFlash = Math.max(0, state.boostFlash - dt * 3.4);
     state.raceElapsedSec = (state.raceElapsedSec || 0) + dt;
     state.currentLapTimeSec = (state.currentLapTimeSec || 0) + dt;
@@ -4406,19 +4555,88 @@
       });
     }
 
-    // 11. 던지거나 쏜 5대 무기 투사체(🚀유도로켓 · 💣왕폭탄 · 🐢3연발등껍질 · ❄️얼음대포 · 🍌전방투척바나나) 물리 & 타격 판정!
+    // 11. 플레이어 전방 총격 탄환 & 앞에서 쏘는 라이벌 적 총탄(isEnemy) 물리 및 타격·요격 판정!
     for (let i = state.projectiles.length - 1; i >= 0; i--) {
       const proj = state.projectiles[i];
+      if (proj.isEnemy) {
+        // [앞에서 달리는 상대가 플레이어를 향해 발사한 총탄]: 앞차 위치에서 플레이어 쪽으로 빠르게 날아옴!
+        const approachSpd = proj.approachSpeed || 122;
+        proj.z += (state.speed - approachSpd) * 4.6 * dt;
+        if (proj.vx) {
+          proj.x = Math.max(-0.82, Math.min(0.82, proj.x + proj.vx * dt));
+        }
+        proj.life -= dt;
+
+        const relZ = proj.z - state.posZ;
+        // 플레이어 카트 도달 판정 (피격 vs 아슬아슬 회피)
+        if (relZ <= 32 && relZ >= -28 && !proj.resolved) {
+          if (Math.abs(proj.x - state.playerX) < 0.26 && state.playerY < 32) {
+            proj.resolved = true;
+            if (isInvincible || state.shieldTimer > 0) {
+              if (state.shieldTimer > 0 && !isInvincible) state.shieldTimer = 0;
+              state.boostTimer = Math.max(state.boostTimer, 0.65);
+              sfx.playBoost(false);
+              showDrivingFeedback('🛡️ 전방 적 총탄 방어! 카운터 부스트!', '#00e5ff', 0.95);
+            } else if (state.hitImmunityTimer <= 0) {
+              state.hitImmunityTimer = 1.85;
+              state.boostTimer = 0;
+              state.speed = Math.max(state.maxSpeed * 0.48, state.speed * 0.64);
+              state.spinTimer = 0.45;
+              sfx.playShellHit();
+              vibrateDevice(70);
+              spawnBoostParticles(14);
+              showDrivingFeedback(`💥 전방 ${proj.shooterName || '라이벌'} 총격 피격! 좌우로 피하세요!`, '#ff1744', 0.95);
+            }
+            state.projectiles.splice(i, 1);
+            continue;
+          }
+        }
+        if (relZ < -28) {
+          if (!proj.resolved && Math.abs(proj.x - state.playerX) < 0.68) {
+            proj.resolved = true;
+            state.boostTimer = Math.max(state.boostTimer, 0.48);
+            sfx.playOvertakeWhoosh();
+            showDrivingFeedback('⚡ 전방 적 총탄 회피 성공! 회피 부스트!', '#69f0ae', 0.80);
+          }
+          state.projectiles.splice(i, 1);
+          continue;
+        }
+        if (proj.life <= 0) {
+          state.projectiles.splice(i, 1);
+        }
+        continue;
+      }
+
+      // [플레이어가 앞으로 발사한 기관총/레이저/로켓/산탄/유탄]
       proj.z += proj.speed * 4.6 * dt;
       if (proj.vx) {
         proj.x += proj.vx * dt;
       }
-      // 포물선 투척 아이템(왕폭탄 · 왕바나나 투척) 수직 중력 아크 업데이트
       if (proj.gravity && proj.gravity > 0) {
         proj.y = (proj.y || 0) + (proj.velY || 0) * dt;
         proj.velY = (proj.velY || 0) - proj.gravity * dt;
       }
       proj.life -= dt;
+
+      // 플레이어 총탄이 날아오는 적 총탄을 공중에서 맞혀 요격(Intercept) 가능!
+      let interceptedEnemy = false;
+      for (let eIdx = state.projectiles.length - 1; eIdx >= 0; eIdx--) {
+        const ep = state.projectiles[eIdx];
+        if (!ep || !ep.isEnemy) continue;
+        if (Math.abs(ep.z - proj.z) < 88 && Math.abs(ep.x - proj.x) < 0.36) {
+          state.projectiles.splice(eIdx, 1);
+          if (eIdx < i) i--;
+          interceptedEnemy = true;
+          sfx.playShellHit();
+          state.boostTimer = Math.max(state.boostTimer, 0.38);
+          showDrivingFeedback('🎯 적 총탄 공중 맞사격 요격!', '#00e5ff', 0.75);
+          break;
+        }
+      }
+      if (interceptedEnemy && proj.type === 'bullet' && !proj.heavy) {
+        state.projectiles.splice(i, 1);
+        continue;
+      }
 
       let targetRival = null;
       let minDist = 99999;
@@ -4435,7 +4653,7 @@
         proj.x += (targetRival.x - proj.x) * Math.min(1, dt * homingGain);
       }
 
-      // (A) 포물선 투척 아이템 지면 착탄 처리 (💣왕폭탄 광역 폭발 / 🍌바나나 전방 도로 설치)
+      // (A) 포물선 유탄 지면 착탄 처리 (💣바주카 유탄 광역 폭발)
       if (proj.gravity && proj.gravity > 0 && proj.y <= 0) {
         proj.y = 0;
         if (proj.type === 'bomb') {
@@ -4443,6 +4661,7 @@
           state.rivals.forEach(r => {
             if (Math.abs(r.z - proj.z) < 210 && Math.abs(r.x - proj.x) < 0.72) {
               r.spinTimer = 1.45;
+              r.speed *= 0.48;
               r.velY = 340;
               hitNames.push(r.racer.shortName);
             }
@@ -4452,31 +4671,17 @@
           spawnBoostShockwave(true);
           spawnBoostParticles(24);
           if (hitNames.length > 0) {
-            state.boostTimer = Math.max(state.boostTimer, 0.65);
-            showDrivingFeedback(`💥 왕폭탄 대폭발! ${hitNames.join('·')} 격추!`, '#ff9100', 1.05);
+            state.boostTimer = Math.max(state.boostTimer, 0.68);
+            showDrivingFeedback(`💥 바주카 대폭발! ${hitNames.join('·')} 격추!`, '#ff9100', 1.05);
           } else {
-            showDrivingFeedback('💥 전방 왕폭탄 착탄 폭발!', '#ff9100', 0.80);
+            showDrivingFeedback('💥 전방 바주카 유탄 착탄 폭발!', '#ff9100', 0.80);
           }
-          state.projectiles.splice(i, 1);
-          continue;
-        } else if (proj.type === 'bananaThrow') {
-          const landSegIdx = Math.floor(Math.max(0, proj.z) / SEG_LEN) % state.segments.length;
-          const landSeg = state.segments[landSegIdx];
-          if (landSeg && landSeg.items) {
-            landSeg.items.push({
-              type: 'banana',
-              x: Math.max(-0.78, Math.min(0.78, proj.x)),
-              takenTimer: 0
-            });
-          }
-          sfx.playHop();
-          showDrivingFeedback('🍌 전방 코스에 왕바나나 함정 투척 완료!', '#ffea00', 0.80);
           state.projectiles.splice(i, 1);
           continue;
         }
       }
 
-      // (B) 라이벌 카트 직격 판정
+      // (B) 앞선 라이벌 카트 총격·중화기 직격 판정
       let hitRival = null;
       const hitZRange = proj.type === 'bomb' ? 125 : 98;
       const hitXRange = proj.type === 'bomb' ? 0.54 : 0.44;
@@ -4490,40 +4695,47 @@
 
       if (hitRival) {
         if (proj.type === 'bomb') {
-          // 왕폭탄 직격 시 주변 라이벌까지 동시 폭발!
           state.rivals.forEach(r => {
             if (Math.abs(r.z - proj.z) < 210 && Math.abs(r.x - proj.x) < 0.72) {
               r.spinTimer = 1.50;
+              r.speed *= 0.46;
               r.velY = 350;
             }
           });
-          state.boostTimer = Math.max(state.boostTimer, 0.68);
-          showDrivingFeedback(`💣 ${hitRival.racer.shortName} 왕폭탄 직격 대폭발!`, '#ff9100', 1.05);
+          state.boostTimer = Math.max(state.boostTimer, 0.70);
+          showDrivingFeedback(`💣 ${hitRival.racer.shortName} 바주카 유탄 직격 대폭발!`, '#ff9100', 1.05);
         } else if (proj.type === 'iceBall') {
-          hitRival.shrinkTimer = 4.5;
-          hitRival.spinTimer = 1.15;
+          hitRival.shrinkTimer = 4.6;
+          hitRival.spinTimer = 1.18;
+          hitRival.speed *= 0.52;
           hitRival.velY = 220;
           state.boostTimer = Math.max(state.boostTimer, 0.55);
-          showDrivingFeedback(`❄️ ${hitRival.racer.shortName} 얼음대포 빙결! 스피드 다운!`, '#00e5ff', 1.0);
+          showDrivingFeedback(`❄️ ${hitRival.racer.shortName} 아이스 산탄총 빙결! 스피드 다운!`, '#80d8ff', 1.0);
         } else if (proj.type === 'rocket') {
-          hitRival.spinTimer = 1.42;
+          hitRival.spinTimer = 1.45;
+          hitRival.speed *= 0.48;
           hitRival.velY = 330;
           state.boostTimer = Math.max(state.boostTimer, 0.75);
           spawnBoostShockwave(true);
-          showDrivingFeedback(`🚀 ${hitRival.racer.shortName} 유도로켓 격추! 추월 가속!`, '#ff1744', 1.05);
-        } else if (proj.type === 'bananaThrow') {
-          hitRival.spinTimer = 1.28;
-          hitRival.velY = 240;
-          showDrivingFeedback(`🍌 ${hitRival.racer.shortName} 투척 바나나 직격 스핀!`, '#ffea00', 0.95);
+          showDrivingFeedback(`🚀 ${hitRival.racer.shortName} 유도 미사일 격추! 추월 가속!`, '#ff1744', 1.05);
+        } else if (proj.type === 'laser') {
+          hitRival.spinTimer = 1.38;
+          hitRival.speed *= 0.50;
+          hitRival.velY = 300;
+          state.boostTimer = Math.max(state.boostTimer, 0.65);
+          spawnBoostShockwave(false);
+          showDrivingFeedback(`⚡ ${hitRival.racer.shortName} 스나이퍼 레이저 관통 저격!`, '#00e5ff', 1.0);
         } else {
-          hitRival.spinTimer = 1.22;
-          hitRival.velY = 265;
-          state.boostTimer = Math.max(state.boostTimer, 0.50);
-          showDrivingFeedback(`🐢 ${hitRival.racer.shortName} 등껍질 명중! 추월 찬스!`, '#00e676', 0.95);
+          // 기본 기관총 / 개틀링 기관총 탄환 명중!
+          hitRival.spinTimer = Math.max(hitRival.spinTimer || 0, proj.heavy ? 1.18 : 0.82);
+          hitRival.speed *= (proj.heavy ? 0.56 : 0.68);
+          hitRival.velY = Math.max(hitRival.velY || 0, proj.heavy ? 240 : 175);
+          state.boostTimer = Math.max(state.boostTimer, 0.44);
+          showDrivingFeedback(`🎯 ${hitRival.racer.shortName} 기관총 사격 명중! 추월 찬스!`, '#ffea00', 0.85);
         }
         sfx.playShellHit();
         vibrateDevice(70);
-        spawnBoostParticles(18);
+        spawnBoostParticles(16);
         state.projectiles.splice(i, 1);
         continue;
       }
@@ -4535,7 +4747,6 @@
     if (state.incomingAttackTimer > 0) {
       state.incomingAttackTimer = Math.max(0, state.incomingAttackTimer - dt);
       if (state.incomingAttackTimer <= 0) {
-        // 급드리프트 횡이동 중이면 후방 투사체를 멋지게 회피하고 카운터 부스트 획득!
         const dodged = state.driftActive && Math.abs(state.velX) > 0.55;
         if (state.shieldTimer > 0 || isInvincible) {
           if (state.shieldTimer > 0 && !isInvincible) state.shieldTimer = 0;
@@ -4549,18 +4760,18 @@
           sfx.playOvertakeWhoosh();
           showDrivingFeedback('⚡ 급드리프트 회피 성공! 회피 부스트!', '#69f0ae', 1.0);
         } else if (state.hitImmunityTimer <= 0) {
-          state.hitImmunityTimer = 2.6;
+          state.hitImmunityTimer = 2.2;
           state.boostTimer = 0;
-          state.speed = Math.max(state.maxSpeed * 0.58, state.speed * 0.70);
-          state.spinTimer = 0.48;
+          state.speed = Math.max(state.maxSpeed * 0.55, state.speed * 0.68);
+          state.spinTimer = 0.46;
           sfx.playShellHit();
           vibrateDevice(65);
-          showDrivingFeedback('💥 라이벌 공격 피격! 즉시 재가속', '#ff5252', 0.90);
+          showDrivingFeedback('💥 라이벌 사격 피격! 즉시 재가속', '#ff5252', 0.90);
         }
       }
     }
 
-    // 12. 한층 더 강력하고 공격적으로 경쟁하는 5대의 라이벌 AI 물리!
+    // 12. 앞으로 치고 나가며 앞에서 총을 쏘는 5대의 고난도 라이벌 AI 물리!
     const totalRaceDist = state.trackLength * state.totalLaps;
     let aheadCount = 0;
     let rearChallenger = null;
@@ -4571,11 +4782,17 @@
       if (state.rivals[k].z > raceLeaderZ) raceLeaderZ = state.rivals[k].z;
     }
 
+    let activeEnemyShots = 0;
+    for (let pIdx = 0; pIdx < state.projectiles.length; pIdx++) {
+      if (state.projectiles[pIdx].isEnemy) activeEnemyShots++;
+    }
+
     state.rivals.forEach((r, idx) => {
       if (r.spinTimer > 0) r.spinTimer = Math.max(0, r.spinTimer - dt);
       if (r.shrinkTimer > 0) r.shrinkTimer = Math.max(0, r.shrinkTimer - dt);
       if (r.shieldTimer > 0) r.shieldTimer = Math.max(0, r.shieldTimer - dt);
       if (r.boostVisualTimer > 0) r.boostVisualTimer = Math.max(0, r.boostVisualTimer - dt);
+      if (r.muzzleFlashTimer > 0) r.muzzleFlashTimer = Math.max(0, r.muzzleFlashTimer - dt);
       if (r.mistakeTimer > 0) r.mistakeTimer = Math.max(0, r.mistakeTimer - dt);
       if (r.recoverTimer > 0) r.recoverTimer = Math.max(0, r.recoverTimer - dt);
       if (r.mistakeCooldown > 0) r.mistakeCooldown = Math.max(0, r.mistakeCooldown - dt);
@@ -4607,105 +4824,135 @@
       const onShortcutDeck = Boolean(rCurSeg.hasShortcut && r.x >= rCurSeg.shortcutMinX && r.x <= rCurSeg.shortcutMaxX);
       const inMedianRough = Boolean(rCurSeg.hasShortcut && r.x > rCurSeg.shortcutMaxX && r.x < rCurSeg.mainRoadMinX);
       const isOffRoad = inMedianRough || (!onShortcutDeck && Math.abs(r.x) > roadMaxX + 0.06);
-      const surfaceMult = onShortcutDeck ? 1.08 : (isOffRoad && r.boostVisualTimer <= 0 ? 0.75 : 1.0);
+      const surfaceMult = onShortcutDeck ? 1.10 : (isOffRoad && r.boostVisualTimer <= 0 ? 0.78 : 1.0);
 
-      // (A) 강화된 직선 가속 & 급코너 고속 드리프트 돌파 속도 (상대가 쉽게 뒤처지지 않고 끝까지 플레이어를 압박!)
+      // (A) 대폭 상향된 직선 가속 & 급코너 고속 드리프트 돌파 속도 (상대가 적극적으로 앞으로 치고 나감!)
       const lookCurveAbs = Math.abs(rLookSeg.curve);
       const curCurveAbs = Math.abs(rCurSeg.curve);
-      const straightBonus = isAggressive ? 1.075 : (isCornerMaster ? 1.048 : 1.058);
+      const straightBonus = isAggressive ? 1.115 : (isCornerMaster ? 1.088 : 1.095);
 
       let cornerSpeedFactor = 1.0;
       if (lookCurveAbs >= 2.6 || curCurveAbs >= 2.6) {
-        // 급커브/헤어핀에서도 AI가 날카로운 드리프트로 속도를 높게 유지 (0.945 ~ 0.985)
-        cornerSpeedFactor = isCornerMaster ? 0.985 : (isAggressive ? 0.948 : 0.962);
+        cornerSpeedFactor = isCornerMaster ? 1.025 : (isAggressive ? 0.992 : 1.005);
       } else if (!onShortcutDeck && (lookCurveAbs >= 1.45 || curCurveAbs >= 1.45)) {
-        cornerSpeedFactor = isCornerMaster ? 1.018 : (isAggressive ? 0.988 : 0.998);
+        cornerSpeedFactor = isCornerMaster ? 1.055 : (isAggressive ? 1.028 : 1.035);
       } else {
         cornerSpeedFactor = straightBonus;
       }
 
-      // (B) 코너 실수 확률 축소 (더 노련한 라이벌 주행)
-      const mistakeProb = isAggressive ? 0.004 : (isCornerMaster ? 0.001 : 0.001);
-      if (curCurveAbs >= 3.1 && r.mistakeCooldown <= 0 && r.mistakeTimer <= 0 && Math.random() < mistakeProb) {
-        r.mistakeTimer = 0.45;
-        r.recoverTimer = 0.80;
-        r.mistakeCooldown = 12.0 + idx * 1.5;
-        r.drifting = false;
-        r.driftCharge = 0;
-      }
-
-      // (C) 강화된 추격 압박 보정: 플레이어 뒤에 있을 때 매섭게 따라붙고(+5.5% ~ +9.5%), 플레이어보다 아주 멀리(820 이상) 앞설 때만 소폭 완급 조절
+      // (B) 상대가 플레이어 뒤에 처지면 부스터를 켜고 앞으로 치고 나가며(paceAdjust 1.16~1.24), 플레이어 앞(100~750)에서 치열한 전방 총격전 유지!
       let paceAdjust = 1.0;
       const distBehindLeader = raceLeaderZ - r.z;
-      if (actualRelZ < -420) paceAdjust = 1.095;
-      else if (actualRelZ < -120) paceAdjust = 1.055;
-      else if (distBehindLeader > 650) paceAdjust = 1.050;
-      else if (actualRelZ > 820) paceAdjust = 0.972;
-      else if (actualRelZ > 480) paceAdjust = 0.990;
+      if (actualRelZ < -260) {
+        paceAdjust = 1.24;
+        if (r.spinTimer <= 0) r.boostVisualTimer = Math.max(r.boostVisualTimer, 0.75);
+      } else if (actualRelZ < 95) {
+        paceAdjust = 1.16;
+      } else if (distBehindLeader > 650) {
+        paceAdjust = 1.08;
+      } else if (actualRelZ > 880) {
+        paceAdjust = 0.92;
+      } else if (actualRelZ > 620) {
+        paceAdjust = 0.975;
+      } else {
+        paceAdjust = 1.045;
+      }
 
-      // (D) 급코너 드리프트 충전 및 탈출 풀부스트 가속 강화
+      // (C) 급코너 드리프트 충전 및 탈출 풀부스트 가속 강화
       const inDriftCorner = curCurveAbs >= 1.35 && r.spinTimer <= 0 && r.mistakeTimer <= 0;
       if (inDriftCorner) {
-        if (r.drifting && r.driftDir && (r.driftDir * Math.sign(rCurSeg.curve)) < 0 && r.driftCharge >= 0.35) {
-          r.boostVisualTimer = Math.max(r.boostVisualTimer, isCornerMaster ? 0.92 : 0.72);
-          r.n2oGauge = Math.min(100, (r.n2oGauge || 0) + (isCornerMaster ? 46 : 36));
+        if (r.drifting && r.driftDir && (r.driftDir * Math.sign(rCurSeg.curve)) < 0 && r.driftCharge >= 0.32) {
+          r.boostVisualTimer = Math.max(r.boostVisualTimer, isCornerMaster ? 1.05 : 0.85);
+          r.n2oGauge = Math.min(100, (r.n2oGauge || 0) + (isCornerMaster ? 52 : 42));
           r.driftCharge = 0;
         }
         r.drifting = true;
         r.driftDir = Math.sign(rCurSeg.curve);
         r.driftCharge = (r.driftCharge || 0) + dt;
-        r.n2oGauge = Math.min(100, (r.n2oGauge || 0) + (isCornerMaster ? 54 : 44) * dt);
+        r.n2oGauge = Math.min(100, (r.n2oGauge || 0) + (isCornerMaster ? 60 : 50) * dt);
       } else {
-        if (r.drifting && (r.driftCharge || 0) >= 0.32 && r.spinTimer <= 0) {
-          r.boostVisualTimer = Math.max(r.boostVisualTimer, isCornerMaster ? 0.95 : 0.76);
-          r.n2oGauge = Math.min(100, (r.n2oGauge || 0) + (isCornerMaster ? 44 : 34));
+        if (r.drifting && (r.driftCharge || 0) >= 0.28 && r.spinTimer <= 0) {
+          r.boostVisualTimer = Math.max(r.boostVisualTimer, isCornerMaster ? 1.08 : 0.88);
+          r.n2oGauge = Math.min(100, (r.n2oGauge || 0) + (isCornerMaster ? 48 : 38));
         }
         r.drifting = false;
         r.driftCharge = 0;
       }
 
-      if ((r.n2oGauge || 0) >= 100 && r.boostVisualTimer <= 0.1 && curCurveAbs < 2.2 && r.spinTimer <= 0) {
+      if ((r.n2oGauge || 0) >= 100 && r.boostVisualTimer <= 0.1 && curCurveAbs < 2.4 && r.spinTimer <= 0) {
         r.n2oGauge -= 100;
-        r.boostVisualTimer = isAggressive ? 1.55 : 1.38;
+        r.boostVisualTimer = isAggressive ? 1.65 : 1.48;
       }
 
       // 트랙 기믹(대시패드, 점프대, 아이템 박스) 상호작용
       if (rCurSeg.items && rCurSeg.items.length > 0 && r.spinTimer <= 0) {
         for (let itIdx = 0; itIdx < rCurSeg.items.length; itIdx++) {
           const it = rCurSeg.items[itIdx];
-          if (Math.abs(r.x - it.x) < 0.36) {
+          if (Math.abs(r.x - it.x) < 0.38) {
             if (it.type === 'dashPad') {
-              r.boostVisualTimer = Math.max(r.boostVisualTimer, 0.92);
+              r.boostVisualTimer = Math.max(r.boostVisualTimer, 1.05);
             } else if (it.type === 'jumpRamp' && r.y <= 2) {
               r.velY = 420;
-              r.boostVisualTimer = Math.max(r.boostVisualTimer, 0.85);
+              r.boostVisualTimer = Math.max(r.boostVisualTimer, 0.95);
             } else if (it.type === 'itemBox' && !r.heldItem) {
-              const aiWeapons = ['rocket', 'bomb', 'tripleShell', 'iceBall', 'bananaThrow'];
+              const aiWeapons = ['gatlingGun', 'laserRifle', 'iceShotgun', 'rocket', 'bomb'];
               r.heldItem = aiWeapons[(idx + Math.floor(r.z)) % aiWeapons.length];
-              r.itemUseTimer = 0.65 + Math.random() * 0.9;
+              r.itemUseTimer = 0.45 + Math.random() * 0.65;
             }
           }
         }
       }
 
-      // AI의 공격적인 투척·발사 아이템 사용
-      if (r.heldItem && r.itemUseTimer <= 0 && r.spinTimer <= 0) {
-        if (actualRelZ < -65 && actualRelZ > -440 && state.incomingAttackTimer <= 0 && state.hitImmunityTimer <= 0) {
-          state.incomingAttackTimer = 1.25;
-          state.incomingAttackSource = r.racer.shortName;
-          sfx.playTone(880, 0.12, 'square', 0.14);
-          setTimeout(() => sfx.playTone(1174, 0.12, 'square', 0.14), 160);
-          r.heldItem = null;
-        } else {
-          for (let o = 0; o < state.rivals.length; o++) {
-            if (o !== idx && state.rivals[o].z - r.z > 60 && state.rivals[o].z - r.z < 380 && state.rivals[o].spinTimer <= 0) {
-              state.rivals[o].spinTimer = 0.65;
-              r.boostVisualTimer = Math.max(r.boostVisualTimer, 0.60);
-              r.heldItem = null;
-              break;
-            }
-          }
+      // [핵심 신규 메커니즘: 앞으로 나간 상대가 앞에서 총을 쏘는 방식!]
+      // 플레이어 전방(actualRelZ: 90 ~ 860)을 달리는 상대가 주기적으로 플레이어를 조준해 실제 3D 총탄/레이저탄 발사!
+      const canShootFromFront = (r.attackCooldown <= 0 || (r.heldItem && r.itemUseTimer <= 0))
+        && r.spinTimer <= 0
+        && actualRelZ > 90
+        && actualRelZ < 860
+        && activeEnemyShots < 3;
+      if (canShootFromFront) {
+        r.attackCooldown = isAggressive ? (1.95 + Math.random() * 1.15) : (2.55 + Math.random() * 1.35);
+        r.heldItem = null;
+        r.muzzleFlashTimer = 0.30;
+        activeEnemyShots++;
+
+        const approachSpd = isAggressive ? 132 : 118;
+        const travelTime = Math.max(0.38, actualRelZ / (approachSpd * 4.6));
+        const aimX = Math.max(-0.70, Math.min(0.70, state.playerX + (Math.random() - 0.5) * 0.10));
+        const vx = (aimX - r.x) / travelTime;
+
+        state.projectiles.push({
+          type: isAggressive ? 'enemyLaser' : 'enemyBullet',
+          isEnemy: true,
+          shooterName: r.racer.shortName,
+          z: r.z - 22,
+          x: r.x,
+          targetX: aimX,
+          vx,
+          approachSpeed: approachSpd,
+          y: 15,
+          life: 2.2
+        });
+
+        // 공격형 라이벌이 중거리에 있을 때는 2연발 사격으로 긴장감 배가!
+        if (isAggressive && actualRelZ > 240 && activeEnemyShots < 3) {
+          activeEnemyShots++;
+          const sideAlt = aimX >= 0 ? Math.max(-0.68, aimX - 0.32) : Math.min(0.68, aimX + 0.32);
+          state.projectiles.push({
+            type: 'enemyBullet',
+            isEnemy: true,
+            shooterName: r.racer.shortName,
+            z: r.z + 24,
+            x: r.x,
+            targetX: sideAlt,
+            vx: (sideAlt - r.x) / (travelTime + 0.08),
+            approachSpeed: approachSpd,
+            y: 15,
+            life: 2.3
+          });
         }
+
+        sfx.playGunShot(true, isAggressive ? 2 : 1);
       }
 
       // (E) 앞차 추월 탐색(안쪽·바깥쪽 빈 공간 선택 / 실패 시 복귀) 및 슬립스트림 계산
@@ -4937,12 +5184,18 @@
       }
     });
 
-    // 후방 공격 경보(최우선 표시) 또는 후방 추격 미러 표시
-    if (state.incomingAttackTimer > 0) {
+    // 전방 적 총격 경보 / 후방 공격 경보 / 후방 추격 미러 표시
+    const activeEnemyProj = state.projectiles.find(p => p.isEnemy && (p.z - state.posZ) > 0);
+    if (activeEnemyProj) {
       rearAlertBar.style.display = 'flex';
       rearAlertBar.style.borderColor = '#ff1744';
       rearAlertBar.style.background = 'linear-gradient(180deg, #ffebee, #ffcdd2)';
-      rearAlertBar.textContent = `⚠️ 후방 로켓 접근 (${state.incomingAttackTimer.toFixed(1)}s)! 급드리프트 회피 또는 무기 맞대응!`;
+      rearAlertBar.textContent = `🔫 전방 ${activeEnemyProj.shooterName || '라이벌'} 총격 발사! 좌우 핸들·드리프트로 탄선 회피 또는 맞사격(🔫)!`;
+    } else if (state.incomingAttackTimer > 0) {
+      rearAlertBar.style.display = 'flex';
+      rearAlertBar.style.borderColor = '#ff1744';
+      rearAlertBar.style.background = 'linear-gradient(180deg, #ffebee, #ffcdd2)';
+      rearAlertBar.textContent = `⚠️ 후방 로켓 접근 (${state.incomingAttackTimer.toFixed(1)}s)! 급드리프트 회피 또는 총격 맞대응!`;
     } else if (rearChallenger) {
       rearAlertBar.style.display = 'flex';
       rearAlertBar.style.borderColor = '#ff9100';
@@ -5418,12 +5671,28 @@
       }
     }
 
-    // 던지거나 쏜 5대 액티브 투사체(🚀로켓 · 💣왕폭탄 · 🐢등껍질 · ❄️얼음대포 · 🍌왕바나나) 3D 원근 & 포물선 고도 렌더링!
+    // 전방 총격전 투사체(🔫기관총탄 · ⚡레이저빔 · ❄️산탄탄 · 🚀로켓 · 💣유탄 · 상대 전방 총탄) 3D 원근 & 조준 궤적 렌더링!
     state.projectiles.forEach(proj => {
       const relZ = proj.z - state.posZ;
       if (relZ < -40 || relZ > 4800) return;
       const pt = projectContinuousRelZ(relZ);
       const sx = pt.x + proj.x * pt.w * 0.78;
+
+      // 앞에서 쏘는 적 총탄/레이저의 탄도 경고 라인(Red Laser Sight)을 노면 위에 표시하여 회피/맞총격 유도!
+      if (proj.isEnemy && relZ > 15 && relZ < 950) {
+        const nearPt = projectContinuousRelZ(Math.max(5, relZ * 0.12));
+        const nearX = nearPt.x + (proj.x + (proj.vx || 0) * 0.25) * nearPt.w * 0.78;
+        ctx.save();
+        ctx.strokeStyle = proj.type === 'enemyLaser' ? 'rgba(255, 23, 68, 0.55)' : 'rgba(255, 145, 0, 0.42)';
+        ctx.lineWidth = Math.max(2, pt.w * 0.018);
+        ctx.setLineDash([10, 8]);
+        ctx.beginPath();
+        ctx.moveTo(sx, pt.y);
+        ctx.lineTo(nearX, nearPt.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
       drawRedShell(ctx, sx, pt.y, Math.max(5, pt.w * 0.095), timeMs, proj);
     });
 
@@ -5449,6 +5718,7 @@
         driftStage: r.drifting ? 2 : 0,
         spinning: r.spinTimer > 0,
         speedRatio: r.speed / Math.max(1, state.maxSpeed),
+        muzzleFlash: (r.muzzleFlashTimer || 0) > 0,
         star: false,
         bullet: false,
         ufo: false,
@@ -5512,6 +5782,7 @@
       spinning: state.spinTimer > 0,
       trickRot: state.trickRot,
       speedRatio,
+      muzzleFlash: (state.muzzleFlashTimer || 0) > 0,
       star: state.starTimer > 0,
       bullet: state.bulletTimer > 0,
       ufo: state.ufoTimer > 0 && state.bulletTimer <= 0,
@@ -6678,13 +6949,13 @@
     c.restore();
   }
 
-  // 던지거나 쏜 5대 무기 투사체(🚀유도로켓 · 💣왕폭탄 · 🐢등껍질 · ❄️얼음대포 · 🍌투척바나나) 3D 입체 렌더링!
+  // 전방 총격전 투사체(🔫기관총탄 · ⚡레이저빔 · ❄️산탄탄 · 🚀로켓 · 💣유탄 · 상대 전방 총탄) 3D 입체 렌더링!
   function drawRedShell(c, x, y, size, timeMs, proj = {}) {
     c.save();
     const pType = proj.type || 'rocket';
     const airLift = Math.max(0, (proj.y || 0)) * (size / 26);
 
-    // 1) 지면 그림자 (포물선 투척 시 공중 고도감을 선명하게 전달!)
+    // 1) 지면 그림자 (포물선 투척 및 총탄 고도감을 선명하게 전달!)
     c.fillStyle = 'rgba(10, 15, 30, 0.42)';
     c.beginPath();
     c.ellipse(x, y - size * 0.08, size * 0.65, size * 0.22, 0, 0, Math.PI * 2);
@@ -6693,7 +6964,59 @@
     c.translate(x, y - size * 0.62 - airLift);
     const pulse = Math.sin((timeMs || 0) * 0.035) * 0.16;
 
-    if (pType === 'bomb') {
+    if (proj.isEnemy) {
+      // 🔥 앞에서 상대가 플레이어를 향해 쏘는 적 기관총탄 / 레이저탄 (위협적인 붉은 경고 오라 + 네온 코어!)
+      const isEnemyLaser = pType === 'enemyLaser';
+      c.strokeStyle = isEnemyLaser ? '#ff1744' : '#ff9100';
+      c.lineWidth = Math.max(2.2, size * 0.16);
+      c.beginPath();
+      c.arc(0, 0, size * (0.85 + pulse), 0, Math.PI * 2);
+      c.stroke();
+
+      const eg = c.createRadialGradient(0, 0, size * 0.08, 0, 0, size * 0.68);
+      eg.addColorStop(0, '#ffffff');
+      eg.addColorStop(0.45, isEnemyLaser ? '#ff4081' : '#ffea00');
+      eg.addColorStop(1, '#d50000');
+      c.fillStyle = eg;
+      c.beginPath();
+      c.arc(0, 0, size * 0.58, 0, Math.PI * 2);
+      c.fill();
+    } else if (pType === 'bullet') {
+      // 🔫 플레이어 전방 기관총탄: 초고속 황금 예광탄(Tracer Bullet) + 소닉 꼬리!
+      c.fillStyle = 'rgba(255, 214, 0, 0.55)';
+      c.beginPath();
+      c.moveTo(-size * 0.24, 0);
+      c.lineTo(size * 0.24, 0);
+      c.lineTo(0, size * 1.45);
+      c.closePath();
+      c.fill();
+
+      const bg = c.createRadialGradient(0, -size * 0.12, size * 0.05, 0, 0, size * 0.52);
+      bg.addColorStop(0, '#ffffff');
+      bg.addColorStop(0.5, '#ffea00');
+      bg.addColorStop(1, '#ff6d00');
+      c.fillStyle = bg;
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = Math.max(1.5, size * 0.10);
+      c.beginPath();
+      c.ellipse(0, -size * 0.10, size * 0.34, size * 0.58, 0, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+    } else if (pType === 'laser') {
+      // ⚡ 플라즈마 스나이퍼 레이저 빔: 시안/화이트 고에너지 관통 광선!
+      c.fillStyle = 'rgba(0, 229, 255, 0.58)';
+      c.beginPath();
+      c.ellipse(0, size * 0.45, size * 0.26, size * 1.65, 0, 0, Math.PI * 2);
+      c.fill();
+
+      c.fillStyle = '#ffffff';
+      c.strokeStyle = '#00e5ff';
+      c.lineWidth = Math.max(2.2, size * 0.16);
+      c.beginPath();
+      c.ellipse(0, 0, size * (0.42 + pulse * 0.5), size * 0.92, 0, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+    } else if (pType === 'bomb') {
       // 💣 왕폭탄: 묵직한 강철 구체 + 타오르는 심지 불꽃
       const bg = c.createRadialGradient(-size * 0.22, -size * 0.22, size * 0.08, 0, 0, size * 0.78);
       bg.addColorStop(0, '#78909c');
@@ -7112,6 +7435,37 @@
     c.closePath();
     c.fill();
     c.stroke();
+
+    // 2.5 [전방 트윈 개틀링 머신건 총열 & 머즐 플래시(총구 화염)]
+    [-25, 25].forEach(gunOffsetX => {
+      const gx = gunOffsetX + frontX * 1.05;
+      // 총열 본체 (메탈릭 다크 배럴)
+      c.fillStyle = '#263238';
+      c.strokeStyle = '#90a4ae';
+      c.lineWidth = 1.6;
+      c.beginPath();
+      c.roundRect(gx - 4.5, -54, 9, 18, 3);
+      c.fill();
+      c.stroke();
+
+      // 총구 금색 머즐 링
+      c.fillStyle = '#ffab00';
+      c.fillRect(gx - 5, -55, 10, 3.5);
+
+      // 사격 중일 때 폭발하는 머즐 플래시(Muzzle Flash) 불꽃!
+      if (opts.muzzleFlash) {
+        c.save();
+        c.fillStyle = (Math.floor((opts.timeMs || 0) * 0.06) % 2 === 0) ? '#ffea00' : '#ff3d00';
+        c.beginPath();
+        c.arc(gx, -61, 10.5, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.arc(gx, -59, 5.2, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+      }
+    });
 
     // 3. [중간 깊이 레이어] 카본 하부 섀시 언더트레이 & 리어 액슬 샤프트 (드리프트 시 뒷바퀴가 바깥쪽으로 미끄러짐!)
     const rearX = -yaw * 0.38;

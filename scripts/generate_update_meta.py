@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.8.0.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.0.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,18 +15,18 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.8.0.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.0.apk"
     notes = (
-        "• [급코스 드리프트 & 카빙 코너링 대폭 강화] S자 코너·헤어핀·능선 분기·결승 코너 곡률(±2.65~3.45)을 다이나믹한 급코너로 업그레이드하고, 드리프트 시 안쪽 에이펙스를 날카롭게 파고드는 카빙 그립과 3단 드리프트 부스트(청색·주황·보라) 완성!\n"
-        "• [캐릭터 얼굴 크기 대폭 확대 (108x108 + 최대 2.85배)] 내 캐릭터(1.56배)와 라이벌 캐릭터(최대 2.85배)의 얼굴 컷아웃 크기를 대폭 키워 주행 중 누구의 얼굴인지 한눈에 선명하게 식별!\n"
-        "• [상대편 AI 경쟁력 상향 & 투척·발사형 공격 아이템 5종 전면 개편] AI 주행 페이스(1.018~1.058) 및 코너 공략 속도를 높여 치열한 접전을 구현하고, 아이템을 주로 던지거나 쏘는 5종(🚀유도 로켓·💣왕폭탄 던지기·🐢3연발 등껍질·❄️얼음대포·🍌바나나 전방 투척)으로 전면 개편!"
+        "• [상대편 선행 출발 & 하드코어 AI 난이도 대폭 상향] 상대 카트 5대가 출발부터 플레이어 앞으로 치고 나가며(초기 6위 출발), 주행 페이스(1.125~1.185)와 추월 가속(1.16~1.24 + N2O 부스트)을 대폭 강화해 끝까지 긴장감 넘치는 추격전 완성!\n"
+        "• [전방 총격전 시스템 (앞에서 상대가 총을 쏘고 & 내 카트 기본 기관총 + 중화기 5종 사격)] 앞서 달리는 상대들이 전방에서 플레이어를 향해 기관총탄·레이저탄(조준 경고선 표시)을 발사하며, 내 카트도 프론트 트윈 개틀링건으로 상시 3점사 사격 및 5종 중화기(🔫개틀링 6연사·⚡플라즈마 스나이퍼·❄️아이스 산탄총·🚀유도 미사일·💣바주카 유탄포)로 맞대응!\n"
+        "• [드리프트 '끼이익~!' 리얼 타이어 마찰 효과음 완성] 바람 소리 대신 고주파 포먼트 공명(1.6~2.4kHz) 듀얼 오실레이터와 스틱-슬립 마찰 비브라토를 결합해, 드리프트 진입·유지·탈출 시 아스팔트에 타이어가 날카롭게 미끄러지는 '끼이익~!' 스키드 사운드를 선명하게 구현!"
     )
 
     update_payload = {
         "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
         "packageId": "com.mj.kidskart",
-        "versionCode": 17,
-        "versionName": "1.8.0",
+        "versionCode": 18,
+        "versionName": "1.9.0",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -53,17 +53,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "에어로 카트 GP: 선셋 캐니언 에디션",
-                "latest_version": "1.8.0",
-                "version_code": 17,
+                "latest_version": "1.9.0",
+                "version_code": 18,
                 "force_update": False,
-                "release_notes": "급코스 드리프트 카빙 물리, 캐릭터 얼굴 대폭 확대(108x108 + 최대 2.85배), 상대편 AI 속도·코너링 상향, 투척·발사형 공격 아이템 5종(유도로켓·왕폭탄·3연발등껍질·얼음대포·왕바나나투척) 및 자동 업데이트 개선 완성.",
+                "release_notes": "상대편 전방 선행 및 하드코어 난이도 상향, 전방 총격전 시스템(상대 전방 사격 & 내 카트 상시 기관총 + 5종 중화기 총격), 드리프트 시 '끼이익~!' 리얼 타이어 스키드 효과음 적용.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.8.0 (build 17), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.9.0 (build 18), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
