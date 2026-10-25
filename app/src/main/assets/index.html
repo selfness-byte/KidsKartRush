@@ -978,7 +978,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.9.3</span>
+      <span class="lobby-badge" id="verBadge">v1.9.4</span>
       <h1>🌅 선셋 캐니언 에어로 카트 GP</h1>
     </div>
     <div class="assist-pills">
@@ -1071,7 +1071,7 @@
 
   <div class="lobby-footer">
     <div class="lobby-tip">
-      🏎️ <b>"끼이익!" 급코스 드리프트</b>로 가속하고, <b>앞으로 치고 나가는 상대들을 총(🔫)으로 격추</b>하며 적의 사격을 회피해 1위를 차지하세요!
+      🏎️ <b>급코스 드리프트</b>로 가속하고, <b>전방 적 군단(드론·바이커·메카탱크)과 거대 보스(🤖·🛸·🐉)</b>를 기관총(🔫) 및 중화기로 격파해 1위를 차지하세요!
     </div>
     <button id="startRaceBtn" class="start-race-btn">🏁 3랩 그랑프리 출발!</button>
   </div>
@@ -1889,6 +1889,92 @@
       } catch (_) {}
     }
 
+    // 적 기체(드론·바이커·메카탱크) 격추 폭발음 ("콰-앙! + 띠링!")
+    playEnemyExplode(isHeavyMecha = false) {
+      if (this.muted || this.appPaused) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        const boomOsc = this.ctx.createOscillator();
+        const boomGain = this.ctx.createGain();
+        boomOsc.type = 'sawtooth';
+        boomOsc.frequency.setValueAtTime(isHeavyMecha ? 160 : 210, now);
+        boomOsc.frequency.exponentialRampToValueAtTime(28, now + (isHeavyMecha ? 0.28 : 0.20));
+        boomGain.gain.setValueAtTime(isHeavyMecha ? 0.42 : 0.34, now);
+        boomGain.gain.exponentialRampToValueAtTime(0.001, now + (isHeavyMecha ? 0.30 : 0.22));
+        if (this.distCurve) {
+          const ws = this.ctx.createWaveShaper();
+          ws.curve = this.distCurve;
+          boomOsc.connect(ws);
+          ws.connect(boomGain);
+        } else {
+          boomOsc.connect(boomGain);
+        }
+        boomGain.connect(this.ctx.destination);
+        boomOsc.start(now);
+        boomOsc.stop(now + 0.32);
+
+        if (this.brownNoiseBuffer) {
+          const nSrc = this.ctx.createBufferSource();
+          nSrc.buffer = this.brownNoiseBuffer;
+          const lp = this.ctx.createBiquadFilter();
+          lp.type = 'lowpass';
+          lp.frequency.setValueAtTime(980, now);
+          lp.frequency.exponentialRampToValueAtTime(180, now + 0.24);
+          const ng = this.ctx.createGain();
+          ng.gain.setValueAtTime(0.32, now);
+          ng.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          nSrc.connect(lp);
+          lp.connect(ng);
+          ng.connect(this.ctx.destination);
+          nSrc.start(now);
+          nSrc.stop(now + 0.26);
+        }
+
+        // 격추 보너스 차임
+        this.playTone(880, 0.07, 'triangle', 0.16);
+        setTimeout(() => this.playTone(1318.5, 0.11, 'triangle', 0.18), 55);
+      } catch (_) {}
+    }
+
+    // 거대 보스 출현 경고 사이렌 ("위잉-위잉!")
+    playBossWarning() {
+      if (this.muted || this.appPaused) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        [0, 0.24].forEach(delay => {
+          const t0 = this.ctx.currentTime + delay;
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(340, t0);
+          osc.frequency.linearRampToValueAtTime(620, t0 + 0.16);
+          osc.frequency.linearRampToValueAtTime(380, t0 + 0.22);
+          g.gain.setValueAtTime(0.18, t0);
+          g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.23);
+          osc.connect(g);
+          g.connect(this.ctx.destination);
+          osc.start(t0);
+          osc.stop(t0 + 0.24);
+        });
+      } catch (_) {}
+    }
+
+    // 거대 보스 격파 연쇄 대폭발 + 승리 팡파르!
+    playBossDefeat() {
+      if (this.muted || this.appPaused) return;
+      this.playEnemyExplode(true);
+      setTimeout(() => this.playEnemyExplode(true), 120);
+      setTimeout(() => {
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+          setTimeout(() => this.playTone(freq, 0.16, 'triangle', 0.22), idx * 65);
+        });
+      }, 220);
+    }
+
     // 부스트 충전 단계 도달(GOOD / PERFECT) 및 N2O 토큰 충전 완료 전용 사운드 (부스트 발동음과 명확히 구분!)
     playBoostChargeReady(tier = 1) {
       if (this.muted || this.appPaused) return;
@@ -2392,13 +2478,90 @@
     }
   ];
 
-  // ==================== 앞에서 총을 쏘는 전방 총격 배틀 & 5대 중화기 아이템 완성 ====================
+  // ==================== 앞에서 총을 쏘는 전방 총격 배틀 & 5대 중화기 아이템 & 적 군단 · 거대 보스 정의 ====================
   const ITEMS = [
     { id: 'gatlingGun', icon: '🔫', name: '개틀링 기관총 6연사', color: '#ffea00', voice: '' },
     { id: 'laserRifle', icon: '⚡', name: '플라즈마 스나이퍼 총', color: '#00e5ff', voice: '' },
     { id: 'iceShotgun', icon: '❄️', name: '아이스 3열 산탄총', color: '#80d8ff', voice: '' },
     { id: 'rocket', icon: '🚀', name: '유도 미사일 런처', color: '#ff1744', voice: '' },
     { id: 'bomb', icon: '💣', name: '헤비 바주카 유탄포', color: '#ff9100', voice: '' }
+  ];
+
+  // 트랙 위에서 편대 주행·비행하며 플레이어와 총격전을 벌이는 3종의 적 기체(Combat Enemies)
+  const ENEMY_TYPES = [
+    {
+      type: 'drone',
+      name: '스카이 전투 드론',
+      icon: '👾',
+      maxHp: 2,
+      baseY: 22,
+      weaveAmp: 0.34,
+      weaveFreq: 2.3,
+      primary: '#00e5ff',
+      secondary: '#1e293b',
+      accent: '#ff1744'
+    },
+    {
+      type: 'biker',
+      name: '아머드 바이커',
+      icon: '🏍️',
+      maxHp: 3,
+      baseY: 0,
+      weaveAmp: 0.28,
+      weaveFreq: 1.8,
+      primary: '#ff9100',
+      secondary: '#263238',
+      accent: '#ffea00'
+    },
+    {
+      type: 'mecha',
+      name: '헤비 메카 탱크',
+      icon: '🛡️',
+      maxHp: 5,
+      baseY: 0,
+      weaveAmp: 0.18,
+      weaveFreq: 1.1,
+      primary: '#e040fb',
+      secondary: '#1a202c',
+      accent: '#69f0ae'
+    }
+  ];
+
+  // 3단계로 진화하며 전방 도로를 장악하는 초대형 보스(Giant Bosses)
+  const BOSS_STAGES = [
+    {
+      stage: 1,
+      id: 'scorpion',
+      name: '아이언 스콜피온 메카',
+      icon: '🤖',
+      maxHp: 16,
+      primary: '#ff6d00',
+      secondary: '#263238',
+      accent: '#ffea00',
+      baseY: 0
+    },
+    {
+      stage: 2,
+      id: 'destroyer',
+      name: '네온 디스트로이어 건십',
+      icon: '🛸',
+      maxHp: 22,
+      primary: '#7c4dff',
+      secondary: '#0f172a',
+      accent: '#00e5ff',
+      baseY: 18
+    },
+    {
+      stage: 3,
+      id: 'dragon',
+      name: '메카 드래곤 엠페러',
+      icon: '🐉',
+      maxHp: 28,
+      primary: '#d50000',
+      secondary: '#1a090d',
+      accent: '#ffea00',
+      baseY: 10
+    }
   ];
 
   // ==================== 게임 전역 상태 ====================
@@ -2485,6 +2648,12 @@
     startBoostWindow: false,
 
     rivals: [],
+    enemies: [],
+    boss: null,
+    bossStageIdx: 0,
+    bossRespawnTimer: 0,
+    enemyKills: 0,
+    bossKills: 0,
     projectiles: [],
     tracerBeams: [],
     shellCasings: [],
@@ -3636,18 +3805,54 @@
     state.gunRecoil = 1.0;
     state.muzzleFlashTimer = Math.max(state.muzzleFlashTimer || 0, heavy ? 0.24 : 0.16);
 
-    // 전방 가장 가까운 라이벌을 탐색하여 예광탄 궤적(Tracer)이 목표물을 향해 꽂히도록 조준 보정!
+    // 전방 가장 가까운 적 기체(enemies) · 거대 보스(boss) · 라이벌(rivals)을 탐색하여 예광탄 궤적(Tracer)이 목표물을 향해 꽂히도록 스마트 락온 보정!
     let aimTargetX = state.playerX + offsetX + state.smoothSteer * 0.14;
     let aimRelZ = 340;
-    let bestDist = 680;
+    let bestScore = 720;
+
+    // 1) 적 기체(드론·바이커·메카탱크) 우선 락온 탐색
+    if (state.enemies && state.enemies.length > 0) {
+      for (let i = 0; i < state.enemies.length; i++) {
+        const en = state.enemies[i];
+        if (!en || en.hp <= 0) continue;
+        const dz = en.z - state.posZ;
+        const dx = Math.abs(en.x - state.playerX);
+        if (dz > 30 && dz < 680 && dx < 0.72) {
+          const score = dz * 0.75 + dx * 180;
+          if (score < bestScore) {
+            bestScore = score;
+            aimTargetX = en.x + offsetX * 0.25;
+            aimRelZ = Math.max(65, Math.min(480, dz));
+          }
+        }
+      }
+    }
+    // 2) 거대 보스(Boss) 락온 탐색
+    if (state.boss && state.boss.active && state.boss.hp > 0) {
+      const bDz = state.boss.z - state.posZ;
+      const bDx = Math.abs(state.boss.x - state.playerX);
+      if (bDz > 35 && bDz < 720 && bDx < 0.85) {
+        const bScore = bDz * 0.70 + bDx * 140;
+        if (bScore < bestScore) {
+          bestScore = bScore;
+          aimTargetX = state.boss.x + offsetX * 0.30;
+          aimRelZ = Math.max(75, Math.min(500, bDz));
+        }
+      }
+    }
+    // 3) 라이벌 카트 락온 탐색
     if (state.rivals && state.rivals.length > 0) {
       for (let i = 0; i < state.rivals.length; i++) {
         const rv = state.rivals[i];
         const dz = rv.z - state.posZ;
-        if (dz > 35 && dz < bestDist && Math.abs(rv.x - state.playerX) < 0.64) {
-          bestDist = dz;
-          aimTargetX = rv.x + offsetX * 0.35;
-          aimRelZ = Math.max(75, Math.min(480, dz));
+        const dx = Math.abs(rv.x - state.playerX);
+        if (dz > 35 && dz < 680 && dx < 0.64) {
+          const score = dz + dx * 210;
+          if (score < bestScore) {
+            bestScore = score;
+            aimTargetX = rv.x + offsetX * 0.35;
+            aimRelZ = Math.max(75, Math.min(480, dz));
+          }
         }
       }
     }
@@ -4095,6 +4300,63 @@
     lobbyScreen.style.display = 'flex';
   }
 
+  // ==================== 적 군단(Combat Enemies) 및 거대 보스(Giant Boss) 생성 헬퍼 ====================
+  function createEnemyUnit(spawnZ, idxHint = 0) {
+    const spec = ENEMY_TYPES[idxHint % ENEMY_TYPES.length];
+    const baseLane = [-0.52, 0.48, -0.18, 0.34, -0.38, 0.16][idxHint % 6];
+    return {
+      type: spec.type,
+      name: spec.name,
+      icon: spec.icon,
+      hp: spec.maxHp,
+      maxHp: spec.maxHp,
+      z: spawnZ,
+      x: baseLane,
+      baseX: baseLane,
+      y: spec.baseY,
+      weaveAmp: spec.weaveAmp,
+      weaveFreq: spec.weaveFreq,
+      phase: idxHint * 1.35 + Math.random() * 2.0,
+      speed: state.maxSpeed * 0.96,
+      attackCooldown: 1.4 + (idxHint % 3) * 0.65,
+      muzzleFlashTimer: 0,
+      hitFlash: 0,
+      primary: spec.primary,
+      secondary: spec.secondary,
+      accent: spec.accent
+    };
+  }
+
+  function spawnBossStage(stageIdx = 0, playAlert = false) {
+    const spec = BOSS_STAGES[stageIdx % BOSS_STAGES.length];
+    state.bossStageIdx = stageIdx;
+    state.boss = {
+      active: true,
+      stage: spec.stage,
+      id: spec.id,
+      name: spec.name,
+      icon: spec.icon,
+      hp: spec.maxHp,
+      maxHp: spec.maxHp,
+      z: state.posZ + 305,
+      x: 0,
+      y: spec.baseY,
+      phase: 0,
+      speed: state.maxSpeed * 1.02,
+      attackCooldown: 1.85,
+      patternIdx: 0,
+      muzzleFlashTimer: 0,
+      hitFlash: 0,
+      primary: spec.primary,
+      secondary: spec.secondary,
+      accent: spec.accent
+    };
+    if (playAlert) {
+      sfx.playBossWarning();
+      showDrivingFeedback(`🚨 STAGE ${spec.stage} 거대 보스 [${spec.icon} ${spec.name}] 출현! 집중 사격!`, '#ff1744', 1.35);
+    }
+  }
+
   // ==================== 레이스 시작 초기화 ====================
   function startRace() {
     sfx.init();
@@ -4166,6 +4428,18 @@
     state.skidMarks = [];
     state.shockwaves = [];
     state.floatingTexts = [];
+    state.enemyKills = 0;
+    state.bossKills = 0;
+    state.bossStageIdx = 0;
+    state.bossRespawnTimer = 0;
+
+    // 1) 트랙 전방에 6기의 적 전투 편대(드론 · 바이커 · 메카탱크) 초기 배치!
+    const initialEnemyOffsets = [155, 265, 390, 520, 660, 810];
+    state.enemies = initialEnemyOffsets.map((ez, idx) => createEnemyUnit(ez, idx));
+
+    // 2) 1단계 거대 보스(아이언 스콜피온 메카) 전방 출현!
+    spawnBossStage(0, false);
+
     rearAlertBar.style.display = 'none';
     driftStageBadge.style.display = 'none';
 
@@ -4883,22 +5157,44 @@
         continue;
       }
 
-      let targetRival = null;
+      let targetEntity = null;
       let minDist = 99999;
+      if (state.enemies && state.enemies.length > 0) {
+        state.enemies.forEach(en => {
+          if (!en || en.hp <= 0) return;
+          const d = en.z - proj.z;
+          if (d > -35 && d < 1200 && d < minDist) {
+            minDist = d;
+            targetEntity = en;
+          }
+        });
+      }
+      if (state.boss && state.boss.active && state.boss.hp > 0) {
+        const dBoss = state.boss.z - proj.z;
+        const bossPriority = (proj.heavy || proj.type !== 'bullet' || proj.barrelSide === 1) ? 0.38 : 0.72;
+        if (dBoss > -45 && dBoss < 1350 && dBoss * bossPriority < minDist) {
+          minDist = dBoss * bossPriority;
+          targetEntity = state.boss;
+        }
+      }
       state.rivals.forEach(r => {
         const d = r.z - proj.z;
         if (d > -40 && d < 1650 && d < minDist && (r.spinTimer || 0) <= 0.1) {
           minDist = d;
-          targetRival = r;
+          targetEntity = r;
         }
       });
 
       const homingGain = proj.homing !== undefined ? proj.homing : 8.5;
-      if (targetRival && homingGain > 0) {
-        proj.x += (targetRival.x - proj.x) * Math.min(1, dt * homingGain);
+      if (targetEntity && homingGain > 0) {
+        proj.x += (targetEntity.x - proj.x) * Math.min(1, dt * homingGain);
       }
 
-      // (A) 포물선 유탄 지면 착탄 처리 (💣바주카 유탄 광역 폭발)
+      const projDmg = proj.type === 'bomb'
+        ? 7
+        : (proj.type === 'rocket' ? 6 : (proj.type === 'laser' ? 4 : (proj.type === 'iceBall' ? 2 : (proj.heavy ? 2 : 1))));
+
+      // (A) 포물선 유탄 지면 착탄 처리 (💣바주카 유탄 광역 폭발 — 적 군단·보스·라이벌 동시 타격!)
       if (proj.gravity && proj.gravity > 0 && proj.y <= 0) {
         proj.y = 0;
         if (proj.type === 'bomb') {
@@ -4911,19 +5207,128 @@
               hitNames.push(r.racer.shortName);
             }
           });
+          if (state.enemies) {
+            state.enemies.forEach(en => {
+              if (en && en.hp > 0 && Math.abs(en.z - proj.z) < 220 && Math.abs(en.x - proj.x) < 0.78) {
+                en.hp = 0;
+                hitNames.push(en.name);
+              }
+            });
+          }
+          if (state.boss && state.boss.active && state.boss.hp > 0 && Math.abs(state.boss.z - proj.z) < 230) {
+            state.boss.hp = Math.max(0, state.boss.hp - 7);
+            state.boss.hitFlash = 0.25;
+            hitNames.push(state.boss.name);
+          }
           sfx.playShellHit();
           vibrateDevice(80);
           spawnBoostShockwave(true);
           spawnBoostParticles(24);
           if (hitNames.length > 0) {
             state.boostTimer = Math.max(state.boostTimer, 0.68);
-            showDrivingFeedback(`💥 바주카 대폭발! ${hitNames.join('·')} 격추!`, '#ff9100', 1.05);
+            showDrivingFeedback(`💥 바주카 대폭발! ${hitNames.slice(0, 2).join('·')} 타격!`, '#ff9100', 1.05);
           } else {
             showDrivingFeedback('💥 전방 바주카 유탄 착탄 폭발!', '#ff9100', 0.80);
           }
           state.projectiles.splice(i, 1);
           continue;
         }
+      }
+
+      // (A-2) 전방 거대 보스(Giant Boss) 명중 및 보스 격파 대보상 판정!
+      if (state.boss && state.boss.active && state.boss.hp > 0) {
+        const b = state.boss;
+        if (Math.abs(b.z - proj.z) < 115 && Math.abs(b.x - proj.x) < 0.60 && (proj.y || 0) < 110) {
+          b.hp = Math.max(0, b.hp - projDmg);
+          b.hitFlash = 0.16;
+          if (!state.hitMarkers) state.hitMarkers = [];
+          state.hitMarkers.push({
+            z: b.z,
+            x: b.x + (Math.random() - 0.5) * 0.24,
+            y: (b.y || 0) + 38,
+            life: 0.38,
+            maxLife: 0.38,
+            color: b.hp <= 0 ? '#ff1744' : '#00e5ff'
+          });
+
+          if (b.hp <= 0) {
+            b.active = false;
+            state.bossKills = (state.bossKills || 0) + 1;
+            state.bossRespawnTimer = 4.2;
+            sfx.playBossDefeat();
+            vibrateDevice(120);
+            spawnBoostShockwave(true);
+            spawnBoostParticles(34);
+            state.boostTimer = Math.max(state.boostTimer, 1.85);
+            state.exitBoostTier = 2;
+            state.boostCount = 2;
+            state.n2oGauge = 100;
+            updateBoostUI();
+            if (!state.heldItem) {
+              state.heldItem = ITEMS[0]; // 개틀링 6연사 또는 중화기 지급
+              updateItemUI();
+            }
+            showDrivingFeedback(`🏆 거대 보스 [${b.icon} ${b.name}] 완전 격파!! 슈퍼 풀부스트 폭발!`, '#00e5ff', 1.45);
+          } else {
+            sfx.playBulletHit(true);
+            vibrateDevice(40);
+            if (b.hp % 5 === 0) {
+              showDrivingFeedback(`🎯 보스 [${b.name}] 집중 타격 중! (남은 HP: ${b.hp}/${b.maxHp})`, '#ffea00', 0.72);
+            }
+          }
+          state.projectiles.splice(i, 1);
+          continue;
+        }
+      }
+
+      // (A-3) 전방 적 기체(드론·바이커·메카탱크) 명중 및 격추 판정!
+      let hitEnemy = null;
+      if (state.enemies && state.enemies.length > 0) {
+        for (let eIdx = 0; eIdx < state.enemies.length; eIdx++) {
+          const en = state.enemies[eIdx];
+          if (!en || en.hp <= 0) continue;
+          if (Math.abs(en.z - proj.z) < 92 && Math.abs(en.x - proj.x) < 0.44 && (proj.y || 0) < 95) {
+            hitEnemy = en;
+            break;
+          }
+        }
+      }
+      if (hitEnemy) {
+        hitEnemy.hp -= projDmg;
+        hitEnemy.hitFlash = 0.18;
+        if (!state.hitMarkers) state.hitMarkers = [];
+        state.hitMarkers.push({
+          z: hitEnemy.z,
+          x: hitEnemy.x,
+          y: (hitEnemy.y || 0) + 26,
+          life: 0.36,
+          maxLife: 0.36,
+          color: hitEnemy.hp <= 0 ? '#ff1744' : '#ffea00'
+        });
+
+        if (hitEnemy.hp <= 0) {
+          state.enemyKills = (state.enemyKills || 0) + 1;
+          sfx.playEnemyExplode(hitEnemy.type === 'mecha');
+          vibrateDevice(65);
+          spawnBoostParticles(18);
+          state.boostTimer = Math.max(state.boostTimer, hitEnemy.type === 'mecha' ? 0.78 : 0.46);
+          state.n2oGauge = Math.min(100, state.n2oGauge + (hitEnemy.type === 'mecha' ? 34 : 18));
+          if (hitEnemy.type === 'mecha' && !state.heldItem && state.rouletteTimer <= 0) {
+            state.heldItem = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+            updateItemUI();
+            showDrivingFeedback(`💥 ${hitEnemy.icon} ${hitEnemy.name} 격파! 중화기 [${state.heldItem.icon}${state.heldItem.name}] 획득!`, '#69f0ae', 1.0);
+          } else {
+            showDrivingFeedback(`💥 ${hitEnemy.icon} ${hitEnemy.name} 격추! (${state.enemyKills}기 격파 · 부스트 가속!)`, '#ffea00', 0.82);
+          }
+          // 격추된 적 기체 대신 전방에 새로운 적 기체 즉시 증원!
+          const respawnZ = state.posZ + 520 + Math.random() * 380;
+          Object.assign(hitEnemy, createEnemyUnit(respawnZ, state.enemyKills + Math.floor(Math.random() * 3)));
+        } else {
+          sfx.playBulletHit(Boolean(proj.heavy || proj.type !== 'bullet'));
+          vibrateDevice(30);
+        }
+        state.projectiles.splice(i, 1);
+        continue;
       }
 
       // (B) 앞선 라이벌 카트 총격·중화기 직격 판정
@@ -5044,6 +5449,147 @@
     let activeEnemyShots = 0;
     for (let pIdx = 0; pIdx < state.projectiles.length; pIdx++) {
       if (state.projectiles[pIdx].isEnemy) activeEnemyShots++;
+    }
+
+    // 11.8 [신규 전투 시스템] 전방 적 군단(드론·바이커·메카탱크) & 거대 보스(Giant Boss) 주행·패턴 사격·증원 물리!
+    if (state.enemies && state.enemies.length > 0) {
+      state.enemies.forEach((en, eIdx) => {
+        if (!en) return;
+        if (en.hitFlash > 0) en.hitFlash = Math.max(0, en.hitFlash - dt);
+        if (en.muzzleFlashTimer > 0) en.muzzleFlashTimer = Math.max(0, en.muzzleFlashTimer - dt);
+        if (en.attackCooldown > 0) en.attackCooldown = Math.max(0, en.attackCooldown - dt);
+
+        en.phase = (en.phase || 0) + dt * (en.weaveFreq || 1.8);
+        en.x = Math.max(-0.72, Math.min(0.72, (en.baseX || 0) + Math.sin(en.phase) * (en.weaveAmp || 0.28)));
+
+        const relZ = en.z - state.posZ;
+        // 플레이어 전방 사격 교전 거리(110 ~ 680)에서 전투 편대 속도 조절
+        let targetEnSpd = state.maxSpeed * 0.96;
+        if (relZ > 680) targetEnSpd = state.maxSpeed * 0.84;
+        else if (relZ < 150 && relZ > 20) targetEnSpd = state.maxSpeed * 1.04;
+        en.speed += (targetEnSpd - en.speed) * Math.min(1, dt * 6.0);
+        en.z += en.speed * 4.6 * dt;
+
+        // 뒤로 지나간 적 기체는 전방에 새로운 적 편대로 즉시 재배치
+        if (en.z - state.posZ < -75) {
+          Object.assign(en, createEnemyUnit(state.posZ + 540 + (eIdx % 3) * 140 + Math.random() * 180, eIdx + (state.enemyKills || 0)));
+          return;
+        }
+
+        // 적 기체의 전방 사격
+        if (en.attackCooldown <= 0 && relZ > 125 && relZ < 640 && activeEnemyShots < 4) {
+          en.attackCooldown = (en.type === 'mecha' ? 2.1 : 2.7) + Math.random() * 1.2;
+          en.muzzleFlashTimer = 0.25;
+          activeEnemyShots++;
+          const approachSpd = en.type === 'mecha' ? 130 : 115;
+          const travelTime = Math.max(0.40, relZ / (approachSpd * 4.6));
+          const aimX = Math.max(-0.70, Math.min(0.70, state.playerX + (Math.random() - 0.5) * 0.14));
+          state.projectiles.push({
+            type: en.type === 'mecha' ? 'enemyLaser' : 'enemyBullet',
+            isEnemy: true,
+            shooterName: en.name,
+            z: en.z - 18,
+            x: en.x,
+            targetX: aimX,
+            vx: (aimX - en.x) / travelTime,
+            approachSpeed: approachSpd,
+            y: (en.y || 0) + 14,
+            life: 2.2
+          });
+          sfx.playGunShot(true, 1);
+        }
+
+        // 플레이어 카트와 적 기체 근접 충돌 판정 (부스터/실드/무적 상태에서는 몸통 박치기로도 적 격파 가능!)
+        if (Math.abs(en.z - state.posZ) < 42 && Math.abs(en.x - state.playerX) < 0.28 && state.playerY < 36) {
+          if (isInvincible || state.shieldTimer > 0 || isBoosting) {
+            state.enemyKills = (state.enemyKills || 0) + 1;
+            sfx.playEnemyExplode(en.type === 'mecha');
+            vibrateDevice(55);
+            spawnBoostParticles(14);
+            state.boostTimer = Math.max(state.boostTimer, 0.55);
+            showDrivingFeedback(`💥 ${en.icon} ${en.name} 부스터 몸통 격파!`, '#69f0ae', 0.80);
+            Object.assign(en, createEnemyUnit(state.posZ + 560 + Math.random() * 320, eIdx + state.enemyKills));
+          } else if (state.hitImmunityTimer <= 0) {
+            state.hitImmunityTimer = 1.6;
+            state.speed = Math.max(state.maxSpeed * 0.58, state.speed * 0.74);
+            const pushDir = state.playerX >= en.x ? 1 : -1;
+            state.velX += pushDir * 0.52;
+            sfx.playHop();
+            vibrateDevice(45);
+            showDrivingFeedback(`⚠️ ${en.icon} ${en.name} 충돌! 총(🔫)으로 먼저 격추하세요!`, '#ffab40', 0.80);
+          }
+        }
+      });
+    }
+
+    // 거대 보스(Giant Boss) 주행·패턴 공격·다음 단계 보스 리스폰 물리!
+    if (!state.boss || !state.boss.active) {
+      if (state.bossRespawnTimer > 0) {
+        state.bossRespawnTimer -= dt;
+        if (state.bossRespawnTimer <= 0) {
+          spawnBossStage((state.bossStageIdx + 1) % BOSS_STAGES.length, true);
+        }
+      }
+    } else if (state.boss && state.boss.active && state.boss.hp > 0) {
+      const b = state.boss;
+      if (b.hitFlash > 0) b.hitFlash = Math.max(0, b.hitFlash - dt);
+      if (b.muzzleFlashTimer > 0) b.muzzleFlashTimer = Math.max(0, b.muzzleFlashTimer - dt);
+      if (b.attackCooldown > 0) b.attackCooldown = Math.max(0, b.attackCooldown - dt);
+
+      b.phase = (b.phase || 0) + dt * (1.25 + b.stage * 0.18);
+      b.x = Math.sin(b.phase) * 0.46;
+
+      // 보스가 플레이어 전방 230 ~ 310 거리에서 위압감 있게 앞서 달리며 사격 배틀을 유지!
+      const desiredBossZ = state.posZ + 265 + Math.sin(b.phase * 0.55) * 38;
+      b.z += (desiredBossZ - b.z) * Math.min(1, dt * 4.8);
+
+      if (b.attackCooldown <= 0 && activeEnemyShots < 4) {
+        b.patternIdx = ((b.patternIdx || 0) + 1) % 2;
+        b.attackCooldown = Math.max(1.85, 2.75 - b.stage * 0.22);
+        b.muzzleFlashTimer = 0.35;
+        const bRelZ = Math.max(140, b.z - state.posZ);
+        const approachSpd = 128 + b.stage * 6;
+        const travelTime = Math.max(0.42, bRelZ / (approachSpd * 4.6));
+
+        if (b.patternIdx === 0) {
+          // 보스 패턴 1: 좌·우 트윈 플라즈마 캐논 조준 사격
+          [-0.18, 0.18].forEach(ox => {
+            const aimX = Math.max(-0.72, Math.min(0.72, state.playerX + ox * 1.3));
+            state.projectiles.push({
+              type: 'enemyBullet',
+              isEnemy: true,
+              shooterName: `보스 ${b.name}`,
+              z: b.z - 24,
+              x: b.x + ox,
+              targetX: aimX,
+              vx: (aimX - (b.x + ox)) / travelTime,
+              approachSpeed: approachSpd,
+              y: (b.y || 0) + 18,
+              life: 2.3
+            });
+          });
+          activeEnemyShots += 2;
+          sfx.playGunShot(true, 2);
+        } else {
+          // 보스 패턴 2: 3갈래 부채꼴 보스 레이저 포격 (사이 빈틈으로 드리프트/핸들 회피 가능!)
+          [-0.48, 0, 0.48].forEach(laneX => {
+            state.projectiles.push({
+              type: 'enemyLaser',
+              isEnemy: true,
+              shooterName: `보스 ${b.name}`,
+              z: b.z - 20,
+              x: b.x,
+              targetX: laneX,
+              vx: (laneX - b.x) / travelTime,
+              approachSpeed: approachSpd,
+              y: (b.y || 0) + 20,
+              life: 2.3
+            });
+          });
+          activeEnemyShots += 3;
+          sfx.playGunShot(true, 3);
+        }
+      }
     }
 
     state.rivals.forEach((r, idx) => {
@@ -5528,9 +6074,10 @@
     document.getElementById('finishTitle').textContent = `🏁 ${state.rank}위 완주 성공!`;
     const finishSubEl = document.getElementById('finishSub');
     if (finishSubEl) {
-      finishSubEl.textContent = `⏱️ 총 주행 ${totalSec}초 · 최고 랩 ${bestLapSec}초`;
+      finishSubEl.textContent = `⏱️ 총 주행 ${totalSec}초 · 최고 랩 ${bestLapSec}초 · 👾 적 격추 ${state.enemyKills || 0}기 · 💀 보스 격파 ${state.bossKills || 0}체`;
     }
-    document.getElementById('finishCoinText').textContent = `🪙 코인 +${state.coins + 35}`;
+    const combatBonus = (state.enemyKills || 0) * 5 + (state.bossKills || 0) * 50;
+    document.getElementById('finishCoinText').textContent = `🪙 코인 +${state.coins + 35 + combatBonus}`;
     finishModal.style.display = 'flex';
   }
 
@@ -5955,35 +6502,57 @@
       drawRedShell(ctx, sx, pt.y, Math.max(6.5, pt.w * 0.115), timeMs, proj);
     });
 
-    // 5대의 라이벌 카트를 원거리(아주 작게)에서 근거리(내 차와 같은 크기)까지 정확한 1/Z 원근 비율로 렌더링!
-    const visibleRivals = state.rivals
-      .map(r => ({ r, relZ: r.z - state.posZ }))
-      .filter(item => item.relZ > -70 && item.relZ < 5500)
-      .sort((a, b) => b.relZ - a.relZ);
-
-    visibleRivals.forEach(({ r, relZ }) => {
-      const pt = projectContinuousRelZ(Math.max(-45, relZ));
-      if (pt.y < horizonY - 5) return;
-      const rx = pt.x + r.x * pt.w * 0.78;
-      const shrinkScale = r.shrinkTimer > 0 ? 0.56 : 1.0;
-      const kScale = Math.min(1.32, Math.max(0.05, (pt.w / roadBaseW) * 1.20)) * shrinkScale;
-      const jumpLift = r.y * kScale * 0.42;
-
-      drawKartCharacter(ctx, rx, pt.y - jumpLift, kScale, r.racer, {
-        steer: r.steer || 0,
-        driftAngle: r.drifting ? (r.steer || 0) * 0.75 : 0,
-        boosting: r.boostVisualTimer > 0,
-        drifting: r.drifting || r.spinTimer > 0,
-        driftStage: r.drifting ? 2 : 0,
-        spinning: r.spinTimer > 0,
-        speedRatio: r.speed / Math.max(1, state.maxSpeed),
-        muzzleFlash: (r.muzzleFlashTimer || 0) > 0,
-        star: false,
-        bullet: false,
-        ufo: false,
-        shield: false,
-        timeMs
+    // 5대의 라이벌 카트 + 적 전투 편대(드론·바이커·메카탱크) + 거대 보스(Giant Boss)를 원거리에서 근거리까지 정확한 1/Z 깊이 정렬로 렌더링!
+    const worldUnits = [];
+    state.rivals.forEach(r => {
+      const relZ = r.z - state.posZ;
+      if (relZ > -70 && relZ < 5500) worldUnits.push({ kind: 'rival', obj: r, relZ });
+    });
+    if (state.enemies && state.enemies.length > 0) {
+      state.enemies.forEach(en => {
+        if (!en || en.hp <= 0) return;
+        const relZ = en.z - state.posZ;
+        if (relZ > -60 && relZ < 4800) worldUnits.push({ kind: 'enemy', obj: en, relZ });
       });
+    }
+    if (state.boss && state.boss.active && state.boss.hp > 0) {
+      const bRelZ = state.boss.z - state.posZ;
+      if (bRelZ > -60 && bRelZ < 5200) worldUnits.push({ kind: 'boss', obj: state.boss, relZ: bRelZ });
+    }
+    worldUnits.sort((a, b) => b.relZ - a.relZ);
+
+    worldUnits.forEach(unit => {
+      const { kind, obj, relZ } = unit;
+      const pt = projectContinuousRelZ(Math.max(-45, relZ));
+      if (pt.y < horizonY - 8) return;
+      const ux = pt.x + obj.x * pt.w * 0.78;
+      const baseScale = Math.min(1.36, Math.max(0.05, (pt.w / roadBaseW) * 1.20));
+
+      if (kind === 'rival') {
+        const r = obj;
+        const shrinkScale = r.shrinkTimer > 0 ? 0.56 : 1.0;
+        const kScale = baseScale * shrinkScale;
+        const jumpLift = r.y * kScale * 0.42;
+        drawKartCharacter(ctx, ux, pt.y - jumpLift, kScale, r.racer, {
+          steer: r.steer || 0,
+          driftAngle: r.drifting ? (r.steer || 0) * 0.75 : 0,
+          boosting: r.boostVisualTimer > 0,
+          drifting: r.drifting || r.spinTimer > 0,
+          driftStage: r.drifting ? 2 : 0,
+          spinning: r.spinTimer > 0,
+          speedRatio: r.speed / Math.max(1, state.maxSpeed),
+          muzzleFlash: (r.muzzleFlashTimer || 0) > 0,
+          star: false,
+          bullet: false,
+          ufo: false,
+          shield: false,
+          timeMs
+        });
+      } else if (kind === 'enemy') {
+        drawEnemyUnit(ctx, ux, pt.y, baseScale, obj, timeMs);
+      } else if (kind === 'boss') {
+        drawBossUnit(ctx, ux, pt.y, baseScale * 1.48, obj, timeMs);
+      }
     });
 
     // 총알이 앞차에 명중했을 때 터지는 3D 타격 스파크 & 크로스헤어 히트마커(Hit Marker) 렌더링!
@@ -6235,7 +6804,48 @@
         ctx.restore();
       }
 
-      // 3) 주행 결과 피드백 배너 (드리프트 성공/실패 · 부스트 · 실드 방어 · 추월 알림 — 시야를 가리지 않도록 상단 78px 위치에 깔끔하게 표시)
+      // 2.5) 상단 거대 보스 체력 게이지 바(Boss HP Bar) & 적/보스 격추 스코어 보드!
+      let feedbackBaseY = 74;
+      if (state.boss && state.boss.active && state.boss.hp > 0) {
+        const b = state.boss;
+        const bossBarW = 310;
+        const bossBarH = 22;
+        const bbx = W * 0.5 - bossBarW * 0.5;
+        const bby = 72;
+        const hpPct = Math.max(0, Math.min(1, b.hp / Math.max(1, b.maxHp)));
+        feedbackBaseY = 102;
+
+        ctx.save();
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.90)';
+        ctx.strokeStyle = b.hitFlash > 0 ? '#ffffff' : '#ff1744';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.roundRect(bbx, bby, bossBarW, bossBarH, 11);
+        ctx.fill();
+        ctx.stroke();
+
+        const hpGrad = ctx.createLinearGradient(bbx, bby, bbx + bossBarW, bby);
+        hpGrad.addColorStop(0, '#ff1744');
+        hpGrad.addColorStop(0.55, '#ff9100');
+        hpGrad.addColorStop(1, '#ffea00');
+        ctx.fillStyle = b.hitFlash > 0 ? '#ffffff' : hpGrad;
+        ctx.beginPath();
+        ctx.roundRect(bbx + 3, bby + 3, Math.max(8, (bossBarW - 6) * hpPct), bossBarH - 6, 8);
+        ctx.fill();
+
+        ctx.font = '900 12.5px "Apple SD Gothic Neo", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
+          `${b.icon} BOSS Lv.${b.stage} ${b.name}  [HP ${b.hp}/${b.maxHp}]  |  👾격추 ${state.enemyKills || 0} · 💀보스 ${state.bossKills || 0}`,
+          W * 0.5,
+          bby + bossBarH * 0.5 + 0.5
+        );
+        ctx.restore();
+      }
+
+      // 3) 주행 결과 피드백 배너 (드리프트 성공/실패 · 부스트 · 실드 방어 · 추월 · 보스 타격 알림)
       if (state.driftFeedbackTimer > 0 && state.driftFeedbackText) {
         ctx.save();
         ctx.globalAlpha = Math.min(1, state.driftFeedbackTimer * 2.2);
@@ -6243,7 +6853,7 @@
         const fTw = ctx.measureText(state.driftFeedbackText).width;
         const fW = fTw + 28;
         const fX = W * 0.5 - fW * 0.5;
-        const fY = 74;
+        const fY = feedbackBaseY;
         ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
         ctx.strokeStyle = state.driftFeedbackColor || '#00e5ff';
         ctx.lineWidth = 2.5;
@@ -6273,6 +6883,295 @@
         ctx.restore();
       });
     }
+  }
+
+  // ==================== 3D 적 기체(드론 · 바이커 · 메카탱크) 및 거대 보스(스콜피온 · 디스트로이어 · 드래곤) 렌더링 ====================
+  function drawEnemyUnit(c, x, y, scale, en, timeMs) {
+    if (scale < 0.06) return;
+    c.save();
+    c.translate(x, y);
+    c.scale(scale, scale);
+
+    // 1) 바닥 그림자 및 적 위험 경고 링
+    c.fillStyle = 'rgba(8, 13, 26, 0.48)';
+    c.beginPath();
+    c.ellipse(0, 6, 46, 13, 0, 0, Math.PI * 2);
+    c.fill();
+    c.strokeStyle = 'rgba(255, 23, 68, 0.65)';
+    c.lineWidth = 2.5;
+    c.beginPath();
+    c.ellipse(0, 6, 52, 15, 0, 0, Math.PI * 2);
+    c.stroke();
+
+    const hoverLift = (en.y || 0) + (en.type === 'drone' ? Math.sin((timeMs || 0) * 0.012 + (en.phase || 0)) * 6 : 0);
+    c.translate(0, -hoverLift);
+
+    const flash = (en.hitFlash || 0) > 0;
+    const bodyCol = flash ? '#ffffff' : (en.primary || '#00e5ff');
+    const subCol = flash ? '#ffea00' : (en.secondary || '#1e293b');
+    const accCol = flash ? '#ff1744' : (en.accent || '#ff1744');
+
+    if (en.type === 'drone') {
+      // 👾 스카이 전투 드론: 좌우 트윈 로터 링 + 네온 코어 + 하부 플라즈마 총열
+      [-34, 34].forEach(rx => {
+        c.fillStyle = subCol;
+        c.strokeStyle = bodyCol;
+        c.lineWidth = 2.5;
+        c.beginPath();
+        c.ellipse(rx, -18, 16, 7, 0, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+        // 프로펠러 블러
+        c.strokeStyle = '#ffffff';
+        c.lineWidth = 2;
+        const rotX = Math.cos((timeMs || 0) * 0.08) * 12;
+        c.beginPath();
+        c.moveTo(rx - rotX, -18);
+        c.lineTo(rx + rotX, -18);
+        c.stroke();
+      });
+
+      // 드론 메인 구체 아머
+      c.fillStyle = subCol;
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 2.5;
+      c.beginPath();
+      c.arc(0, -18, 22, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+
+      // 붉은 모노아이 조준 렌즈
+      c.fillStyle = accCol;
+      c.beginPath();
+      c.arc(0, -18, 9, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = '#ffffff';
+      c.beginPath();
+      c.arc(-3, -21, 3, 0, Math.PI * 2);
+      c.fill();
+    } else if (en.type === 'biker') {
+      // 🏍️ 아머드 바이커: 광폭 리어 타이어 + 사이버 바이크 카울 + 스파이크 헬멧 라이더
+      c.fillStyle = '#11171a';
+      c.strokeStyle = '#90a4ae';
+      c.lineWidth = 2.5;
+      c.beginPath();
+      c.roundRect(-13, -24, 26, 28, 8);
+      c.fill();
+      c.stroke();
+
+      c.fillStyle = bodyCol;
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 2.2;
+      c.beginPath();
+      c.moveTo(-24, -10);
+      c.lineTo(-16, -42);
+      c.lineTo(16, -42);
+      c.lineTo(24, -10);
+      c.closePath();
+      c.fill();
+      c.stroke();
+
+      // 라이더 다크 바이저 헬멧
+      c.fillStyle = subCol;
+      c.strokeStyle = accCol;
+      c.lineWidth = 2.2;
+      c.beginPath();
+      c.arc(0, -54, 15, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+      c.fillStyle = '#ff1744';
+      c.fillRect(-9, -56, 18, 5);
+    } else {
+      // 🛡️ 헤비 메카 탱크: 좌우 무한궤도 캐터필러 + 중장갑 포탑 + 트윈 대구경 포신
+      [-36, 20].forEach(tx => {
+        c.fillStyle = '#1e293b';
+        c.strokeStyle = '#94a3b8';
+        c.lineWidth = 2.2;
+        c.beginPath();
+        c.roundRect(tx, -24, 16, 26, 5);
+        c.fill();
+        c.stroke();
+      });
+
+      c.fillStyle = subCol;
+      c.strokeStyle = bodyCol;
+      c.lineWidth = 2.8;
+      c.beginPath();
+      c.roundRect(-30, -40, 60, 28, 8);
+      c.fill();
+      c.stroke();
+
+      // 상단 회전 포탑 & 트윈 캐논
+      c.fillStyle = bodyCol;
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 2.2;
+      c.beginPath();
+      c.roundRect(-20, -56, 40, 20, 7);
+      c.fill();
+      c.stroke();
+
+      c.fillStyle = '#263238';
+      [-10, 10].forEach(cx => {
+        c.fillRect(cx - 3.5, -68, 7, 16);
+      });
+    }
+
+    // 사격 시 머즐 플래시
+    if ((en.muzzleFlashTimer || 0) > 0) {
+      c.fillStyle = '#ff1744';
+      c.beginPath();
+      c.arc(0, -34, 12, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = '#ffffff';
+      c.beginPath();
+      c.arc(0, -34, 5, 0, Math.PI * 2);
+      c.fill();
+    }
+
+    // 상단 적 체력바(Enemy HP Bar) & TARGET 배지
+    const barW = 54;
+    const barH = 7;
+    const hpRatio = Math.max(0, Math.min(1, en.hp / Math.max(1, en.maxHp)));
+    c.fillStyle = 'rgba(15, 23, 42, 0.88)';
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 1.5;
+    c.beginPath();
+    c.roundRect(-barW * 0.5, -80, barW, barH, 3.5);
+    c.fill();
+    c.stroke();
+    c.fillStyle = hpRatio > 0.5 ? '#00e676' : '#ff1744';
+    c.fillRect(-barW * 0.5 + 1.5, -78.5, Math.max(3, (barW - 3) * hpRatio), barH - 3);
+
+    c.restore();
+  }
+
+  function drawBossUnit(c, x, y, scale, boss, timeMs) {
+    if (scale < 0.05) return;
+    c.save();
+    c.translate(x, y);
+    c.scale(scale, scale);
+
+    const pulse = Math.sin((timeMs || 0) * 0.015);
+    const hoverY = (boss.y || 0) + Math.sin((timeMs || 0) * 0.008) * 5;
+
+    // 1) 거대 보스 바닥 위험 경고 오라 (Red Boss Danger Zone)
+    c.fillStyle = 'rgba(255, 23, 68, 0.28)';
+    c.strokeStyle = '#ff1744';
+    c.lineWidth = 3.2;
+    c.beginPath();
+    c.ellipse(0, 8, 92 + pulse * 6, 24, 0, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    c.translate(0, -hoverY);
+
+    const flash = (boss.hitFlash || 0) > 0;
+    const pCol = flash ? '#ffffff' : (boss.primary || '#ff6d00');
+    const sCol = flash ? '#ffea00' : (boss.secondary || '#263238');
+    const aCol = flash ? '#ff1744' : (boss.accent || '#ffea00');
+
+    // 2) 좌·우 거대 무장 암(Pincers / Wings / Dragon Claws) & 트윈 플라즈마 캐논
+    const wingWave = Math.sin((timeMs || 0) * 0.012) * 8;
+    [-1, 1].forEach(side => {
+      c.save();
+      c.fillStyle = pCol;
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = 3;
+      c.beginPath();
+      c.moveTo(side * 42, -32);
+      c.lineTo(side * (92 + wingWave * 0.5), -64 + wingWave);
+      c.lineTo(side * 84, -16);
+      c.closePath();
+      c.fill();
+      c.stroke();
+
+      // 양쪽 대구경 보스 발칸 포신
+      c.fillStyle = sCol;
+      c.strokeStyle = aCol;
+      c.lineWidth = 2.2;
+      c.beginPath();
+      c.roundRect(side * 62 - 9, -56, 18, 28, 5);
+      c.fill();
+      c.stroke();
+
+      if ((boss.muzzleFlashTimer || 0) > 0) {
+        c.fillStyle = '#ff1744';
+        c.beginPath();
+        c.arc(side * 62, -60, 15, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.arc(side * 62, -60, 7, 0, Math.PI * 2);
+        c.fill();
+      }
+      c.restore();
+    });
+
+    // 3) 보스 메인 아머 섀시 & 중앙 약점 리액터 코어(Weak-Point Core)
+    c.fillStyle = sCol;
+    c.strokeStyle = '#ffffff';
+    c.lineWidth = 3.5;
+    c.beginPath();
+    c.roundRect(-56, -72, 112, 62, 18);
+    c.fill();
+    c.stroke();
+
+    // 보스 상단 뿔/테일 캐논 장식
+    c.fillStyle = pCol;
+    c.strokeStyle = aCol;
+    c.lineWidth = 2.5;
+    [-28, 0, 28].forEach((hx, idx) => {
+      const hTop = idx === 1 ? -102 : -90;
+      c.beginPath();
+      c.moveTo(hx - 12, -70);
+      c.lineTo(hx, hTop);
+      c.lineTo(hx + 12, -70);
+      c.closePath();
+      c.fill();
+      c.stroke();
+    });
+
+    // 중앙 발광 에너지 코어 & 위협적인 보스 눈매
+    const coreGrad = c.createRadialGradient(0, -40, 3, 0, -40, 24);
+    coreGrad.addColorStop(0, '#ffffff');
+    coreGrad.addColorStop(0.45, aCol);
+    coreGrad.addColorStop(1, '#ff1744');
+    c.fillStyle = coreGrad;
+    c.beginPath();
+    c.arc(0, -40, 20 + pulse * 2.5, 0, Math.PI * 2);
+    c.fill();
+
+    // 성난 보스 바이저 아이
+    c.fillStyle = '#ff1744';
+    [-26, 26].forEach(ex => {
+      c.beginPath();
+      c.arc(ex, -54, 7.5, 0, Math.PI * 2);
+      c.fill();
+    });
+
+    // 4) 보스 머리 위 3D 체력 게이지 & BOSS 배지
+    const bw = 116;
+    const bh = 11;
+    const hpPct = Math.max(0, Math.min(1, boss.hp / Math.max(1, boss.maxHp)));
+    c.fillStyle = 'rgba(15, 23, 42, 0.92)';
+    c.strokeStyle = '#ffea00';
+    c.lineWidth = 2.2;
+    c.beginPath();
+    c.roundRect(-bw * 0.5, -120, bw, bh, 5.5);
+    c.fill();
+    c.stroke();
+
+    c.fillStyle = hpPct > 0.35 ? '#ff9100' : '#ff1744';
+    c.beginPath();
+    c.roundRect(-bw * 0.5 + 2, -118, Math.max(5, (bw - 4) * hpPct), bh - 4, 4);
+    c.fill();
+
+    c.font = '900 13px "Apple SD Gothic Neo", sans-serif';
+    c.fillStyle = '#ffea00';
+    c.textAlign = 'center';
+    c.fillText(`${boss.icon} BOSS HP ${boss.hp}/${boss.maxHp}`, 0, -126);
+
+    c.restore();
   }
 
   function drawTrapezoid(c, x1, y1, w1, x2, y2, w2) {

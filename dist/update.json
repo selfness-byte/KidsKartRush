@@ -1,11 +1,11 @@
 {
   "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
   "packageId": "com.mj.kidskart",
-  "versionCode": 21,
-  "versionName": "1.9.3",
-  "apkUrl": "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.3.apk",
-  "sha256": "2e4dfaebf968618f7604ffcf3c61f3f38b2f363e2ae5e612da2d096bb5fadf5e",
-  "sizeBytes": 1097869,
+  "versionCode": 22,
+  "versionName": "1.9.4",
+  "apkUrl": "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.4.apk",
+  "sha256": "fd594eec35582aa5cd0bd76475bc52eec608a42af577f80bbc9a82f371810d32",
+  "sizeBytes": 1107613,
   "updatedAt": "2026-10-25",
-  "notes": "• [총알 쏘는 타격감 & 실감 탄도 사운드 대폭 업그레이드] ① 3-Layer 실감 총성 합성(총구 폭발 저음 펀치 + 화약 파열 크랙 + 노리쇠/황동 탄피 금속 클락) 및 적 카트 장갑 명중 타격음('챙-퍽!') 추가, ② 사격 버튼(🔫) 터치 시 즉각 3점사 + 버튼을 누르고 있으면 트윈 개틀링 기관총이 좌·우 번갈아 고속 자동 연사(Hold-to-Fire), ③ 카트 총구에서 전방 도로 표적까지 뻗어나가는 초고속 3D 예광탄 궤적 광선(Tracer Beam) + 사방으로 튕기는 황동 탄피(Shell Casing) + 총열 반동(Recoil) + 명중 크로스헤어(🎯 HIT!) 연출 적용!\n• [캐릭터 나오는 모든 프레임에 얼굴 100% 정밀 맞춤] 로비 프리뷰·카트 위 캐릭터 헤드 원형 프레임·로비 카드·사진 스튜디오 프레임에 얼굴이 빈틈없이 정렬!\n• [드리프트 시 실제 차 타이어 미끄러짐(촥~/스르륵~) 마찰음 적용] 아스팔트 노면과 타이어 고무가 쓸리는 리얼 물리 마찰음 적용!"
+  "notes": "• [전방 적 군단(3종) & 3단계 거대 보스전(Giant Boss Battle) 시스템 신설!] ① 트랙 위를 편대 비행·주행하며 플레이어를 공격하는 3종 적 기체(👾스카이 전투 드론 · 🏍️아머드 바이커 · 🛡️헤비 메카 탱크) 상시 출현 및 격추 시 부스트/중화기 보상, ② 전방 도로를 장악하며 2연장 플라즈마 캐논과 3갈래 보스 레이저를 쏘는 3단계 거대 보스(Lv.1 🤖아이언 스콜피온 메카 -> Lv.2 🛸네온 디스트로이어 건십 -> Lv.3 🐉메카 드래곤 엠페러) 및 상단 실시간 보스 HP 게이지 바 추가, ③ 보스 격파 시 연쇄 대폭발과 함께 무적 슈퍼 풀부스트 + N2O 완충 + 중화기 보상 지급!\n• [총알 쏘는 타격감 & 3-Layer 실감 탄도 사운드] 총구에서 적/보스까지 뻗어나가는 3D 예광탄 궤적 광선, 황동 탄피 배출, 연사 손맛, 명중 히트마커 및 묵직한 총성/장갑 타격음 적용!"
 }
