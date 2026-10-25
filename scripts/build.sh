@@ -11,10 +11,10 @@ dot_clean -m "$PROJECT" 2>/dev/null || true
 gradle --offline --project-cache-dir /Volumes/MDev/project-cache/KidsKartRush :app:assembleDebug --console=plain
 mkdir -p "$PROJECT/dist"
 cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-debug.apk"
-cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-1.5.8.apk"
+cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-1.6.0.apk"
 python3 "$PROJECT/scripts/generate_update_meta.py"
-echo "APK: $PROJECT/dist/KidsKartRush-1.5.8.apk"
+echo "APK: $PROJECT/dist/KidsKartRush-1.6.0.apk"
 if [ "$1" = "--install" ]; then
-  adb -d install -r "$PROJECT/dist/KidsKartRush-1.5.8.apk"
+  adb -d install -r "$PROJECT/dist/KidsKartRush-1.6.0.apk"
   adb -d shell am start -n com.mj.kidskart/.MainActivity
 fi

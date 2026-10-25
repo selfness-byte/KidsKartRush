@@ -1,11 +1,11 @@
 {
-  "appName": "키즈 카트 러쉬! (Kids Kart Rush+)",
+  "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
   "packageId": "com.mj.kidskart",
-  "versionCode": 14,
-  "versionName": "1.5.8",
-  "apkUrl": "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.5.8.apk",
-  "sha256": "a2c2a8c65c06b09c023916d0b98134f24e54d70a30bb7302d21735e5dedd4e35",
-  "sizeBytes": 912275,
+  "versionCode": 15,
+  "versionName": "1.6.0",
+  "apkUrl": "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.6.0.apk",
+  "sha256": "ceeff362cf263b33c951d3bef68246f86f1dcc38786cd5c925ce48487decc847",
+  "sizeBytes": 995192,
   "updatedAt": "2026-10-25",
-  "notes": "• [얼굴 UI 테두리·액자 완전 제거 & 얼굴만 재미있게 코믹 표현] 😄 로비 카드·사진 스튜디오·카트 위 캐릭터 머리에서 원형 테두리 선, 헬멧 림, 배경 액자를 100% 없애고, 통통한 볼살과 귀가 살아있는 '얼굴 전용 실루엣 컷아웃'으로 표현!\n• [살아 움직이는 코믹 보블헤드(Bobblehead) & 리액션 연출] 조향·드리프트·부스터에 따라 얼굴이 말랑말랑하게 통통 튀고 갸우뚱거리며, 발그레해지는 볼터치·부스터 반짝이(✨)·드리프트 스파크(⚡/💦) 등 익살스러운 표정 리액션 탑재!\n• [카트라이더 정통 드리프트 & 여성 음성 완전 제거 유지] 핸들 드리프트 끌기·카운터 스티어링 순부 점화 및 순수 V8 엔진·타이어 마찰음 사운드 적용!"
+  "notes": "• [스킬 기반 드리프트 & 주행 물리 전면 개선] 진입 각도·유지 시간(GOOD/PERFECT/OVER)·해제 타이밍에 따라 탈출 부스트와 감속/라인 밀림이 갈리는 손맛 구현, 가드레일 비점착 탄성 리바운드 적용!\n• [대표 코스 '선셋 캐니언 에어로 서킷' 3랩 & 분기 지름길 완성] 직선 슬립스트림 추월 구간, 연속 S자 코너, 고저차 능선 분기(안전 본선 vs 위험 고속 협곡 데크 지름길), 180도 헤어핀 구간 탑재!\n• [경쟁형 AI 5대 & 핵심 전술 아이템 3종(터보 셀·쇼크 볼트·에너지 실드)] 고무줄 바인딩 제거, 공격형/안정형 AI 라인 선택 및 실수·회복, 후방 공격 경보(1.3초)와 실드 카운터 부스트/드리프트 회피 및 연속 피격 방지(2.5초 면역) 완성!"
 }

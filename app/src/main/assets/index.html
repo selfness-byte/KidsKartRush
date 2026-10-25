@@ -968,12 +968,12 @@
 
 <canvas id="gameCanvas"></canvas>
 
-<!-- ==================== 1. 로비 화면 (도우미 삭제 & 귀여운 토이 캡슐 테마) ==================== -->
+<!-- ==================== 1. 로비 화면 (독자 테마: 선셋 캐니언 에어로 카트 GP) ==================== -->
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.5.8</span>
-      <h1>🍄 키즈 마리오·카트 러쉬!</h1>
+      <span class="lobby-badge" id="verBadge">v1.6.0</span>
+      <h1>🌅 선셋 캐니언 에어로 카트 GP</h1>
     </div>
     <div class="assist-pills">
       <button id="toggleAutoBoostBtn" class="pill-btn">🚀 자동 부스터 OFF</button>
@@ -983,45 +983,45 @@
   </div>
 
   <div class="lobby-body">
-    <!-- 캐릭터/카트 & 얼굴 사진 선택 (6명 전체 레이서) -->
+    <!-- 캐릭터/카트 & 얼굴 사진 선택 (6명 전체 독자 레이서) -->
     <div class="panel-card">
-      <div class="panel-title">📸 레이서 & 얼굴 사진 설정</div>
+      <div class="panel-title">📸 에어로 레이서 & 얼굴 사진 설정</div>
       <div class="racer-grid" id="racerGrid">
         <div class="racer-card selected" data-racer="0">
           <button class="card-photo-btn" data-photo-racer="0" type="button">📷</button>
-          <div class="racer-face-wrap"><img id="lobbyFaceImg0" alt="다오" /></div>
-          <div class="racer-name">다오 블루</div>
-          <div class="racer-desc">번개 세이버</div>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg0" alt="레오" /></div>
+          <div class="racer-name">레오 블루</div>
+          <div class="racer-desc">에어로 팔콘</div>
         </div>
         <div class="racer-card" data-racer="1">
           <button class="card-photo-btn" data-photo-racer="1" type="button">📷</button>
-          <div class="racer-face-wrap"><img id="lobbyFaceImg1" alt="디지니" /></div>
-          <div class="racer-name">디지니 핑크</div>
-          <div class="racer-desc">구름 솜사탕</div>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg1" alt="루나" /></div>
+          <div class="racer-name">루나 코랄</div>
+          <div class="racer-desc">코멧 글라이더</div>
         </div>
         <div class="racer-card" data-racer="2">
           <button class="card-photo-btn" data-photo-racer="2" type="button">📷</button>
-          <div class="racer-face-wrap"><img id="lobbyFaceImg2" alt="배찌" /></div>
-          <div class="racer-name">배찌 옐로우</div>
-          <div class="racer-desc">꿀단지 범퍼</div>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg2" alt="카이" /></div>
+          <div class="racer-name">카이 골드</div>
+          <div class="racer-desc">선셋 볼텍스</div>
         </div>
         <div class="racer-card" data-racer="3">
           <button class="card-photo-btn" data-photo-racer="3" type="button">📷</button>
-          <div class="racer-face-wrap"><img id="lobbyFaceImg3" alt="우니" /></div>
-          <div class="racer-name">우니 다이노</div>
-          <div class="racer-desc">요시 공룡</div>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg3" alt="렉스" /></div>
+          <div class="racer-name">렉스 그린</div>
+          <div class="racer-desc">캐니언 랩터</div>
         </div>
         <div class="racer-card" data-racer="4">
           <button class="card-photo-btn" data-photo-racer="4" type="button">📷</button>
-          <div class="racer-face-wrap"><img id="lobbyFaceImg4" alt="마리드" /></div>
-          <div class="racer-name">마리드 퍼플</div>
-          <div class="racer-desc">스타 슈팅</div>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg4" alt="유나" /></div>
+          <div class="racer-name">유나 바이올렛</div>
+          <div class="racer-desc">네온 소닉</div>
         </div>
         <div class="racer-card" data-racer="5">
           <button class="card-photo-btn" data-photo-racer="5" type="button">📷</button>
-          <div class="racer-face-wrap"><img id="lobbyFaceImg5" alt="모비" /></div>
-          <div class="racer-name">모비 오렌지</div>
-          <div class="racer-desc">터보 불꽃</div>
+          <div class="racer-face-wrap"><img id="lobbyFaceImg5" alt="볼트" /></div>
+          <div class="racer-name">볼트 오렌지</div>
+          <div class="racer-desc">플라즈마 제트</div>
         </div>
       </div>
       <div class="photo-bar">
@@ -1034,71 +1034,29 @@
     <div class="preview-stage">
       <canvas id="previewCanvas" width="320" height="200"></canvas>
       <div class="speed-selector" id="speedSelector">
-        <button class="speed-btn" data-speed="slow">🐢 천천히<br/><span style="font-size:11px;font-weight:700;">유아용</span></button>
-        <button class="speed-btn selected" data-speed="normal">🚗 신나게<br/><span style="font-size:11px;font-weight:700;">어린이 추천</span></button>
-        <button class="speed-btn" data-speed="fast">🚀 초고속<br/><span style="font-size:11px;font-weight:700;">스피드왕</span></button>
+        <button class="speed-btn" data-speed="slow">🐢 루키 클래스<br/><span style="font-size:11px;font-weight:700;">입문 주행</span></button>
+        <button class="speed-btn selected" data-speed="normal">🚗 에어로 GP<br/><span style="font-size:11px;font-weight:700;">표준 챔피언십</span></button>
+        <button class="speed-btn" data-speed="fast">🚀 마스터 GP<br/><span style="font-size:11px;font-weight:700;">초고속 드리프트</span></button>
       </div>
     </div>
 
-    <!-- 모험 월드 선택 (경기장 트랙 대신 8가지 대자연·판타지 오픈 모험 월드!) -->
+    <!-- 대표 시그니처 코스 1종 완성 브리핑 & 4대 전략 섹터 안내 -->
     <div class="panel-card">
-      <div class="panel-title">🌍 8가지 신나는 모험 월드</div>
-      <div class="track-list" id="trackList">
-        <div class="track-card selected" data-track="0">
-          <div class="track-icon">🍄</div>
+      <div class="panel-title">🏁 대표 시그니처 서킷 (3 LAP · 6대 경쟁)</div>
+      <div class="track-list" id="trackList" style="grid-template-columns: 1fr; gap: 6px;">
+        <div class="track-card selected" data-track="0" style="padding: 8px 10px;">
+          <div class="track-icon" style="background:#ffe0b2;">🌅</div>
           <div class="track-info">
-            <div class="track-name">버섯 왕국 들판</div>
-            <div class="track-sub">꽃밭 오솔길·피치 성 대모험</div>
+            <div class="track-name">선셋 캐니언 에어로 서킷 (대표 코스)</div>
+            <div class="track-sub">직선 추월 · 연속 S-드리프트 · 고저차 & 지름길 분기</div>
           </div>
         </div>
-        <div class="track-card" data-track="1">
-          <div class="track-icon">🍩</div>
-          <div class="track-info">
-            <div class="track-name">스위트 디저트 동산</div>
-            <div class="track-sub">쿠키 언덕·초코 강변 탐험</div>
-          </div>
-        </div>
-        <div class="track-card" data-track="2">
-          <div class="track-icon">🏖️</div>
-          <div class="track-info">
-            <div class="track-name">코랄 오션 해변</div>
-            <div class="track-sub">파도 치는 모래사장·산호 섬</div>
-          </div>
-        </div>
-        <div class="track-card" data-track="3">
-          <div class="track-icon">⛄</div>
-          <div class="track-info">
-            <div class="track-name">오로라 빙하 설원</div>
-            <div class="track-sub">눈 덮인 빙판 들판·얼음 궁전</div>
-          </div>
-        </div>
-        <div class="track-card" data-track="4">
-          <div class="track-icon">🦕</div>
-          <div class="track-info">
-            <div class="track-name">공룡 정글 사파리</div>
-            <div class="track-sub">원시림 통나무 다리·화산 정글</div>
-          </div>
-        </div>
-        <div class="track-card" data-track="5">
-          <div class="track-icon">🌸</div>
-          <div class="track-info">
-            <div class="track-name">로얄 벚꽃 동산</div>
-            <div class="track-sub">분홍 꽃길 산책로·대관람차</div>
-          </div>
-        </div>
-        <div class="track-card" data-track="6">
-          <div class="track-icon">🌋</div>
-          <div class="track-info">
-            <div class="track-name">드래곤 화산 협곡</div>
-            <div class="track-sub">용암 강 바위길·마왕 성채</div>
-          </div>
-        </div>
-        <div class="track-card" data-track="7">
-          <div class="track-icon">🌈</div>
-          <div class="track-info">
-            <div class="track-name">은하수 별빛 하늘길</div>
-            <div class="track-sub">우주 성운 오로라·별구름 길</div>
-          </div>
+        <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:16px;padding:7px 10px;font-size:11.5px;line-height:1.45;color:#1e293b;font-weight:800;">
+          <div>🔹 <b>구간 1 (직선 추월)</b>: 앞차 뒤 슬립스트림(+7%) 추격 & 추월 라인 선택</div>
+          <div>🔹 <b>구간 2 (연속 S-드리프트)</b>: 진입각·유지(0.42~1.42s)·해제 타이밍 승부</div>
+          <div>🔹 <b>구간 3 (고저차 & 분기)</b>: 우측 안전 본선 vs 좌측 고속 데크 지름길</div>
+          <div>🔹 <b>구간 4 (선셋 헤어핀)</b>: 180° 급감속 헤어핀 & 홈 스트레이트 역전승</div>
+          <div style="margin-top:3px;color:#0277bd;">🎯 <b>아이템 3종</b>: ⚡터보 셀(가속) · 🎯쇼크 볼트(공격) · 🛡️에너지 실드(방어)</div>
         </div>
       </div>
     </div>
@@ -1106,9 +1064,9 @@
 
   <div class="lobby-footer">
     <div class="lobby-tip">
-      🎈 8가지 신나는 모험 월드를 골라 <b>동그란 핸들</b>과 <b>부스터·아이템 버튼</b>으로 달려보세요!
+      🏎️ <b>드리프트</b>(핸들 깊게 꺾기 후 타이밍 맞춰 풀기)와 <b>지름길·아이템 판단</b>으로 3랩 그랑프리를 제패하세요!
     </div>
-    <button id="startRaceBtn" class="start-race-btn">🏁 출발하기!</button>
+    <button id="startRaceBtn" class="start-race-btn">🏁 3랩 그랑프리 출발!</button>
   </div>
 </div>
 
@@ -1982,15 +1940,15 @@
     if (document.hidden) sfx.suspendAll();
   });
 
-  // ==================== 레이서(캐릭터 & 카트 6종) 및 트랙 데이터 ====================
+  // ==================== 레이서(독자 캐릭터 & 에어로 카트 6종) 및 대표 시그니처 서킷 데이터 ====================
   const RACERS = [
     {
       id: 0,
-      name: '다오 블루',
-      shortName: '다오',
-      kartName: '번개 세이버 카트',
+      name: '레오 블루',
+      shortName: '레오',
+      kartName: '에어로 팔콘 카트',
       primary: '#1e88e5',
-      secondary: '#e53935',
+      secondary: '#00e5ff',
       helmet: '#1565c0',
       visor: '#00e5ff',
       earType: 'visor',
@@ -1998,9 +1956,9 @@
     },
     {
       id: 1,
-      name: '디지니 핑크',
-      shortName: '디지니',
-      kartName: '구름 솜사탕 카트',
+      name: '루나 코랄',
+      shortName: '루나',
+      kartName: '코멧 글라이더 카트',
       primary: '#f06292',
       secondary: '#fff176',
       helmet: '#ec407a',
@@ -2010,9 +1968,9 @@
     },
     {
       id: 2,
-      name: '배찌 옐로우',
-      shortName: '배찌',
-      kartName: '튼튼 범퍼 카트',
+      name: '카이 골드',
+      shortName: '카이',
+      kartName: '선셋 볼텍스 카트',
       primary: '#fdd835',
       secondary: '#fb8c00',
       helmet: '#ffee58',
@@ -2022,9 +1980,9 @@
     },
     {
       id: 3,
-      name: '우니 다이노',
-      shortName: '우니',
-      kartName: '공룡 로켓 카트',
+      name: '렉스 그린',
+      shortName: '렉스',
+      kartName: '캐니언 랩터 카트',
       primary: '#00e676',
       secondary: '#00b0ff',
       helmet: '#00c853',
@@ -2034,9 +1992,9 @@
     },
     {
       id: 4,
-      name: '마리드 퍼플',
-      shortName: '마리드',
-      kartName: '스타 슈팅 카트',
+      name: '유나 바이올렛',
+      shortName: '유나',
+      kartName: '네온 소닉 카트',
       primary: '#ab47bc',
       secondary: '#ff4081',
       helmet: '#8e24aa',
@@ -2046,9 +2004,9 @@
     },
     {
       id: 5,
-      name: '모비 오렌지',
-      shortName: '모비',
-      kartName: '터보 불꽃 카트',
+      name: '볼트 오렌지',
+      shortName: '볼트',
+      kartName: '플라즈마 제트 카트',
       primary: '#ff7043',
       secondary: '#ffca28',
       helmet: '#f4511e',
@@ -2061,16 +2019,16 @@
   const TRACKS = [
     {
       id: 0,
-      name: '버섯 왕국 들판',
-      skyTop: '#29b6f6',
-      skyBottom: '#e1f5fe',
-      grass1: '#43a047',
-      grass2: '#66bb6a',
-      road1: '#e6c280',
-      road2: '#ddb368',
-      kerb1: '#7cb342',
-      kerb2: '#9ccc65',
-      sceneryType: 'mario'
+      name: '선셋 캐니언 에어로 서킷',
+      skyTop: '#1e1b4b',
+      skyBottom: '#fb923c',
+      grass1: '#9a3412',
+      grass2: '#c2410c',
+      road1: '#334155',
+      road2: '#1e293b',
+      kerb1: '#f59e0b',
+      kerb2: '#f8fafc',
+      sceneryType: 'canyon'
     },
     {
       id: 1,
@@ -2165,14 +2123,11 @@
     }
   ];
 
-  // 아기자기한 슈퍼마리오 카트 & 카트라이더 시그니처 아이템
+  // ==================== 전술 아이템 3종 완성 (가속 · 공격 · 방어) ====================
   const ITEMS = [
-    { id: 'star', icon: '🌟', name: '반짝 무지개별', voice: '반짝반짝 무지개 별 발동!' },
-    { id: 'mushroom', icon: '🍄', name: '왕방울 핑크버섯', voice: '왕방울 버섯! 차가 커지고 쌩쌩 달려요!' },
-    { id: 'bullet', icon: '🐳', name: '하늘 고래 로켓', voice: '귀여운 하늘 고래 로켓 변신!' },
-    { id: 'shell', icon: '🐢', name: '날개 거북이 등껍질', voice: '날개 달린 거북이 등껍질 발사!' },
-    { id: 'lightning', icon: '⚡', name: '구름 번개 요정', voice: '구름 번개 요정! 라이벌 차들이 꼬마가 되었어요!' },
-    { id: 'banana', icon: '🍌', name: '방긋 웃는 바나나', voice: '귀여운 바나나 투척!' }
+    { id: 'turbo', icon: '⚡', name: '터보 셀 (가속)', color: '#00e5ff', voice: '' },
+    { id: 'bolt', icon: '🎯', name: '쇼크 볼트 (공격)', color: '#ff5252', voice: '' },
+    { id: 'shield', icon: '🛡️', name: '에너지 실드 (방어)', color: '#69f0ae', voice: '' }
   ];
 
   // ==================== 게임 전역 상태 ====================
@@ -2186,7 +2141,7 @@
 
     segments: [],
     trackLength: 0,
-    totalLaps: 2,
+    totalLaps: 3,
 
     posZ: 0,
     playerX: 0,
@@ -2196,6 +2151,22 @@
     velY: 0,
     trickRot: 0,
     spinTimer: 0,
+    hitImmunityTimer: 0,
+    wallHitCooldown: 0,
+    driftPenaltyTimer: 0,
+    driftEntryQuality: 'good',
+    driftFeedbackText: '',
+    driftFeedbackColor: '#00e5ff',
+    driftFeedbackTimer: 0,
+    lastDriftResult: 'none',
+    inShortcutZone: false,
+    shortcutFailedRecovering: false,
+    incomingAttackTimer: 0,
+    incomingAttackSource: null,
+    lapStartTimeMs: 0,
+    currentLapTimeSec: 0,
+    bestLapTimeSec: 0,
+    raceElapsedSec: 0,
 
     speed: 0,
     maxSpeed: 275,
@@ -2208,6 +2179,7 @@
     driftSlip: 0,
     driftChargeTime: 0,
     driftStage: 0,
+    exitBoostTier: 0,
 
     n2oGauge: 25,
     boostCount: 1,
@@ -2713,109 +2685,96 @@
     });
   }
 
-  // ==================== 8가지 테마별 굴절코스(S자 시케인·헤어핀·더블 코너) & 다이나믹 트랙 생성 ====================
+  // ==================== 대표 시그니처 서킷 완성: '선셋 캐니언 에어로 서킷' (3랩 · 4대 전략 섹터 · 안전 본선 vs 위험 고속 지름길) ====================
   const SEG_LEN = 100;
-  function buildTrack(trackId) {
+  function buildTrack(trackId = 0) {
     const segs = [];
-    const totalSegs = 420;
+    const totalSegs = 450;
 
     for (let i = 0; i < totalSegs; i++) {
       let curve = 0;
       let y = 0;
+      let zone = 'straight'; // 'straight' | 'drift_s' | 'ridge_split' | 'hairpin_finale'
+      let hasShortcut = false;
+      let shortcutMinX = -0.98;
+      let shortcutMaxX = -0.46;
+      let mainRoadMinX = -0.22;
 
-      if (trackId === 0) {
-        // 0. 마리오 버섯 왕국: 직각 코너 + 연속 S자 굴절 시케인 + 헤어핀 턴
-        if (i >= 24 && i < 56) curve = 2.35;
-        else if (i >= 68 && i < 94) curve = -2.55;
-        else if (i >= 94 && i < 120) curve = 2.65;
-        else if (i >= 152 && i < 194) curve = -3.05; // 깊게 꺾이는 버섯 헤어핀 굴절!
-        else if (i >= 230 && i < 258) curve = 2.45;
-        else if (i >= 262 && i < 292) curve = -2.50;
-        else if (i >= 326 && i < 368) curve = 2.85;
-        y = Math.sin(i * 0.065) * 140 + Math.cos(i * 0.035) * 60;
-      } else if (trackId === 1) {
-        // 1. 슈가 캔디 랜드: 롤러코스터 웨이브 & 4연속 지그재그 S자 굴절 코스
-        if (i >= 20 && i < 48) curve = -2.65;
-        else if (i >= 50 && i < 78) curve = 2.75;
-        else if (i >= 80 && i < 108) curve = -2.80;
-        else if (i >= 110 && i < 140) curve = 2.65;
-        else if (i >= 175 && i < 218) curve = -3.15;
-        else if (i >= 252 && i < 284) curve = 2.70;
-        else if (i >= 288 && i < 322) curve = -2.75;
-        else if (i >= 348 && i < 382) curve = 2.55;
-        y = Math.sin(i * 0.11) * 185 + Math.sin(i * 0.045) * 85;
-      } else if (trackId === 2) {
-        // 2. 돌핀 비치 아일랜드: 해안 곶 더블 에이펙스 코너 & 비치 시케인 굴절
-        if (i >= 26 && i < 66) curve = 2.40;
-        else if (i >= 76 && i < 112) curve = 2.95;
-        else if (i >= 145 && i < 176) curve = -2.85;
-        else if (i >= 180 && i < 212) curve = 2.80;
-        else if (i >= 248 && i < 292) curve = -3.10;
-        else if (i >= 325 && i < 368) curve = 2.55;
-        y = Math.sin(i * 0.055) * 120;
-      } else if (trackId === 3) {
-        // 3. 펭귄 아이스 밸리: 미끄러운 설원 급커브 헤어핀 & 연속 아이스 굴절 슬라럼
-        if (i >= 22 && i < 62) curve = -2.90;
-        else if (i >= 88 && i < 116) curve = 2.75;
-        else if (i >= 118 && i < 146) curve = -2.85;
-        else if (i >= 148 && i < 178) curve = 2.95;
-        else if (i >= 212 && i < 258) curve = -3.30; // 아이스 180도 헤어핀!
-        else if (i >= 292 && i < 332) curve = 2.85;
-        else if (i >= 345 && i < 378) curve = -2.60;
-        y = Math.cos(i * 0.048) * 260 + Math.sin(i * 0.09) * 70;
-      } else if (trackId === 4) {
-        // 4. 요시 공룡 정글: 정글 협곡 S자 와인딩 굴절 & 나무다리 급회전
-        if (i >= 24 && i < 58) curve = 2.75;
-        else if (i >= 62 && i < 96) curve = -2.95;
-        else if (i >= 126 && i < 168) curve = 3.20;
-        else if (i >= 198 && i < 228) curve = -2.70;
-        else if (i >= 232 && i < 264) curve = 2.80;
-        else if (i >= 296 && i < 338) curve = -3.15;
-        else if (i >= 352 && i < 382) curve = 2.45;
-        y = Math.sin(i * 0.13) * 165 + Math.cos(i * 0.06) * 110;
-      } else if (trackId === 5) {
-        // 5. 벚꽃 스프링 가든: 쉴 새 없이 좌우로 굽이치는 리드미컬 벚꽃 와인딩 굴절
-        curve = Math.sin(i * 0.075) * 2.85 + Math.cos(i * 0.038) * 0.65;
-        if (i < 16 || i > 392) curve = 0;
-        y = Math.sin(i * 0.07) * 140;
-      } else if (trackId === 6) {
-        // 6. 쿠파 용암 캐슬: 90도 직각 성곽 굴절 코너 & 용암 대교 스위치백
-        if (i >= 20 && i < 52) curve = 3.15;
-        else if (i >= 76 && i < 108) curve = -3.20;
-        else if (i >= 134 && i < 162) curve = 2.95;
-        else if (i >= 166 && i < 196) curve = -3.05;
-        else if (i >= 232 && i < 276) curve = 3.35;
-        else if (i >= 306 && i < 342) curve = -3.10;
-        else if (i >= 355 && i < 384) curve = 2.75;
-        y = Math.sin(i * 0.08) * 230;
+      // 4대 전략 구간 설계 (무작위 장애물 도배 금지, 구간마다 다른 판단과 조작 요구!)
+      if (i < 95) {
+        // [구간 1: 캐니언 브릿지 직선 추월 구간 (Seg 0 ~ 94)]
+        // - 초반 슬립스트림 추월 및 첫 코너 브레이킹/드리프트 진입 라인 선점 구간
+        zone = 'straight';
+        if (i >= 70 && i < 95) {
+          curve = 1.55; // 첫 코너 진입 리드인 스윕
+        } else {
+          curve = 0;
+        }
+        y = Math.sin(i * 0.066) * 48;
+      } else if (i < 215) {
+        // [구간 2: 더블 에이펙스 & 연속 S자 드리프트 협곡 (Seg 95 ~ 214)]
+        // - 우회전 딥코너(96~132) -> 짧은 직선 전환(133~141) -> 좌회전 스위치백(142~176) -> 우회전 에이펙스(184~212)
+        // - 드리프트 진입 각도, 유지 시간, 해제 타이밍에 따라 탈출 속도가 크게 벌어지는 핵심 테크니컬 섹터
+        zone = 'drift_s';
+        if (i >= 96 && i < 132) curve = 2.55;
+        else if (i >= 142 && i < 176) curve = -2.75;
+        else if (i >= 184 && i < 212) curve = 2.85;
+        else curve = 0;
+        y = 48 + Math.sin((i - 95) * 0.052) * 115;
+      } else if (i < 330) {
+        // [구간 3: 절벽 고저차 언덕 & 지름길 분기 구간 (Seg 215 ~ 329)]
+        // - 가파른 언덕 오르막(215~260, 최대 높이 +240) 후 협곡 내리막(261~329, 최저 -165)
+        // - Seg 246 ~ 308: 우측 넓은 안전 본선(x: -0.22 ~ +0.85) vs 좌측 좁고 빠른 인코스 협곡 데크 지름길(x: -0.98 ~ -0.46)
+        zone = 'ridge_split';
+        const p = (i - 215) / 115;
+        y = Math.sin(p * Math.PI * 2) * 225 + Math.cos(p * Math.PI) * 45;
+
+        if (i >= 246 && i <= 308) {
+          hasShortcut = true;
+          // 본선은 우측으로 완만하게 돌아 나가고, 좌측 인코스 데크 지름길은 안쪽 현(Chord)을 직선으로 가로지름
+          curve = 2.15;
+        } else if (i >= 220 && i < 246) {
+          curve = -1.45; // 언덕 진입 전 좌측 에이펙스 셋업
+        } else {
+          curve = 0.65; // 지름길 합류 완충 구간(309~329): 지름길 실패 차량도 안전하게 본선으로 합류
+        }
       } else {
-        // 7. 레인보우 스타 로드: 우주 하이퍼 S-시케인 & 스타 헤어핀 굴절
-        if (i >= 20 && i < 54) curve = -3.05;
-        else if (i >= 58 && i < 92) curve = 3.15;
-        else if (i >= 122 && i < 166) curve = -3.35;
-        else if (i >= 198 && i < 230) curve = 2.95;
-        else if (i >= 234 && i < 268) curve = -3.05;
-        else if (i >= 302 && i < 346) curve = 3.25;
-        else if (i >= 358 && i < 386) curve = -2.75;
-        y = Math.sin(i * 0.09) * 250;
+        // [구간 4: 선셋 헤어핀 & 피날레 홈 스트레이트 (Seg 330 ~ 449)]
+        // - 고속 내리막 끝에 위치한 180도 급커브 좌회전 헤어핀(336~378, curve = -3.15)
+        // - 이후 결승선까지 이어지는 홈 스트레이트(379~449)에서 탈출 부스트와 아이템 심리전으로 최종 순위 결정!
+        zone = 'hairpin_finale';
+        if (i >= 336 && i < 378) {
+          curve = -3.15;
+        } else if (i >= 378 && i < 392) {
+          curve = 0.55; // 헤어핀 탈출 카운터 안정화
+        } else {
+          curve = 0;
+        }
+        const hp = (i - 330) / 120;
+        y = -Math.sin(hp * Math.PI) * 110;
       }
 
       const seg = {
         index: i,
+        zone,
         curve,
         y,
+        hasShortcut,
+        shortcutMinX,
+        shortcutMaxX,
+        mainRoadMinX,
         items: [],
         scenery: []
       };
 
-      // 굴절 코너 바깥쪽에 방향을 알려주는 갈매기 유도 표지판(Chevron Sign) 배치
-      if (Math.abs(curve) >= 2.15 && i % 2 === 0) {
-        seg.chevronSign = curve > 0 ? -1 : 1; // 우회전(curve>0)이면 왼쪽 바깥(-1), 좌회전(curve<0)이면 오른쪽 바깥(+1)에 유도 표지판 설치
+      // 코너 바깥쪽에 방향을 미리 읽을 수 있는 에어로 셰브론(갈매기 유도 표지판) 배치
+      if (Math.abs(curve) >= 2.0 && i % 2 === 0) {
+        seg.chevronSign = curve > 0 ? -1 : 1;
       }
 
-      // 1) 아기자기한 3D 선물 캡슐 아이템 박스 (흔들리지 않게 고정 배치)
-      if (i > 20 && i % 42 === 0) {
-        [-0.56, -0.18, 0.18, 0.56].forEach((ox, idx) => {
+      // 1) 전략적 아이템 캡슐 배치 (직선 추월 전 Seg 28, S자 코너 진입 전 Seg 88, 지름길 분기 전 Seg 228, 헤어핀 직전 Seg 324)
+      if (i === 28 || i === 88 || i === 168 || i === 228 || i === 324 || i === 395) {
+        [-0.54, -0.18, 0.18, 0.54].forEach((ox, idx) => {
           seg.items.push({
             type: 'itemBox',
             x: ox,
@@ -2826,58 +2785,59 @@
           });
         });
       }
-      // 2) 구름 무지개 점프대 (Jump Ramp) - 한 바퀴에 3곳만 전략적으로 배치!
-      else if (i > 55 && i % 125 === 80) {
-        seg.items.push({ type: 'jumpRamp', x: 0, takenTimer: 0 });
-        seg.items.push({ type: 'coin', x: -0.46, takenTimer: 0 });
-        seg.items.push({ type: 'coin', x: 0.46, takenTimer: 0 });
-      }
-      // 3) 별빛 대시 부스터 패드 (Dash Pad) - 부스터 남발 방지를 위해 한 바퀴에 딱 2곳(긴 직선 구간)만 배치!
-      else if (i > 60 && i % 185 === 95) {
-        const side = (i % 370 === 95) ? -0.36 : 0.36;
-        seg.items.push({ type: 'dashPad', x: side, takenTimer: 0 });
-      }
-      // 4) 슈퍼마리오 카트 코스별 시그니처 기믹 & 장애물 배치!
-      else if (i > 30 && i % 28 === 14) {
-        const sideX = Math.sin(i * 0.85 + trackId) * 0.52;
-        if (trackId === 0) {
-          // 마리오 서킷: 초록 토관 슬라럼 & 서킷 오일 웅덩이
-          seg.items.push({ type: (i % 56 === 14) ? 'pipe' : 'oilSlick', x: sideX, takenTimer: 0 });
-        } else if (trackId === 1) {
-          // 도넛 평원·초코섬: 끈적한 초코 진흙 웅덩이 & 바나나
-          seg.items.push({ type: 'oilSlick', x: sideX * 0.85, takenTimer: 0 });
-        } else if (trackId === 2) {
-          // 엉금엉금 비치: 좌우로 옆걸음질 치는 해변 꽃게(crab)
-          seg.items.push({ type: 'crab', x: sideX, baseX: sideX, phase: i * 0.4, takenTimer: 0 });
-        } else if (trackId === 3) {
-          // 바닐라 아이스 레이크: 부딪히면 튕겨나는 얼음 블록(iceBlock)
-          seg.items.push({ type: 'iceBlock', x: sideX, takenTimer: 0 });
-        } else if (trackId === 4) {
-          // 요시 밸리·디노 정글: 도로 위를 데구르르 굴러다니는 거대 요시 알(yoshiEgg)
-          seg.items.push({ type: 'yoshiEgg', x: sideX, baseX: sideX, phase: i * 0.5, takenTimer: 0 });
-        } else if (trackId === 5) {
-          // 피치 로얄 가든: 정원 미로 시케인 토관 화단 & 바나나
-          seg.items.push({ type: (i % 56 === 14) ? 'pipe' : 'banana', x: (i % 56 === 14) ? (i % 112 === 14 ? -0.42 : 0.42) : sideX, takenTimer: 0 });
-        } else if (trackId === 6 || trackId === 7) {
-          // 쿠파 성 & 무지개 로드: 위아래로 쿵쾅거리며 내려찍는 마리오카트 명물 쿵쿵이(thwomp)!
-          seg.items.push({ type: 'thwomp', x: sideX * 0.75, phase: i * 0.65, takenTimer: 0 });
-        }
-      }
-      // 5) 별 코인 라인
-      else if (i > 8 && i % 8 === 0) {
-        const lane = Math.sin(i * 0.22 + trackId) * 0.50;
-        seg.items.push({ type: 'coin', x: lane, takenTimer: 0 });
+
+      // 2) 고저차 언덕 정상 점프 램프 (Seg 236: 본선 우측 크레스트 점프대)
+      if (i === 236) {
+        seg.items.push({ type: 'jumpRamp', x: 0.24, takenTimer: 0 });
       }
 
-      // 풍성하고 입체적인 다층(기슭 근경 + 들판 중경 + 언덕 원경) 자연 생태계 오브젝트 배치!
+      // 3) 대시 패드 배치:
+      // - 직선 추월 구간 중앙(Seg 52)
+      // - 위험하지만 빠른 좌측 지름길 데크 내부 연속 2곳(Seg 258, Seg 286, x = -0.72) -> 지름길 성공 시 폭발적 단축 보상!
+      // - 피날레 홈 스트레이트 인코스(Seg 408, x = -0.32)
+      if (i === 52) {
+        seg.items.push({ type: 'dashPad', x: 0.0, takenTimer: 0 });
+      } else if (i === 258 || i === 286) {
+        seg.items.push({ type: 'dashPad', x: -0.72, takenTimer: 0 });
+      } else if (i === 408) {
+        seg.items.push({ type: 'dashPad', x: -0.32, takenTimer: 0 });
+      }
+
+      // 4) 구간별 의도된 장애물 배치 (무작위 스팸 제거! 회피 라인과 위험/보상 판단이 분명한 지점에만 배치)
+      // - 지름길 경계 암석 파일런 (Seg 266, Seg 294, x = -0.40): 지름길 진입/유지 정밀도를 요구하는 위험 요소
+      // - 연속 드리프트 구간 아웃코스 슬립 존 (Seg 120: x = -0.52, Seg 162: x = 0.52): 드리프트 실패로 바깥으로 밀릴 때만 밟게 되는 페널티 존
+      // - 헤어핀 바깥쪽 협곡 낙석 바리케이드 (Seg 358: x = 0.54)
+      if (i === 120) {
+        seg.items.push({ type: 'oilSlick', x: -0.54, takenTimer: 0 });
+      } else if (i === 162) {
+        seg.items.push({ type: 'oilSlick', x: 0.54, takenTimer: 0 });
+      } else if (i === 266 || i === 294) {
+        seg.items.push({ type: 'canyonRock', x: -0.40, takenTimer: 0 });
+      } else if (i === 358) {
+        seg.items.push({ type: 'canyonRock', x: 0.56, takenTimer: 0 });
+      }
+
+      // 5) 이상적인 에이펙스 주행 라인을 안내하는 에너지 코인 가이드 라인
+      if (i >= 100 && i <= 128 && i % 7 === 0) {
+        seg.items.push({ type: 'coin', x: 0.44, takenTimer: 0 }); // 우코너 인코스 가이드
+      } else if (i >= 146 && i <= 172 && i % 7 === 0) {
+        seg.items.push({ type: 'coin', x: -0.44, takenTimer: 0 }); // 좌코너 인코스 가이드
+      } else if (i >= 252 && i <= 300 && i % 8 === 0) {
+        seg.items.push({ type: 'coin', x: -0.72, takenTimer: 0 }); // 지름길 데크 정중앙 가이드
+      } else if (i >= 342 && i <= 372 && i % 7 === 0) {
+        seg.items.push({ type: 'coin', x: -0.48, takenTimer: 0 }); // 헤어핀 인코스 가이드
+      }
+
+      // 구간별 실루엣이 뚜렷한 자연/협곡 프롭 배치 (도로 시야를 가리지 않도록 오프셋 확보)
       if (i % 2 === 0) {
-        const organicLeft = -1.26 - Math.abs(Math.sin(i * 0.73)) * 0.48;
-        const organicRight = 1.26 + Math.abs(Math.cos(i * 0.67)) * 0.48;
-        seg.scenery.push({ side: -1, offset: organicLeft, variant: i % 4, scaleMult: 0.96 + (i % 3) * 0.12 });
-        seg.scenery.push({ side: 1, offset: organicRight, variant: (i + 1) % 4, scaleMult: 0.96 + ((i + 1) % 3) * 0.12 });
+        const leftBase = hasShortcut ? -1.48 : -1.28;
+        const organicLeft = leftBase - Math.abs(Math.sin(i * 0.73)) * 0.44;
+        const organicRight = 1.28 + Math.abs(Math.cos(i * 0.67)) * 0.44;
+        seg.scenery.push({ side: -1, offset: organicLeft, variant: i % 4, zone, scaleMult: 0.96 + (i % 3) * 0.12 });
+        seg.scenery.push({ side: 1, offset: organicRight, variant: (i + 1) % 4, zone, scaleMult: 0.96 + ((i + 1) % 3) * 0.12 });
         if (i % 4 === 0) {
-          seg.scenery.push({ side: -1, offset: -2.18 - Math.abs(Math.cos(i * 0.41)) * 0.55, variant: (i + 2) % 4, scaleMult: 1.42 });
-          seg.scenery.push({ side: 1, offset: 2.18 + Math.abs(Math.sin(i * 0.53)) * 0.55, variant: (i + 3) % 4, scaleMult: 1.42 });
+          seg.scenery.push({ side: -1, offset: -2.25 - Math.abs(Math.cos(i * 0.41)) * 0.55, variant: (i + 2) % 4, zone, scaleMult: 1.45 });
+          seg.scenery.push({ side: 1, offset: 2.25 + Math.abs(Math.sin(i * 0.53)) * 0.55, variant: (i + 3) % 4, zone, scaleMult: 1.45 });
         }
       }
 
@@ -2888,73 +2848,212 @@
     state.trackLength = segs.length * SEG_LEN;
   }
 
-  // ==================== 직관적인 핸들(Steering Wheel) 1:1 조향 & 카트라이더 정통 드리프트 컨트롤 ====================
+  // ==================== 직관적인 핸들(Steering Wheel) 1:1 조향 & 진입각·유지시간·해제타이밍 기반 스킬 드리프트 ====================
   let wheelTouchId = null;
   let lastSteerTime = performance.now();
 
-  // 카트라이더식 드리프트 진입: 핸들을 깊게 꺾거나(|steer| >= 0.54) 빠르게 꺾을 때 언제 어디서나 즉시 드리프트 슬라이딩 시작!
+  function showDrivingFeedback(text, color = '#00e5ff', duration = 0.85) {
+    state.driftFeedbackText = text;
+    state.driftFeedbackColor = color;
+    state.driftFeedbackTimer = duration;
+  }
+
+  // 현재 세그먼트 및 전방 코너 곡률을 분석해 드리프트 진입 각도 품질('perfect' | 'good' | 'bad_angle') 판정
+  function evaluateDriftEntry(dir) {
+    if (!state.segments || !state.segments.length) return 'good';
+    const segIdx = Math.floor(Math.max(0, state.posZ) / SEG_LEN) % state.segments.length;
+    const s0 = state.segments[segIdx];
+    const s2 = state.segments[(segIdx + 2) % state.segments.length];
+    const s4 = state.segments[(segIdx + 4) % state.segments.length];
+    const s6 = state.segments[(segIdx + 6) % state.segments.length];
+
+    // 현재 세그먼트 및 전방 6세그먼트 내에서 조향 방향(dir)과 일치하는 코너 곡률 우선 선택
+    const candidates = [s0.curve, s2.curve, s4.curve, s6.curve];
+    let cornerCurve = s0.curve;
+    for (let i = 0; i < candidates.length; i++) {
+      const c = candidates[i];
+      if ((dir * c) > 0 && Math.abs(c) >= Math.abs(cornerCurve)) {
+        cornerCurve = c;
+      }
+    }
+    if (Math.abs(cornerCurve) < 0.75) {
+      for (let i = 0; i < candidates.length; i++) {
+        if (Math.abs(candidates[i]) > Math.abs(cornerCurve)) {
+          cornerCurve = candidates[i];
+        }
+      }
+    }
+
+    const absCurve = Math.abs(cornerCurve);
+    const aligned = (dir * cornerCurve) > 0;
+    const steerMag = Math.max(Math.abs(state.steerInput), Math.abs(state.smoothSteer));
+
+    // 직선 구간(곡률 < 0.75)에서 억지 드리프트하거나 코너 반대 방향으로 꺾은 경우 -> 'bad_angle'
+    if (absCurve < 0.75 || (absCurve >= 0.95 && !aligned)) {
+      return 'bad_angle';
+    }
+    // 코너 방향과 일치하고 진입 조향각이 깊으며 속도가 충분할 때 -> 'perfect' 또는 'good'
+    if (absCurve >= 1.55 && steerMag >= 0.52 && state.speed >= state.maxSpeed * 0.58) {
+      return 'perfect';
+    }
+    return 'good';
+  }
+
+  // 노면 상태 판별: 일반 포장 도로('paved') / 협곡 지름길 데크('shortcut') / 오프로드 갓길('offroad')
+  function getSurfaceState(seg, xPos) {
+    if (seg && seg.hasShortcut && xPos >= seg.shortcutMinX && xPos <= seg.shortcutMaxX) {
+      return {
+        type: 'shortcut',
+        terrainMult: 1.09,
+        grip: 8.6,
+        leftLimit: -1.16,
+        rightLimit: 1.02
+      };
+    }
+    // 지름길 구간에서 지름길 데크와 본선 사이의 자갈 분리대(-0.46 ~ -0.26) 또는 도로 바깥(|x| > 0.84)
+    const inSplitRough = seg && seg.hasShortcut && xPos > seg.shortcutMaxX && xPos < seg.mainRoadMinX;
+    const isOutsideRoad = Math.abs(xPos) > 0.84;
+    if (inSplitRough || isOutsideRoad) {
+      return {
+        type: 'offroad',
+        terrainMult: inSplitRough ? 0.68 : 0.62,
+        grip: 4.6,
+        leftLimit: seg && seg.hasShortcut ? -1.16 : -1.04,
+        rightLimit: 1.04
+      };
+    }
+    return {
+      type: 'paved',
+      terrainMult: 1.0,
+      grip: 9.6,
+      leftLimit: seg && seg.hasShortcut ? -1.16 : -1.04,
+      rightLimit: 1.04
+    };
+  }
+
+  // 드리프트 진입: 진입 각도, 속도, 코너 방향을 평가하여 드리프트 시작
   function engageKartRiderDrift(dir) {
-    if (state.mode !== 'racing' || state.speed < state.maxSpeed * 0.30) return;
+    if (state.mode !== 'racing' || state.speed < state.maxSpeed * 0.36) return;
+    if (state.driftPenaltyTimer > 0.15) return;
     const d = dir || Math.sign(state.steerInput) || 1;
     if (!state.driftActive) {
       state.driftActive = true;
       state.driftDir = d;
       state.driftChargeTime = 0;
       state.driftStage = 1;
+      state.driftEntryQuality = evaluateDriftEntry(d);
       if (state.playerY <= 2) {
-        state.velY = 145;
+        state.velY = 95;
       }
       sfx.playDriftScreech();
-      vibrateDevice(28);
-    } else if (state.driftDir !== d && Math.abs(state.steerInput) >= 0.68) {
-      // 연속 S자 커브에서 반대 방향으로 핸들을 끝까지 꺾으면 카트라이더 '연타/트위스트 드리프트'로 즉시 전환!
+      vibrateDevice(25);
+    } else if (state.driftDir !== d && Math.abs(state.steerInput) >= 0.66) {
+      // 연속 S자 코너 전환(트위스트 드리프트): 이전 드리프트 해제 판정 후 반대 방향 드리프트 진입
       finishKartRiderDrift(true);
       state.driftActive = true;
       state.driftDir = d;
-      state.driftChargeTime = 0.15;
+      state.driftChargeTime = 0.08;
       state.driftStage = 1;
+      state.driftEntryQuality = evaluateDriftEntry(d);
       sfx.playDriftScreech();
-      vibrateDevice(28);
+      vibrateDevice(25);
     }
   }
 
-  // 카트라이더식 드리프트 탈출 & '순간 부스터(순부)' 점화!
+  // 드리프트 해제: 진입 각도(driftEntryQuality) + 유지 시간(driftChargeTime) + 해제 타이밍에 따라 성공(부스트) vs 실패(감속·라인 밀림) 차등 적용!
   function finishKartRiderDrift(silentTransition = false) {
     if (!state.driftActive) return;
-    const stage = state.driftStage;
     const chargedTime = state.driftChargeTime;
+    const entryQuality = state.driftEntryQuality || 'good';
+    const dDir = state.driftDir || 1;
+
     state.driftActive = false;
     state.driftChargeTime = 0;
     state.driftStage = 0;
     driftBtn.classList.remove('pressed');
-    driftStageBadge.style.display = 'none';
 
-    // 드리프트 끌기 시간에 비례해 카트라이더 N2O 부스터 게이지 대폭 충전 (최대 2개까지 부스터 토큰 스택!)
-    if (chargedTime > 0.22) {
-      const gainGauge = stage === 3 ? 42 : (stage === 2 ? 26 : 14);
-      state.n2oGauge += gainGauge;
-      while (state.n2oGauge >= 100) {
-        if (state.boostCount < 2) {
-          state.boostCount++;
-          state.n2oGauge -= 100;
-          sfx.playCoin();
-        } else {
-          state.n2oGauge = 100;
-          break;
-        }
+    // 아주 짧은 터치 스침(< 0.14s)은 무시
+    if (chargedTime < 0.14) {
+      driftStageBadge.style.display = 'none';
+      updateBoostUI();
+      return;
+    }
+
+    // [실패 1] 오버 드리프트 (1.45초 초과 유지): 타이어 과열로 속도 손실(-22%) 및 바깥쪽으로 크게 라인 밀림
+    if (chargedTime > 1.45) {
+      state.lastDriftResult = 'fail_over';
+      state.speed *= 0.78;
+      state.velX += -dDir * 0.88;
+      state.driftPenaltyTimer = 0.55;
+      state.exitBoostTier = 0;
+      showDrivingFeedback('⚠️ 오버 드리프트! 속도 손실', '#ff5252', 0.95);
+      sfx.playHop();
+      vibrateDevice(55);
+      updateBoostUI();
+      return;
+    }
+
+    // [실패 2] 진입 각도 불량 (직선에서 억지 드리프트 또는 코너 역방향 진입): 부스트 없음 + 속도 손실(-15%) + 주행 라인 벌어짐
+    if (entryQuality === 'bad_angle' && chargedTime >= 0.22) {
+      state.lastDriftResult = 'fail_angle';
+      state.speed *= 0.85;
+      state.velX += -dDir * 0.62;
+      state.driftPenaltyTimer = 0.38;
+      state.exitBoostTier = 0;
+      showDrivingFeedback('⚠️ 진입각 불량! 라인 밀림', '#ffab40', 0.85);
+      sfx.playHop();
+      vibrateDevice(40);
+      updateBoostUI();
+      return;
+    }
+
+    // [실패 3] 너무 이른 해제 (0.14초 ~ 0.42초 미만): 충전 미달로 부스트 불발 + 약한 감속(-11%) + 언더스티어 밀림
+    if (chargedTime < 0.42) {
+      state.lastDriftResult = 'fail_early';
+      if (!silentTransition) {
+        state.speed *= 0.89;
+        state.velX += -dDir * 0.44;
+        state.exitBoostTier = 0;
+        showDrivingFeedback('💨 드리프트 부족 (조기 해제)', '#ffd740', 0.75);
+      }
+      updateBoostUI();
+      return;
+    }
+
+    // [성공!] 코너 진입각이 맞고 적정 유지 시간(0.42s ~ 1.45s)에 해제한 경우:
+    // - PERFECT 타이밍 (0.82s ~ 1.42s 또는 퍼펙트 진입각): 강한 탈출 부스트(0.74초) + N2O 게이지 +38% + 에이펙스 라인 정렬
+    // - GOOD 타이밍 (0.42s ~ 0.82s): 짧은 탈출 부스트(0.48초) + N2O 게이지 +24%
+    const isPerfect = (chargedTime >= 0.82 && chargedTime <= 1.42) || (entryQuality === 'perfect' && chargedTime >= 0.62);
+    const gainGauge = isPerfect ? 38 : 24;
+    state.n2oGauge += gainGauge;
+    while (state.n2oGauge >= 100) {
+      if (state.boostCount < 2) {
+        state.boostCount++;
+        state.n2oGauge -= 100;
+        sfx.playCoin();
+      } else {
+        state.n2oGauge = 100;
+        break;
       }
     }
 
-    // 카트라이더 시그니처 '순간 부스터(Instant Boost / 순부)': 드리프트 후 핸들을 반대/중앙으로 풀면 즉시 짧은 순부 점화!
-    if (!silentTransition && chargedTime >= 0.36) {
-      const isSuperInstant = stage >= 3;
-      const instantDur = isSuperInstant ? 0.78 : (stage >= 2 ? 0.54 : 0.36);
+    if (!silentTransition) {
+      const instantDur = isPerfect ? 0.74 : 0.48;
+      state.exitBoostTier = isPerfect ? 2 : 1;
+      state.lastDriftResult = isPerfect ? 'perfect' : 'good';
       state.boostTimer = Math.max(state.boostTimer, instantDur);
-      state.instantBoostWindow = 0.65;
-      spawnBoostShockwave(isSuperInstant);
-      sfx.playBoost(isSuperInstant);
-      vibrateDevice(isSuperInstant ? 55 : 35);
-      spawnBoostParticles(stage * 7 + 6);
+      state.instantBoostWindow = 0.60;
+      // 성공적인 드리프트 탈출 시 바깥쪽 미끄러짐을 잡아주어 코너 탈출 가속 라인이 날카롭게 이어짐
+      state.velX *= 0.45;
+      showDrivingFeedback(
+        isPerfect ? '⚡ PERFECT DRIFT! 클린 탈출 가속!' : '✨ GOOD DRIFT! 코너 탈출 부스트!',
+        isPerfect ? '#00e5ff' : '#69f0ae',
+        0.90
+      );
+      spawnBoostShockwave(isPerfect);
+      sfx.playBoost(isPerfect);
+      vibrateDevice(isPerfect ? 55 : 35);
+      spawnBoostParticles(isPerfect ? 22 : 14);
     }
     updateBoostUI();
   }
@@ -3146,53 +3245,52 @@
     const item = state.heldItem;
     state.heldItem = null;
     updateItemUI();
-    vibrateDevice(90);
-    speakKR(item.voice, true);
+    vibrateDevice(70);
 
-    if (item.id === 'star') {
-      state.starTimer = 4.5;
-      state.boostTimer = 1.25;
+    const segIdxNow = state.segments.length ? (Math.floor(Math.max(0, state.posZ) / SEG_LEN) % state.segments.length) : 0;
+    const curSegNow = state.segments[segIdxNow] || { curve: 0, hasShortcut: false };
+
+    if (item.id === 'turbo') {
+      // [아이템 1: 가속 - ⚡ 터보 셀]
+      // 바로 쓰면 기본 1.18초 가속이지만, 지름길 분기 구간(hasShortcut)이나 코너 탈출 직후에 아껴 쓰면 1.52초 오프로드 무시 슈퍼 가속 + N2O 보너스!
+      const isTacticalSpot = Boolean(curSegNow.hasShortcut || Math.abs(state.playerX) > 0.78 || state.instantBoostWindow > 0);
+      state.boostTimer = isTacticalSpot ? 1.52 : 1.18;
+      state.exitBoostTier = isTacticalSpot ? 2 : 1;
+      if (isTacticalSpot) {
+        state.n2oGauge = Math.min(100, state.n2oGauge + 25);
+        showDrivingFeedback('⚡ 전술 터보 셀! 지름길·탈출 슈퍼가속!', '#00e5ff', 1.0);
+      } else {
+        showDrivingFeedback('⚡ 터보 셀 가속 발동!', '#00e5ff', 0.8);
+      }
       spawnBoostShockwave(true);
       sfx.playBoost(true);
-    } else if (item.id === 'mushroom') {
-      state.megaTimer = 4.2;
-      state.boostTimer = 1.15;
-      if (state.playerY <= 2) state.velY = 230;
-      spawnBoostShockwave(true);
-      sfx.playBoost(true);
-    } else if (item.id === 'bullet') {
-      state.bulletTimer = 3.8;
-      state.ufoTimer = 3.8;
-      state.boostTimer = 1.3;
-      spawnBoostShockwave(true);
-      sfx.playBoost(true);
-    } else if (item.id === 'shell') {
+    } else if (item.id === 'bolt') {
+      // [아이템 2: 공격 - 🎯 쇼크 볼트]
+      // 전방 타겟을 추적하는 전자기 볼트 발사 (직선 추월 구간이나 앞차 코너 탈출 타이밍에 맞추면 명중률 극대화!)
       sfx.playShellShoot();
       state.projectiles.push({
-        type: 'shell',
+        type: 'bolt',
         z: state.posZ + 70,
         x: state.playerX,
-        speed: state.maxSpeed * 1.95 + 180,
-        life: 3.5
+        speed: state.maxSpeed * 2.05 + 190,
+        life: 3.2
       });
-    } else if (item.id === 'lightning') {
-      state.lightningTimer = 4.5;
-      state.boostTimer = 1.0;
-      spawnBoostShockwave(true);
-      sfx.playShellHit();
-      state.rivals.forEach(r => {
-        r.shrinkTimer = 5.0;
-        r.spinTimer = 1.1;
-      });
-    } else if (item.id === 'banana') {
-      sfx.playHop();
-      const dropSegIdx = Math.floor(Math.max(0, state.posZ - 90) / SEG_LEN) % state.segments.length;
-      state.segments[dropSegIdx].items.push({ type: 'banana', x: state.playerX, takenTimer: 0 });
-      state.rivals.forEach(r => {
-        if (r.z < state.posZ && state.posZ - r.z < 380) {
-          r.spinTimer = 1.6;
-        }
-      });
+      showDrivingFeedback('🎯 쇼크 볼트 발사! 전방 추격!', '#ff5252', 0.85);
+    } else if (item.id === 'shield') {
+      // [아이템 3: 방어 - 🛡️ 에너지 실드]
+      // 4.0초간 전자기 방어막 전개 — 후방 공격 경보(⚠️)가 떴을 때 맞춰 쓰면 즉시 카운터 부스트 발동!
+      state.shieldTimer = 4.0;
+      if (state.incomingAttackTimer > 0) {
+        state.incomingAttackTimer = 0;
+        state.boostTimer = Math.max(state.boostTimer, 0.80);
+        state.exitBoostTier = 2;
+        spawnBoostShockwave(true);
+        sfx.playBoost(true);
+        showDrivingFeedback('🛡️ 퍼펙트 실드 반격! 카운터 부스트!', '#69f0ae', 1.1);
+      } else {
+        sfx.playItemRouletteLock();
+        showDrivingFeedback('🛡️ 에너지 실드 전개 (4.0초 방어)', '#69f0ae', 0.9);
+      }
     }
     spawnBoostParticles(18);
   }
@@ -3431,6 +3529,7 @@
     state.n2oGauge = 35;
     state.boostCount = 0;
     state.boostTimer = 0;
+    state.exitBoostTier = 0;
     state.boostVisual = 0;
     state.boostFlash = 0;
     state.starTimer = 0;
@@ -3439,6 +3538,16 @@
     state.ufoTimer = 0;
     state.shieldTimer = 0;
     state.lightningTimer = 0;
+    state.hitImmunityTimer = 0;
+    state.wallHitCooldown = 0;
+    state.driftPenaltyTimer = 0;
+    state.driftFeedbackText = '';
+    state.driftFeedbackTimer = 0;
+    state.incomingAttackTimer = 0;
+    state.incomingAttackSource = null;
+    state.raceElapsedSec = 0;
+    state.currentLapTimeSec = 0;
+    state.bestLapTimeSec = 0;
     state.rouletteTimer = 0;
     state.heldItem = null;
     state.coins = 0;
@@ -3453,8 +3562,8 @@
     driftStageBadge.style.display = 'none';
 
     const otherRacers = RACERS.filter((_, idx) => idx !== state.selectedRacer);
-    const startOffsetsZ = [-130, -55, 110, 240, 390];
-    const startLanes = [-0.54, 0.52, -0.30, 0.42, 0.06];
+    const startOffsetsZ = [-95, -40, 65, 145, 230];
+    const startLanes = [-0.52, 0.48, -0.28, 0.38, 0.04];
 
     rivalDotsContainer.innerHTML = '';
     state.rivals = otherRacers.map((rc, i) => {
@@ -3463,8 +3572,15 @@
       dot.style.background = rc.primary;
       rivalDotsContainer.appendChild(dot);
 
+      // 공격형(Aggressive: 3대) vs 안정형(Stable: 2대) 성향 분리
+      const persona = (i % 2 === 0) ? 'aggressive' : 'stable';
+      // 순간이동·무제한 가속 없이 고유 실력 편차(0.915 ~ 0.975)로 실제 주행 경쟁
+      const basePace = 0.915 + i * 0.015;
+
       return {
         racer: rc,
+        persona,
+        basePace,
         z: Math.max(0, startOffsetsZ[i]),
         x: startLanes[i],
         velX: 0,
@@ -3473,14 +3589,17 @@
         y: 0,
         velY: 0,
         preferredLane: startLanes[i],
-        laneTimer: 1.5 + i * 0.6,
-        speed: state.maxSpeed * 0.88,
-        surgePhase: i * 1.25,
-        surgeFreq: 0.48 + (i % 3) * 0.16,
-        baseBandOffset: -90 + i * 145,
+        laneTimer: 1.4 + i * 0.5,
+        speed: state.maxSpeed * 0.86,
         boostVisualTimer: 0,
         spinTimer: 0,
         shrinkTimer: 0,
+        shieldTimer: 0,
+        mistakeTimer: 0,
+        recoverTimer: 0,
+        mistakeCooldown: 4.0 + i * 1.5,
+        attackCooldown: 5.5 + i * 1.8,
+        takeShortcut: persona === 'aggressive' && (i >= 2),
         passSoundCooldown: 0,
         wasAhead: startOffsetsZ[i] > 0,
         dotEl: dot
@@ -3558,38 +3677,48 @@
       }
       if (state.rouletteTimer <= 0) {
         state.rouletteTimer = 0;
+        // 순위 및 전술 상황에 맞춘 3종 아이템(터보 셀 · 쇼크 볼트 · 에너지 실드) 배분
         let pool = ITEMS;
-        if (state.rank >= 3 && Math.random() < 0.65) {
-          pool = [ITEMS[0], ITEMS[1], ITEMS[2], ITEMS[3]];
+        if (state.incomingAttackTimer > 0) {
+          pool = [ITEMS[2], ITEMS[2], ITEMS[0]]; // 후방 공격 접근 시 방어 실드 확률 상승
+        } else if (state.rank === 1) {
+          pool = [ITEMS[2], ITEMS[0], ITEMS[2], ITEMS[1]]; // 선두권은 방어(실드)와 가속(터보) 중심
+        } else if (state.rank >= 4) {
+          pool = [ITEMS[0], ITEMS[0], ITEMS[1], ITEMS[2]]; // 추격권은 가속(터보)과 공격(쇼크 볼트) 중심
         }
-        const picked = pool[Math.floor(Math.random() * pool.length)];
+        const picked = pool[Math.floor(Math.random() * pool.length)] || ITEMS[0];
         state.heldItem = picked;
         updateItemUI();
         sfx.playItemRouletteLock();
+        showDrivingFeedback(`${picked.icon} ${picked.name} 획득!`, picked.color || '#ffea00', 0.85);
       }
     }
 
-    // 3. 핸들 입력 업데이트 (1:1 직관적 반응 & 키보드/자이로 카트라이더 드리프트 연동)
+    // 3. 핸들 입력 업데이트 (1:1 직관적 반응 & 키보드/터치/자이로 스킬 드리프트 연동)
+    const driftKeyHeld = Boolean(
+      keys['ShiftLeft'] || keys['ShiftRight'] || keys['KeyX'] || keys['Space'] ||
+      (driftBtn && driftBtn.classList && driftBtn.classList.contains('pressed'))
+    );
     if (keys['ArrowLeft'] || keys['KeyA']) {
-      state.steerInput = -0.88;
-      if (keys['ShiftLeft'] || keys['KeyX'] || Math.abs(state.smoothSteer) > 0.52) {
+      state.steerInput = -0.85;
+      if (driftKeyHeld) {
         engageKartRiderDrift(-1);
       }
     } else if (keys['ArrowRight'] || keys['KeyD']) {
-      state.steerInput = 0.88;
-      if (keys['ShiftLeft'] || keys['KeyX'] || Math.abs(state.smoothSteer) > 0.52) {
+      state.steerInput = 0.85;
+      if (driftKeyHeld) {
         engageKartRiderDrift(1);
       }
-    } else if (wheelTouchId === null && !mouseWheelDown) {
+    } else if (wheelTouchId === null && !mouseWheelDown && !state.testControlActive) {
       if (state.tiltSteer) {
         const tilt = getNativeTilt();
         state.steerInput = Math.max(-1, Math.min(1, tilt));
-        if (Math.abs(state.steerInput) >= 0.56) engageKartRiderDrift(Math.sign(state.steerInput));
-        else if (state.driftActive && Math.abs(state.steerInput) < 0.22) finishKartRiderDrift(false);
+        if (Math.abs(state.steerInput) >= 0.62) engageKartRiderDrift(Math.sign(state.steerInput));
+        else if (state.driftActive && Math.abs(state.steerInput) < 0.25 && !driftKeyHeld) finishKartRiderDrift(false);
       } else {
         state.steerInput *= Math.pow(0.015, dt);
         if (Math.abs(state.steerInput) < 0.01) state.steerInput = 0;
-        if (state.driftActive && !keys['ShiftLeft'] && !keys['KeyX']) {
+        if (state.driftActive && !driftKeyHeld && !state.autoFlickDrift) {
           finishKartRiderDrift(false);
         }
       }
@@ -3601,6 +3730,7 @@
 
     // 4. 타이머 업데이트 & 슈퍼부스터 화면 워프/충격파 이펙트 보간
     if (state.boostTimer > 0) state.boostTimer = Math.max(0, state.boostTimer - dt);
+    else state.exitBoostTier = 0;
     if (state.instantBoostWindow > 0) state.instantBoostWindow = Math.max(0, state.instantBoostWindow - dt);
     if (state.starTimer > 0) state.starTimer = Math.max(0, state.starTimer - dt);
     if (state.megaTimer > 0) state.megaTimer = Math.max(0, state.megaTimer - dt);
@@ -3609,34 +3739,58 @@
     if (state.shieldTimer > 0) state.shieldTimer = Math.max(0, state.shieldTimer - dt);
     if (state.lightningTimer > 0) state.lightningTimer = Math.max(0, state.lightningTimer - dt);
     if (state.spinTimer > 0) state.spinTimer = Math.max(0, state.spinTimer - dt);
+    if (state.hitImmunityTimer > 0) state.hitImmunityTimer = Math.max(0, state.hitImmunityTimer - dt);
+    if (state.wallHitCooldown > 0) state.wallHitCooldown = Math.max(0, state.wallHitCooldown - dt);
+    if (state.driftPenaltyTimer > 0) state.driftPenaltyTimer = Math.max(0, state.driftPenaltyTimer - dt);
+    if (state.driftFeedbackTimer > 0) state.driftFeedbackTimer = Math.max(0, state.driftFeedbackTimer - dt);
     if (state.boostFlash > 0) state.boostFlash = Math.max(0, state.boostFlash - dt * 3.4);
+    state.raceElapsedSec = (state.raceElapsedSec || 0) + dt;
+    state.currentLapTimeSec = (state.currentLapTimeSec || 0) + dt;
 
     const segIdx = Math.floor(state.posZ / SEG_LEN) % state.segments.length;
     const currentSeg = state.segments[segIdx];
 
-    // 5. 카트라이더(KartRider) 정통 드리프트 물리 & 드리프트 끌기 게이지 차지 & 순간 부스터(순부) 시스템!
+    // 5. 진입각·유지시간·해제타이밍에 따라 결과가 달라지는 스킬 드리프트 물리
+    // 터치 핸들만 끝까지(>=0.92) 꺾어 진입한 경우에도 코너 탈출 시 핸들을 풀면(<0.58) 자동 해제되도록 지원
     const autoCornerSlide = !state.driftActive
-      && Math.abs(state.smoothSteer) > 0.30
-      && Math.abs(currentSeg.curve) > 0.85
-      && state.speed > state.maxSpeed * 0.34;
+      && state.driftPenaltyTimer <= 0
+      && Math.abs(state.steerInput) >= 0.92
+      && Math.abs(currentSeg.curve) >= 1.45
+      && state.speed > state.maxSpeed * 0.50;
     if (autoCornerSlide) {
-      engageKartRiderDrift(Math.sign(state.smoothSteer));
+      state.autoFlickDrift = true;
+      engageKartRiderDrift(Math.sign(state.steerInput));
+    } else if (state.driftActive && state.autoFlickDrift && (Math.abs(state.steerInput) < 0.58 || Math.abs(currentSeg.curve) < 0.72)) {
+      state.autoFlickDrift = false;
+      finishKartRiderDrift(false);
     }
     const isSliding = state.driftActive;
 
     if (isSliding) {
-      state.driftChargeTime += dt * (1.35 + Math.abs(state.smoothSteer) * 0.95);
-      if (state.driftChargeTime > 0.95) state.driftStage = 3;
-      else if (state.driftChargeTime > 0.42) state.driftStage = 2;
-      else state.driftStage = 1;
+      // 실제 유지 시간(초) 기준으로 드리프트 충전: 0.42s(GOOD) -> 0.82s(PERFECT) -> 1.45s 초과(OVER-DRIFT 위험!)
+      state.driftChargeTime += dt;
+      if (state.driftChargeTime > 1.45) {
+        state.driftStage = 4; // 오버 드리프트 경고 단계
+        // 1.64초 이상 무리하게 끌면 자동으로 타이어 그립을 잃고 오버 드리프트 실패 처리!
+        if (state.driftChargeTime >= 1.64) {
+          state.autoFlickDrift = false;
+          finishKartRiderDrift(false);
+        }
+      } else if (state.driftChargeTime >= 0.82) {
+        state.driftStage = 3; // PERFECT 윈도우
+      } else if (state.driftChargeTime >= 0.42) {
+        state.driftStage = 2; // GOOD 윈도우
+      } else {
+        state.driftStage = 1; // 초기 슬립 단계
+      }
     }
 
     const isInvincible = state.starTimer > 0 || state.megaTimer > 0 || state.bulletTimer > 0;
     const isBoosting = state.boostTimer > 0 || isInvincible;
 
-    // 부스터 화면 워프 강도(boostVisual: 0 ~ 1) - 누를 때 즉시 1.0으로 솟구치고 끝날 때 매끄럽게 복귀!
+    // 부스터 화면 워프 강도(boostVisual: 0 ~ 1) - 절제된 전환으로 시야 방해 방지
     const targetBoostVis = isBoosting ? 1.0 : 0.0;
-    const visRate = isBoosting ? 18.0 : 4.2;
+    const visRate = isBoosting ? 15.0 : 4.5;
     state.boostVisual = (state.boostVisual || 0) + (targetBoostVis - (state.boostVisual || 0)) * Math.min(1, dt * visRate);
     if (state.boostVisual < 0.005 && !isBoosting) state.boostVisual = 0;
 
@@ -3650,32 +3804,84 @@
       }
     }
 
-    // 부스터만 쓰면 무조건 이기지 못하도록 밸런스 조정 + 오프로드(잔디/진흙/모래/용암 갓길) 이탈 시 강력한 감속 페널티 적용!
+    // 노면 상태(일반 포장 도로 / 협곡 지름길 데크 / 오프로드 갓길) 판정
+    const surface = getSurfaceState(currentSeg, state.playerX);
+    state.inShortcutZone = surface.type === 'shortcut';
+    const offRoad = surface.type === 'offroad' && !isInvincible && state.boostTimer <= 0.65;
+    if (offRoad && state.boostTimer > 0 && state.exitBoostTier < 2) {
+      state.boostTimer = Math.max(0, state.boostTimer - dt * 1.85);
+    }
+
+    // 지름길 실패 후 본선 복귀 보조: 지름길 분리대 자갈밭에 빠졌을 때 본선 방향 조향(>= -0.15) 시 막힘 없이 우측 본선으로 복귀 유도
+    if (currentSeg.hasShortcut && state.playerX < currentSeg.mainRoadMinX && surface.type === 'offroad' && state.steerInput >= -0.15) {
+      state.shortcutFailedRecovering = true;
+      state.playerX += 0.58 * dt;
+      state.velX = Math.max(state.velX, 0.72);
+    } else if (!currentSeg.hasShortcut) {
+      state.shortcutFailedRecovering = false;
+    }
+
+    // 가속·감속·코너 마찰 저항 계산:
+    // - 일반 그립 코너링으로 급커브를 돌면 타이어 스크럽 저항(최대 -22%)으로 속도가 떨어짐
+    // - 적정 드리프트 중에는 코너 저항이 최소화되고, 해제 성공 시 짧은 부스트(+26%~+36%)로 코너 탈출 속도가 확연히 빨라짐!
     let boostMult = 1.0;
-    if (state.bulletTimer > 0) boostMult = 1.78;
-    else if (state.starTimer > 0) boostMult = 1.56;
-    else if (state.megaTimer > 0) boostMult = 1.48;
+    if (state.bulletTimer > 0) boostMult = 1.62;
+    else if (state.starTimer > 0) boostMult = 1.44;
+    else if (state.megaTimer > 0) boostMult = 1.38;
     else if (state.boostTimer > 0) {
-      boostMult = state.boostTimer > 0.50 ? 1.54 : 1.38;
+      boostMult = state.exitBoostTier === 2 ? 1.36 : (state.exitBoostTier === 1 ? 1.26 : 1.38);
     }
-    if (state.spinTimer > 0) boostMult = 0.45;
+    if (state.spinTimer > 0) boostMult = 0.58;
+    else if (state.driftPenaltyTimer > 0) boostMult = Math.min(boostMult, 0.82);
 
-    // 마리오 카트 전통 오프로드 갓길 감속(|playerX| > 0.85): 무적/버섯 상태가 아니면 부스터 중이라도 잔디/진흙에서 속도가 크게 떨어지고 부스터가 소모됨!
-    const offRoad = Math.abs(state.playerX) > 0.85 && !isInvincible;
-    if (offRoad && state.boostTimer > 0) {
-      state.boostTimer = Math.max(0, state.boostTimer - dt * 2.2);
+    // 일반 코너링 스크럽 감속 vs 드리프트 라인 유지
+    let cornerScrubMult = 1.0;
+    const absCurve = Math.abs(currentSeg.curve);
+    if (!isSliding && absCurve > 1.0 && !isBoosting) {
+      const steerLoad = Math.max(0.45, Math.abs(state.smoothSteer));
+      cornerScrubMult = 1.0 - Math.min(0.22, steerLoad * (absCurve / 2.5) * 0.24);
+    } else if (isSliding) {
+      // 드리프트 중에는 진입각이 불량하거나 오버드리프트일 때만 마찰 손실 발생
+      if (state.driftEntryQuality === 'bad_angle') cornerScrubMult = 0.86;
+      else if (state.driftStage >= 4) cornerScrubMult = 0.80;
+      else cornerScrubMult = 0.985;
     }
-    const terrainMult = offRoad ? 0.56 : 1.0;
 
-    const targetSpeed = state.maxSpeed * boostMult * terrainMult;
-    const accelRate = isBoosting ? 14.0 : 6.0;
+    // 슬립스트림(직선 추월 구간에서 앞차 바로 뒤 60~340 거리 추격 시 공기저항 감소 +7% 가속)
+    let slipstreamMult = 1.0;
+    for (let rIdx = 0; rIdx < state.rivals.length; rIdx++) {
+      const rv = state.rivals[rIdx];
+      const dz = rv.z - state.posZ;
+      if (dz > 55 && dz < 340 && Math.abs(rv.x - state.playerX) < 0.28 && absCurve < 1.2) {
+        slipstreamMult = 1.07;
+        break;
+      }
+    }
+
+    const effectiveTerrainMult = (isInvincible || (state.boostTimer > 0.65 && surface.type === 'offroad'))
+      ? Math.max(0.92, surface.terrainMult)
+      : surface.terrainMult;
+    const targetSpeed = state.maxSpeed * boostMult * effectiveTerrainMult * cornerScrubMult * slipstreamMult;
+
+    // 저속 토크는 묵직하게 밀어주고 고속에서는 공기저항으로 점진 수렴하는 비선형 가속/감속 곡선
+    const curSpeedRatio = state.speed / Math.max(1, state.maxSpeed);
+    const torqueCurve = Math.max(0.55, 1.32 - curSpeedRatio * 0.54);
+    const accelRate = isBoosting
+      ? 12.5
+      : (targetSpeed < state.speed ? 7.8 : 5.6 * torqueCurve);
     state.speed += (targetSpeed - state.speed) * Math.min(1, dt * accelRate);
 
-    // 시원한 고속 주행감 + 부스터 시 체감 전진 속도 부스트
-    const moveDist = state.speed * (4.6 + (state.boostVisual || 0) * 0.65) * dt;
+    // 수동 브레이크/감속 (아래 방향키 또는 S키)
+    if (keys['ArrowDown'] || keys['KeyS']) {
+      state.speed = Math.max(state.maxSpeed * 0.28, state.speed - 195 * dt);
+    }
+
+    // 전진 거리 적분 (협곡 데크 지름길 주행 시 직선 현(Chord) 단축 효과 +24% 반영)
+    const shortcutChordMult = state.inShortcutZone ? 1.24 : 1.0;
+    const moveDist = state.speed * (4.6 + (state.boostVisual || 0) * 0.45) * shortcutChordMult * dt;
     state.posZ += moveDist;
 
-    // 6. 점프(Hop) & 무지개 점프대 공중 물리 (착지 시 중복 부스터 제거하여 부스터 과다 방지!)
+    // 6. 점프(Hop) & 점프대 공중 물리
     if (state.playerY > 0 || state.velY !== 0) {
       state.playerY += state.velY * dt;
       state.velY -= 1280 * dt;
@@ -3699,48 +3905,61 @@
       dt
     );
 
-    // 8. 카트라이더(KartRider) 정통 드리프트 횡방향 슬라이딩 물리 (차체가 대각선으로 깊게 꺾이며 코너 안쪽을 예리하게 파고듦!)
+    // 8. 속도에 따른 조향 감도(고속 언더스티어 vs 드리프트 회두성) & 노면 접지력(Grip) 물리
     const slideDir = state.driftActive
       ? (state.driftDir || Math.sign(state.smoothSteer || 1))
       : Math.sign(state.smoothSteer || currentSeg.curve || 1);
     const targetDriftAngle = isSliding
-      ? Math.max(-1.32, Math.min(1.32, slideDir * 0.76 + state.smoothSteer * 0.56 - currentSeg.curve * 0.08))
-      : (Math.abs(currentSeg.curve) > 1.8 ? state.smoothSteer * 0.28 : 0);
-    state.driftAngle = (state.driftAngle || 0) + (targetDriftAngle - (state.driftAngle || 0)) * Math.min(1, dt * (isSliding ? 9.5 : 10.5));
+      ? Math.max(-1.18, Math.min(1.18, slideDir * 0.68 + state.smoothSteer * 0.48 - currentSeg.curve * 0.06))
+      : (Math.abs(currentSeg.curve) > 1.8 ? state.smoothSteer * 0.22 : 0);
+    state.driftAngle = (state.driftAngle || 0) + (targetDriftAngle - (state.driftAngle || 0)) * Math.min(1, dt * (isSliding ? 9.2 : 10.5));
     if (Math.abs(state.driftAngle) < 0.01 && !isSliding) state.driftAngle = 0;
 
-    // 카트라이더 드리프트 코너링: 드리프트 없이 부스터만 켜면 원심력으로 바깥으로 밀려나지만, 드리프트를 넣으면 코너 안쪽 인코스를 날카롭게 파고듦!
     const speedRatio = state.speed / Math.max(1, state.maxSpeed);
-    const boostCornerPush = (state.boostTimer > 0 && !isSliding) ? 1.42 : (isSliding ? 0.62 : 1.0);
-    const curveSlideForce = -(currentSeg.curve * 0.26 * boostCornerPush) * Math.pow(speedRatio, 1.35);
+    // 속도가 높을수록 일반 조향은 묵직해지고(0.82), 드리프트를 걸면 코너 에이펙스를 날카롭게 파고듦!
+    const speedSteerFactor = Math.max(0.76, 1.18 - speedRatio * 0.34);
+    const boostCornerPush = (state.boostTimer > 0 && !isSliding) ? 1.25 : (isSliding && state.driftEntryQuality !== 'bad_angle' ? 0.72 : 1.05);
+    const curveSlideForce = -(currentSeg.curve * 0.26 * boostCornerPush) * Math.pow(speedRatio, 1.25);
     const steerForce = isSliding
-      ? (state.smoothSteer * 1.75 + slideDir * 0.42)
-      : (state.smoothSteer * 1.42);
+      ? (state.smoothSteer * 1.38 + slideDir * (state.driftEntryQuality === 'bad_angle' ? 0.08 : 0.22))
+      : (state.smoothSteer * 1.22 * speedSteerFactor);
     const desiredVelX = steerForce + (state.bulletTimer > 0 ? 0 : curveSlideForce);
-    // 설원(track 3)은 빙판 슬라이딩 그립, 일반 코스는 카트라이더 드리프트 슬라이딩 관성 적용!
-    const baseGrip = state.selectedTrack === 3 ? 3.6 : 5.2;
-    const gripFactor = isSliding ? baseGrip : (state.selectedTrack === 3 ? 6.2 : 9.4);
+
+    const gripFactor = isSliding ? (surface.grip * 0.58) : surface.grip;
     state.velX += (desiredVelX - state.velX) * Math.min(1, dt * gripFactor);
     state.playerX += state.velX * dt;
 
-    // 드리프트 슬라이딩 시 차체가 화면에서 옆으로 시원하게 미끄러지는 시각적 관성 오프셋
-    const targetScreenOffset = state.smoothSteer * 15 + state.driftAngle * 28;
-    state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 8.2);
+    // 절제된 차체 화면 오프셋 (시야 중앙과 다음 코너가 항상 잘 보이도록 ±22px 이내로 제한)
+    const targetScreenOffset = Math.max(-22, Math.min(22, state.smoothSteer * 11 + state.driftAngle * 18));
+    state.screenXOffset += (targetScreenOffset - state.screenXOffset) * Math.min(1, dt * 8.5);
 
     // 원경 산맥/구름 3D 시차(Parallax) 회전값 누적
-    state.skyYaw = ((state.skyYaw || 0) - currentSeg.curve * speedRatio * 185 * dt);
+    state.skyYaw = ((state.skyYaw || 0) - currentSeg.curve * speedRatio * 175 * dt);
     if (state.bulletTimer > 0) {
       state.playerX += (0 - state.playerX) * 6.5 * dt;
     }
 
-    // 코스 외곽 가드레일/성벽 충돌 페널티 (코너에서 무작정 부스터 쓰다 외벽 충돌 시 부스터 해제 & 감속!)
-    if (Math.abs(state.playerX) >= 1.08) {
-      state.playerX = Math.sign(state.playerX) * 1.06;
-      state.velX = -Math.sign(state.playerX) * 0.75;
-      if (!isInvincible) {
+    // 코스 외곽 가드레일 충돌 후 멈춰 붙지 않고 탄성 반발로 즉시 도로 안쪽으로 회복!
+    if (state.playerX <= surface.leftLimit || state.playerX >= surface.rightLimit) {
+      const hitLeft = state.playerX <= surface.leftLimit;
+      const wallSign = hitLeft ? -1 : 1;
+      // 벽 경계에서 0.08만큼 안쪽으로 즉시 분리하여 벽에 달라붙는 현상 원천 차단
+      state.playerX = hitLeft ? (surface.leftLimit + 0.08) : (surface.rightLimit - 0.08);
+      // 도로 안쪽 방향으로 탄성 반발 속도 부여
+      state.velX = -wallSign * Math.max(0.68, Math.min(1.15, Math.abs(state.velX) * 0.65 + 0.48));
+      state.driftAngle *= 0.25;
+      if (state.driftActive) {
+        state.driftActive = false;
+        state.driftChargeTime = 0;
+        state.driftStage = 0;
+      }
+      if (!isInvincible && state.wallHitCooldown <= 0) {
+        state.wallHitCooldown = 0.48;
         state.boostTimer = 0;
-        state.speed *= 0.72;
-        vibrateDevice(45);
+        state.speed = Math.max(state.maxSpeed * 0.54, state.speed * 0.78);
+        showDrivingFeedback('💥 가드레일 리바운드! 조향 복귀', '#ffab40', 0.65);
+        sfx.playHop();
+        vibrateDevice(40);
       }
     }
 
@@ -3866,41 +4085,44 @@
             sfx.playCoin();
             showFloatingText('', '#ffd54f');
           } else if (it.type === 'oilSlick' && state.playerY < 16) {
-            // 마리오 서킷 오일 / 도넛 평원 초코 진흙 웅덩이: 밟으면 미끄러지며 감속!
+            // 코너 아웃코스 슬립 존: 드리프트 실패로 바깥으로 밀려 밟으면 감속 (연속 피격 방지 면역 적용)
             it.takenTimer = 2.0;
-            if (!isInvincible && state.shieldTimer <= 0) {
+            if (!isInvincible && state.shieldTimer <= 0 && state.hitImmunityTimer <= 0) {
+              state.hitImmunityTimer = 2.2;
               state.boostTimer = 0;
-              state.speed *= 0.65;
-              state.driftAngle = (Math.random() < 0.5 ? -1 : 1) * 0.95;
+              state.speed *= 0.72;
+              state.driftAngle = (Math.random() < 0.5 ? -1 : 1) * 0.65;
+              showDrivingFeedback('💧 슬립 존 감속! 인코스 유지!', '#ffab40', 0.85);
               sfx.playHop();
-              vibrateDevice(45);
+              vibrateDevice(40);
+            } else if (state.shieldTimer > 0) {
+              state.shieldTimer = 0;
+              state.boostTimer = Math.max(state.boostTimer, 0.55);
+              showDrivingFeedback('🛡️ 에너지 실드 방어 성공!', '#00e5ff', 0.85);
+              sfx.playBoost(false);
             }
-          } else if (it.type === 'thwomp') {
-            // 쿠파 성 / 무지개 로드 쿵쿵이(Thwomp): 아래로 내려찍힌 상태일 때 부딪히면 스핀 & 감속!
-            const thwompHeight = Math.max(0, Math.sin(nowSec * 2.6 + (it.phase || 0))) * 75;
-            if (thwompHeight < 28 && state.playerY < 35) {
-              it.takenTimer = 2.2;
-              if (isInvincible || state.shieldTimer > 0) {
-                sfx.playShellHit();
-                spawnBoostParticles(14);
-              } else {
-                state.boostTimer = 0;
-                state.speed *= 0.45;
-                state.spinTimer = 0.75;
-                sfx.playShellHit();
-                vibrateDevice(80);
-              }
-            }
-          } else if ((it.type === 'banana' || it.type === 'pipe' || it.type === 'crab' || it.type === 'iceBlock' || it.type === 'yoshiEgg') && state.playerY < 24) {
-            it.takenTimer = 3.0;
+          } else if ((it.type === 'canyonRock' || it.type === 'banana' || it.type === 'pipe' || it.type === 'crab' || it.type === 'iceBlock' || it.type === 'yoshiEgg' || it.type === 'thwomp') && state.playerY < 24) {
+            it.takenTimer = 2.8;
             if (isInvincible || state.shieldTimer > 0) {
+              if (state.shieldTimer > 0 && !isInvincible) {
+                state.shieldTimer = 0;
+                state.boostTimer = Math.max(state.boostTimer, 0.65);
+                showDrivingFeedback('🛡️ 실드 가드! 카운터 부스트!', '#00e5ff', 0.90);
+              }
               sfx.playShellHit();
               spawnBoostParticles(12);
-            } else {
+            } else if (state.hitImmunityTimer <= 0) {
+              // 연속 피격 방지(2.5초 면역) & 조작을 오래 빼앗지 않는 짧은 스텀블(0.48초) 후 즉시 회복!
+              state.hitImmunityTimer = 2.5;
               state.boostTimer = 0;
-              state.speed *= 0.58;
-              state.spinTimer = 0.65;
-              sfx.playHop();
+              state.speed = Math.max(state.maxSpeed * 0.52, state.speed * 0.68);
+              state.spinTimer = 0.48;
+              // 지름길 경계 바위 충돌 시 본선 쪽(+x)으로 부드럽게 밀어주어 즉시 정상 코스로 복귀 가능하게 처리
+              if (currentSeg.hasShortcut && state.playerX < -0.25) {
+                state.velX = 0.72;
+              }
+              showDrivingFeedback('💥 장애물 충격! 즉시 재가속', '#ff5252', 0.90);
+              sfx.playShellHit();
               vibrateDevice(55);
             }
           }
@@ -3908,7 +4130,7 @@
       });
     }
 
-    // 11. 발사된 날개 거북이 등껍질(Shell) 투사체 이동 및 앞차 명중 판정
+    // 11. 발사된 쇼크 볼트(Shock Bolt) 투사체 이동 및 앞차 명중 판정 (연속 피격 방지 적용)
     for (let i = state.projectiles.length - 1; i >= 0; i--) {
       const proj = state.projectiles[i];
       proj.z += proj.speed * 4.6 * dt;
@@ -3918,19 +4140,26 @@
       let minDist = 99999;
       state.rivals.forEach(r => {
         const d = r.z - proj.z;
-        if (d > -40 && d < 1800 && d < minDist) {
+        if (d > -35 && d < 1400 && d < minDist && (r.spinTimer || 0) <= 0.1) {
           minDist = d;
           targetRival = r;
         }
       });
       if (targetRival) {
-        proj.x += (targetRival.x - proj.x) * Math.min(1, dt * 8.0);
-        if (Math.abs(targetRival.z - proj.z) < 95 && Math.abs(targetRival.x - proj.x) < 0.42) {
-          targetRival.spinTimer = 1.8;
-          targetRival.velY = 340;
-          sfx.playShellHit();
-          vibrateDevice(70);
-          spawnBoostParticles(18);
+        proj.x += (targetRival.x - proj.x) * Math.min(1, dt * 8.5);
+        if (Math.abs(targetRival.z - proj.z) < 92 && Math.abs(targetRival.x - proj.x) < 0.40) {
+          if (targetRival.shieldTimer > 0) {
+            targetRival.shieldTimer = 0;
+            sfx.playItemRouletteLock();
+            showDrivingFeedback(`🛡️ ${targetRival.racer.shortName} 실드 방어!`, '#ffd740', 0.8);
+          } else {
+            targetRival.spinTimer = 1.15;
+            targetRival.velY = 250;
+            sfx.playShellHit();
+            vibrateDevice(65);
+            spawnBoostParticles(16);
+            showDrivingFeedback(`🎯 ${targetRival.racer.shortName} 쇼크 볼트 명중! 추월 찬스!`, '#00e5ff', 0.95);
+          }
           state.projectiles.splice(i, 1);
           continue;
         }
@@ -3938,7 +4167,36 @@
       if (proj.life <= 0) state.projectiles.splice(i, 1);
     }
 
-    // 12. 5대의 라이벌 AI 차량 물리 (결승선 봐주기 핸디캡 제거 & 코너 탈출 미니터보·대시 경쟁력 강화!)
+    // 11.5 후방 AI 공격(쇼크 볼트) 접근 경보 및 회피/실드 방어 판정
+    if (state.incomingAttackTimer > 0) {
+      state.incomingAttackTimer = Math.max(0, state.incomingAttackTimer - dt);
+      // 급드리프트 횡이동(|velX| > 0.72 & driftActive) 중이면 발사 직전 락온을 흔들어 회피 가능!
+      if (state.incomingAttackTimer <= 0) {
+        const dodged = state.driftActive && Math.abs(state.velX) > 0.72;
+        if (state.shieldTimer > 0 || isInvincible) {
+          if (state.shieldTimer > 0 && !isInvincible) state.shieldTimer = 0;
+          state.boostTimer = Math.max(state.boostTimer, 0.75);
+          state.exitBoostTier = 2;
+          spawnBoostShockwave(true);
+          sfx.playBoost(true);
+          showDrivingFeedback('🛡️ 실드 방어 성공! 카운터 부스트!', '#00e5ff', 1.1);
+        } else if (dodged) {
+          sfx.playOvertakeWhoosh();
+          showDrivingFeedback('⚡ 급드리프트 회피 성공!', '#69f0ae', 1.0);
+        } else if (state.hitImmunityTimer <= 0) {
+          // 피격 시 연속 피격 방지(2.5초 면역) + 조작을 오래 빼앗지 않는 짧은 감속(0.52초)
+          state.hitImmunityTimer = 2.5;
+          state.boostTimer = 0;
+          state.speed = Math.max(state.maxSpeed * 0.56, state.speed * 0.68);
+          state.spinTimer = 0.52;
+          sfx.playShellHit();
+          vibrateDevice(65);
+          showDrivingFeedback('⚡ 쇼크 볼트 피격! 즉시 재가속', '#ff5252', 0.95);
+        }
+      }
+    }
+
+    // 12. 5대의 경쟁 AI 물리 (순간이동·무제한 가속 금지! 코너 감속·추월 라인·장애물 회피·실수와 회복·공격형/안정형 개성 구현)
     const totalRaceDist = state.trackLength * state.totalLaps;
     let aheadCount = 0;
     let rearChallenger = null;
@@ -3947,72 +4205,140 @@
     state.rivals.forEach((r, idx) => {
       if (r.spinTimer > 0) r.spinTimer = Math.max(0, r.spinTimer - dt);
       if (r.shrinkTimer > 0) r.shrinkTimer = Math.max(0, r.shrinkTimer - dt);
+      if (r.shieldTimer > 0) r.shieldTimer = Math.max(0, r.shieldTimer - dt);
       if (r.boostVisualTimer > 0) r.boostVisualTimer = Math.max(0, r.boostVisualTimer - dt);
+      if (r.mistakeTimer > 0) r.mistakeTimer = Math.max(0, r.mistakeTimer - dt);
+      if (r.recoverTimer > 0) r.recoverTimer = Math.max(0, r.recoverTimer - dt);
+      if (r.mistakeCooldown > 0) r.mistakeCooldown = Math.max(0, r.mistakeCooldown - dt);
+      if (r.attackCooldown > 0) r.attackCooldown = Math.max(0, r.attackCooldown - dt);
       if (r.passSoundCooldown > 0) r.passSoundCooldown = Math.max(0, r.passSoundCooldown - dt);
 
       const rSegIdx = Math.floor(Math.max(0, r.z) / SEG_LEN) % state.segments.length;
       const rCurSeg = state.segments[rSegIdx];
+      const rNextSeg = state.segments[(rSegIdx + 2) % state.segments.length];
       const rLookSeg = state.segments[(rSegIdx + 6) % state.segments.length];
-
-      r.surgePhase += dt * r.surgeFreq;
-      const surgeWave = Math.sin(r.surgePhase);
-      // 결승선 근처 봐주기(finishHandicap)를 제거하고 선두 그룹 라이벌이 끝까지 치열하게 레이스하도록 설정!
-      const desiredRelZ = (r.baseBandOffset + 85) + surgeWave * 360;
       const actualRelZ = r.z - state.posZ;
-      const gapError = desiredRelZ - actualRelZ;
+      const isAggressive = r.persona === 'aggressive';
 
-      const curveFactor = Math.abs(rCurSeg.curve) > 2.2 ? 0.94 : 1.0;
-      const skillMult = 1.03 + idx * 0.022;
-      let rivalTargetSpeed = state.maxSpeed * curveFactor * (skillMult + surgeWave * 0.14) + Math.max(-70, Math.min(145, gapError * 0.36));
-
-      // 라이벌도 코너 탈출 시 드리프트 미니터보 & 뒤처졌을 때 슈퍼부스터를 적극 사용해 플레이어와 박진감 넘치게 승부!
-      if ((surgeWave > 0.22 || gapError > 95 || (r.drifting && Math.abs(rLookSeg.curve) < 1.0)) && r.spinTimer <= 0 && r.shrinkTimer <= 0) {
-        r.boostVisualTimer = 0.55;
-        rivalTargetSpeed += 38;
+      // (A) 코너 진입 감속 & 코너 탈출 드리프트 가속 판단
+      const lookCurveAbs = Math.abs(rLookSeg.curve);
+      const curCurveAbs = Math.abs(rCurSeg.curve);
+      let cornerSpeedFactor = 1.0;
+      if (lookCurveAbs >= 2.6 || curCurveAbs >= 2.6) {
+        // 공격형은 늦게 브레이크(0.92), 안정형은 미리 안전하게 감속(0.88)
+        cornerSpeedFactor = isAggressive ? 0.92 : 0.88;
+      } else if (lookCurveAbs >= 1.6 || curCurveAbs >= 1.6) {
+        cornerSpeedFactor = isAggressive ? 0.96 : 0.93;
       }
 
-      if (r.spinTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.28;
-      else if (r.shrinkTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.58;
+      // (B) 공격형 AI의 코너 오버스피드 실수(Wide Mistake) 및 회복(Recovery)
+      if (isAggressive && curCurveAbs >= 2.75 && r.mistakeCooldown <= 0 && r.mistakeTimer <= 0 && Math.random() < 0.018) {
+        r.mistakeTimer = 0.72;
+        r.recoverTimer = 1.15;
+        r.mistakeCooldown = 9.5;
+        r.drifting = false;
+      }
 
-      r.speed += (rivalTargetSpeed - r.speed) * Math.min(1, dt * 3.5);
+      // (C) 제한적 페이스 보정 (±4.5% 이내로만 슬립스트림/페이스 조절, 순간이동이나 무제한 가속 절대 금지!)
+      let paceAdjust = 1.0;
+      if (actualRelZ < -650) paceAdjust = 1.045;
+      else if (actualRelZ < -250) paceAdjust = 1.025;
+      else if (actualRelZ > 650) paceAdjust = 0.955;
+      else if (actualRelZ > 280) paceAdjust = 0.978;
+
+      // 지름길 데크 주행 중인 공격형 AI는 지름길 가속 보너스 획득
+      const onShortcutDeck = rCurSeg.hasShortcut && r.x <= rCurSeg.shortcutMaxX;
+      const surfaceBonus = onShortcutDeck ? 1.08 : 1.0;
+
+      let rivalTargetSpeed = state.maxSpeed * r.basePace * cornerSpeedFactor * paceAdjust * surfaceBonus;
+
+      // 코너를 드리프트로 돌아나올 때 짧은 탈출 부스트 발동
+      const wasDrifting = r.drifting;
+      r.drifting = curCurveAbs > 1.55 && r.spinTimer <= 0 && r.mistakeTimer <= 0;
+      if (wasDrifting && !r.drifting && lookCurveAbs < 1.2 && r.spinTimer <= 0) {
+        r.boostVisualTimer = 0.52;
+      }
+      if (r.boostVisualTimer > 0) {
+        rivalTargetSpeed += 28;
+      }
+
+      if (r.mistakeTimer > 0) rivalTargetSpeed *= 0.83;
+      if (r.spinTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.42;
+      else if (r.shrinkTimer > 0) rivalTargetSpeed = state.maxSpeed * 0.68;
+
+      r.speed += (rivalTargetSpeed - r.speed) * Math.min(1, dt * 4.2);
       r.z += r.speed * 4.6 * dt;
 
+      // (D) 주행 라인 선택: 에이펙스 공략 vs 섹터 3 지름길/안전길 분기 vs 추월 라인 변경 vs 장애물 회피
       r.laneTimer -= dt;
       if (r.laneTimer <= 0) {
-        r.laneTimer = 2.4 + Math.random() * 2.2;
-        const lanes = [-0.58, -0.28, 0.0, 0.28, 0.58];
+        r.laneTimer = isAggressive ? (1.6 + Math.random() * 1.4) : (2.6 + Math.random() * 1.8);
+        const lanes = isAggressive ? [-0.56, -0.24, 0.24, 0.56] : [-0.32, 0.0, 0.32];
         r.preferredLane = lanes[(idx + Math.floor(Math.random() * lanes.length)) % lanes.length];
       }
 
       let desiredX = r.preferredLane;
-      if (Math.abs(rLookSeg.curve) > 0.9) {
-        desiredX = Math.max(-0.68, Math.min(0.68, desiredX * 0.55 + Math.sign(rLookSeg.curve) * 0.32));
-        r.drifting = Math.abs(rCurSeg.curve) > 1.55 && r.spinTimer <= 0;
-      } else {
-        r.drifting = false;
+
+      // 섹터 3 분기점 판단: 공격형 AI 일부는 좌측 고속 지름길(-0.72) 도전, 안정형 AI는 우측 넓은 안전 본선(+0.28) 주행
+      if (rCurSeg.hasShortcut || rNextSeg.hasShortcut) {
+        desiredX = r.takeShortcut ? -0.72 : 0.30;
+      } else if (Math.abs(rLookSeg.curve) > 1.1) {
+        // 코너 에이펙스 인코스 라인 타겟팅 (우회전 curve>0 이면 우측 +x, 좌회전 curve<0 이면 좌측 -x)
+        const apexSide = Math.sign(rLookSeg.curve);
+        desiredX = apexSide * (isAggressive ? 0.52 : 0.38);
       }
 
-      if (actualRelZ > -220 && actualRelZ < 75 && Math.abs(r.x - state.playerX) < 0.42) {
-        desiredX = state.playerX >= 0 ? -0.60 : 0.60;
+      // 실수 중일 때는 코너 바깥쪽 갓길로 라인이 밀려나고, 회복 구간에서 다시 중앙으로 복귀
+      if (r.mistakeTimer > 0) {
+        desiredX = -Math.sign(rCurSeg.curve || 1) * 0.82;
+      } else if (r.recoverTimer > 0) {
+        desiredX = 0.0;
       }
 
+      // 전방 장애물(canyonRock, oilSlick) 감지 및 회피 조향
+      [rCurSeg, rNextSeg].forEach(segCheck => {
+        if (!segCheck || !segCheck.items) return;
+        segCheck.items.forEach(it => {
+          if ((it.type === 'canyonRock' || it.type === 'oilSlick') && Math.abs(it.x - desiredX) < 0.34) {
+            desiredX = it.x >= 0 ? Math.max(-0.78, it.x - 0.46) : Math.min(0.78, it.x + 0.46);
+          }
+        });
+      });
+
+      // 앞차(플레이어 또는 다른 AI) 추월 라인 선택: 바로 뒤에 붙었을 때 좌/우 빈 차선으로 빠져나와 추월 시도!
+      if (actualRelZ > -260 && actualRelZ < 65 && Math.abs(r.x - state.playerX) < 0.44) {
+        desiredX = state.playerX >= 0 ? Math.max(-0.78, state.playerX - 0.54) : Math.min(0.78, state.playerX + 0.54);
+      }
       state.rivals.forEach((other, oIdx) => {
         if (oIdx === idx) return;
-        if (Math.abs(r.z - other.z) < 110 && Math.abs(r.x - other.x) < 0.36) {
-          desiredX += (r.x >= other.x ? 0.32 : -0.32);
+        const dzOther = other.z - r.z;
+        if (dzOther > -40 && dzOther < 180 && Math.abs(r.x - other.x) < 0.38) {
+          desiredX += (r.x >= other.x ? 0.38 : -0.38);
         }
       });
-      desiredX = Math.max(-0.80, Math.min(0.80, desiredX));
+
+      const minLaneX = (rCurSeg.hasShortcut && r.takeShortcut) ? -0.90 : -0.80;
+      desiredX = Math.max(minLaneX, Math.min(0.80, desiredX));
 
       const xDiff = desiredX - r.x;
-      const targetSteer = Math.max(-0.65, Math.min(0.65, xDiff * 1.4));
-      r.steer += (targetSteer - (r.steer || 0)) * Math.min(1, dt * 4.5);
-      r.velX += (xDiff * 2.2 - r.velX) * Math.min(1, dt * 5.0);
-      r.x = Math.max(-0.84, Math.min(0.84, r.x + r.velX * dt));
+      const steerGain = isAggressive ? 5.4 : 4.4;
+      const targetSteer = Math.max(-0.68, Math.min(0.68, xDiff * 1.45));
+      r.steer += (targetSteer - (r.steer || 0)) * Math.min(1, dt * steerGain);
+      r.velX += (xDiff * 2.5 - r.velX) * Math.min(1, dt * steerGain);
+      r.x = Math.max(minLaneX - 0.04, Math.min(0.84, r.x + r.velX * dt));
 
-      if (rSegIdx % 32 === 16 && r.y <= 1) {
+      // (E) 공격형 AI의 전방 쇼크 볼트 공격 예고 (플레이어 후방 90~380 거리에서 조준 시 1.30초 사전 경고 발령!)
+      if (isAggressive && r.attackCooldown <= 0 && r.spinTimer <= 0 && actualRelZ < -85 && actualRelZ > -380 && state.incomingAttackTimer <= 0 && state.hitImmunityTimer <= 0) {
+        r.attackCooldown = 11.5 + Math.random() * 4.0;
+        state.incomingAttackTimer = 1.30;
+        state.incomingAttackSource = r.racer.shortName;
+        sfx.playTone(880, 0.12, 'square', 0.14);
+        setTimeout(() => sfx.playTone(1174, 0.12, 'square', 0.14), 160);
+      }
+
+      if (rCurSeg.index === 236 && r.y <= 1) {
         r.velY = 360;
-        r.boostVisualTimer = 0.8;
+        r.boostVisualTimer = 0.65;
       }
       if (r.y > 0 || r.velY !== 0) {
         r.y += r.velY * dt;
@@ -4023,26 +4349,28 @@
         }
       }
 
+      // 카트 간 범퍼 접촉 물리 (서로 멈춰 붙지 않고 탄성 밀어내기)
       const newRelZ = r.z - state.posZ;
-      if (Math.abs(newRelZ) < 52 && Math.abs(r.x - state.playerX) < 0.32 && state.playerY < 30) {
-        if (isInvincible) {
+      if (Math.abs(newRelZ) < 50 && Math.abs(r.x - state.playerX) < 0.32 && state.playerY < 30) {
+        if (isInvincible || state.shieldTimer > 0) {
           if (r.spinTimer <= 0.2) {
-            r.spinTimer = 1.6;
-            r.velY = 340;
+            r.spinTimer = 1.1;
+            r.velY = 260;
             sfx.playShellHit();
-            vibrateDevice(60);
-            spawnBoostParticles(14);
+            vibrateDevice(50);
+            spawnBoostParticles(12);
           }
         } else {
           const pushDir = state.playerX >= r.x ? 1 : -1;
-          state.velX += pushDir * 0.38;
-          r.velX -= pushDir * 0.38;
+          state.velX += pushDir * 0.42;
+          r.velX -= pushDir * 0.42;
         }
       }
 
       const isAheadNow = r.z > state.posZ;
-      if (r.wasAhead && !isAheadNow) {
+      if (r.wasAhead && !isAheadNow && state.posZ > 180) {
         sfx.playOvertakeWhoosh();
+        showDrivingFeedback(`🏁 ${r.racer.shortName} 추월 성공!`, '#69f0ae', 0.75);
       } else if (!r.wasAhead && isAheadNow && state.posZ > 250) {
         if (r.passSoundCooldown <= 0) {
           sfx.playRivalPassBy();
@@ -4053,7 +4381,7 @@
 
       if (isAheadNow) aheadCount++;
 
-      if (newRelZ > -220 && newRelZ < 10 && r.speed >= state.speed * 0.97) {
+      if (newRelZ > -240 && newRelZ < 10 && r.speed >= state.speed * 0.96) {
         if (newRelZ > closestRearDist) {
           closestRearDist = newRelZ;
           rearChallenger = r;
@@ -4066,10 +4394,19 @@
       }
     });
 
-    if (rearChallenger) {
+    // 후방 공격 경보(최우선 표시) 또는 후방 추격 미러 표시
+    if (state.incomingAttackTimer > 0) {
       rearAlertBar.style.display = 'flex';
+      rearAlertBar.style.borderColor = '#ff1744';
+      rearAlertBar.style.background = 'linear-gradient(180deg, #ffebee, #ffcdd2)';
+      rearAlertBar.textContent = `⚠️ 후방 쇼크볼트 접근 (${state.incomingAttackTimer.toFixed(1)}s)! 🛡️방어 또는 급드리프트 회피!`;
+    } else if (rearChallenger) {
+      rearAlertBar.style.display = 'flex';
+      rearAlertBar.style.borderColor = '#ff9100';
+      rearAlertBar.style.background = 'linear-gradient(180deg, #fff8e1, #ffe082)';
       const dirIcon = rearChallenger.x < state.playerX - 0.15 ? '↙️' : (rearChallenger.x > state.playerX + 0.15 ? '↘️' : '⬇️');
-      rearAlertBar.textContent = `🪞 ${dirIcon} 🏎️💨`;
+      const styleTag = rearChallenger.persona === 'aggressive' ? '🔥공격형' : '🛡️안정형';
+      rearAlertBar.textContent = `🪞 ${dirIcon} ${rearChallenger.racer.shortName}(${styleTag}) 추격 중!`;
     } else {
       rearAlertBar.style.display = 'none';
     }
@@ -4077,12 +4414,16 @@
     state.rank = 1 + aheadCount;
     rankNumEl.textContent = String(state.rank);
 
-    // 13. 바퀴(Lap) 및 결승선 골인 체크
+    // 13. 바퀴(Lap) 타임 기록 및 3랩 완주 체크
     const currentLap = Math.min(state.totalLaps, Math.floor(state.posZ / state.trackLength) + 1);
     if (currentLap !== state.lap) {
+      if (state.currentLapTimeSec > 5 && (!state.bestLapTimeSec || state.currentLapTimeSec < state.bestLapTimeSec)) {
+        state.bestLapTimeSec = state.currentLapTimeSec;
+      }
+      state.currentLapTimeSec = 0;
       state.lap = currentLap;
       sfx.playFanfare();
-      speakKR('마지막 바퀴예요! 화이팅!', true);
+      showDrivingFeedback(`🏁 LAP ${state.lap}/${state.totalLaps} 진입!`, '#ffea00', 1.1);
     }
     lapBoxEl.textContent = `🏁 ${state.lap}/${state.totalLaps}`;
 
@@ -4092,6 +4433,9 @@
     speedText.textContent = String(Math.round(state.speed * 1.15));
 
     if (state.posZ >= totalRaceDist) {
+      if (state.currentLapTimeSec > 5 && (!state.bestLapTimeSec || state.currentLapTimeSec < state.bestLapTimeSec)) {
+        state.bestLapTimeSec = state.currentLapTimeSec;
+      }
       finishRace();
     }
 
@@ -4124,10 +4468,15 @@
       });
     }
 
-    document.getElementById('finishTitle').textContent = `우와! ${state.rank}등으로 골인!!`;
+    const totalSec = (state.raceElapsedSec || 0).toFixed(2);
+    const bestLapSec = (state.bestLapTimeSec || (state.raceElapsedSec || 0) / 3).toFixed(2);
+    document.getElementById('finishTitle').textContent = `🏁 ${state.rank}위 완주 성공!`;
+    const finishSubEl = document.getElementById('finishSub');
+    if (finishSubEl) {
+      finishSubEl.textContent = `⏱️ 총 주행 ${totalSec}초 · 최고 랩 ${bestLapSec}초`;
+    }
     document.getElementById('finishCoinText').textContent = `🪙 코인 +${state.coins + 35}`;
     finishModal.style.display = 'flex';
-    speakKR(`우와! ${state.rank}등으로 골인했어요! 정말 최고예요! 축하합니다!`, true);
   }
 
   // ==================== 정통 3D 카메라 원근 투영(1/Z Perspective) & 깊이감 렌더링 엔진 ====================
@@ -4140,11 +4489,11 @@
 
     if (state.segments.length === 0) return;
 
-    const drawDistance = 96;
+    const drawDistance = 108;
     const baseIndex = Math.floor(state.posZ / SEG_LEN);
     const basePercent = (state.posZ % SEG_LEN) / SEG_LEN;
 
-    // 내 차가 밟고 있는 도로 높이(baseRoadY)와 경사(roadSlope)를 보간하여 고저차 피칭 & 지평선 역동성 구현!
+    // 내 차가 밟고 있는 도로 높이(baseRoadY)와 경사(roadSlope)를 보간하여 고저차 피칭 & 다음 코너 시야 확보
     const seg0 = state.segments[baseIndex % state.segments.length];
     const seg1 = state.segments[(baseIndex + 1) % state.segments.length];
     const baseRoadY = seg0.y + (seg1.y - seg0.y) * basePercent;
@@ -4153,21 +4502,22 @@
     const speedRatio = state.speed / Math.max(1, state.maxSpeed);
     const boostVis = state.boostVisual || 0;
 
-    // 연석(Curb) 밟기 & 고속 부스터 주행 시 노면 진동(Rumble)과 경사 피칭이 반영된 다이나믹 지평선!
+    // 노면 진동(Rumble)과 경사 피칭은 시야를 흔들지 않도록 절제(±1.8px 이내)하여 다음 코너 에이펙스가 선명하게 보이도록 설계
     const onKerbRumble = (Math.abs(state.playerX) > 0.76 && state.playerY <= 2)
-      ? Math.sin(timeMs * 0.085) * 3.2 * speedRatio
-      : Math.sin(timeMs * 0.045) * (0.9 + boostVis * 2.2) * speedRatio;
-    const horizonY = Math.floor(H * 0.34 + Math.max(-28, Math.min(28, roadSlope * 0.42)) - boostVis * 10 + onKerbRumble);
+      ? Math.sin(timeMs * 0.075) * 1.8 * speedRatio
+      : Math.sin(timeMs * 0.04) * (0.5 + boostVis * 1.1) * speedRatio;
+    const horizonY = Math.floor(H * 0.33 + Math.max(-18, Math.min(18, roadSlope * 0.34)) - boostVis * 6 + onKerbRumble);
     const kartGroundY = H * 0.81;
 
-    // 코너 조향 및 드리프트 슬라이딩 시 화면 전체가 코너 안쪽으로 기울어지는 3D 다이나믹 카메라 뱅크 롤(Camera Bank Tilt)!
-    const camRoll = (-state.smoothSteer * 0.036 - (state.driftAngle || 0) * 0.030) * Math.min(1.15, speedRatio + 0.15);
+    // 코너 조향 및 드리프트 시 카메라 기울기(Bank Roll)를 최대 ±2.0도(0.035 rad)로 절제 적용
+    const rawRoll = (-state.smoothSteer * 0.022 - (state.driftAngle || 0) * 0.018) * Math.min(1.05, speedRatio + 0.12);
+    const camRoll = Math.max(-0.035, Math.min(0.035, rawRoll));
 
     ctx.save();
     if (Math.abs(camRoll) > 0.001) {
       ctx.translate(W * 0.5, H * 0.55);
       ctx.rotate(camRoll);
-      ctx.scale(1.045, 1.045);
+      ctx.scale(1.032, 1.032);
       ctx.translate(-W * 0.5, -H * 0.55);
     }
 
@@ -4182,11 +4532,12 @@
     ctx.fillStyle = track.grass1;
     ctx.fillRect(-60, horizonY, W + 120, H - horizonY + 80);
 
-    // 정통 3D 핀홀 카메라 파라미터 + 슈퍼부스터 다이나믹 FOV 워프(화각 확장):
+    // 속도와 부스트에 따른 절제된 FOV(시야각) 변화 — 과도한 왜곡 없이 고속감과 전방 코너 가시성을 동시에 확보
     const camDistBehind = 205;
-    const focalLen = 205 - boostVis * 54;
+    const fovShift = Math.min(34, Math.max(0, (speedRatio - 0.55) * 18) + boostVis * 26);
+    const focalLen = 205 - fovShift;
     const camHeight = (kartGroundY - horizonY) / (focalLen / camDistBehind);
-    const roadBaseW = Math.min(W * 0.54, H * 0.98) * (1 + boostVis * 0.08);
+    const roadBaseW = Math.min(W * 0.54, H * 0.98) * (1 + boostVis * 0.05);
 
     let dx = -(seg0.curve * basePercent * 2.2);
     let x = -dx * basePercent;
@@ -4276,8 +4627,28 @@
       ctx.fillStyle = stripe ? track.kerb1 : track.kerb2;
       drawTrapezoid(ctx, cx1, p1.y, bank1, cx2, p2.y, bank2);
 
-      // 4) 메인 대자연 주행 지면 (들판 흙길 / 쿠키 언덕길 / 백사장 모래 / 오로라 눈밭 / 정글 통나무·흙길 / 꽃잎 동산 / 화산 바위 / 별빛 오로라 길)
-      if (track.sceneryType === 'rainbow') {
+      // 4) 메인 주행 지면 & 섹터 3 지름길 분기(안전 본선 vs 위험 고속 지름길 데크) 렌더링!
+      if (p2.seg.hasShortcut) {
+        // (A) 중간 자갈 분리대 (지름길 실패 시 감속되지만 본선으로 탈출 가능한 완충 지대)
+        ctx.fillStyle = stripe ? '#8d6e63' : '#795548';
+        drawTrapezoid(ctx, cx1, p1.y, rw1 * 1.05, cx2, p2.y, rw2 * 1.05);
+
+        // (B) 우측 안전 본선 (넓고 안정적인 메인 주행로: x = -0.22 ~ +0.92)
+        const mainCenter1 = cx1 + rw1 * 0.28;
+        const mainCenter2 = cx2 + rw2 * 0.28;
+        ctx.fillStyle = stripe ? track.road1 : track.road2;
+        drawTrapezoid(ctx, mainCenter1, p1.y, rw1 * 0.62, mainCenter2, p2.y, rw2 * 0.62);
+
+        // (C) 좌측 위험·고속 협곡 우드/스틸 데크 지름길 (좁지만 직선 단축 + 대시패드 2연속: x = -0.98 ~ -0.46)
+        const scCenter1 = cx1 - rw1 * 0.62;
+        const scCenter2 = cx2 - rw2 * 0.62;
+        ctx.fillStyle = stripe ? '#5d4037' : '#4e342e';
+        drawTrapezoid(ctx, scCenter1, p1.y, rw1 * 0.24, scCenter2, p2.y, rw2 * 0.24);
+        // 지름길 시안·골드 가이드 레일 하이라이트 (멀리서도 분기점이 한눈에 식별됨!)
+        ctx.fillStyle = stripe ? '#00e5ff' : '#ffca28';
+        drawTrapezoid(ctx, scCenter1 - rw1 * 0.23, p1.y, rw1 * 0.025, scCenter2 - rw2 * 0.23, p2.y, rw2 * 0.025);
+        drawTrapezoid(ctx, scCenter1 + rw1 * 0.23, p1.y, rw1 * 0.025, scCenter2 + rw2 * 0.23, p2.y, rw2 * 0.025);
+      } else if (track.sceneryType === 'rainbow') {
         ctx.fillStyle = RAINBOW_COLORS[p2.seg.index % RAINBOW_COLORS.length];
         ctx.globalAlpha = 0.82;
         drawTrapezoid(ctx, cx1, p1.y, rw1, cx2, p2.y, rw2);
@@ -4409,6 +4780,30 @@
         drawRoadsideProp(ctx, sx, p.y, p.w * 0.48 * (sc.scaleMult || 1.0), track.sceneryType, sc.variant, timeMs);
       });
 
+      // 급커브/헤어핀 바깥쪽 에어로 셰브론 유도 표지판 (다음 코너 방향을 한눈에 안내)
+      if (p.seg.chevronSign && p.w > 18) {
+        const signX = p.x + p.seg.chevronSign * p.w * 1.12;
+        const signW = Math.max(8, p.w * 0.13);
+        const signH = signW * 0.85;
+        ctx.save();
+        ctx.fillStyle = '#0f172a';
+        ctx.strokeStyle = '#ffea00';
+        ctx.lineWidth = Math.max(1.5, signW * 0.12);
+        ctx.beginPath();
+        ctx.roundRect(signX - signW * 0.5, p.y - signH * 1.35, signW, signH, 3);
+        ctx.fill();
+        ctx.stroke();
+        ctx.strokeStyle = '#00e5ff';
+        ctx.lineWidth = Math.max(2, signW * 0.18);
+        const dirArrow = p.seg.curve > 0 ? 1 : -1;
+        ctx.beginPath();
+        ctx.moveTo(signX - dirArrow * signW * 0.22, p.y - signH * 1.15);
+        ctx.lineTo(signX + dirArrow * signW * 0.22, p.y - signH * 0.92);
+        ctx.lineTo(signX - dirArrow * signW * 0.22, p.y - signH * 0.70);
+        ctx.stroke();
+        ctx.restore();
+      }
+
       p.seg.items.forEach(it => {
         if (it.takenTimer && it.takenTimer > 0) return;
         const ix = p.x + it.x * p.w * 0.78;
@@ -4424,7 +4819,7 @@
           drawMarioPipe(ctx, ix, p.y, p.w * 0.11, timeMs);
         } else if (it.type === 'banana') {
           drawBananaPeel(ctx, ix, p.y, p.w * 0.082, timeMs);
-        } else if (it.type === 'oilSlick' || it.type === 'crab' || it.type === 'iceBlock' || it.type === 'yoshiEgg' || it.type === 'thwomp') {
+        } else if (it.type === 'canyonRock' || it.type === 'oilSlick' || it.type === 'crab' || it.type === 'iceBlock' || it.type === 'yoshiEgg' || it.type === 'thwomp') {
           drawMarioGimmick(ctx, it.type, ix, p.y, p.w * 0.12, it.phase || 0, timeMs);
         }
       });
@@ -4566,13 +4961,111 @@
 
     state.particles.forEach(pt => {
       ctx.save();
-      ctx.globalAlpha = Math.max(0, pt.life);
+      ctx.globalAlpha = Math.max(0, Math.min(0.68, pt.life));
       ctx.fillStyle = pt.color;
       ctx.beginPath();
-      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+      ctx.arc(pt.x, pt.y, Math.min(9, pt.size), 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     });
+
+    // ==================== 한눈에 읽히는 전술 HUD (드리프트 타이밍 게이지 · 현재 코스 구간 · 실시간 주행 피드백) ====================
+    if (state.mode === 'racing') {
+      // 1) 상단 진행도 바 아래 현재 전략 섹터 배지 표시 (구간별 판단 유도)
+      const zoneNames = {
+        straight: '구간 1 · 브릿지 직선 추월 (슬립스트림 가속)',
+        drift_s: '구간 2 · 연속 S-드리프트 협곡 (타이밍 릴리즈)',
+        ridge_split: state.inShortcutZone
+          ? '⚡ 좌측 고속 데크 지름길 돌파 중! (+9% 가속)'
+          : '구간 3 · 고저차 언덕 & 분기 (⬅️좌측 고속 지름길 / ➡️우측 안전 본선)',
+        hairpin_finale: '구간 4 · 선셋 180° 헤어핀 & 홈 스트레이트'
+      };
+      const curZoneText = zoneNames[seg0.zone] || zoneNames.straight;
+      ctx.save();
+      ctx.font = '900 13px "Apple SD Gothic Neo", sans-serif';
+      const zTw = ctx.measureText(curZoneText).width;
+      const zBoxW = zTw + 24;
+      const zBoxX = W * 0.5 - zBoxW * 0.5;
+      const zBoxY = 44;
+      ctx.fillStyle = state.inShortcutZone ? 'rgba(0, 176, 255, 0.88)' : 'rgba(15, 23, 42, 0.76)';
+      ctx.strokeStyle = state.inShortcutZone ? '#ffea00' : 'rgba(255, 255, 255, 0.55)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(zBoxX, zBoxY, zBoxW, 24, 12);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(curZoneText, W * 0.5, zBoxY + 12.5);
+      ctx.restore();
+
+      // 2) 드리프트 중 실시간 유지 시간 & 해제 타이밍 윈도우 게이지 (차량 하단 좌우, 도로 시야 방해 없음!)
+      if (state.driftActive) {
+        const barW = 156;
+        const barH = 11;
+        const bx = kartX - barW * 0.5;
+        const by = kartGroundY + 26;
+        const pct = Math.min(1, state.driftChargeTime / 1.55);
+        ctx.save();
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(bx, by, barW, barH, 6);
+        ctx.fill();
+        ctx.stroke();
+
+        // GOOD 구간(0.42s~0.82s)과 PERFECT 구간(0.82s~1.42s) 마커 표시
+        const goodStart = (0.42 / 1.55) * barW;
+        const perfStart = (0.82 / 1.55) * barW;
+        const overStart = (1.45 / 1.55) * barW;
+        ctx.fillStyle = 'rgba(105, 240, 174, 0.28)';
+        ctx.fillRect(bx + goodStart, by + 1, perfStart - goodStart, barH - 2);
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.35)';
+        ctx.fillRect(bx + perfStart, by + 1, overStart - perfStart, barH - 2);
+
+        const fillCol = state.driftEntryQuality === 'bad_angle'
+          ? '#ff9100'
+          : (state.driftStage >= 4 ? '#ff1744' : (state.driftStage === 3 ? '#00e5ff' : (state.driftStage === 2 ? '#69f0ae' : '#fff59d')));
+        ctx.fillStyle = fillCol;
+        ctx.beginPath();
+        ctx.roundRect(bx + 2, by + 2, Math.max(4, (barW - 4) * pct), barH - 4, 4);
+        ctx.fill();
+
+        const stageLabel = state.driftEntryQuality === 'bad_angle'
+          ? '⚠️ 진입각 불량'
+          : (state.driftStage >= 4 ? '🔥 OVER-DRIFT 위험!' : (state.driftStage === 3 ? '⚡ PERFECT! 지금 해제!' : (state.driftStage === 2 ? '✨ GOOD 윈도우' : '드리프트 충전 중...')));
+        ctx.font = '900 12px "Apple SD Gothic Neo", sans-serif';
+        ctx.fillStyle = fillCol;
+        ctx.textAlign = 'center';
+        ctx.fillText(stageLabel, kartX, by - 6);
+        ctx.restore();
+      }
+
+      // 3) 주행 결과 피드백 배너 (드리프트 성공/실패 · 부스트 · 실드 방어 · 추월 알림 — 시야를 가리지 않도록 상단 78px 위치에 깔끔하게 표시)
+      if (state.driftFeedbackTimer > 0 && state.driftFeedbackText) {
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, state.driftFeedbackTimer * 2.2);
+        ctx.font = '900 16px "Apple SD Gothic Neo", sans-serif';
+        const fTw = ctx.measureText(state.driftFeedbackText).width;
+        const fW = fTw + 28;
+        const fX = W * 0.5 - fW * 0.5;
+        const fY = 74;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+        ctx.strokeStyle = state.driftFeedbackColor || '#00e5ff';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.roundRect(fX, fY, fW, 28, 14);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = state.driftFeedbackColor || '#00e5ff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(state.driftFeedbackText, W * 0.5, fY + 14.5);
+        ctx.restore();
+      }
+    }
 
     if (state.mode === 'finished') {
       state.confetti.forEach(c => {
@@ -4792,36 +5285,36 @@
       const lx = (((k * (farSpan * 0.5) + 180 + skyYaw * 0.52) % farSpan) + farSpan) % farSpan - 180;
       const ly = horizonY;
       c.save();
-      if (type === 'mario') {
-        // 피치 성(Peach's Castle): 하얀 성벽 + 빨간 고깔 지붕 3탑 + 스테인드글라스 창문 + 황금 깃발
-        c.fillStyle = '#fff8e1';
-        c.strokeStyle = '#d7ccc8';
-        c.lineWidth = 2;
-        c.fillRect(lx - 54, ly - 68, 108, 68);
-        c.fillRect(lx - 26, ly - 108, 52, 42);
-        c.fillRect(lx - 66, ly - 82, 24, 82);
-        c.fillRect(lx + 42, ly - 82, 24, 82);
-        c.fillStyle = '#ff1744';
-        [[-54, -82, 20, 32], [54, -82, 20, 32], [0, -108, 34, 44]].forEach(([rx, ry, rw, rh]) => {
-          c.beginPath();
-          c.moveTo(lx + rx - rw, ly + ry);
-          c.lineTo(lx + rx, ly + ry - rh);
-          c.lineTo(lx + rx + rw, ly + ry);
-          c.closePath();
-          c.fill();
-        });
-        c.fillStyle = '#ffea00';
+      if (type === 'canyon' || type === 'mario') {
+        // 선셋 캐니언 에어로 서킷 랜드마크: 거대 붉은 사암 메사(Mesa) 협곡 실루엣 & 현수교 파일런 타워 (깊이감과 색 대비 강조!)
+        c.fillStyle = '#7c2d12';
         c.beginPath();
-        c.arc(lx, ly - 84, 11, 0, Math.PI * 2);
+        c.moveTo(lx - 115, ly + 4);
+        c.lineTo(lx - 78, ly - 92);
+        c.lineTo(lx - 18, ly - 92);
+        c.lineTo(lx + 12, ly + 4);
+        c.closePath();
         c.fill();
-        // 공중에 떠 있는 황금 ? 블록 3개
-        [-130, -98, -66].forEach((bx, bIdx) => {
-          const by = ly - 76 - Math.sin(tSec * 3.5 + bIdx) * 5;
-          c.fillStyle = '#ffca28';
-          c.strokeStyle = '#ffffff';
-          c.lineWidth = 2;
-          c.fillRect(lx + bx, by, 22, 22);
-          c.strokeRect(lx + bx, by, 22, 22);
+        // 메사 상단 노을 하이라이트 단층
+        c.fillStyle = '#ea580c';
+        c.fillRect(lx - 76, ly - 92, 56, 12);
+
+        // 우측 에어로 서킷 사장교 타워 실루엣
+        c.strokeStyle = '#e2e8f0';
+        c.lineWidth = 3.5;
+        c.beginPath();
+        c.moveTo(lx + 75, ly);
+        c.lineTo(lx + 85, ly - 108);
+        c.lineTo(lx + 95, ly);
+        c.stroke();
+        // 사장교 케이블 라인
+        c.strokeStyle = 'rgba(56, 189, 248, 0.65)';
+        c.lineWidth = 1.6;
+        [-48, -28, 28, 48].forEach(cxOff => {
+          c.beginPath();
+          c.moveTo(lx + 85, ly - 96);
+          c.lineTo(lx + 85 + cxOff, ly);
+          c.stroke();
         });
       } else if (type === 'candy') {
         // 도넛 평원·초코섬: 거대한 핑크 아이싱 도넛 산 아치 & 막대사탕 풍차
@@ -5047,43 +5540,30 @@
     }
 
     const v = variant % 2;
-    if (type === 'mario') {
+    if (type === 'canyon' || type === 'mario') {
       if (v === 0) {
-        // 아기자기한 웃는 얼굴의 슈퍼마리오 버섯 나무
-        c.fillStyle = '#fff8e1';
-        c.strokeStyle = '#ffffff';
+        // 선셋 캐니언 적갈색 사암 첨탑(Sandstone Spire) 실루엣
+        c.fillStyle = '#7c2d12';
+        c.strokeStyle = '#fb923c';
         c.lineWidth = Math.max(1.2, size * 0.05);
         c.beginPath();
-        c.roundRect(x - size * 0.22, y - size * 0.55, size * 0.44, size * 0.55, size * 0.1);
-        c.fill();
-        c.fillStyle = '#ff1744';
-        c.beginPath();
-        c.arc(x, y - size * 0.62, size * 0.54, Math.PI, 0);
+        c.moveTo(x - size * 0.36, y);
+        c.lineTo(x - size * 0.22, y - size * 0.96);
+        c.lineTo(x + size * 0.14, y - size * 0.82);
+        c.lineTo(x + size * 0.34, y);
         c.closePath();
         c.fill();
         c.stroke();
-        c.fillStyle = '#ffffff';
-        c.beginPath();
-        c.arc(x - size * 0.22, y - size * 0.82, size * 0.13, 0, Math.PI * 2);
-        c.arc(x + size * 0.22, y - size * 0.82, size * 0.13, 0, Math.PI * 2);
-        c.arc(x, y - size * 0.95, size * 0.11, 0, Math.PI * 2);
-        c.fill();
-        if (size > 16) {
-          c.fillStyle = '#263238';
-          c.beginPath();
-          c.arc(x - size * 0.09, y - size * 0.34, size * 0.04, 0, Math.PI * 2);
-          c.arc(x + size * 0.09, y - size * 0.34, size * 0.04, 0, Math.PI * 2);
-          c.fill();
-        }
       } else {
-        // 동글동글 열매가 달린 버섯 왕국 나무
-        c.fillStyle = '#8d6e63';
-        c.fillRect(x - size * 0.14, y - size * 0.7, size * 0.28, size * 0.7);
-        c.fillStyle = '#66bb6a';
+        // 협곡 고원 침엽수(Canyon Pine) 실루엣
+        c.fillStyle = '#4e342e';
+        c.fillRect(x - size * 0.10, y - size * 0.65, size * 0.20, size * 0.65);
+        c.fillStyle = '#15803d';
         c.beginPath();
-        c.arc(x, y - size * 0.95, size * 0.46, 0, Math.PI * 2);
-        c.arc(x - size * 0.28, y - size * 0.75, size * 0.34, 0, Math.PI * 2);
-        c.arc(x + size * 0.28, y - size * 0.75, size * 0.34, 0, Math.PI * 2);
+        c.moveTo(x, y - size * 1.22);
+        c.lineTo(x + size * 0.42, y - size * 0.32);
+        c.lineTo(x - size * 0.42, y - size * 0.32);
+        c.closePath();
         c.fill();
       }
     } else if (type === 'candy') {
@@ -5490,7 +5970,29 @@
   function drawMarioGimmick(c, type, x, y, size, phase, timeMs) {
     if (size < 4) return;
     c.save();
-    if (type === 'oilSlick') {
+    if (type === 'canyonRock') {
+      // 선셋 캐니언 협곡 바리케이드 암석 파일런 (붉은 사암 실루엣 + 바닥 위험 링 + 상단 '!' 경고 배지)
+      drawHazardWarningZone(c, x, y, size, timeMs, 0.90);
+      const rw = size * 0.96;
+      const rh = size * 1.15;
+      const rg = c.createLinearGradient(x - rw * 0.5, y - rh, x + rw * 0.5, y);
+      rg.addColorStop(0, '#ff8a65');
+      rg.addColorStop(0.5, '#d84315');
+      rg.addColorStop(1, '#4e342e');
+      c.fillStyle = rg;
+      c.strokeStyle = '#ffea00';
+      c.lineWidth = Math.max(1.6, size * 0.09);
+      c.beginPath();
+      c.moveTo(x - rw * 0.48, y);
+      c.lineTo(x - rw * 0.34, y - rh * 0.78);
+      c.lineTo(x - rw * 0.06, y - rh);
+      c.lineTo(x + rw * 0.28, y - rh * 0.84);
+      c.lineTo(x + rw * 0.48, y);
+      c.closePath();
+      c.fill();
+      c.stroke();
+      drawHazardAlertBadge(c, x, y - rh, size, timeMs);
+    } else if (type === 'oilSlick') {
       // 마리오 서킷 오일 / 도넛 평원 초코 진흙 웅덩이 (빨간 위험 경고 테두리)
       drawHazardWarningZone(c, x, y, size, timeMs, 1.02);
       const isChoco = state.selectedTrack === 1;
@@ -5614,34 +6116,28 @@
     c.restore();
   }
 
-  // 천사 날개가 달린 아기자기한 빨강 거북이 등껍질
+  // 전방 추적형 전자기 쇼크 볼트(Shock Bolt) 투사체 렌더링
   function drawRedShell(c, x, y, size, timeMs) {
     c.save();
-    c.translate(x, y - size * 0.52);
-    const flap = Math.sin(timeMs * 0.025) * 0.18;
+    c.translate(x, y - size * 0.56);
+    const pulse = Math.sin((timeMs || 0) * 0.03) * 0.18;
 
-    c.fillStyle = '#ffffff';
-    c.strokeStyle = '#80d8ff';
-    c.lineWidth = Math.max(1.2, size * 0.08);
-    [-1, 1].forEach(dir => {
-      c.save();
-      c.rotate(dir * flap);
-      c.beginPath();
-      c.ellipse(dir * size * 0.68, -size * 0.14, size * 0.34, size * 0.18, dir * -0.3, 0, Math.PI * 2);
-      c.fill();
-      c.stroke();
-      c.restore();
-    });
+    // 외곽 고전압 시안 플라즈마 링
+    c.strokeStyle = '#00e5ff';
+    c.lineWidth = Math.max(1.8, size * 0.14);
+    c.beginPath();
+    c.ellipse(0, 0, size * (0.86 + pulse), size * 0.36, (timeMs || 0) * 0.01, 0, Math.PI * 2);
+    c.stroke();
 
-    const sg = c.createRadialGradient(-size * 0.2, -size * 0.2, size * 0.1, 0, 0, size * 0.65);
-    sg.addColorStop(0, '#ff8a80');
-    sg.addColorStop(0.45, '#ff1744');
-    sg.addColorStop(1, '#b71c1c');
+    const sg = c.createRadialGradient(-size * 0.18, -size * 0.18, size * 0.08, 0, 0, size * 0.62);
+    sg.addColorStop(0, '#ffffff');
+    sg.addColorStop(0.45, '#00e5ff');
+    sg.addColorStop(1, '#ff1744');
     c.fillStyle = sg;
     c.strokeStyle = '#ffffff';
     c.lineWidth = Math.max(1.5, size * 0.12);
     c.beginPath();
-    c.arc(0, 0, size * 0.58, 0, Math.PI * 2);
+    c.arc(0, 0, size * 0.56, 0, Math.PI * 2);
     c.fill();
     c.stroke();
     c.restore();
