@@ -15,8 +15,6 @@ mkdir -p /Volumes/M/inanimals-corp-website/public/kidskart
 
 cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-debug.apk"
 cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-1.8.0.apk"
-cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/firebase-app-update-server/public/kidskart/KidsKartRush-1.8.0.apk
-cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/inanimals-corp-website/public/kidskart/KidsKartRush-1.8.0.apk
 
 cp "$PROJECT/app/src/main/assets/index.html" "$PROJECT/dist/index.html"
 cp "$PROJECT/app/src/main/assets/index.html" "$PROJECT/dist/index_v1.8.0.html"

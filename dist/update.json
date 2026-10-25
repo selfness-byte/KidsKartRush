@@ -3,7 +3,7 @@
   "packageId": "com.mj.kidskart",
   "versionCode": 17,
   "versionName": "1.8.0",
-  "apkUrl": "https://inanimals-1977.web.app/kidskart/KidsKartRush-1.8.0.apk",
+  "apkUrl": "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.8.0.apk",
   "sha256": "ca0b2b099958d1cb420b0ee606fff2b00f2d5ca212fcb6b65d3729c7329e1877",
   "sizeBytes": 1088101,
   "updatedAt": "2026-10-25",
