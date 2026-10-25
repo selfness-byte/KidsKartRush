@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.6.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.7.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,16 +15,16 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.6.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.7.apk"
     notes = (
-        "• [우측 동료 레이서 클릭 지원 출격 & 원거리-근거리 파도타기 적군 & 거대 화염 용(🐉) 보스전 대개편!] ① 나머지 5명의 레이서를 화면 오른쪽 지원 버튼으로 클릭하면 즉시 트랙 위로 출격해 적과 보스를 함께 공격하며 도와주는 아군 윙맨(Ally Support) 시스템 탑재, ② 적 기체들이 현재의 전방 위치에서 멀리서 총을 쏘다가 가까워졌다가 다시 멀어지는 원거리-근거리 왕복 기동 적용, ③ 중간보스(🤖아이언 스콜피온)는 1회 처치 시 다시 나오지 않고 저 멀리서 작은 적들이 몰려오는 웨이브로 전환된 뒤 대망의 큰 보스전 거대 화염 용(🐉 드래곤 엠페러)이 강림하도록 구성!"
+        "• [초장거리 후퇴(1130m) ↔ 초근접 급강하(120m) 적 기체 기동 & 4대 아케이드 재미 요소 대폭 추가!] ① 적들이 지평선 근처 초장거리(960~1150m)까지 훨씬 멀리 떨어졌다가 제트 부스터 불꽃을 뿜으며 플레이어 코앞(115~145m)으로 급강하 돌진하는 다이내믹 왕복 기동 적용, ② 5연속 격추 시 5갈래 스타버스트 탄막이 폭발하는 🔥연쇄 콤보 & ⚡FEVER OVERDRIVE 각성 시스템, ③ 적 격추 시 도로 위에 떨어지는 🎁3D 홀로그램 보급 캡슐(⚡하이퍼 발칸 오버차지 · 🧲코인 잭팟 · 🤝동료 긴급 호출), ④ 보스 몸체의 회전 과녁을 맞히면 2~3배 데미지가 터지는 🎯WEAK POINT 크리티컬 사격 및 🌈동료 5인 합체 레인보우 레이저 포격 탑재!"
     )
 
     update_payload = {
         "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
         "packageId": "com.mj.kidskart",
-        "versionCode": 24,
-        "versionName": "1.9.6",
+        "versionCode": 25,
+        "versionName": "1.9.7",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -51,17 +51,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "에어로 카트 GP: 선셋 캐니언 에디션",
-                "latest_version": "1.9.6",
-                "version_code": 24,
+                "latest_version": "1.9.7",
+                "version_code": 25,
                 "force_update": False,
-                "release_notes": "우측 레이서 클릭 지원 출격, 원거리-근거리 파도타기 적 기체, 중간보스 1회 처치 후 작은 적 원거리 웨이브 및 거대 화염 용(드래곤) 보스전 적용.",
+                "release_notes": "초장거리 후퇴-초근접 급강하 적 기동, 5콤보 FEVER OVERDRIVE 각성, 3D 보급 캡슐 드롭, 보스 약점 크리티컬 사격 및 동료 합체 레인보우 레이저 추가.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.9.6 (build 24), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.9.7 (build 25), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
