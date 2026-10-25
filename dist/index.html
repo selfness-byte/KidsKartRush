@@ -978,7 +978,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.9.4</span>
+      <span class="lobby-badge" id="verBadge">v1.9.5</span>
       <h1>🌅 선셋 캐니언 에어로 카트 GP</h1>
     </div>
     <div class="assist-pills">
@@ -4301,10 +4301,14 @@
   }
 
   // ==================== 적 군단(Combat Enemies) 및 거대 보스(Giant Boss) 생성 헬퍼 ====================
-  function createEnemyUnit(spawnZ, idxHint = 0) {
-    const spec = ENEMY_TYPES[idxHint % ENEMY_TYPES.length];
-    const baseLane = [-0.52, 0.48, -0.18, 0.34, -0.38, 0.16][idxHint % 6];
+  function createEnemyUnit(spawnZ, slotIdx = 0, variantSeed = 0) {
+    const typeIdx = (slotIdx + variantSeed) % ENEMY_TYPES.length;
+    const spec = ENEMY_TYPES[typeIdx];
+    const baseLane = [-0.50, 0.46, -0.18, 0.32, -0.36, 0.16][slotIdx % 6];
+    const slotRelZ = 135 + (slotIdx % 6) * 60; // 플레이어 전방 135 ~ 435 거리에 항상 포진!
     return {
+      slotIdx: slotIdx % 6,
+      slotRelZ,
       type: spec.type,
       name: spec.name,
       icon: spec.icon,
@@ -4316,9 +4320,9 @@
       y: spec.baseY,
       weaveAmp: spec.weaveAmp,
       weaveFreq: spec.weaveFreq,
-      phase: idxHint * 1.35 + Math.random() * 2.0,
-      speed: state.maxSpeed * 0.96,
-      attackCooldown: 1.4 + (idxHint % 3) * 0.65,
+      phase: slotIdx * 1.35 + Math.random() * 2.0,
+      speed: state.maxSpeed * 1.05,
+      attackCooldown: 1.2 + (slotIdx % 3) * 0.55,
       muzzleFlashTimer: 0,
       hitFlash: 0,
       primary: spec.primary,
@@ -4338,12 +4342,12 @@
       icon: spec.icon,
       hp: spec.maxHp,
       maxHp: spec.maxHp,
-      z: state.posZ + 305,
+      z: state.posZ + 255,
       x: 0,
       y: spec.baseY,
       phase: 0,
-      speed: state.maxSpeed * 1.02,
-      attackCooldown: 1.85,
+      speed: state.maxSpeed * 1.08,
+      attackCooldown: 1.65,
       patternIdx: 0,
       muzzleFlashTimer: 0,
       hitFlash: 0,
@@ -4353,7 +4357,7 @@
     };
     if (playAlert) {
       sfx.playBossWarning();
-      showDrivingFeedback(`🚨 STAGE ${spec.stage} 거대 보스 [${spec.icon} ${spec.name}] 출현! 집중 사격!`, '#ff1744', 1.35);
+      showDrivingFeedback(`🚨 STAGE ${spec.stage} 거대 보스 [${spec.icon} ${spec.name}] 전방 출현! 집중 사격!`, '#ff1744', 1.35);
     }
   }
 
@@ -4433,9 +4437,9 @@
     state.bossStageIdx = 0;
     state.bossRespawnTimer = 0;
 
-    // 1) 트랙 전방에 6기의 적 전투 편대(드론 · 바이커 · 메카탱크) 초기 배치!
-    const initialEnemyOffsets = [155, 265, 390, 520, 660, 810];
-    state.enemies = initialEnemyOffsets.map((ez, idx) => createEnemyUnit(ez, idx));
+    // 1) 트랙 전방에 6기의 적 전투 편대(드론 · 바이커 · 메카탱크) 초기 배치 (항상 플레이어 앞 135~435 거리에 포진!)
+    const initialEnemyOffsets = [135, 195, 255, 315, 375, 435];
+    state.enemies = initialEnemyOffsets.map((ez, idx) => createEnemyUnit(ez, idx, 0));
 
     // 2) 1단계 거대 보스(아이언 스콜피온 메카) 전방 출현!
     spawnBossStage(0, false);
@@ -5126,8 +5130,9 @@
         continue;
       }
 
-      // [플레이어가 앞으로 발사한 기관총/레이저/로켓/산탄/유탄]
-      proj.z += proj.speed * 4.6 * dt;
+      // [플레이어가 앞으로 발사한 기관총/레이저/로켓/산탄/유탄] — 부스터/지름길 초고속 주행 중에도 항상 전방의 적·보스보다 훨씬 빠르게 앞으로 날아가 명중!
+      const minBulletStep = moveDist + Math.max(260, (proj.speed - state.maxSpeed)) * 4.6 * dt;
+      proj.z += Math.max(proj.speed * 4.6 * dt, minBulletStep);
       if (proj.vx) {
         proj.x += proj.vx * dt;
       }
@@ -5208,10 +5213,12 @@
             }
           });
           if (state.enemies) {
-            state.enemies.forEach(en => {
+            state.enemies.forEach((en, eIdx) => {
               if (en && en.hp > 0 && Math.abs(en.z - proj.z) < 220 && Math.abs(en.x - proj.x) < 0.78) {
-                en.hp = 0;
+                state.enemyKills = (state.enemyKills || 0) + 1;
                 hitNames.push(en.name);
+                const curSlotIdx = en.slotIdx !== undefined ? en.slotIdx : eIdx;
+                Object.assign(en, createEnemyUnit(state.posZ + 380 + (curSlotIdx % 4) * 32, curSlotIdx, state.enemyKills));
               }
             });
           }
@@ -5219,6 +5226,12 @@
             state.boss.hp = Math.max(0, state.boss.hp - 7);
             state.boss.hitFlash = 0.25;
             hitNames.push(state.boss.name);
+            if (state.boss.hp <= 0) {
+              state.boss.active = false;
+              state.bossKills = (state.bossKills || 0) + 1;
+              state.bossRespawnTimer = 0.85;
+              sfx.playBossDefeat();
+            }
           }
           sfx.playShellHit();
           vibrateDevice(80);
@@ -5254,7 +5267,7 @@
           if (b.hp <= 0) {
             b.active = false;
             state.bossKills = (state.bossKills || 0) + 1;
-            state.bossRespawnTimer = 4.2;
+            state.bossRespawnTimer = 0.85; // 격파 직후 다음 스테이지 거대 보스가 즉시 전방에서 출현하여 항상 앞에 보스가 유지됨!
             sfx.playBossDefeat();
             vibrateDevice(120);
             spawnBoostShockwave(true);
@@ -5320,9 +5333,10 @@
           } else {
             showDrivingFeedback(`💥 ${hitEnemy.icon} ${hitEnemy.name} 격추! (${state.enemyKills}기 격파 · 부스트 가속!)`, '#ffea00', 0.82);
           }
-          // 격추된 적 기체 대신 전방에 새로운 적 기체 즉시 증원!
-          const respawnZ = state.posZ + 520 + Math.random() * 380;
-          Object.assign(hitEnemy, createEnemyUnit(respawnZ, state.enemyKills + Math.floor(Math.random() * 3)));
+          // 격추된 적 기체 대신 전방(380~500 앞)에 새로운 적 기체 즉시 증원하여 자기 전방 슬롯(slotRelZ)으로 진입!
+          const curSlotIdx = hitEnemy.slotIdx !== undefined ? hitEnemy.slotIdx : 0;
+          const respawnZ = state.posZ + 380 + (curSlotIdx % 4) * 32;
+          Object.assign(hitEnemy, createEnemyUnit(respawnZ, curSlotIdx, state.enemyKills));
         } else {
           sfx.playBulletHit(Boolean(proj.heavy || proj.type !== 'bullet'));
           vibrateDevice(30);
@@ -5451,7 +5465,7 @@
       if (state.projectiles[pIdx].isEnemy) activeEnemyShots++;
     }
 
-    // 11.8 [신규 전투 시스템] 전방 적 군단(드론·바이커·메카탱크) & 거대 보스(Giant Boss) 주행·패턴 사격·증원 물리!
+    // 11.8 [신규 전투 시스템] 전방 적 군단(드론·바이커·메카탱크) & 거대 보스(Giant Boss) — 언제나 플레이어 앞에 위치하며 전방 교전 유지!
     if (state.enemies && state.enemies.length > 0) {
       state.enemies.forEach((en, eIdx) => {
         if (!en) return;
@@ -5462,22 +5476,20 @@
         en.phase = (en.phase || 0) + dt * (en.weaveFreq || 1.8);
         en.x = Math.max(-0.72, Math.min(0.72, (en.baseX || 0) + Math.sin(en.phase) * (en.weaveAmp || 0.28)));
 
+        // [핵심 개선] 적 기체들이 플레이어의 전진량(moveDist: 부스터·스타·지름길 포함)을 100% 동기화하고,
+        // 항상 플레이어 전방 전용 사격 슬롯(115 ~ 520 거리 앞)에 머물며 절대 뒤로 밀려나지 않음!
+        en.z += moveDist;
+        const baseSlotRelZ = en.slotRelZ || (135 + (eIdx % 6) * 60);
+        const desiredEnZ = state.posZ + baseSlotRelZ + Math.sin(en.phase * 0.65) * 22;
+        en.z += (desiredEnZ - en.z) * Math.min(1, dt * 7.2);
+        const minFrontRelZ = 115 + (eIdx % 3) * 24;
+        en.z = Math.max(state.posZ + minFrontRelZ, Math.min(state.posZ + 520, en.z));
+        en.speed = state.speed;
+
         const relZ = en.z - state.posZ;
-        // 플레이어 전방 사격 교전 거리(110 ~ 680)에서 전투 편대 속도 조절
-        let targetEnSpd = state.maxSpeed * 0.96;
-        if (relZ > 680) targetEnSpd = state.maxSpeed * 0.84;
-        else if (relZ < 150 && relZ > 20) targetEnSpd = state.maxSpeed * 1.04;
-        en.speed += (targetEnSpd - en.speed) * Math.min(1, dt * 6.0);
-        en.z += en.speed * 4.6 * dt;
 
-        // 뒤로 지나간 적 기체는 전방에 새로운 적 편대로 즉시 재배치
-        if (en.z - state.posZ < -75) {
-          Object.assign(en, createEnemyUnit(state.posZ + 540 + (eIdx % 3) * 140 + Math.random() * 180, eIdx + (state.enemyKills || 0)));
-          return;
-        }
-
-        // 적 기체의 전방 사격
-        if (en.attackCooldown <= 0 && relZ > 125 && relZ < 640 && activeEnemyShots < 4) {
+        // 적 기체의 전방 사격 (항상 플레이어 앞 115 ~ 520 거리에서 플레이어를 향해 사격!)
+        if (en.attackCooldown <= 0 && relZ >= 110 && relZ <= 530 && activeEnemyShots < 4) {
           en.attackCooldown = (en.type === 'mecha' ? 2.1 : 2.7) + Math.random() * 1.2;
           en.muzzleFlashTimer = 0.25;
           activeEnemyShots++;
@@ -5498,31 +5510,10 @@
           });
           sfx.playGunShot(true, 1);
         }
-
-        // 플레이어 카트와 적 기체 근접 충돌 판정 (부스터/실드/무적 상태에서는 몸통 박치기로도 적 격파 가능!)
-        if (Math.abs(en.z - state.posZ) < 42 && Math.abs(en.x - state.playerX) < 0.28 && state.playerY < 36) {
-          if (isInvincible || state.shieldTimer > 0 || isBoosting) {
-            state.enemyKills = (state.enemyKills || 0) + 1;
-            sfx.playEnemyExplode(en.type === 'mecha');
-            vibrateDevice(55);
-            spawnBoostParticles(14);
-            state.boostTimer = Math.max(state.boostTimer, 0.55);
-            showDrivingFeedback(`💥 ${en.icon} ${en.name} 부스터 몸통 격파!`, '#69f0ae', 0.80);
-            Object.assign(en, createEnemyUnit(state.posZ + 560 + Math.random() * 320, eIdx + state.enemyKills));
-          } else if (state.hitImmunityTimer <= 0) {
-            state.hitImmunityTimer = 1.6;
-            state.speed = Math.max(state.maxSpeed * 0.58, state.speed * 0.74);
-            const pushDir = state.playerX >= en.x ? 1 : -1;
-            state.velX += pushDir * 0.52;
-            sfx.playHop();
-            vibrateDevice(45);
-            showDrivingFeedback(`⚠️ ${en.icon} ${en.name} 충돌! 총(🔫)으로 먼저 격추하세요!`, '#ffab40', 0.80);
-          }
-        }
       });
     }
 
-    // 거대 보스(Giant Boss) 주행·패턴 공격·다음 단계 보스 리스폰 물리!
+    // 거대 보스(Giant Boss) 주행·패턴 공격·다음 단계 보스 리스폰 물리! (언제나 플레이어 앞 185~330 거리에 위치!)
     if (!state.boss || !state.boss.active) {
       if (state.bossRespawnTimer > 0) {
         state.bossRespawnTimer -= dt;
@@ -5539,9 +5530,13 @@
       b.phase = (b.phase || 0) + dt * (1.25 + b.stage * 0.18);
       b.x = Math.sin(b.phase) * 0.46;
 
-      // 보스가 플레이어 전방 230 ~ 310 거리에서 위압감 있게 앞서 달리며 사격 배틀을 유지!
-      const desiredBossZ = state.posZ + 265 + Math.sin(b.phase * 0.55) * 38;
-      b.z += (desiredBossZ - b.z) * Math.min(1, dt * 4.8);
+      // [핵심 개선] 플레이어가 부스터·슈퍼부스트·지름길을 써도 거대 보스가 moveDist만큼 먼저 전진한 뒤
+      // 전방 185 ~ 330 거리에 하드 클램프되어 100% 항상 플레이어 정면 앞쪽에서 앞서 달리며 사격 배틀을 유지!
+      b.z += moveDist;
+      const desiredBossZ = state.posZ + 245 + Math.sin(b.phase * 0.55) * 28;
+      b.z += (desiredBossZ - b.z) * Math.min(1, dt * 7.8);
+      b.z = Math.max(state.posZ + 185, Math.min(state.posZ + 330, b.z));
+      b.speed = state.speed;
 
       if (b.attackCooldown <= 0 && activeEnemyShots < 4) {
         b.patternIdx = ((b.patternIdx || 0) + 1) % 2;

@@ -14,16 +14,16 @@ mkdir -p /Volumes/M/firebase-app-update-server/public/kidskart
 mkdir -p /Volumes/M/inanimals-corp-website/public/kidskart
 
 cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-debug.apk"
-cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-1.9.4.apk"
+cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-1.9.5.apk"
 
 cp "$PROJECT/app/src/main/assets/index.html" "$PROJECT/dist/index.html"
-cp "$PROJECT/app/src/main/assets/index.html" "$PROJECT/dist/index_v1.9.4.html"
+cp "$PROJECT/app/src/main/assets/index.html" "$PROJECT/dist/index_v1.9.5.html"
 cp "$PROJECT/app/src/main/assets/index.html" /Volumes/M/firebase-app-update-server/public/kidskart/play.html
 cp "$PROJECT/app/src/main/assets/index.html" /Volumes/M/inanimals-corp-website/public/kidskart/play.html
 
 python3 "$PROJECT/scripts/generate_update_meta.py"
-echo "APK: $PROJECT/dist/KidsKartRush-1.9.4.apk"
+echo "APK: $PROJECT/dist/KidsKartRush-1.9.5.apk"
 if [ "$1" = "--install" ]; then
-  adb -d install -r "$PROJECT/dist/KidsKartRush-1.9.4.apk"
+  adb -d install -r "$PROJECT/dist/KidsKartRush-1.9.5.apk"
   adb -d shell am start -n com.mj.kidskart/.MainActivity
 fi
