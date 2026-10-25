@@ -978,7 +978,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.9.2</span>
+      <span class="lobby-badge" id="verBadge">v1.9.3</span>
       <h1>🌅 선셋 캐니언 에어로 카트 GP</h1>
     </div>
     <div class="assist-pills">
@@ -1749,46 +1749,143 @@
       } catch (_) {}
     }
 
-    // 전방 기관총 / 레이저 총 / 적 사격 효과음 ("타타탕! / 피융!")
-    playGunShot(isEnemy = false, burstCount = 1) {
+    // 전방 기관총 / 레이저 총 / 적 사격 효과음 — 3-Layer 실감 탄도 사운드 (총구 저음 펀치 + 화약 파열 크랙 + 노리쇠/탄피 금속 클락!)
+    playGunShot(isEnemy = false, burstCount = 1, weaponType = 'bullet') {
       if (this.muted || this.appPaused) return;
       try {
         this.init();
         if (!this.ctx) return;
-        const shots = Math.max(1, Math.min(5, burstCount));
+        const shots = Math.max(1, Math.min(6, burstCount));
+        const spacing = weaponType === 'heavy' ? 0.052 : 0.048;
+
         for (let b = 0; b < shots; b++) {
-          const t0 = this.ctx.currentTime + b * 0.055;
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.type = isEnemy ? 'triangle' : 'sawtooth';
-          osc.frequency.setValueAtTime(isEnemy ? 580 : 760, t0);
-          osc.frequency.exponentialRampToValueAtTime(isEnemy ? 145 : 175, t0 + 0.068);
+          const t0 = this.ctx.currentTime + b * spacing;
 
-          gain.gain.setValueAtTime(isEnemy ? 0.065 : 0.12, t0);
-          gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.072);
+          // [Layer 1] 총구 폭발 로우엔드 펀치 (Muzzle Blast Sub-Kick: 묵직하게 가슴을 때리는 "탕! / 두둥!" 타격감)
+          const punchOsc = this.ctx.createOscillator();
+          const punchGain = this.ctx.createGain();
+          punchOsc.type = isEnemy ? 'triangle' : 'sawtooth';
+          const startFreq = isEnemy ? 165 : (weaponType === 'heavy' ? 245 : (weaponType === 'laser' ? 1350 : 215));
+          const endFreq = isEnemy ? 48 : (weaponType === 'laser' ? 190 : 38);
+          const dur = isEnemy ? 0.055 : (weaponType === 'laser' ? 0.075 : 0.058);
 
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.start(t0);
-          osc.stop(t0 + 0.078);
+          punchOsc.frequency.setValueAtTime(startFreq, t0);
+          punchOsc.frequency.exponentialRampToValueAtTime(endFreq, t0 + dur);
 
-          if (this.noiseBuffer) {
+          const peakPunch = isEnemy ? 0.09 : (weaponType === 'heavy' ? 0.44 : 0.38);
+          punchGain.gain.setValueAtTime(0.001, t0);
+          punchGain.gain.linearRampToValueAtTime(peakPunch, t0 + 0.002);
+          punchGain.gain.exponentialRampToValueAtTime(0.001, t0 + dur + 0.006);
+
+          if (!isEnemy && this.distCurve) {
+            const shaper = this.ctx.createWaveShaper();
+            shaper.curve = this.distCurve;
+            punchOsc.connect(shaper);
+            shaper.connect(punchGain);
+          } else {
+            punchOsc.connect(punchGain);
+          }
+          punchGain.connect(this.ctx.destination);
+          punchOsc.start(t0);
+          punchOsc.stop(t0 + dur + 0.01);
+
+          // [Layer 2] 화약 폭발 파열음 & 초음속 탄두 스냅 (Gunpowder Crack & Supersonic Snap)
+          const snapBuf = this.brownNoiseBuffer || this.noiseBuffer;
+          if (snapBuf) {
             const nSrc = this.ctx.createBufferSource();
-            nSrc.buffer = this.noiseBuffer;
+            nSrc.buffer = snapBuf;
+            nSrc.playbackRate.setValueAtTime(isEnemy ? 1.15 : (weaponType === 'heavy' ? 0.92 : 1.08), t0);
+
             const nBp = this.ctx.createBiquadFilter();
             nBp.type = 'bandpass';
-            nBp.frequency.setValueAtTime(isEnemy ? 1200 : 1650, t0);
-            nBp.Q.setValueAtTime(2.0, t0);
+            nBp.frequency.setValueAtTime(isEnemy ? 1350 : 2250, t0);
+            nBp.frequency.exponentialRampToValueAtTime(isEnemy ? 480 : 540, t0 + 0.052);
+            nBp.Q.setValueAtTime(1.35, t0);
+
+            const nLp = this.ctx.createBiquadFilter();
+            nLp.type = 'lowpass';
+            nLp.frequency.setValueAtTime(isEnemy ? 1800 : 2900, t0);
+
             const nGain = this.ctx.createGain();
-            nGain.gain.setValueAtTime(isEnemy ? 0.05 : 0.10, t0);
-            nGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.05);
+            const peakSnap = isEnemy ? 0.08 : (weaponType === 'heavy' ? 0.42 : 0.36);
+            nGain.gain.setValueAtTime(0.001, t0);
+            nGain.gain.linearRampToValueAtTime(peakSnap, t0 + 0.0015);
+            nGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.060);
+
             nSrc.connect(nBp);
-            nBp.connect(nGain);
+            nBp.connect(nLp);
+            nLp.connect(nGain);
             nGain.connect(this.ctx.destination);
             nSrc.start(t0);
-            nSrc.stop(t0 + 0.055);
+            nSrc.stop(t0 + 0.065);
+          }
+
+          // [Layer 3] 기관총 노리쇠 작동음 & 황동 탄피 튀는 금속음 (Mechanical Bolt Click & Brass Casing Ping)
+          if (!isEnemy) {
+            const boltOsc = this.ctx.createOscillator();
+            const boltGain = this.ctx.createGain();
+            boltOsc.type = 'square';
+            boltOsc.frequency.setValueAtTime(1820, t0 + 0.012);
+            boltOsc.frequency.exponentialRampToValueAtTime(760, t0 + 0.028);
+            boltGain.gain.setValueAtTime(0.13, t0 + 0.012);
+            boltGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.030);
+            boltOsc.connect(boltGain);
+            boltGain.connect(this.ctx.destination);
+            boltOsc.start(t0 + 0.012);
+            boltOsc.stop(t0 + 0.032);
+
+            // 황동 탄피 튕김 고음 ("챙!")
+            if (b === shots - 1 || b % 2 === 0) {
+              const casingOsc = this.ctx.createOscillator();
+              const casingGain = this.ctx.createGain();
+              casingOsc.type = 'sine';
+              casingOsc.frequency.setValueAtTime(3150 + (b % 3) * 240, t0 + 0.024);
+              casingOsc.frequency.exponentialRampToValueAtTime(1950, t0 + 0.052);
+              casingGain.gain.setValueAtTime(0.055, t0 + 0.024);
+              casingGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.055);
+              casingOsc.connect(casingGain);
+              casingGain.connect(this.ctx.destination);
+              casingOsc.start(t0 + 0.024);
+              casingOsc.stop(t0 + 0.058);
+            }
           }
         }
+      } catch (_) {}
+    }
+
+    // 총알이 앞차(라이벌 카트) 장갑에 명중했을 때 터지는 금속 타격음 ("챙-퍽! / 콰앙!")
+    playBulletHit(isHeavy = false) {
+      if (this.muted || this.appPaused) return;
+      try {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        // 1) 금속 차체 관통/도탄 핑 (Metallic Armor Ricochet Ping)
+        const pingOsc = this.ctx.createOscillator();
+        const pingGain = this.ctx.createGain();
+        pingOsc.type = 'triangle';
+        pingOsc.frequency.setValueAtTime(isHeavy ? 1580 : 1380, now);
+        pingOsc.frequency.exponentialRampToValueAtTime(420, now + 0.065);
+        pingGain.gain.setValueAtTime(isHeavy ? 0.28 : 0.22, now);
+        pingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.070);
+        pingOsc.connect(pingGain);
+        pingGain.connect(this.ctx.destination);
+        pingOsc.start(now);
+        pingOsc.stop(now + 0.075);
+
+        // 2) 묵직한 명중 타격 펀치 (Impact Thud)
+        const thudOsc = this.ctx.createOscillator();
+        const thudGain = this.ctx.createGain();
+        thudOsc.type = 'sawtooth';
+        thudOsc.frequency.setValueAtTime(isHeavy ? 185 : 155, now);
+        thudOsc.frequency.exponentialRampToValueAtTime(36, now + 0.085);
+        thudGain.gain.setValueAtTime(isHeavy ? 0.34 : 0.26, now);
+        thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.090);
+        thudOsc.connect(thudGain);
+        thudGain.connect(this.ctx.destination);
+        thudOsc.start(now);
+        thudOsc.stop(now + 0.095);
       } catch (_) {}
     }
 
@@ -2341,6 +2438,10 @@
     incomingAttackTimer: 0,
     incomingAttackSource: null,
     gunCooldown: 0,
+    gunTriggerHeld: false,
+    gunAutoTimer: 0,
+    gunBarrelSide: 1,
+    gunRecoil: 0,
     muzzleFlashTimer: 0,
     lapStartTimeMs: 0,
     currentLapTimeSec: 0,
@@ -2385,6 +2486,9 @@
 
     rivals: [],
     projectiles: [],
+    tracerBeams: [],
+    shellCasings: [],
+    hitMarkers: [],
     particles: [],
     skidMarks: [],
     shockwaves: [],
@@ -3525,6 +3629,71 @@
     state.rouletteStep = 0;
   }
 
+  // 플레이어 카트 전면 트윈 기관총 탄환 1발 발사 + 3D 예광탄 궤적(Tracer Beam) + 황동 탄피 배출(Shell Casing) + 총열 반동(Recoil)
+  function firePlayerMachineGunRound(offsetX = 0, heavy = false, zDelay = 0, customColor = null) {
+    state.gunBarrelSide = (state.gunBarrelSide === 1) ? -1 : 1;
+    const bSide = state.gunBarrelSide;
+    state.gunRecoil = 1.0;
+    state.muzzleFlashTimer = Math.max(state.muzzleFlashTimer || 0, heavy ? 0.24 : 0.16);
+
+    // 전방 가장 가까운 라이벌을 탐색하여 예광탄 궤적(Tracer)이 목표물을 향해 꽂히도록 조준 보정!
+    let aimTargetX = state.playerX + offsetX + state.smoothSteer * 0.14;
+    let aimRelZ = 340;
+    let bestDist = 680;
+    if (state.rivals && state.rivals.length > 0) {
+      for (let i = 0; i < state.rivals.length; i++) {
+        const rv = state.rivals[i];
+        const dz = rv.z - state.posZ;
+        if (dz > 35 && dz < bestDist && Math.abs(rv.x - state.playerX) < 0.64) {
+          bestDist = dz;
+          aimTargetX = rv.x + offsetX * 0.35;
+          aimRelZ = Math.max(75, Math.min(480, dz));
+        }
+      }
+    }
+
+    state.projectiles.push({
+      type: 'bullet',
+      heavy: Boolean(heavy),
+      isEnemy: false,
+      barrelSide: bSide,
+      z: state.posZ + 42 + zDelay,
+      x: state.playerX + bSide * 0.05 + offsetX + state.smoothSteer * 0.10,
+      vx: (aimTargetX - state.playerX) * 0.45 + offsetX * 0.28,
+      y: 15,
+      velY: 0,
+      gravity: 0,
+      homing: heavy ? 9.8 : 8.6,
+      speed: state.maxSpeed * (heavy ? 2.85 : 2.72) + 310,
+      life: heavy ? 3.1 : 2.7
+    });
+
+    if (!state.tracerBeams) state.tracerBeams = [];
+    state.tracerBeams.push({
+      barrelSide: bSide,
+      targetX: aimTargetX,
+      targetRelZ: aimRelZ,
+      life: 0.13,
+      maxLife: 0.13,
+      color: customColor || (heavy ? '#ff6d00' : '#ffea00'),
+      coreColor: '#ffffff'
+    });
+
+    // 사격 시 양옆으로 튕겨 나가는 황동 탄피(Brass Shell Casing) 이펙트
+    if (!state.shellCasings) state.shellCasings = [];
+    const kartX = canvas.width * 0.5 + (state.screenXOffset || 0);
+    const kartY = canvas.height * 0.81 - (state.playerY || 0) * 0.48;
+    state.shellCasings.push({
+      x: kartX + bSide * 34,
+      y: kartY - 62,
+      vx: bSide * (95 + Math.random() * 65) - (state.velX || 0) * 35,
+      vy: -(160 + Math.random() * 75),
+      rot: Math.random() * Math.PI,
+      vRot: bSide * (16 + Math.random() * 10),
+      life: 0.46
+    });
+  }
+
   function useHeldItem() {
     if (state.mode !== 'racing') return;
     if (state.rouletteTimer > 0) {
@@ -3532,37 +3701,26 @@
       return;
     }
 
-    // [기본 전방 기관총 사격]: 특수 아이템이 없을 때도 🔫 버튼을 누르면 카트 전면 트윈 기관총에서 앞차를 향해 3점사 고속 탄환 발사!
+    // [기본 전방 기관총 사격]: 특수 아이템이 없을 때도 🔫 버튼을 누르면 카트 전면 트윈 기관총에서 앞차를 향해 3점사 초고속 예광탄 발사! (누르고 있으면 기관총 자동 연사!)
     if (!state.heldItem) {
       if ((state.gunCooldown || 0) > 0) return;
-      state.gunCooldown = 0.62;
-      state.muzzleFlashTimer = 0.22;
-      sfx.playGunShot(false, 3);
-      vibrateDevice(45);
+      state.gunCooldown = 0.24;
+      state.gunAutoTimer = 0.14;
+      sfx.playGunShot(false, 3, 'bullet');
+      vibrateDevice(40);
 
-      [-0.08, 0, 0.08].forEach((offsetX, bIdx) => {
-        state.projectiles.push({
-          type: 'bullet',
-          isEnemy: false,
-          z: state.posZ + 66 + bIdx * 28,
-          x: state.playerX + offsetX + state.smoothSteer * 0.12,
-          vx: state.smoothSteer * 0.14,
-          y: 14,
-          velY: 0,
-          gravity: 0,
-          homing: 7.2,
-          speed: state.maxSpeed * 2.55 + 260,
-          life: 2.6
-        });
+      [-0.06, 0, 0.06].forEach((offsetX, bIdx) => {
+        firePlayerMachineGunRound(offsetX, false, bIdx * 24);
       });
-      showDrivingFeedback('🔫 전방 트윈 기관총 3점사 발사! 타타탕!', '#ffea00', 0.65);
-      spawnBoostParticles(10);
+      showDrivingFeedback('🔫 트윈 개틀링 3점사 발사! 타-타-탕! (누르고 있으면 연속 난사!)', '#ffea00', 0.62);
+      spawnBoostParticles(8);
       return;
     }
 
     const item = state.heldItem;
     state.heldItem = null;
-    state.muzzleFlashTimer = 0.30;
+    state.muzzleFlashTimer = 0.32;
+    state.gunRecoil = 1.0;
     updateItemUI();
     vibrateDevice(75);
 
@@ -3576,37 +3734,24 @@
     if (item.id === 'gatlingGun') {
       // [중화기 1: 🔫 개틀링 기관총 6연사]
       // 카트 전면 트윈 개틀링 포신에서 대구경 고속 철갑탄 6발을 연속 난사하여 앞선 라이벌들을 줄줄이 타격!
-      sfx.playGunShot(false, 5);
-      state.boostTimer = Math.max(state.boostTimer, 0.45);
+      sfx.playGunShot(false, 6, 'heavy');
+      state.boostTimer = Math.max(state.boostTimer, 0.48);
       for (let b = 0; b < 6; b++) {
-        const spreadX = ((b % 3) - 1) * 0.12;
-        state.projectiles.push({
-          type: 'bullet',
-          heavy: true,
-          isEnemy: false,
-          z: state.posZ + 68 + b * 26,
-          x: state.playerX + spreadX,
-          vx: spreadX * 0.35,
-          y: 15,
-          velY: 0,
-          gravity: 0,
-          homing: 9.2,
-          speed: state.maxSpeed * 2.68 + 280,
-          life: 3.1
-        });
+        const spreadX = ((b % 3) - 1) * 0.10;
+        firePlayerMachineGunRound(spreadX, true, b * 24, '#ff6d00');
       }
-      showDrivingFeedback('🔫 개틀링 기관총 6연사 난사! 앞차 집중 사격!', '#ffea00', 0.95);
+      showDrivingFeedback('🔫 헤비 개틀링 기관총 6연사 폭풍 난사! 두두두두두!', '#ffea00', 0.95);
     } else if (item.id === 'laserRifle') {
       // [중화기 2: ⚡ 플라즈마 스나이퍼 총]
       // 초고속 직사 플라즈마 레이저 탄환 2발을 발사해 멀리 앞서가는 선두 라이벌까지 즉시 저격!
-      sfx.playGunShot(false, 2);
+      sfx.playGunShot(false, 2, 'laser');
       sfx.playBoost(false);
       state.boostTimer = Math.max(state.boostTimer, 0.52);
       [-0.06, 0.06].forEach((ox, idx) => {
         state.projectiles.push({
           type: 'laser',
           isEnemy: false,
-          z: state.posZ + 75 + idx * 32,
+          z: state.posZ + 52 + idx * 28,
           x: state.playerX + ox,
           vx: 0,
           y: 16,
@@ -3616,18 +3761,28 @@
           speed: state.maxSpeed * 3.10 + 340,
           life: 3.4
         });
+        if (!state.tracerBeams) state.tracerBeams = [];
+        state.tracerBeams.push({
+          barrelSide: idx === 0 ? -1 : 1,
+          targetX: state.playerX + ox,
+          targetRelZ: 520,
+          life: 0.20,
+          maxLife: 0.20,
+          color: '#00e5ff',
+          coreColor: '#ffffff'
+        });
       });
-      showDrivingFeedback('⚡ 플라즈마 스나이퍼 총 발사! 선두 차량 저격!', '#00e5ff', 0.95);
+      showDrivingFeedback('⚡ 플라즈마 스나이퍼 총 발사! 선두 차량 관통 저격!', '#00e5ff', 0.95);
     } else if (item.id === 'iceShotgun' || item.id === 'iceBall' || item.id === 'tripleShell') {
       // [중화기 3: ❄️ 아이스 3열 산탄총 (샷건)]
       // 좌·중·우 3갈래 부채꼴로 냉기 산탄 총알을 동시에 발사해 앞차들을 한꺼번에 얼리고 감속!
-      sfx.playGunShot(false, 3);
+      sfx.playGunShot(false, 3, 'heavy');
       sfx.playShellShoot();
       [-0.34, 0, 0.34].forEach((fanVx, idx) => {
         state.projectiles.push({
           type: 'iceBall',
           isEnemy: false,
-          z: state.posZ + 70 + (idx === 1 ? 16 : 0),
+          z: state.posZ + 54 + (idx === 1 ? 16 : 0),
           x: state.playerX + fanVx * 0.26,
           vx: fanVx,
           y: 15,
@@ -3637,19 +3792,29 @@
           speed: state.maxSpeed * 2.42 + 240,
           life: 3.2
         });
+        if (!state.tracerBeams) state.tracerBeams = [];
+        state.tracerBeams.push({
+          barrelSide: idx === 0 ? -1 : (idx === 2 ? 1 : 1),
+          targetX: state.playerX + fanVx * 0.85,
+          targetRelZ: 280,
+          life: 0.16,
+          maxLife: 0.16,
+          color: '#80d8ff',
+          coreColor: '#ffffff'
+        });
       });
       showDrivingFeedback('❄️ 아이스 3열 산탄총 발사! 전방 광역 빙결!', '#80d8ff', 0.95);
     } else if (item.id === 'rocket') {
       // [중화기 4: 🚀 유도 미사일 런처]
       // 전방 라이벌을 강력하게 자동 추적하는 초고속 로켓 발사!
-      sfx.playGunShot(false, 2);
+      sfx.playGunShot(false, 2, 'heavy');
       sfx.playShellShoot();
       sfx.playBoost(false);
       state.boostTimer = Math.max(state.boostTimer, 0.55);
       state.projectiles.push({
         type: 'rocket',
         isEnemy: false,
-        z: state.posZ + 72,
+        z: state.posZ + 58,
         x: state.playerX,
         vx: 0,
         y: 16,
@@ -3663,13 +3828,13 @@
     } else if (item.id === 'bomb' || item.id === 'bananaThrow') {
       // [중화기 5: 💣 헤비 바주카 유탄포]
       // 전방 아치 탄도로 대구경 폭발 유탄을 발사! 착탄 시 대폭발 충격파로 주변 라이벌 일망타진!
-      sfx.playGunShot(false, 2);
+      sfx.playGunShot(false, 2, 'heavy');
       sfx.playShellShoot();
       state.boostTimer = Math.max(state.boostTimer, 0.48);
       state.projectiles.push({
         type: 'bomb',
         isEnemy: false,
-        z: state.posZ + 68,
+        z: state.posZ + 56,
         x: state.playerX + state.smoothSteer * 0.16,
         vx: state.smoothSteer * 0.22,
         y: 26,
@@ -3683,8 +3848,20 @@
     }
     spawnBoostParticles(18);
   }
-  itemBtn.addEventListener('touchstart', (e) => { e.preventDefault(); useHeldItem(); }, { passive: false });
-  itemBtn.addEventListener('mousedown', (e) => { e.preventDefault(); useHeldItem(); });
+  function startGunTrigger(e) {
+    if (e) e.preventDefault();
+    state.gunTriggerHeld = true;
+    useHeldItem();
+  }
+  function endGunTrigger(e) {
+    if (e) e.preventDefault();
+    state.gunTriggerHeld = false;
+  }
+  itemBtn.addEventListener('touchstart', startGunTrigger, { passive: false });
+  itemBtn.addEventListener('touchend', endGunTrigger, { passive: false });
+  itemBtn.addEventListener('touchcancel', endGunTrigger, { passive: false });
+  itemBtn.addEventListener('mousedown', startGunTrigger);
+  window.addEventListener('mouseup', () => { state.gunTriggerHeld = false; });
 
   function startDrift(e) {
     if (e) e.preventDefault();
@@ -3968,6 +4145,10 @@
     state.incomingAttackTimer = 0;
     state.incomingAttackSource = null;
     state.gunCooldown = 0;
+    state.gunTriggerHeld = false;
+    state.gunAutoTimer = 0;
+    state.gunBarrelSide = 1;
+    state.gunRecoil = 0;
     state.muzzleFlashTimer = 0;
     state.raceElapsedSec = 0;
     state.currentLapTimeSec = 0;
@@ -3978,6 +4159,9 @@
     state.lap = 1;
     state.rank = 6;
     state.projectiles = [];
+    state.tracerBeams = [];
+    state.shellCasings = [];
+    state.hitMarkers = [];
     state.particles = [];
     state.skidMarks = [];
     state.shockwaves = [];
@@ -4189,7 +4373,49 @@
     if (state.driftReleaseTailTimer > 0) state.driftReleaseTailTimer = Math.max(0, state.driftReleaseTailTimer - dt);
     if (state.gunCooldown > 0) state.gunCooldown = Math.max(0, state.gunCooldown - dt);
     if (state.muzzleFlashTimer > 0) state.muzzleFlashTimer = Math.max(0, state.muzzleFlashTimer - dt);
+    if (state.gunRecoil > 0) state.gunRecoil = Math.max(0, state.gunRecoil - dt * 11.5);
     if (state.boostFlash > 0) state.boostFlash = Math.max(0, state.boostFlash - dt * 3.4);
+
+    // 🔫 사격 버튼(또는 키보드 Z/Ctrl)을 누르고 있으면 카트 전면 트윈 개틀링 기관총이 좌·우 번갈아 고속 자동 연사!
+    const gunKeyHeld = Boolean(keys['KeyZ'] || keys['ControlLeft'] || keys['ControlRight']);
+    if ((state.gunTriggerHeld || gunKeyHeld) && state.rouletteTimer <= 0) {
+      if (state.heldItem) {
+        useHeldItem();
+      } else {
+        state.gunAutoTimer = (state.gunAutoTimer || 0) - dt;
+        if (state.gunAutoTimer <= 0 && (state.gunCooldown || 0) <= 0.12) {
+          state.gunAutoTimer = 0.115;
+          sfx.playGunShot(false, 1, 'bullet');
+          vibrateDevice(22);
+          firePlayerMachineGunRound((Math.random() - 0.5) * 0.07, false, 0);
+        }
+      }
+    }
+
+    // 3D 예광탄 궤적(tracerBeams), 배출 탄피(shellCasings), 피격 마커(hitMarkers) 업데이트
+    if (state.tracerBeams && state.tracerBeams.length > 0) {
+      for (let i = state.tracerBeams.length - 1; i >= 0; i--) {
+        state.tracerBeams[i].life -= dt;
+        if (state.tracerBeams[i].life <= 0) state.tracerBeams.splice(i, 1);
+      }
+    }
+    if (state.shellCasings && state.shellCasings.length > 0) {
+      for (let i = state.shellCasings.length - 1; i >= 0; i--) {
+        const sc = state.shellCasings[i];
+        sc.x += sc.vx * dt;
+        sc.y += sc.vy * dt;
+        sc.vy += 680 * dt;
+        sc.rot += sc.vRot * dt;
+        sc.life -= dt;
+        if (sc.life <= 0) state.shellCasings.splice(i, 1);
+      }
+    }
+    if (state.hitMarkers && state.hitMarkers.length > 0) {
+      for (let i = state.hitMarkers.length - 1; i >= 0; i--) {
+        state.hitMarkers[i].life -= dt;
+        if (state.hitMarkers[i].life <= 0) state.hitMarkers.splice(i, 1);
+      }
+    }
     state.raceElapsedSec = (state.raceElapsedSec || 0) + dt;
     state.currentLapTimeSec = (state.currentLapTimeSec || 0) + dt;
 
@@ -4752,7 +4978,21 @@
           state.boostTimer = Math.max(state.boostTimer, 0.44);
           showDrivingFeedback(`🎯 ${hitRival.racer.shortName} 기관총 사격 명중! 추월 찬스!`, '#ffea00', 0.85);
         }
-        sfx.playShellHit();
+        if (!state.hitMarkers) state.hitMarkers = [];
+        state.hitMarkers.push({
+          z: hitRival.z,
+          x: hitRival.x,
+          y: 26,
+          life: 0.36,
+          maxLife: 0.36,
+          color: proj.type === 'laser' ? '#00e5ff' : (proj.type === 'iceBall' ? '#80d8ff' : '#ffea00')
+        });
+        if (proj.type === 'bullet' || proj.type === 'laser') {
+          sfx.playBulletHit(Boolean(proj.heavy || proj.type === 'laser'));
+        } else {
+          sfx.playBulletHit(true);
+          sfx.playShellHit();
+        }
         vibrateDevice(70);
         spawnBoostParticles(16);
         state.projectiles.splice(i, 1);
@@ -5712,7 +5952,7 @@
         ctx.restore();
       }
 
-      drawRedShell(ctx, sx, pt.y, Math.max(5, pt.w * 0.095), timeMs, proj);
+      drawRedShell(ctx, sx, pt.y, Math.max(6.5, pt.w * 0.115), timeMs, proj);
     });
 
     // 5대의 라이벌 카트를 원거리(아주 작게)에서 근거리(내 차와 같은 크기)까지 정확한 1/Z 원근 비율로 렌더링!
@@ -5746,6 +5986,41 @@
       });
     });
 
+    // 총알이 앞차에 명중했을 때 터지는 3D 타격 스파크 & 크로스헤어 히트마커(Hit Marker) 렌더링!
+    if (state.hitMarkers && state.hitMarkers.length > 0) {
+      state.hitMarkers.forEach(hm => {
+        const relZ = hm.z - state.posZ;
+        if (relZ < -20 || relZ > 3200) return;
+        const pt = projectContinuousRelZ(relZ);
+        const hx = pt.x + hm.x * pt.w * 0.78;
+        const hy = pt.y - Math.max(14, pt.w * 0.14);
+        const prog = 1 - (hm.life / (hm.maxLife || 0.36));
+        const alpha = Math.max(0, Math.min(1, hm.life / (hm.maxLife || 0.36)));
+        const rSize = Math.max(14, pt.w * 0.16) * (0.75 + prog * 0.65);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        // 명중 섬광 링
+        ctx.strokeStyle = hm.color || '#ffea00';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.arc(hx, hy, rSize, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // X자 크로스헤어 히트마커 (FPS/배틀카트 타격 피드백!)
+        ctx.strokeStyle = '#ff1744';
+        ctx.lineWidth = 3.5;
+        ctx.lineCap = 'round';
+        [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([dx, dy]) => {
+          ctx.beginPath();
+          ctx.moveTo(hx + dx * rSize * 0.35, hy + dy * rSize * 0.35);
+          ctx.lineTo(hx + dx * rSize * 1.05, hy + dy * rSize * 1.05);
+          ctx.stroke();
+        });
+        ctx.restore();
+      });
+    }
+
     ctx.restore(); // 카메라 뱅크 롤 복원
 
     if (state.lightningTimer > 3.8) {
@@ -5763,14 +6038,57 @@
       drawSpeedLines(ctx, W, H, timeMs, intensity, boostVis, horizonY);
     }
 
-    // 플레이어 주인공 카트 렌더링 (kartGroundY = H * 0.81 위치에 타이어가 정확히 접지 + 다이나믹 서스펜션 바운스!)
+    // 플레이어 주인공 카트 렌더링 (kartGroundY = H * 0.81 위치에 타이어가 정확히 접지 + 다이나믹 서스펜션 바운스 + 사격 반동 킥!)
     const playerRacer = RACERS[state.selectedRacer];
+    const recoilKickY = (state.gunRecoil || 0) * 3.2;
     const kartX = W * 0.5 + state.screenXOffset;
     const jumpOffset = -state.playerY * 0.48;
     const ufoLift = state.ufoTimer > 0 ? -32 : 0;
     const suspBounce = state.playerY <= 2 ? Math.sin(timeMs * 0.048) * (1.4 + boostVis * 1.8) * speedRatio : 0;
-    const kartY = kartGroundY + jumpOffset + ufoLift + suspBounce;
+    const kartY = kartGroundY + jumpOffset + ufoLift + suspBounce + recoilKickY;
     const megaScale = state.megaTimer > 0 ? 1.54 : 1.22;
+
+    // 🔫 [핵심 타격감 연출] 플레이어 카트 총구에서 전방 도로 표적까지 뻗어나가는 초고속 3D 예광탄 궤적 광선(Tracer Beams)!
+    if (state.tracerBeams && state.tracerBeams.length > 0) {
+      const playerYaw = state.smoothSteer * 10.5 + (state.driftAngle || 0) * 28.5;
+      const frontXShift = playerYaw * 0.72 * 1.05;
+      state.tracerBeams.forEach(tb => {
+        const alpha = Math.max(0, Math.min(1, tb.life / (tb.maxLife || 0.13)));
+        const muzzleX = kartX + ((tb.barrelSide || 1) * 26 + frontXShift) * megaScale;
+        const muzzleY = kartY - 62 * megaScale;
+        const dstPt = projectContinuousRelZ(tb.targetRelZ || 320);
+        const dstX = dstPt.x + (tb.targetX || 0) * dstPt.w * 0.78;
+        const dstY = dstPt.y - Math.max(10, dstPt.w * 0.08);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.lineCap = 'round';
+
+        // 1) 외곽 고열 오렌지/시안 플라즈마 발광 궤적
+        ctx.strokeStyle = tb.color || '#ffea00';
+        ctx.lineWidth = 10 * alpha + 2;
+        ctx.beginPath();
+        ctx.moveTo(muzzleX, muzzleY);
+        ctx.lineTo(dstX, dstY);
+        ctx.stroke();
+
+        // 2) 중심부 화이트핫(White-Hot) 초음속 예광탄 코어 라인
+        ctx.strokeStyle = tb.coreColor || '#ffffff';
+        ctx.lineWidth = 3.2 * alpha + 1;
+        ctx.beginPath();
+        ctx.moveTo(muzzleX, muzzleY);
+        ctx.lineTo(dstX, dstY);
+        ctx.stroke();
+
+        // 3) 총구 앞 압축 공기 쇼크웨이브 링
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5 * alpha;
+        ctx.beginPath();
+        ctx.ellipse(muzzleX, muzzleY - 4, 18 * (1.2 - alpha * 0.5), 9 * (1.2 - alpha * 0.5), 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
 
     // 부스터 버튼을 누르는 순간 카트 주변으로 퍼져나가는 3D 소닉붐 충격파 링(Sonic Shockwave Ring)!
     if (state.shockwaves && state.shockwaves.length > 0) {
@@ -5802,6 +6120,8 @@
       trickRot: state.trickRot,
       speedRatio,
       muzzleFlash: (state.muzzleFlashTimer || 0) > 0,
+      gunRecoil: state.gunRecoil || 0,
+      gunBarrelSide: state.gunBarrelSide || 1,
       star: state.starTimer > 0,
       bullet: state.bulletTimer > 0,
       ufo: state.ufoTimer > 0 && state.bulletTimer <= 0,
@@ -5812,6 +6132,26 @@
       isPlayer: true,
       timeMs
     });
+
+    // 사격 시 카트 양옆으로 회전하며 튕겨 나가는 황동 탄피(Brass Shell Casings) 렌더링!
+    if (state.shellCasings && state.shellCasings.length > 0) {
+      state.shellCasings.forEach(sc => {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, Math.min(1, sc.life * 3.0));
+        ctx.translate(sc.x, sc.y);
+        ctx.rotate(sc.rot);
+        ctx.fillStyle = '#ffd54f';
+        ctx.strokeStyle = '#ff6f00';
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.roundRect(-5.5, -2.5, 11, 5, 1.5);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-3.5, -1.2, 5, 1.4);
+        ctx.restore();
+      });
+    }
 
     state.particles.forEach(pt => {
       ctx.save();
@@ -7001,24 +7341,38 @@
       c.arc(0, 0, size * 0.58, 0, Math.PI * 2);
       c.fill();
     } else if (pType === 'bullet') {
-      // 🔫 플레이어 전방 기관총탄: 초고속 황금 예광탄(Tracer Bullet) + 소닉 꼬리!
-      c.fillStyle = 'rgba(255, 214, 0, 0.55)';
+      // 🔫 플레이어 전방 기관총탄: 대구경 초고속 황금 예광탄(Supersonic Tracer Bullet) + 마하 충격파 & 롱 플라즈마 꼬리!
+      const bScale = proj.heavy ? 1.32 : 1.15;
+      const tailGrad = c.createLinearGradient(0, -size * 0.1, 0, size * 2.4 * bScale);
+      tailGrad.addColorStop(0, '#ffffff');
+      tailGrad.addColorStop(0.32, '#ffea00');
+      tailGrad.addColorStop(0.75, 'rgba(255, 109, 0, 0.72)');
+      tailGrad.addColorStop(1, 'rgba(255, 61, 0, 0)');
+      c.fillStyle = tailGrad;
       c.beginPath();
-      c.moveTo(-size * 0.24, 0);
-      c.lineTo(size * 0.24, 0);
-      c.lineTo(0, size * 1.45);
+      c.moveTo(-size * 0.36 * bScale, 0);
+      c.lineTo(size * 0.36 * bScale, 0);
+      c.lineTo(0, size * 2.45 * bScale);
       c.closePath();
       c.fill();
 
-      const bg = c.createRadialGradient(0, -size * 0.12, size * 0.05, 0, 0, size * 0.52);
-      bg.addColorStop(0, '#ffffff');
-      bg.addColorStop(0.5, '#ffea00');
-      bg.addColorStop(1, '#ff6d00');
-      c.fillStyle = bg;
-      c.strokeStyle = '#ffffff';
+      // 초음속 탄두 주변 마하 충격파 링 (Mach Cone Ring)
+      c.strokeStyle = 'rgba(255, 255, 255, 0.75)';
       c.lineWidth = Math.max(1.5, size * 0.10);
       c.beginPath();
-      c.ellipse(0, -size * 0.10, size * 0.34, size * 0.58, 0, 0, Math.PI * 2);
+      c.ellipse(0, size * 0.12, size * 0.56 * bScale, size * 0.22 * bScale, 0, 0, Math.PI * 2);
+      c.stroke();
+
+      // 빛나는 황금·화이트핫 철갑 탄두 본체
+      const bg = c.createRadialGradient(0, -size * 0.18, size * 0.05, 0, 0, size * 0.68 * bScale);
+      bg.addColorStop(0, '#ffffff');
+      bg.addColorStop(0.45, '#ffea00');
+      bg.addColorStop(1, proj.heavy ? '#ff3d00' : '#ff6d00');
+      c.fillStyle = bg;
+      c.strokeStyle = '#ffffff';
+      c.lineWidth = Math.max(1.8, size * 0.12);
+      c.beginPath();
+      c.ellipse(0, -size * 0.14, size * 0.44 * bScale, size * 0.76 * bScale, 0, 0, Math.PI * 2);
       c.fill();
       c.stroke();
     } else if (pType === 'laser') {
@@ -7455,32 +7809,73 @@
     c.fill();
     c.stroke();
 
-    // 2.5 [전방 트윈 개틀링 머신건 총열 & 머즐 플래시(총구 화염)]
-    [-25, 25].forEach(gunOffsetX => {
+    // 2.5 [전방 트윈 개틀링 머신건 총열 & 사격 반동(Recoil) & 스타버스트 머즐 플래시(총구 화염)]
+    [-26, 26].forEach(gunOffsetX => {
+      const sideSign = Math.sign(gunOffsetX);
+      const isFiringSide = !opts.gunBarrelSide || (sideSign === opts.gunBarrelSide);
+      const barrelRecoilY = (opts.muzzleFlash && isFiringSide) ? ((opts.gunRecoil || 0.75) * 6.0) : 0;
       const gx = gunOffsetX + frontX * 1.05;
-      // 총열 본체 (메탈릭 다크 배럴)
-      c.fillStyle = '#263238';
-      c.strokeStyle = '#90a4ae';
+      const gy = -56 + barrelRecoilY;
+
+      // 1) 개틀링 마운트 하우징 & 3열 회전 총열
+      c.fillStyle = '#1e293b';
+      c.strokeStyle = '#94a3b8';
       c.lineWidth = 1.6;
       c.beginPath();
-      c.roundRect(gx - 4.5, -54, 9, 18, 3);
+      c.roundRect(gx - 6, gy, 12, 22, 3.5);
       c.fill();
       c.stroke();
 
-      // 총구 금색 머즐 링
-      c.fillStyle = '#ffab00';
-      c.fillRect(gx - 5, -55, 10, 3.5);
+      // 회전하는 3연장 스틸 서브 배럴 라인
+      const spinPhase = opts.muzzleFlash ? Math.sin((opts.timeMs || 0) * 0.09) * 2.2 : 0;
+      c.strokeStyle = '#e2e8f0';
+      c.lineWidth = 1.5;
+      [-2.8, 0, 2.8].forEach(bx => {
+        c.beginPath();
+        c.moveTo(gx + bx + spinPhase * 0.3, gy + 2);
+        c.lineTo(gx + bx, gy + 18);
+        c.stroke();
+      });
 
-      // 사격 중일 때 폭발하는 머즐 플래시(Muzzle Flash) 불꽃!
+      // 총구 황금 머즐 브레이크 링
+      c.fillStyle = '#ffab00';
+      c.fillRect(gx - 6.5, gy - 2, 13, 4.5);
+
+      // 2) 사격 순간 폭발하는 다층 스타버스트 머즐 플래시(Starburst Muzzle Flash)!
       if (opts.muzzleFlash) {
         c.save();
-        c.fillStyle = (Math.floor((opts.timeMs || 0) * 0.06) % 2 === 0) ? '#ffea00' : '#ff3d00';
+        const flashScale = isFiringSide ? 1.28 : 0.88;
+        const fx = gx;
+        const fy = gy - 7;
+
+        // 외곽 오렌지 화염 오라
+        const mGrad = c.createRadialGradient(fx, fy, 2, fx, fy, 18 * flashScale);
+        mGrad.addColorStop(0, '#ffffff');
+        mGrad.addColorStop(0.38, '#ffea00');
+        mGrad.addColorStop(0.75, '#ff3d00');
+        mGrad.addColorStop(1, 'rgba(255, 61, 0, 0)');
+        c.fillStyle = mGrad;
         c.beginPath();
-        c.arc(gx, -61, 10.5, 0, Math.PI * 2);
+        c.arc(fx, fy, 18 * flashScale, 0, Math.PI * 2);
         c.fill();
+
+        // 5갈래 방사형 총구 화염 스파이크
+        c.fillStyle = (Math.floor((opts.timeMs || 0) * 0.08) % 2 === 0) ? '#ffea00' : '#ff6d00';
+        c.beginPath();
+        c.moveTo(fx - 5 * flashScale, fy + 4);
+        c.lineTo(fx - 14 * flashScale, fy - 8 * flashScale);
+        c.lineTo(fx - 4 * flashScale, fy - 6 * flashScale);
+        c.lineTo(fx, fy - 22 * flashScale);
+        c.lineTo(fx + 4 * flashScale, fy - 6 * flashScale);
+        c.lineTo(fx + 14 * flashScale, fy - 8 * flashScale);
+        c.lineTo(fx + 5 * flashScale, fy + 4);
+        c.closePath();
+        c.fill();
+
+        // 화이트핫 중심 코어
         c.fillStyle = '#ffffff';
         c.beginPath();
-        c.arc(gx, -59, 5.2, 0, Math.PI * 2);
+        c.arc(fx, fy - 2, 6.5 * flashScale, 0, Math.PI * 2);
         c.fill();
         c.restore();
       }
