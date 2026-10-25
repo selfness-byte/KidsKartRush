@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.5.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.6.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,17 +15,16 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.5.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.6.apk"
     notes = (
-        "• [전방 적 군단 & 거대 보스 상시 전방 유지 물리 고도화!] ① 부스터·슈퍼부스트·스타·지름길 주행 중에도 적 전투 편대(👾드론 · 🏍️바이커 · 🛡️메카탱크)와 3단계 거대 보스(🤖아이언 스콜피온 · 🛸네온 디스트로이어 · 🐉메카 드래곤)가 플레이어 뒤로 밀려나지 않고 100% 항상 플레이어 전방 사격 거리(115m ~ 485m 앞)에서 앞서 달리며 치열한 전방 총격전을 펼치도록 개선, ② 보스 격파 직후 다음 스테이지 거대 보스가 0.85초 만에 즉시 전방에 출현하여 상시 보스 배틀 유지!\n"
-        "• [전방 적 군단(3종) & 3단계 거대 보스전(Giant Boss Battle) 시스템] 상단 실시간 보스 HP 게이지 바, 3D 예광탄 궤적 광선, 황동 탄피 배출, 연사 손맛 및 3-Layer 탄도 사운드 적용!"
+        "• [우측 동료 레이서 클릭 지원 출격 & 원거리-근거리 파도타기 적군 & 거대 화염 용(🐉) 보스전 대개편!] ① 나머지 5명의 레이서를 화면 오른쪽 지원 버튼으로 클릭하면 즉시 트랙 위로 출격해 적과 보스를 함께 공격하며 도와주는 아군 윙맨(Ally Support) 시스템 탑재, ② 적 기체들이 현재의 전방 위치에서 멀리서 총을 쏘다가 가까워졌다가 다시 멀어지는 원거리-근거리 왕복 기동 적용, ③ 중간보스(🤖아이언 스콜피온)는 1회 처치 시 다시 나오지 않고 저 멀리서 작은 적들이 몰려오는 웨이브로 전환된 뒤 대망의 큰 보스전 거대 화염 용(🐉 드래곤 엠페러)이 강림하도록 구성!"
     )
 
     update_payload = {
         "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
         "packageId": "com.mj.kidskart",
-        "versionCode": 23,
-        "versionName": "1.9.5",
+        "versionCode": 24,
+        "versionName": "1.9.6",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -52,17 +51,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "에어로 카트 GP: 선셋 캐니언 에디션",
-                "latest_version": "1.9.5",
-                "version_code": 23,
+                "latest_version": "1.9.6",
+                "version_code": 24,
                 "force_update": False,
-                "release_notes": "적 전투 편대(드론·바이커·메카탱크)와 3단계 거대 보스가 항상 플레이어 전방(앞쪽)에서 앞서 달리며 총격전을 유지하도록 개선.",
+                "release_notes": "우측 레이서 클릭 지원 출격, 원거리-근거리 파도타기 적 기체, 중간보스 1회 처치 후 작은 적 원거리 웨이브 및 거대 화염 용(드래곤) 보스전 적용.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.9.5 (build 23), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.9.6 (build 24), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
