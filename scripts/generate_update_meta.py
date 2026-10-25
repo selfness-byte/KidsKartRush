@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.1.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.2.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,18 +15,18 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.1.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.2.apk"
     notes = (
-        "• [드리프트 시 실제 자동차 타이어 미끄러짐(촥~/스르륵~) 마찰음으로 전면 개선] 귀가 피로한 고주파 전자 오실레이터음을 완전히 제거하고, 핑크 노이즈·트레드 그레인 모듈레이션·680Hz 타이어 바디 공명·1,280Hz 로우패스 필터를 결합해 실제 차가 아스팔트 노면에 묵직하게 쓸리며 미끄러지는 타이어 슬립 사운드로 개선!\n"
-        "• [상대편 선행 출발 & 하드코어 AI 난이도 상향] 상대 카트 5대가 출발부터 플레이어 앞으로 치고 나가며(초기 6위 출발), 주행 페이스(1.125~1.185)와 추월 가속(1.16~1.24 + N2O 부스트)으로 끝까지 치열한 추격전 진행!\n"
-        "• [전방 총격전 시스템 (앞에서 상대가 총을 쏘고 & 내 카트 기본 기관총 + 중화기 5종 사격)] 앞서 달리는 상대들이 전방에서 기관총탄·레이저탄(조준 경고선 표시)을 발사하며, 내 카트도 프론트 트윈 개틀링건으로 상시 3점사 사격 및 5종 중화기로 맞대응!"
+        "• [캐릭터 나오는 모든 프레임에 얼굴 100% 정밀 맞춤] ① 로비 중앙 캐릭터 프리뷰 프레임(#previewCanvas 360x240)에서 얼굴이 상단에 잘리지 않고 프레임 정중앙에 들어오도록 조정, ② 카트 위 캐릭터 헤드/헬멧 원형 프레임(frameR=40)과 귀·리본·공룡뿔 장식에 맞춰 얼굴이 프레임 안에 빈틈없이 들어가도록 클리핑 정렬, ③ 로비 캐릭터 카드(.racer-face-wrap) 및 사진 스튜디오(.photo-slot-avatar) 원형 프레임에 기본 얼굴과 업로드 사진(피부톤·얼굴 중심 자동 검출 및 중복 크롭 방지)이 1:1로 딱 맞게 정렬!\n"
+        "• [드리프트 시 실제 차 타이어 미끄러짐(촥~/스르륵~) 마찰음 적용] 시끄러운 전자 오실레이터음을 제거하고 실제 타이어가 아스팔트 노면에 쓸리는 물리 마찰음 적용!\n"
+        "• [상대편 선행 출발 & 전방 총격전 시스템] 앞서 달리는 상대들이 전방에서 총을 쏘고, 내 카트도 프론트 트윈 개틀링건 상시 3점사 및 5종 중화기로 맞대응!"
     )
 
     update_payload = {
         "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
         "packageId": "com.mj.kidskart",
-        "versionCode": 19,
-        "versionName": "1.9.1",
+        "versionCode": 20,
+        "versionName": "1.9.2",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -53,17 +53,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "에어로 카트 GP: 선셋 캐니언 에디션",
-                "latest_version": "1.9.1",
-                "version_code": 19,
+                "latest_version": "1.9.2",
+                "version_code": 20,
                 "force_update": False,
-                "release_notes": "드리프트 시 시끄러운 전자음 제거 및 실제 차가 아스팔트 노면에 미끄러지는 타이어 마찰음(tireSlideBuffer) 적용, 상대편 전방 선행 및 전방 총격전 시스템 완성.",
+                "release_notes": "캐릭터 나오는 모든 프레임(로비 프리뷰·카트 헤드 프레임·캐릭터 선택 카드·사진 스튜디오)에 얼굴이 100% 딱 맞게 정렬되도록 개선.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.9.1 (build 19), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.9.2 (build 20), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()
