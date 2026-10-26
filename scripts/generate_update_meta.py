@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.8.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.9.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,16 +15,16 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.8.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.9.apk"
     notes = (
-        "• [1인 파트너 선택형 지원 시스템 & 사운드 완벽 복구!] ① 동료 레이서가 한꺼번에 몰려오거나 보급 캡슐에서 자동 소환되지 않고, 우측 패널에서 플레이어가 선택한 단 1명의 파트너만 나와서 도와주도록 개선(다시 누르면 즉시 복귀하여 혼자 주행!), ② 태블릿·스마트폰 스피커 및 웹뷰에서 소리가 안 나던 문제 완벽 해결(마스터 게인 2.35x 증폭 + 다이내믹 컴프레서, 터치 즉시 오디오 언락, 88~340Hz 가청 대역 V8 배기음 & 신나는 레이싱 신스 BGM 루프, 안드로이드 미디어 볼륨 스트림 연동)!"
+        "• [3-STAGE 롱 캠페인 · 적 전투헬기(🚁) & 기갑 탱크(🚜) 출격 · 중간보스 빈도 대폭 완화!] ① 스테이지 주행 거리를 33% 확장(720 세그먼트)하고 STAGE 1(🌅선셋 데저트 캐니언) → STAGE 2(❄️오로라 설원 기갑요새) → STAGE 3(🌋크림슨 화산 드래곤 성채)마다 하늘·지형·도로 분위기가 완전히 전환되도록 업그레이드! ② 4엽 메인 로터가 회전하며 로켓포드를 쏘는 3D 적 전투헬기(🚁)와 무한궤도·대구경 주포를 갖춘 적 기갑 탱크(🚜) 등 스테이지별 전용 적 군단 편성! ③ 중간보스가 너무 자주 나오지 않도록 스테이지당 딱 1회(Stage 1 🤖스콜피온 -> Stage 2 🛸아크틱 건십 -> Stage 3 🐉거대 화염 드래곤, 총 3회)만 등장하고 처치 후에는 전방 적 헬기·탱크 부대만 출현하도록 개선!"
     )
 
     update_payload = {
         "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
         "packageId": "com.mj.kidskart",
-        "versionCode": 26,
-        "versionName": "1.9.8",
+        "versionCode": 27,
+        "versionName": "1.9.9",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
@@ -51,17 +51,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "에어로 카트 GP: 선셋 캐니언 에디션",
-                "latest_version": "1.9.8",
-                "version_code": 26,
+                "latest_version": "1.9.9",
+                "version_code": 27,
                 "force_update": False,
-                "release_notes": "우측에서 선택한 단 1명의 동료만 출격·복귀하는 선택형 지원 시스템 적용 및 엔진음·사격음·BGM 사운드 출력 완벽 복구.",
+                "release_notes": "3-STAGE 롱 캠페인(사막 협곡 → 설원 기갑요새 → 화산 드래곤 성채) 분위기 전환, 적 전투헬기(🚁)·기갑 탱크(🚜) 추가, 스테이지당 보스 1회 출현으로 중간보스 빈도 대폭 완화.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.9.8 (build 26), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.9.9 (build 27), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()

@@ -1,11 +1,11 @@
 {
   "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
   "packageId": "com.mj.kidskart",
-  "versionCode": 26,
-  "versionName": "1.9.8",
-  "apkUrl": "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.8.apk",
-  "sha256": "9f4450ed0ef71e4150ea349956429d0f00784ad3372e15285f0f97a4cd756b25",
-  "sizeBytes": 1114157,
+  "versionCode": 27,
+  "versionName": "1.9.9",
+  "apkUrl": "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.9.apk",
+  "sha256": "33ca54279407872a9550d8018bcc2f4963c4b8ff17df5fc149bca8cbfbec1569",
+  "sizeBytes": 1118553,
   "updatedAt": "2026-10-26",
-  "notes": "• [1인 파트너 선택형 지원 시스템 & 사운드 완벽 복구!] ① 동료 레이서가 한꺼번에 몰려오거나 보급 캡슐에서 자동 소환되지 않고, 우측 패널에서 플레이어가 선택한 단 1명의 파트너만 나와서 도와주도록 개선(다시 누르면 즉시 복귀하여 혼자 주행!), ② 태블릿·스마트폰 스피커 및 웹뷰에서 소리가 안 나던 문제 완벽 해결(마스터 게인 2.35x 증폭 + 다이내믹 컴프레서, 터치 즉시 오디오 언락, 88~340Hz 가청 대역 V8 배기음 & 신나는 레이싱 신스 BGM 루프, 안드로이드 미디어 볼륨 스트림 연동)!"
+  "notes": "• [3-STAGE 롱 캠페인 · 적 전투헬기(🚁) & 기갑 탱크(🚜) 출격 · 중간보스 빈도 대폭 완화!] ① 스테이지 주행 거리를 33% 확장(720 세그먼트)하고 STAGE 1(🌅선셋 데저트 캐니언) → STAGE 2(❄️오로라 설원 기갑요새) → STAGE 3(🌋크림슨 화산 드래곤 성채)마다 하늘·지형·도로 분위기가 완전히 전환되도록 업그레이드! ② 4엽 메인 로터가 회전하며 로켓포드를 쏘는 3D 적 전투헬기(🚁)와 무한궤도·대구경 주포를 갖춘 적 기갑 탱크(🚜) 등 스테이지별 전용 적 군단 편성! ③ 중간보스가 너무 자주 나오지 않도록 스테이지당 딱 1회(Stage 1 🤖스콜피온 -> Stage 2 🛸아크틱 건십 -> Stage 3 🐉거대 화염 드래곤, 총 3회)만 등장하고 처치 후에는 전방 적 헬기·탱크 부대만 출현하도록 개선!"
 }
