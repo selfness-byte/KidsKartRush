@@ -8,6 +8,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,6 +37,7 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
     private var ttsReady = false
     private var sensorManager: SensorManager? = null
     private var accelSensor: Sensor? = null
+    private var toneGen: ToneGenerator? = null
     private var fileUploadCallback: ValueCallback<Array<Uri>>? = null
 
     companion object {
@@ -49,6 +52,20 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
         super.onCreate(savedInstanceState)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        volumeControlStream = AudioManager.STREAM_MUSIC
+
+        try {
+            val am = getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+            if (am != null) {
+                val curVol = am.getStreamVolume(AudioManager.STREAM_MUSIC)
+                val maxVol = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                if (curVol <= 0 && maxVol > 0) {
+                    am.setStreamVolume(AudioManager.STREAM_MUSIC, (maxVol * 0.55f).toInt().coerceAtLeast(1), 0)
+                }
+            }
+            toneGen = ToneGenerator(AudioManager.STREAM_MUSIC, 80)
+        } catch (_: Exception) {
+        }
 
         // 여성 음성(TTS) 엔진 초기화 제거 (순수 자동차 엔진·드리프트·효과음만 재생)
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as? SensorManager
@@ -182,6 +199,23 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
         }
 
         @JavascriptInterface
+        fun playNativeTone(type: String) {
+            try {
+                val tg = toneGen ?: ToneGenerator(AudioManager.STREAM_MUSIC, 80).also { toneGen = it }
+                when (type) {
+                    "start" -> tg.startTone(ToneGenerator.TONE_PROP_ACK, 120)
+                    "go" -> tg.startTone(ToneGenerator.TONE_PROP_PROMPT, 180)
+                    "boost" -> tg.startTone(ToneGenerator.TONE_DTMF_D, 90)
+                    "coin" -> tg.startTone(ToneGenerator.TONE_PROP_BEEP, 55)
+                    "shot" -> tg.startTone(ToneGenerator.TONE_PROP_BEEP2, 35)
+                    "explode" -> tg.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 110)
+                    else -> tg.startTone(ToneGenerator.TONE_PROP_BEEP, 45)
+                }
+            } catch (_: Exception) {
+            }
+        }
+
+        @JavascriptInterface
         fun checkUpdate() {
             runOnUiThread {
                 AppUpdater.checkManual(this@MainActivity)
@@ -249,7 +283,15 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            webView.post { hideSystemUI() }
+            webView.post {
+                hideSystemUI()
+                try {
+                    webView.onResume()
+                    webView.resumeTimers()
+                    webView.evaluateJavascript("if(window.onAppResume) window.onAppResume();", null)
+                } catch (_: Exception) {
+                }
+            }
         }
     }
 
@@ -277,6 +319,11 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
     }
 
     override fun onDestroy() {
+        try {
+            toneGen?.release()
+            toneGen = null
+        } catch (_: Exception) {
+        }
         tts?.stop()
         tts?.shutdown()
         webView.destroy()

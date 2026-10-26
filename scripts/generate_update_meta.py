@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = Path("/Volumes/M/KidsKartRush_20261024")
-APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.7.apk"
+APK_PATH = PROJECT_DIR / "dist" / "KidsKartRush-1.9.8.apk"
 
 def main():
     if not APK_PATH.exists():
@@ -15,20 +15,20 @@ def main():
     sha256 = hashlib.sha256(data).hexdigest()
     size_bytes = len(data)
 
-    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.7.apk"
+    apk_url = "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-1.9.8.apk"
     notes = (
-        "• [초장거리 후퇴(1130m) ↔ 초근접 급강하(120m) 적 기체 기동 & 4대 아케이드 재미 요소 대폭 추가!] ① 적들이 지평선 근처 초장거리(960~1150m)까지 훨씬 멀리 떨어졌다가 제트 부스터 불꽃을 뿜으며 플레이어 코앞(115~145m)으로 급강하 돌진하는 다이내믹 왕복 기동 적용, ② 5연속 격추 시 5갈래 스타버스트 탄막이 폭발하는 🔥연쇄 콤보 & ⚡FEVER OVERDRIVE 각성 시스템, ③ 적 격추 시 도로 위에 떨어지는 🎁3D 홀로그램 보급 캡슐(⚡하이퍼 발칸 오버차지 · 🧲코인 잭팟 · 🤝동료 긴급 호출), ④ 보스 몸체의 회전 과녁을 맞히면 2~3배 데미지가 터지는 🎯WEAK POINT 크리티컬 사격 및 🌈동료 5인 합체 레인보우 레이저 포격 탑재!"
+        "• [1인 파트너 선택형 지원 시스템 & 사운드 완벽 복구!] ① 동료 레이서가 한꺼번에 몰려오거나 보급 캡슐에서 자동 소환되지 않고, 우측 패널에서 플레이어가 선택한 단 1명의 파트너만 나와서 도와주도록 개선(다시 누르면 즉시 복귀하여 혼자 주행!), ② 태블릿·스마트폰 스피커 및 웹뷰에서 소리가 안 나던 문제 완벽 해결(마스터 게인 2.35x 증폭 + 다이내믹 컴프레서, 터치 즉시 오디오 언락, 88~340Hz 가청 대역 V8 배기음 & 신나는 레이싱 신스 BGM 루프, 안드로이드 미디어 볼륨 스트림 연동)!"
     )
 
     update_payload = {
         "appName": "에어로 카트 GP: 선셋 캐니언 에디션",
         "packageId": "com.mj.kidskart",
-        "versionCode": 25,
-        "versionName": "1.9.7",
+        "versionCode": 26,
+        "versionName": "1.9.8",
         "apkUrl": apk_url,
         "sha256": sha256,
         "sizeBytes": size_bytes,
-        "updatedAt": "2026-10-25",
+        "updatedAt": "2026-10-26",
         "notes": notes,
     }
 
@@ -51,17 +51,17 @@ def main():
             vdata = json.loads(vf.read_text(encoding="utf-8"))
             vdata.setdefault("apps", {})["com.mj.kidskart"] = {
                 "app_name": "에어로 카트 GP: 선셋 캐니언 에디션",
-                "latest_version": "1.9.7",
-                "version_code": 25,
+                "latest_version": "1.9.8",
+                "version_code": 26,
                 "force_update": False,
-                "release_notes": "초장거리 후퇴-초근접 급강하 적 기동, 5콤보 FEVER OVERDRIVE 각성, 3D 보급 캡슐 드롭, 보스 약점 크리티컬 사격 및 동료 합체 레인보우 레이저 추가.",
+                "release_notes": "우측에서 선택한 단 1명의 동료만 출격·복귀하는 선택형 지원 시스템 적용 및 엔진음·사격음·BGM 사운드 출력 완벽 복구.",
                 "download_url": apk_url,
                 "sha256": sha256,
                 "size_bytes": size_bytes,
             }
             vf.write_text(json.dumps(vdata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Updated metadata: v1.9.7 (build 25), sha256={sha256}, size={size_bytes}")
+    print(f"Updated metadata: v1.9.8 (build 26), sha256={sha256}, size={size_bytes}")
 
 if __name__ == "__main__":
     main()

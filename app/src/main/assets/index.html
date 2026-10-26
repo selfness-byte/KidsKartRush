@@ -1072,7 +1072,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v1.9.7</span>
+      <span class="lobby-badge" id="verBadge">v1.9.8</span>
       <h1>🌅 선셋 캐니언 에어로 카트 GP</h1>
     </div>
     <div class="assist-pills">
@@ -1252,9 +1252,9 @@
     <button id="hornBtn" type="button" aria-label="Horn" style="display:none !important;"></button>
   </div>
 
-  <!-- 우측 상·중단: 클릭하면 나와서 도와주는 나머지 레이서 지원군 호출 패널! -->
+  <!-- 우측 상·중단: 클릭하면 선택한 동료 단 1명만 나와서 도와주는 선택형 지원군 패널! -->
   <div id="allySupportDock">
-    <button id="summonAllAlliesBtn" class="ally-summon-all-btn" type="button">🤝 동료 전원 지원 출격!</button>
+    <button id="summonAllAlliesBtn" class="ally-summon-all-btn" type="button">🤝 동료 1명 선택 지원!</button>
     <div id="allyBtnList"></div>
   </div>
 
@@ -1392,6 +1392,9 @@
   class CarSoundEngine {
     constructor() {
       this.ctx = null;
+      this.outNode = null;
+      this.masterGain = null;
+      this.compressor = null;
       this.muted = false;
       this.appPaused = false;
       this.bgmTimer = null;
@@ -1423,18 +1426,58 @@
       this.gearShiftCooldown = 0;
     }
 
+    dest() {
+      return this.outNode || (this.ctx ? this.ctx.destination : null);
+    }
+
+    nativePing(type) {
+      if (this.muted || this.appPaused) return;
+      try {
+        if (window.AndroidBridge && typeof window.AndroidBridge.playNativeTone === 'function') {
+          window.AndroidBridge.playNativeTone(type);
+        }
+      } catch (_) {}
+    }
+
     init() {
-      if (this.appPaused) return;
+      this.appPaused = false;
       if (!this.ctx) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (AC) {
           this.ctx = new AC();
+          try {
+            this.masterGain = this.ctx.createGain();
+            this.masterGain.gain.value = 2.35;
+            if (typeof this.ctx.createDynamicsCompressor === 'function') {
+              this.compressor = this.ctx.createDynamicsCompressor();
+              this.compressor.threshold.value = -16;
+              this.compressor.knee.value = 18;
+              this.compressor.ratio.value = 4.5;
+              this.compressor.attack.value = 0.003;
+              this.compressor.release.value = 0.16;
+              this.masterGain.connect(this.compressor);
+              this.compressor.connect(this.ctx.destination);
+            } else {
+              this.masterGain.connect(this.ctx.destination);
+            }
+            this.outNode = this.masterGain;
+          } catch (_) {
+            this.outNode = this.ctx.destination;
+          }
           this.createNoiseBuffers();
           this.distCurve = this.makeDistortionCurve(55);
         }
       }
-      if (this.ctx && this.ctx.state === 'suspended' && !this.appPaused) {
-        this.ctx.resume().catch(() => {});
+      if (this.ctx && this.ctx.state !== 'running') {
+        try {
+          this.ctx.resume().catch(() => {});
+          // 모바일/태블릿 WebView 하드웨어 오디오 채널 즉시 언락용 1샘플 버퍼 재생
+          const unlockBuf = this.ctx.createBuffer(1, 1, 22050);
+          const unlockSrc = this.ctx.createBufferSource();
+          unlockSrc.buffer = unlockBuf;
+          unlockSrc.connect(this.ctx.destination);
+          unlockSrc.start(0);
+        } catch (_) {}
       }
     }
 
@@ -1474,7 +1517,7 @@
       }
       this.brownNoiseBuffer = bBuf;
 
-      // 실제 자동차 타이어가 아스팔트 노면에 "촥~ / 스르륵~" 미끄러지는 물리 마찰 버퍼 (시끄러운 전자 오실레이터 완전 배제!)
+      // 실제 자동차 타이어가 아스팔트 노면에 "촥~ / 스르륵~" 미끄러지는 물리 마찰 버퍼
       const sBuf = this.ctx.createBuffer(1, len, sr);
       const sData = sBuf.getChannelData(0);
       let pk0 = 0, pk1 = 0, pk2 = 0, bpState1 = 0, bpState2 = 0;
@@ -1482,13 +1525,11 @@
       for (let i = 0; i < len; i++) {
         const t = i / sr;
         const w = Math.random() * 2 - 1;
-        // 핑크 노이즈 필터링 (고주파 치찰음 제거, 두툼한 아스팔트 입자감 생성)
         pk0 = 0.99765 * pk0 + w * 0.0990460;
         pk1 = 0.96300 * pk1 + w * 0.2965164;
         pk2 = 0.57000 * pk2 + w * 1.0526913;
         const pink = (pk0 + pk1 + pk2 + w * 0.1848) * 0.18;
 
-        // 타이어 트레드 블록이 노면 알갱이를 스치며 미끄러지는 미세 그레인(Stick-Slip Scrub) 엔벨로프
         if (i % 48 === 0) {
           grainEnv = 0.58 + Math.random() * 0.52;
         }
@@ -1496,7 +1537,6 @@
           + 0.14 * Math.sin(2 * Math.PI * 52 * t + Math.sin(2 * Math.PI * 11 * t) * 1.6)
           + 0.10 * Math.cos(2 * Math.PI * 118 * t);
 
-        // 680Hz 중심 고무 타이어 바디 공명 상태변수 필터 (전자음 없이 실제 타이어가 바닥에 쓸리는 질감)
         const f = 2 * Math.sin(Math.PI * 680 / sr);
         const q = 0.42;
         const hp = pink * grainEnv * treadMod - bpState1 * q - bpState2;
@@ -1525,20 +1565,21 @@
     resumeAll() {
       this.appPaused = false;
       try {
-        if (this.ctx && this.ctx.state === 'suspended' && !this.muted) {
+        if (this.ctx && this.ctx.state !== 'running' && !this.muted) {
           this.ctx.resume().catch(() => {});
         }
-        if (state && state.mode === 'racing' && state.countdownTimer <= 0 && !this.muted) {
+        if (state && state.mode === 'racing' && !this.muted) {
           this.startBGM();
         }
       } catch (_) {}
     }
 
-    // 1. 자동차 시동 크랭킹 & 중후한 저음 배기음 ("부르르릉~ 우우웅~")
+    // 1. 자동차 시동 크랭킹 & 태블릿/폰 스피커에서도 쩌렁쩌렁하게 들리는 V8 배기음 ("부르르릉~ 우우웅~!")
     playEngineStart() {
-      if (this.muted || this.appPaused) return;
+      if (this.muted) return;
       try {
         this.init();
+        this.nativePing('start');
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
 
@@ -1552,41 +1593,40 @@
         sub.type = 'triangle';
         if (this.distCurve) shaper.curve = this.distCurve;
         filter.type = 'lowpass';
-        filter.Q.value = 1.6;
+        filter.Q.value = 2.2;
 
-        osc.frequency.setValueAtTime(34, now);
-        osc.frequency.linearRampToValueAtTime(52, now + 0.22);
-        osc.frequency.exponentialRampToValueAtTime(96, now + 0.52);
-        osc.frequency.exponentialRampToValueAtTime(54, now + 1.05);
+        osc.frequency.setValueAtTime(95, now);
+        osc.frequency.linearRampToValueAtTime(165, now + 0.18);
+        osc.frequency.exponentialRampToValueAtTime(340, now + 0.48);
+        osc.frequency.exponentialRampToValueAtTime(145, now + 0.98);
 
-        sub.frequency.setValueAtTime(24, now);
-        sub.frequency.exponentialRampToValueAtTime(58, now + 0.52);
-        sub.frequency.exponentialRampToValueAtTime(32, now + 1.05);
+        sub.frequency.setValueAtTime(75, now);
+        sub.frequency.exponentialRampToValueAtTime(190, now + 0.48);
+        sub.frequency.exponentialRampToValueAtTime(98, now + 0.98);
 
-        filter.frequency.setValueAtTime(140, now);
-        filter.frequency.exponentialRampToValueAtTime(380, now + 0.52);
-        filter.frequency.exponentialRampToValueAtTime(185, now + 1.05);
+        filter.frequency.setValueAtTime(480, now);
+        filter.frequency.exponentialRampToValueAtTime(1850, now + 0.48);
+        filter.frequency.exponentialRampToValueAtTime(680, now + 0.98);
 
-        gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.24, now + 0.24);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.08);
+        gain.gain.setValueAtTime(0.02, now);
+        gain.gain.linearRampToValueAtTime(0.42, now + 0.20);
+        gain.gain.exponentialRampToValueAtTime(0.002, now + 1.02);
 
         osc.connect(shaper);
         sub.connect(shaper);
         shaper.connect(filter);
         filter.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.dest());
 
         osc.start(now);
         sub.start(now);
-        osc.stop(now + 1.1);
-        sub.stop(now + 1.1);
+        osc.stop(now + 1.05);
+        sub.stop(now + 1.05);
       } catch (_) {}
     }
 
-    // 2. 주행 중 연속 자동차 엔진음 (속도가 빨라질수록 배기 플랩이 열리며 묵직하고 강렬하게 뿜어져 나오는 V8 사운드)
+    // 2. 주행 중 연속 자동차 엔진음 (모바일·태블릿 스피커 가청 대역 85Hz~540Hz 최적화!)
     startContinuousEngine() {
-      if (this.appPaused) return;
       this.init();
       if (!this.ctx || this.engineRunning) return;
       try {
@@ -1602,32 +1642,38 @@
 
         this.engOsc1.type = 'sawtooth';
         this.engOsc2.type = 'triangle';
-        this.engOsc3.type = 'sawtooth';
+        this.engOsc3.type = 'square';
         this.engSubOsc.type = 'triangle';
+
+        this.engOsc1.frequency.setValueAtTime(110, now);
+        this.engOsc2.frequency.setValueAtTime(165, now);
+        this.engOsc3.frequency.setValueAtTime(220, now);
+        this.engSubOsc.frequency.setValueAtTime(85, now);
 
         if (this.distCurve) this.engShaper.curve = this.distCurve;
 
         this.engFilter.type = 'lowpass';
-        this.engFilter.frequency.setValueAtTime(140, now);
-        this.engFilter.Q.setValueAtTime(1.2, now);
+        this.engFilter.frequency.setValueAtTime(680, now);
+        this.engFilter.Q.setValueAtTime(1.6, now);
 
-        this.engGain.gain.setValueAtTime(0.001, now);
-        this.subGain.gain.setValueAtTime(0.001, now);
+        this.engGain.gain.setValueAtTime(0.14, now);
+        this.subGain.gain.setValueAtTime(0.16, now);
 
         this.engOsc1.connect(this.engShaper);
         this.engOsc2.connect(this.engShaper);
         this.engOsc3.connect(this.engShaper);
         this.engShaper.connect(this.engFilter);
         this.engFilter.connect(this.engGain);
-        this.engGain.connect(this.ctx.destination);
+        this.engGain.connect(this.dest());
 
         this.engSubOsc.connect(this.subGain);
-        this.subGain.connect(this.ctx.destination);
+        this.subGain.connect(this.dest());
 
         this.engOsc1.start(now);
         this.engOsc2.start(now);
         this.engOsc3.start(now);
         this.engSubOsc.start(now);
+        this.engineRunning = true;
 
         // 고속 주행일수록 강해지는 중저음 도로 주행 & 배기 압력 사운드
         const rBuf = this.brownNoiseBuffer || this.noiseBuffer;
@@ -1638,35 +1684,33 @@
 
           this.roadFilter = this.ctx.createBiquadFilter();
           this.roadFilter.type = 'lowpass';
-          this.roadFilter.frequency.setValueAtTime(160, now);
-          this.roadFilter.Q.setValueAtTime(1.0, now);
+          this.roadFilter.frequency.setValueAtTime(420, now);
+          this.roadFilter.Q.setValueAtTime(1.1, now);
 
           this.roadGain = this.ctx.createGain();
-          this.roadGain.gain.setValueAtTime(0.0001, now);
+          this.roadGain.gain.setValueAtTime(0.04, now);
 
           this.roadNoiseNode.connect(this.roadFilter);
           this.roadFilter.connect(this.roadGain);
-          this.roadGain.connect(this.ctx.destination);
+          this.roadGain.connect(this.dest());
           this.roadNoiseNode.start(now);
         }
 
-        // 드리프트 유지 시 시끄러운 전자음(Oscillator) 없이 실제 자동차 타이어가 아스팔트 노면에 "촥~ / 스르륵~" 미끄러지는 물리 마찰음!
+        // 드리프트 유지 시 실제 자동차 타이어가 아스팔트 노면에 "촥~ / 스르륵~" 미끄러지는 물리 마찰음
         const slideBuf = this.tireSlideBuffer || this.brownNoiseBuffer || this.noiseBuffer;
         if (slideBuf) {
           this.skidNode = this.ctx.createBufferSource();
           this.skidNode.buffer = slideBuf;
           this.skidNode.loop = true;
 
-          // 중역대(640~920Hz) 고무 트레드 마찰 공명 필터
           this.skidFilter = this.ctx.createBiquadFilter();
           this.skidFilter.type = 'bandpass';
-          this.skidFilter.frequency.setValueAtTime(720, now);
+          this.skidFilter.frequency.setValueAtTime(760, now);
           this.skidFilter.Q.setValueAtTime(1.65, now);
 
-          // 귀를 찌르는 고주파(1,280Hz 이상) 완전 차단 로우패스 필터 (절대 시끄럽지 않고 묵직하게 바닥에 쓸리는 차 미끄러짐 소리!)
           this.skidLpFilter = this.ctx.createBiquadFilter();
           this.skidLpFilter.type = 'lowpass';
-          this.skidLpFilter.frequency.setValueAtTime(1280, now);
+          this.skidLpFilter.frequency.setValueAtTime(1450, now);
           this.skidLpFilter.Q.setValueAtTime(0.7, now);
 
           this.skidGain = this.ctx.createGain();
@@ -1675,7 +1719,7 @@
           this.skidNode.connect(this.skidFilter);
           this.skidFilter.connect(this.skidLpFilter);
           this.skidLpFilter.connect(this.skidGain);
-          this.skidGain.connect(this.ctx.destination);
+          this.skidGain.connect(this.dest());
           this.skidNode.start(now);
         }
 
@@ -1684,7 +1728,13 @@
     }
 
     updateContinuousEngine(speed, maxSpeed, isBoosting, isDrifting, steerIntensity, dt) {
+      if (!this.engineRunning && state && state.mode === 'racing' && !this.muted && !this.appPaused) {
+        this.startBGM();
+      }
       if (!this.engineRunning || !this.ctx) return;
+      if (this.ctx.state !== 'running' && !this.muted && !this.appPaused) {
+        this.ctx.resume().catch(() => {});
+      }
       if (this.muted || this.appPaused || state.mode !== 'racing') {
         const t = this.ctx.currentTime;
         this.engGain.gain.setTargetAtTime(0.0001, t, 0.05);
@@ -1714,68 +1764,65 @@
       const gMax = gearRanges[this.currentGear];
       const gearRpm = Math.max(0.10, Math.min(1.10, (speed - gMin) / Math.max(25, gMax - gMin)));
 
-      // 속도 비례 파워 곡선
+      // 속도 비례 파워 곡선 (태블릿/스마트폰 내장 스피커에서도 선명하게 들리는 90Hz~320Hz RPM 대역!)
       const speedNorm = Math.max(0, Math.min(1.65, speed / Math.max(120, maxSpeed)));
-      const powerCurve = Math.pow(speedNorm, 1.35);
+      const powerCurve = Math.pow(speedNorm, 1.25);
 
       const shiftDip = this.gearShiftCooldown > 0 ? 0.90 : 1.0;
-      const baseFreq = (32 + speedNorm * 64 + gearRpm * 26) * shiftDip * (isBoosting ? 1.15 : 1.0);
+      const baseFreq = (88 + speedNorm * 135 + gearRpm * 52) * shiftDip * (isBoosting ? 1.22 : 1.0);
 
-      this.engOsc1.frequency.setTargetAtTime(baseFreq, now, 0.07);
-      this.engOsc2.frequency.setTargetAtTime(baseFreq * 1.498, now, 0.07);
+      this.engOsc1.frequency.setTargetAtTime(baseFreq, now, 0.06);
+      this.engOsc2.frequency.setTargetAtTime(baseFreq * 1.498, now, 0.06);
       if (this.engOsc3) {
-        this.engOsc3.frequency.setTargetAtTime(baseFreq * 2.01, now, 0.07);
+        this.engOsc3.frequency.setTargetAtTime(baseFreq * 2.01, now, 0.06);
       }
       if (this.engSubOsc) {
-        this.engSubOsc.frequency.setTargetAtTime(Math.max(24, baseFreq * 0.5), now, 0.07);
+        this.engSubOsc.frequency.setTargetAtTime(Math.max(68, baseFreq * 0.75), now, 0.06);
       }
 
-      const filterFreq = 125 + powerCurve * 290 + gearRpm * 65 + (isBoosting ? 130 : 0);
-      const filterQ = 1.15 + Math.min(1.8, speedNorm * 1.35) + (isBoosting ? 0.5 : 0);
-      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.07);
-      this.engFilter.Q.setTargetAtTime(filterQ, now, 0.07);
+      const filterFreq = 520 + powerCurve * 1250 + gearRpm * 280 + (isBoosting ? 520 : 0);
+      const filterQ = 1.35 + Math.min(2.0, speedNorm * 1.45) + (isBoosting ? 0.6 : 0);
+      this.engFilter.frequency.setTargetAtTime(filterFreq, now, 0.06);
+      this.engFilter.Q.setTargetAtTime(filterQ, now, 0.06);
 
-      // 드리프트 중 엔진음과 타이어 슬립 사운드가 자연스럽게 어우러지도록 완만한 덕킹(0.80) 적용
       const activeDriftGround = Boolean(isDrifting && speed > 55 && state.playerY <= 4);
-      const driftDuck = activeDriftGround ? 0.80 : 1.0;
+      const driftDuck = activeDriftGround ? 0.85 : 1.0;
 
-      const targetVol = (speed < 5 ? 0.022 : Math.min(0.32, 0.032 + powerCurve * 0.175 + (isBoosting ? 0.070 : 0))) * driftDuck;
-      this.engGain.gain.setTargetAtTime(targetVol, now, 0.06);
+      const targetVol = (speed < 5 ? 0.09 : Math.min(0.40, 0.14 + powerCurve * 0.20 + (isBoosting ? 0.09 : 0))) * driftDuck;
+      this.engGain.gain.setTargetAtTime(targetVol, now, 0.05);
       if (this.subGain) {
-        const subVol = (speed < 5 ? 0.035 : Math.min(0.35, 0.050 + powerCurve * 0.195 + (isBoosting ? 0.085 : 0))) * driftDuck;
-        this.subGain.gain.setTargetAtTime(subVol, now, 0.06);
+        const subVol = (speed < 5 ? 0.11 : Math.min(0.42, 0.15 + powerCurve * 0.21 + (isBoosting ? 0.09 : 0))) * driftDuck;
+        this.subGain.gain.setTargetAtTime(subVol, now, 0.05);
       }
 
       if (this.roadGain && this.roadFilter) {
-        const roadCutoff = 135 + powerCurve * 220 + (isBoosting ? 110 : 0);
-        const roadVol = (speed < 5 ? 0.008 : Math.min(0.25, 0.016 + powerCurve * 0.135 + (isBoosting ? 0.075 : 0))) * driftDuck;
-        this.roadFilter.frequency.setTargetAtTime(roadCutoff, now, 0.08);
-        this.roadGain.gain.setTargetAtTime(roadVol, now, 0.06);
+        const roadCutoff = 380 + powerCurve * 640 + (isBoosting ? 320 : 0);
+        const roadVol = (speed < 5 ? 0.03 : Math.min(0.28, 0.06 + powerCurve * 0.15 + (isBoosting ? 0.08 : 0))) * driftDuck;
+        this.roadFilter.frequency.setTargetAtTime(roadCutoff, now, 0.07);
+        this.roadGain.gain.setTargetAtTime(roadVol, now, 0.05);
       }
 
-      // 드리프트 시 차가 아스팔트 바닥에 "촥~ / 스르륵~" 미끄러지는 실제 타이어 마찰 사운드 제어 (시끄러운 고주파 전자음 제거):
       if (this.skidGain && this.skidFilter) {
         const slipMag = Math.min(1.20, Math.abs(state.driftAngle || 0) + steerIntensity * 0.38);
         if (activeDriftGround) {
           const flutter = Math.sin(now * 28) * 22 + Math.cos(now * 47) * 14;
-          const skidVol = Math.min(0.135, 0.075 + speedNorm * 0.028 + slipMag * 0.032);
-          const skidCenterFreq = 620 + speedNorm * 130 + slipMag * 145 + flutter;
+          const skidVol = Math.min(0.24, 0.13 + speedNorm * 0.05 + slipMag * 0.05);
+          const skidCenterFreq = 680 + speedNorm * 160 + slipMag * 165 + flutter;
           this.skidFilter.frequency.setTargetAtTime(skidCenterFreq, now, 0.04);
           if (this.skidLpFilter) {
-            this.skidLpFilter.frequency.setTargetAtTime(1150 + slipMag * 180, now, 0.04);
+            this.skidLpFilter.frequency.setTargetAtTime(1350 + slipMag * 240, now, 0.04);
           }
           if (this.skidNode && this.skidNode.playbackRate) {
-            this.skidNode.playbackRate.setTargetAtTime(0.88 + speedNorm * 0.16 + slipMag * 0.10, now, 0.05);
+            this.skidNode.playbackRate.setTargetAtTime(0.92 + speedNorm * 0.18 + slipMag * 0.12, now, 0.05);
           }
           this.skidGain.gain.setTargetAtTime(skidVol, now, 0.035);
         } else {
-          // 드리프트 해제 시 부드럽게 감쇠
           this.skidGain.gain.setTargetAtTime(0.0001, now, 0.09);
         }
       }
     }
 
-    // 드리프트 진입 순간 뒷바퀴가 아스팔트 접지력을 잃고 "촥~!" 하며 미끄러지기 시작하는 자연스러운 초기 타이어 슬립 사운드
+    // 드리프트 진입 순간 뒷바퀴가 아스팔트 접지력을 잃고 "촥~!" 하며 미끄러지기 시작하는 초기 타이어 슬립 사운드
     playDriftScreech() {
       if (this.muted || this.appPaused) return;
       try {
@@ -1799,17 +1846,17 @@
 
         const lp = this.ctx.createBiquadFilter();
         lp.type = 'lowpass';
-        lp.frequency.setValueAtTime(1320, now);
+        lp.frequency.setValueAtTime(1450, now);
 
         const g = this.ctx.createGain();
-        g.gain.setValueAtTime(0.01, now);
-        g.gain.linearRampToValueAtTime(0.115, now + 0.018);
+        g.gain.setValueAtTime(0.02, now);
+        g.gain.linearRampToValueAtTime(0.22, now + 0.018);
         g.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
 
         src.connect(bp);
         bp.connect(lp);
         lp.connect(g);
-        g.connect(this.ctx.destination);
+        g.connect(this.dest());
         src.start(now);
         src.stop(now + 0.20);
       } catch (_) {}
@@ -1834,16 +1881,16 @@
 
         const lp = this.ctx.createBiquadFilter();
         lp.type = 'lowpass';
-        lp.frequency.setValueAtTime(1080, now);
+        lp.frequency.setValueAtTime(1180, now);
 
         const g = this.ctx.createGain();
-        g.gain.setValueAtTime(Math.min(0.09, 0.045 + slipMag * 0.03), now);
+        g.gain.setValueAtTime(Math.min(0.18, 0.09 + slipMag * 0.05), now);
         g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
 
         src.connect(bp);
         bp.connect(lp);
         lp.connect(g);
-        g.connect(this.ctx.destination);
+        g.connect(this.dest());
         src.start(now);
         src.stop(now + 0.16);
       } catch (_) {}
@@ -1854,6 +1901,13 @@
       if (this.muted || this.appPaused) return;
       try {
         this.init();
+        if (!isEnemy) {
+          const nowMs = Date.now();
+          if (!this.lastNativeShotMs || nowMs - this.lastNativeShotMs > 120) {
+            this.lastNativeShotMs = nowMs;
+            this.nativePing('shot');
+          }
+        }
         if (!this.ctx) return;
         const shots = Math.max(1, Math.min(6, burstCount));
         const spacing = weaponType === 'heavy' ? 0.052 : 0.048;
@@ -1865,14 +1919,14 @@
           const punchOsc = this.ctx.createOscillator();
           const punchGain = this.ctx.createGain();
           punchOsc.type = isEnemy ? 'triangle' : 'sawtooth';
-          const startFreq = isEnemy ? 165 : (weaponType === 'heavy' ? 245 : (weaponType === 'laser' ? 1350 : 215));
-          const endFreq = isEnemy ? 48 : (weaponType === 'laser' ? 190 : 38);
-          const dur = isEnemy ? 0.055 : (weaponType === 'laser' ? 0.075 : 0.058);
+          const startFreq = isEnemy ? 220 : (weaponType === 'heavy' ? 320 : (weaponType === 'laser' ? 1420 : 280));
+          const endFreq = isEnemy ? 85 : (weaponType === 'laser' ? 220 : 75);
+          const dur = isEnemy ? 0.055 : (weaponType === 'laser' ? 0.075 : 0.062);
 
           punchOsc.frequency.setValueAtTime(startFreq, t0);
           punchOsc.frequency.exponentialRampToValueAtTime(endFreq, t0 + dur);
 
-          const peakPunch = isEnemy ? 0.09 : (weaponType === 'heavy' ? 0.44 : 0.38);
+          const peakPunch = isEnemy ? 0.14 : (weaponType === 'heavy' ? 0.52 : 0.45);
           punchGain.gain.setValueAtTime(0.001, t0);
           punchGain.gain.linearRampToValueAtTime(peakPunch, t0 + 0.002);
           punchGain.gain.exponentialRampToValueAtTime(0.001, t0 + dur + 0.006);
@@ -1885,7 +1939,7 @@
           } else {
             punchOsc.connect(punchGain);
           }
-          punchGain.connect(this.ctx.destination);
+          punchGain.connect(this.dest());
           punchOsc.start(t0);
           punchOsc.stop(t0 + dur + 0.01);
 
@@ -1907,7 +1961,7 @@
             nLp.frequency.setValueAtTime(isEnemy ? 1800 : 2900, t0);
 
             const nGain = this.ctx.createGain();
-            const peakSnap = isEnemy ? 0.08 : (weaponType === 'heavy' ? 0.42 : 0.36);
+            const peakSnap = isEnemy ? 0.12 : (weaponType === 'heavy' ? 0.48 : 0.42);
             nGain.gain.setValueAtTime(0.001, t0);
             nGain.gain.linearRampToValueAtTime(peakSnap, t0 + 0.0015);
             nGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.060);
@@ -1915,7 +1969,7 @@
             nSrc.connect(nBp);
             nBp.connect(nLp);
             nLp.connect(nGain);
-            nGain.connect(this.ctx.destination);
+            nGain.connect(this.dest());
             nSrc.start(t0);
             nSrc.stop(t0 + 0.065);
           }
@@ -1927,10 +1981,10 @@
             boltOsc.type = 'square';
             boltOsc.frequency.setValueAtTime(1820, t0 + 0.012);
             boltOsc.frequency.exponentialRampToValueAtTime(760, t0 + 0.028);
-            boltGain.gain.setValueAtTime(0.13, t0 + 0.012);
+            boltGain.gain.setValueAtTime(0.18, t0 + 0.012);
             boltGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.030);
             boltOsc.connect(boltGain);
-            boltGain.connect(this.ctx.destination);
+            boltGain.connect(this.dest());
             boltOsc.start(t0 + 0.012);
             boltOsc.stop(t0 + 0.032);
 
@@ -1941,10 +1995,10 @@
               casingOsc.type = 'sine';
               casingOsc.frequency.setValueAtTime(3150 + (b % 3) * 240, t0 + 0.024);
               casingOsc.frequency.exponentialRampToValueAtTime(1950, t0 + 0.052);
-              casingGain.gain.setValueAtTime(0.055, t0 + 0.024);
+              casingGain.gain.setValueAtTime(0.08, t0 + 0.024);
               casingGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.055);
               casingOsc.connect(casingGain);
-              casingGain.connect(this.ctx.destination);
+              casingGain.connect(this.dest());
               casingOsc.start(t0 + 0.024);
               casingOsc.stop(t0 + 0.058);
             }
@@ -1967,10 +2021,10 @@
         pingOsc.type = 'triangle';
         pingOsc.frequency.setValueAtTime(isHeavy ? 1580 : 1380, now);
         pingOsc.frequency.exponentialRampToValueAtTime(420, now + 0.065);
-        pingGain.gain.setValueAtTime(isHeavy ? 0.28 : 0.22, now);
+        pingGain.gain.setValueAtTime(isHeavy ? 0.34 : 0.28, now);
         pingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.070);
         pingOsc.connect(pingGain);
-        pingGain.connect(this.ctx.destination);
+        pingGain.connect(this.dest());
         pingOsc.start(now);
         pingOsc.stop(now + 0.075);
 
@@ -1978,12 +2032,12 @@
         const thudOsc = this.ctx.createOscillator();
         const thudGain = this.ctx.createGain();
         thudOsc.type = 'sawtooth';
-        thudOsc.frequency.setValueAtTime(isHeavy ? 185 : 155, now);
-        thudOsc.frequency.exponentialRampToValueAtTime(36, now + 0.085);
-        thudGain.gain.setValueAtTime(isHeavy ? 0.34 : 0.26, now);
+        thudOsc.frequency.setValueAtTime(isHeavy ? 240 : 195, now);
+        thudOsc.frequency.exponentialRampToValueAtTime(65, now + 0.085);
+        thudGain.gain.setValueAtTime(isHeavy ? 0.40 : 0.32, now);
         thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.090);
         thudOsc.connect(thudGain);
-        thudGain.connect(this.ctx.destination);
+        thudGain.connect(this.dest());
         thudOsc.start(now);
         thudOsc.stop(now + 0.095);
       } catch (_) {}
@@ -1994,15 +2048,16 @@
       if (this.muted || this.appPaused) return;
       try {
         this.init();
+        this.nativePing('explode');
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
 
         const boomOsc = this.ctx.createOscillator();
         const boomGain = this.ctx.createGain();
         boomOsc.type = 'sawtooth';
-        boomOsc.frequency.setValueAtTime(isHeavyMecha ? 160 : 210, now);
-        boomOsc.frequency.exponentialRampToValueAtTime(28, now + (isHeavyMecha ? 0.28 : 0.20));
-        boomGain.gain.setValueAtTime(isHeavyMecha ? 0.42 : 0.34, now);
+        boomOsc.frequency.setValueAtTime(isHeavyMecha ? 220 : 280, now);
+        boomOsc.frequency.exponentialRampToValueAtTime(55, now + (isHeavyMecha ? 0.28 : 0.20));
+        boomGain.gain.setValueAtTime(isHeavyMecha ? 0.48 : 0.40, now);
         boomGain.gain.exponentialRampToValueAtTime(0.001, now + (isHeavyMecha ? 0.30 : 0.22));
         if (this.distCurve) {
           const ws = this.ctx.createWaveShaper();
@@ -2012,7 +2067,7 @@
         } else {
           boomOsc.connect(boomGain);
         }
-        boomGain.connect(this.ctx.destination);
+        boomGain.connect(this.dest());
         boomOsc.start(now);
         boomOsc.stop(now + 0.32);
 
@@ -2021,21 +2076,21 @@
           nSrc.buffer = this.brownNoiseBuffer;
           const lp = this.ctx.createBiquadFilter();
           lp.type = 'lowpass';
-          lp.frequency.setValueAtTime(980, now);
-          lp.frequency.exponentialRampToValueAtTime(180, now + 0.24);
+          lp.frequency.setValueAtTime(1280, now);
+          lp.frequency.exponentialRampToValueAtTime(240, now + 0.24);
           const ng = this.ctx.createGain();
-          ng.gain.setValueAtTime(0.32, now);
+          ng.gain.setValueAtTime(0.38, now);
           ng.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
           nSrc.connect(lp);
           lp.connect(ng);
-          ng.connect(this.ctx.destination);
+          ng.connect(this.dest());
           nSrc.start(now);
           nSrc.stop(now + 0.26);
         }
 
         // 격추 보너스 차임
-        this.playTone(880, 0.07, 'triangle', 0.16);
-        setTimeout(() => this.playTone(1318.5, 0.11, 'triangle', 0.18), 55);
+        this.playTone(880, 0.07, 'triangle', 0.22);
+        setTimeout(() => this.playTone(1318.5, 0.11, 'triangle', 0.24), 55);
       } catch (_) {}
     }
 
@@ -2053,10 +2108,10 @@
           osc.frequency.setValueAtTime(340, t0);
           osc.frequency.linearRampToValueAtTime(620, t0 + 0.16);
           osc.frequency.linearRampToValueAtTime(380, t0 + 0.22);
-          g.gain.setValueAtTime(0.18, t0);
+          g.gain.setValueAtTime(0.24, t0);
           g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.23);
           osc.connect(g);
-          g.connect(this.ctx.destination);
+          g.connect(this.dest());
           osc.start(t0);
           osc.stop(t0 + 0.24);
         });
@@ -2070,28 +2125,25 @@
       setTimeout(() => this.playEnemyExplode(true), 120);
       setTimeout(() => {
         [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
-          setTimeout(() => this.playTone(freq, 0.16, 'triangle', 0.22), idx * 65);
+          setTimeout(() => this.playTone(freq, 0.16, 'triangle', 0.26), idx * 65);
         });
       }, 220);
     }
 
-    // 부스트 충전 단계 도달(GOOD / PERFECT) 및 N2O 토큰 충전 완료 전용 사운드 (부스트 발동음과 명확히 구분!)
+    // 부스트 충전 단계 도달(GOOD / PERFECT) 및 N2O 토큰 충전 완료 전용 사운드
     playBoostChargeReady(tier = 1) {
       if (this.muted || this.appPaused) return;
       if (tier === 1) {
-        // GOOD 충전 도달: 맑은 2음 터빈 차징 벨
-        this.playTone(784.0, 0.065, 'triangle', 0.13);
-        setTimeout(() => this.playTone(1046.5, 0.09, 'triangle', 0.15), 48);
+        this.playTone(784.0, 0.065, 'triangle', 0.18);
+        setTimeout(() => this.playTone(1046.5, 0.09, 'triangle', 0.20), 48);
       } else if (tier === 2) {
-        // PERFECT 충전 도달: 선명한 3음 크리스탈 하모닉 차징 완료음
-        this.playTone(987.77, 0.06, 'sine', 0.15);
-        setTimeout(() => this.playTone(1318.5, 0.07, 'sine', 0.17), 42);
-        setTimeout(() => this.playTone(1567.98, 0.12, 'triangle', 0.19), 84);
+        this.playTone(987.77, 0.06, 'sine', 0.20);
+        setTimeout(() => this.playTone(1318.5, 0.07, 'sine', 0.22), 42);
+        setTimeout(() => this.playTone(1567.98, 0.12, 'triangle', 0.24), 84);
       } else {
-        // N2O 부스터 토큰 100% 충전 완료: 에너지 셀 락온 차임
-        this.playTone(659.25, 0.06, 'triangle', 0.16);
-        setTimeout(() => this.playTone(987.77, 0.07, 'triangle', 0.18), 45);
-        setTimeout(() => this.playTone(1318.5, 0.14, 'sine', 0.20), 90);
+        this.playTone(659.25, 0.06, 'triangle', 0.20);
+        setTimeout(() => this.playTone(987.77, 0.07, 'triangle', 0.22), 45);
+        setTimeout(() => this.playTone(1318.5, 0.14, 'sine', 0.25), 90);
       }
     }
 
@@ -2112,11 +2164,12 @@
       if (this.muted || this.appPaused) return;
       try {
         this.init();
+        this.nativePing('boost');
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
         const dur = isSuper ? 0.62 : 0.44;
 
-        // (A) '슈우웅~!' 고속 에어로다이나믹 바람 가르는 밴드패스 스윕 (핵심 속도감 사운드!)
+        // (A) '슈우웅~!' 고속 에어로다이나믹 바람 가르는 밴드패스 스윕
         const wBuf = this.noiseBuffer || this.brownNoiseBuffer;
         if (wBuf) {
           const whoosh = this.ctx.createBufferSource();
@@ -2125,18 +2178,18 @@
           const bpFilter = this.ctx.createBiquadFilter();
           bpFilter.type = 'bandpass';
           bpFilter.Q.setValueAtTime(isSuper ? 3.2 : 2.6, now);
-          bpFilter.frequency.setValueAtTime(280, now);
-          bpFilter.frequency.exponentialRampToValueAtTime(isSuper ? 1950 : 1400, now + 0.14);
-          bpFilter.frequency.exponentialRampToValueAtTime(isSuper ? 520 : 400, now + dur);
+          bpFilter.frequency.setValueAtTime(320, now);
+          bpFilter.frequency.exponentialRampToValueAtTime(isSuper ? 2100 : 1550, now + 0.14);
+          bpFilter.frequency.exponentialRampToValueAtTime(isSuper ? 560 : 440, now + dur);
 
           const whooshGain = this.ctx.createGain();
           whooshGain.gain.setValueAtTime(0.01, now);
-          whooshGain.gain.linearRampToValueAtTime(isSuper ? 0.48 : 0.34, now + 0.035);
+          whooshGain.gain.linearRampToValueAtTime(isSuper ? 0.55 : 0.40, now + 0.035);
           whooshGain.gain.exponentialRampToValueAtTime(0.002, now + dur);
 
           whoosh.connect(bpFilter);
           bpFilter.connect(whooshGain);
-          whooshGain.connect(this.ctx.destination);
+          whooshGain.connect(this.dest());
           whoosh.start(now);
           whoosh.stop(now + dur + 0.02);
         }
@@ -2149,18 +2202,18 @@
           const jetFilter = this.ctx.createBiquadFilter();
           jetFilter.type = 'lowpass';
           jetFilter.Q.value = 2.2;
-          jetFilter.frequency.setValueAtTime(360, now);
-          jetFilter.frequency.exponentialRampToValueAtTime(isSuper ? 2100 : 1450, now + 0.13);
-          jetFilter.frequency.exponentialRampToValueAtTime(320, now + dur);
+          jetFilter.frequency.setValueAtTime(420, now);
+          jetFilter.frequency.exponentialRampToValueAtTime(isSuper ? 2250 : 1600, now + 0.13);
+          jetFilter.frequency.exponentialRampToValueAtTime(360, now + dur);
 
           const jetGain = this.ctx.createGain();
           jetGain.gain.setValueAtTime(0.01, now);
-          jetGain.gain.linearRampToValueAtTime(isSuper ? 0.36 : 0.24, now + 0.035);
+          jetGain.gain.linearRampToValueAtTime(isSuper ? 0.42 : 0.30, now + 0.035);
           jetGain.gain.exponentialRampToValueAtTime(0.002, now + dur);
 
           jet.connect(jetFilter);
           jetFilter.connect(jetGain);
-          jetGain.connect(this.ctx.destination);
+          jetGain.connect(this.dest());
           jet.start(now);
           jet.stop(now + dur + 0.02);
         }
@@ -2169,33 +2222,33 @@
         const whistleOsc = this.ctx.createOscillator();
         const whistleGain = this.ctx.createGain();
         whistleOsc.type = 'sine';
-        whistleOsc.frequency.setValueAtTime(240, now);
-        whistleOsc.frequency.exponentialRampToValueAtTime(isSuper ? 880 : 650, now + 0.15);
-        whistleOsc.frequency.exponentialRampToValueAtTime(330, now + dur);
+        whistleOsc.frequency.setValueAtTime(280, now);
+        whistleOsc.frequency.exponentialRampToValueAtTime(isSuper ? 960 : 720, now + 0.15);
+        whistleOsc.frequency.exponentialRampToValueAtTime(360, now + dur);
 
         whistleGain.gain.setValueAtTime(0.005, now);
-        whistleGain.gain.linearRampToValueAtTime(isSuper ? 0.20 : 0.13, now + 0.03);
+        whistleGain.gain.linearRampToValueAtTime(isSuper ? 0.26 : 0.18, now + 0.03);
         whistleGain.gain.exponentialRampToValueAtTime(0.002, now + dur);
 
         whistleOsc.connect(whistleGain);
-        whistleGain.connect(this.ctx.destination);
+        whistleGain.connect(this.dest());
         whistleOsc.start(now);
         whistleOsc.stop(now + dur + 0.02);
 
-        // (D) 묵직한 초기 점화 서브베이스 펀치 (초반 0.34초 임팩트 받침)
+        // (D) 묵직한 초기 점화 서브베이스 펀치
         const subOsc = this.ctx.createOscillator();
         const subGain = this.ctx.createGain();
         subOsc.type = 'triangle';
-        subOsc.frequency.setValueAtTime(isSuper ? 96 : 82, now);
-        subOsc.frequency.exponentialRampToValueAtTime(168, now + 0.11);
-        subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.34);
+        subOsc.frequency.setValueAtTime(isSuper ? 120 : 105, now);
+        subOsc.frequency.exponentialRampToValueAtTime(210, now + 0.11);
+        subOsc.frequency.exponentialRampToValueAtTime(75, now + 0.34);
 
         subGain.gain.setValueAtTime(0.01, now);
-        subGain.gain.linearRampToValueAtTime(isSuper ? 0.32 : 0.22, now + 0.025);
+        subGain.gain.linearRampToValueAtTime(isSuper ? 0.38 : 0.28, now + 0.025);
         subGain.gain.exponentialRampToValueAtTime(0.002, now + 0.36);
 
         subOsc.connect(subGain);
-        subGain.connect(this.ctx.destination);
+        subGain.connect(this.dest());
         subOsc.start(now);
         subOsc.stop(now + 0.38);
       } catch (_) {}
@@ -2204,7 +2257,7 @@
     // 4. 마리오 카트 시그니처 카트 점프(Hop) 효과음 ("뽀잉~!")
     playHop() {
       if (this.muted || this.appPaused) return;
-      this.playTone(190, 0.16, 'sine', 0.18, 460);
+      this.playTone(220, 0.16, 'sine', 0.24, 520);
     }
 
     // 5. 마리오 카트 물음표 박스 슬롯머신 룰렛 틱 & 당첨 효과음
@@ -2212,25 +2265,25 @@
       if (this.muted || this.appPaused) return;
       const notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.0, 987.77, 1046.5];
       const f = notes[stepIdx % notes.length];
-      this.playTone(f, 0.055, 'square', 0.08);
+      this.playTone(f, 0.055, 'square', 0.12);
     }
 
     playItemRouletteLock() {
       if (this.muted || this.appPaused) return;
-      this.playTone(784, 0.08, 'triangle', 0.18);
-      setTimeout(() => this.playTone(1046.5, 0.18, 'triangle', 0.22), 75);
+      this.playTone(784, 0.08, 'triangle', 0.24);
+      setTimeout(() => this.playTone(1046.5, 0.18, 'triangle', 0.28), 75);
     }
 
     // 6. 등껍질 / 미사일 발사 및 명중 폭발음
     playShellShoot() {
       if (this.muted || this.appPaused) return;
-      this.playTone(520, 0.18, 'sawtooth', 0.16, 180);
+      this.playTone(540, 0.18, 'sawtooth', 0.22, 190);
     }
 
     playShellHit() {
       if (this.muted || this.appPaused) return;
       this.playBoost(false);
-      this.playTone(440, 0.25, 'sawtooth', 0.16, 110);
+      this.playTone(440, 0.25, 'sawtooth', 0.22, 120);
     }
 
     // 7. 뒤에서 라이벌 차가 부스터로 나를 추월해 지나갈 때 묵직한 도플러 배기음
@@ -2244,16 +2297,16 @@
         const filt = this.ctx.createBiquadFilter();
         const g = this.ctx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(165, now);
-        osc.frequency.exponentialRampToValueAtTime(68, now + 0.42);
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(95, now + 0.42);
         filt.type = 'lowpass';
-        filt.frequency.setValueAtTime(480, now);
+        filt.frequency.setValueAtTime(680, now);
         g.gain.setValueAtTime(0.01, now);
-        g.gain.linearRampToValueAtTime(0.16, now + 0.12);
+        g.gain.linearRampToValueAtTime(0.22, now + 0.12);
         g.gain.exponentialRampToValueAtTime(0.001, now + 0.44);
         osc.connect(filt);
         filt.connect(g);
-        g.connect(this.ctx.destination);
+        g.connect(this.dest());
         osc.start(now);
         osc.stop(now + 0.45);
       } catch (_) {}
@@ -2282,14 +2335,14 @@
           filter.Q.setValueAtTime(3.0, t0);
 
           g.gain.setValueAtTime(0.001, t0);
-          g.gain.linearRampToValueAtTime(0.20, t0 + 0.02);
-          g.gain.setValueAtTime(0.18, t0 + duration - 0.03);
+          g.gain.linearRampToValueAtTime(0.26, t0 + 0.02);
+          g.gain.setValueAtTime(0.24, t0 + duration - 0.03);
           g.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
 
           f1.connect(filter);
           f2.connect(filter);
           filter.connect(g);
-          g.connect(this.ctx.destination);
+          g.connect(this.dest());
 
           f1.start(t0);
           f2.start(t0);
@@ -2310,23 +2363,23 @@
         const filt = this.ctx.createBiquadFilter();
         filt.type = 'lowpass';
         filt.Q.value = 2.5;
-        filt.frequency.setValueAtTime(620, now);
-        filt.frequency.exponentialRampToValueAtTime(180, now + 0.30);
+        filt.frequency.setValueAtTime(720, now);
+        filt.frequency.exponentialRampToValueAtTime(220, now + 0.30);
 
         const g = this.ctx.createGain();
-        g.gain.setValueAtTime(0.20, now);
+        g.gain.setValueAtTime(0.26, now);
         g.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
 
         src.connect(filt);
         filt.connect(g);
-        g.connect(this.ctx.destination);
+        g.connect(this.dest());
         src.start(now);
         src.stop(now + 0.33);
       } catch (_) {}
     }
 
-    playTone(freq, dur = 0.14, type = 'triangle', vol = 0.14, slideTo = null) {
-      if (this.muted || this.appPaused) return;
+    playTone(freq, dur = 0.14, type = 'triangle', vol = 0.22, slideTo = null) {
+      if (this.muted) return;
       try {
         this.init();
         if (!this.ctx) return;
@@ -2336,12 +2389,12 @@
         osc.type = type;
         osc.frequency.setValueAtTime(freq, now);
         if (slideTo) {
-          osc.frequency.exponentialRampToValueAtTime(Math.max(30, slideTo), now + dur);
+          osc.frequency.exponentialRampToValueAtTime(Math.max(45, slideTo), now + dur);
         }
         gain.gain.setValueAtTime(vol, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.dest());
         osc.start(now);
         osc.stop(now + dur);
       } catch (_) {}
@@ -2349,28 +2402,43 @@
 
     playCoin() {
       if (this.muted || this.appPaused) return;
-      this.playTone(987.77, 0.07, 'sine', 0.15);
-      setTimeout(() => this.playTone(1318.5, 0.14, 'sine', 0.15), 60);
+      this.nativePing('coin');
+      this.playTone(987.77, 0.08, 'sine', 0.24);
+      setTimeout(() => this.playTone(1318.5, 0.15, 'sine', 0.26), 60);
     }
 
     playItemBox() {
       if (this.muted || this.appPaused) return;
+      this.nativePing('coin');
       const notes = [523, 659, 784, 1046];
-      notes.forEach((n, i) => setTimeout(() => this.playTone(n, 0.08, 'triangle', 0.15), i * 45));
+      notes.forEach((n, i) => setTimeout(() => this.playTone(n, 0.09, 'triangle', 0.22), i * 45));
     }
 
     playFanfare() {
       if (this.muted || this.appPaused) return;
+      this.nativePing('go');
       const melody = [523, 659, 784, 1046, 784, 1046];
       const times = [0, 130, 260, 390, 560, 720];
-      melody.forEach((n, i) => setTimeout(() => this.playTone(n, 0.22, 'triangle', 0.2), times[i]));
+      melody.forEach((n, i) => setTimeout(() => this.playTone(n, 0.22, 'triangle', 0.28), times[i]));
     }
 
     startBGM() {
       this.stopBGM();
       if (this.appPaused || this.muted) return;
-      // 경박한 멜로디 반복음을 제거하고 중후한 리얼 자동차 V8 배기음 & 주행 풍절음에 온전히 집중
       this.startContinuousEngine();
+      // 경쾌하고 신나는 아케이드 레이싱 신스 리듬 & 베이스 루프 (V8 배기음과 조화롭게 재생!)
+      const bassNotes = [130.81, 130.81, 164.81, 196.00, 146.83, 146.83, 174.61, 196.00];
+      const leadNotes = [523.25, 659.25, 783.99, 1046.50, 587.33, 783.99, 880.00, 1174.66];
+      this.step = 0;
+      this.bgmTimer = setInterval(() => {
+        if (this.muted || this.appPaused || (state && state.mode !== 'racing')) return;
+        const idx = this.step % bassNotes.length;
+        this.playTone(bassNotes[idx], 0.13, 'sawtooth', 0.085);
+        if (this.step % 2 === 0) {
+          this.playTone(leadNotes[idx], 0.10, 'triangle', 0.075);
+        }
+        this.step++;
+      }, 190);
     }
 
     stopBGM() {
@@ -2382,6 +2450,17 @@
     }
   }
   const sfx = new CarSoundEngine();
+
+  // 화면 어디든 터치/클릭/키 입력 시 즉시 오디오 컨텍스트 언락 및 사운드 활성화!
+  ['touchstart', 'pointerdown', 'mousedown', 'keydown', 'click'].forEach(evtName => {
+    window.addEventListener(evtName, () => {
+      sfx.appPaused = false;
+      sfx.init();
+      if (typeof state !== 'undefined' && state && state.mode === 'racing' && !sfx.muted && !sfx.engineRunning) {
+        sfx.startBGM();
+      }
+    }, { passive: true, capture: true });
+  });
 
   // 앱 닫기 / 홈 버튼 / 화면 전환 시 소리 완전 차단 이벤트 연결
   window.onAppPause = () => sfx.suspendAll();
@@ -4348,6 +4427,14 @@
     sfx.muted = !sfx.muted;
     hudSoundBtn.classList.toggle('active', !sfx.muted);
     hudSoundBtn.textContent = sfx.muted ? '🔇' : '🔊';
+    if (!sfx.muted) {
+      sfx.appPaused = false;
+      sfx.init();
+      sfx.playCoin();
+      if (state.mode === 'racing') sfx.startBGM();
+    } else {
+      sfx.stopBGM();
+    }
   });
   if (toggleCamTiltBtn) toggleCamTiltBtn.addEventListener('click', cycleCameraTiltMode);
   if (hudCamTiltBtn) hudCamTiltBtn.addEventListener('click', cycleCameraTiltMode);
@@ -4508,11 +4595,11 @@
     }
   }
 
-  // [신규 재미 요소 2] 적 기체 격추 시 도로 위에 3D 홀로그램 보급 캡슐(Loot Drop Capsule) 드롭!
+  // [신규 재미 요소 2] 적 기체 격추 시 도로 위에 3D 홀로그램 보급 캡슐(Loot Drop Capsule) 드롭! (동료 자동 소환 없이 순수 파워업 보상!)
   const LOOT_TYPES = [
     { id: 'overcharge', icon: '⚡', label: '하이퍼 발칸 오버차지', color: '#00e5ff' },
     { id: 'jackpot', icon: '🧲', label: '마그네틱 코인 잭팟 & 풀부스트', color: '#ffea00' },
-    { id: 'ally_shield', icon: '🤝', label: '동료 긴급 호출 & 보호막', color: '#e040fb' }
+    { id: 'shield_boost', icon: '🛡️', label: '슈퍼 에너지 보호막 & 풀부스트', color: '#e040fb' }
   ];
   function spawnEnemyLootDrop(en) {
     if (!state.lootDrops) state.lootDrops = [];
@@ -4642,36 +4729,83 @@
   function updateAllySupportUI() {
     if (!allyBtnListEl || typeof allyBtnListEl.querySelectorAll !== 'function' || !state.allies) return;
     const btns = allyBtnListEl.querySelectorAll('.ally-call-btn');
+    let activePartner = null;
     btns.forEach((btn, idx) => {
       const ally = state.allies[idx];
       if (!ally) return;
       const statusEl = btn.querySelector('.ally-call-status');
       if (ally.active && ally.supportTimer > 0) {
+        activePartner = ally;
         btn.classList.add('active');
-        if (statusEl) statusEl.textContent = `⚡지원중 ${Math.ceil(ally.supportTimer)}s`;
+        if (statusEl) statusEl.textContent = `⚡지원중(${Math.ceil(ally.supportTimer)}s·해제)`;
       } else {
         btn.classList.remove('active');
-        if (statusEl) statusEl.textContent = '🤝클릭 출격!';
+        if (statusEl) statusEl.textContent = '🤝선택 출격';
       }
     });
+    if (summonAllAlliesBtnEl) {
+      if (activePartner) {
+        summonAllAlliesBtnEl.textContent = `👋 ${activePartner.racer.shortName} 복귀 (혼자 주행)`;
+      } else {
+        summonAllAlliesBtnEl.textContent = '🤝 동료 1명 선택 지원!';
+      }
+    }
   }
 
+  function dismissAllAllies(silent = false) {
+    if (!state.allies) return;
+    let hadActive = false;
+    state.allies.forEach(a => {
+      if (a.active) hadActive = true;
+      a.active = false;
+      a.supportTimer = 0;
+      if (a.dotEl) a.dotEl.style.display = 'none';
+    });
+    updateAllySupportUI();
+    if (hadActive && !silent) {
+      sfx.playCoin();
+      showDrivingFeedback('👋 동료 지원 복귀 완료! 혼자 주행 모드로 달립니다!', '#80d8ff', 1.0);
+    }
+  }
+
+  // [핵심 변경]: 도움을 주는 건 100% 플레이어 선택! 한꺼번에 몰려오지 않고 선택한 단 1명의 파트너만 출격 (다시 누르면 즉시 복귀!)
   function summonAllyRacer(allyIdx, silentFeedback = false) {
     if (state.mode !== 'racing' || !state.allies || !state.allies[allyIdx]) return;
     const ally = state.allies[allyIdx];
-    const wasActive = ally.active && ally.supportTimer > 0;
+    const wasActive = Boolean(ally.active && ally.supportTimer > 0);
+
+    // 이미 지원 중인 동료를 다시 클릭하면 -> 즉시 지원 해제(복귀)하여 혼자 주행!
+    if (wasActive && !silentFeedback) {
+      ally.active = false;
+      ally.supportTimer = 0;
+      if (ally.dotEl) ally.dotEl.style.display = 'none';
+      updateAllySupportUI();
+      sfx.playCoin();
+      showDrivingFeedback(`👋 ${ally.racer.shortName} 지원 복귀! (필요할 때 우측에서 다시 선택하세요!)`, '#80d8ff', 1.0);
+      return;
+    }
+
+    // 다른 동료가 나와 있었다면 모두 대기 상태로 복귀시켜 항상 선택한 단 1명만 트랙에 나오도록 보장!
+    state.allies.forEach((other, i) => {
+      if (i !== allyIdx) {
+        other.active = false;
+        other.supportTimer = 0;
+        if (other.dotEl) other.dotEl.style.display = 'none';
+      }
+    });
 
     ally.active = true;
-    ally.supportTimer = 18.0;
+    ally.supportTimer = 20.0;
     ally.boostVisualTimer = 1.6;
+    ally.formationX = (allyIdx % 2 === 0) ? -0.34 : 0.34;
+    ally.formationRelZ = 82;
     if (!wasActive) {
-      // 플레이어 바로 뒤/옆에서 부스터를 켜고 멋지게 치고 올라오며 합류!
       ally.z = state.posZ - 18;
       ally.x = ally.formationX;
       ally.speed = state.maxSpeed * 1.25;
     }
 
-    // 출격 즉시 전방 적과 보스에게 강력한 지원 사격 2연발 발사 + 플레이어 협동 부스트 지원!
+    // 선택한 1명의 파트너가 출격 즉시 전방 적과 보스에게 지원 사격 2연발 발사 + 플레이어 협동 부스트 지원!
     fireAllySupportShot(ally, true);
     fireAllySupportShot(ally, false);
     state.boostTimer = Math.max(state.boostTimer, 0.65);
@@ -4684,39 +4818,25 @@
       sfx.playBoost(false);
       vibrateDevice(45);
       showDrivingFeedback(
-        wasActive
-          ? `⚡ ${ally.racer.shortName} 협동 필살 포격 발사! (전방 적·보스 집중 타격!)`
-          : `🤝 ${ally.racer.shortName} 지원 출격! 플레이어 옆에서 함께 적과 보스를 공격합니다!`,
+        `🤝 파트너 [${ally.racer.shortName}] 1인 단독 지원 출격! (다시 누르면 복귀합니다)`,
         ally.racer.primary || '#00e5ff',
-        1.10
+        1.15
       );
     }
   }
 
   function summonAllAllies() {
     if (state.mode !== 'racing' || !state.allies) return;
-    state.allies.forEach((_, idx) => summonAllyRacer(idx, true));
-    // [신규 재미 요소 4]: 동료 5명 전원 출격 시 무지개 합체 필살 레이저 빔(Team Synergy Strike) 발동!
-    const rainbowCols = ['#ff1744', '#ff9100', '#ffea00', '#00e676', '#00e5ff'];
-    if (!state.tracerBeams) state.tracerBeams = [];
-    rainbowCols.forEach((col, rIdx) => {
-      const targetX = (state.boss && state.boss.active) ? state.boss.x : ((rIdx - 2) * 0.24);
-      const targetRelZ = (state.boss && state.boss.active) ? Math.max(120, state.boss.z - state.posZ) : (480 + rIdx * 90);
-      state.tracerBeams.push({
-        barrelSide: rIdx % 2 === 0 ? -1 : 1,
-        targetX,
-        targetRelZ,
-        life: 0.34,
-        maxLife: 0.34,
-        color: col,
-        coreColor: '#ffffff'
-      });
-    });
-    sfx.playGunShot(false, 5, 'heavy');
-    sfx.playBoost(true);
-    vibrateDevice(80);
-    spawnBoostShockwave(true);
-    showDrivingFeedback('🌈 동료 5인 전원 출격 & 합체 레인보우 레이저 포격 발동!!', '#ffea00', 1.40);
+    const activeIdx = state.allies.findIndex(a => a.active && a.supportTimer > 0);
+    if (activeIdx >= 0) {
+      // 현재 도와주고 있는 동료가 있으면 즉시 복귀(혼자 주행 모드)!
+      dismissAllAllies(false);
+    } else {
+      // 아무도 없을 때 상단 버튼을 누르면 5명 전원이 아니라 1번 파트너 단 1명만 선택 호출!
+      const pickIdx = (state.lastSelectedAllyIdx !== undefined ? (state.lastSelectedAllyIdx + 1) : 0) % state.allies.length;
+      state.lastSelectedAllyIdx = pickIdx;
+      summonAllyRacer(pickIdx, false);
+    }
   }
 
   if (summonAllAlliesBtnEl) {
@@ -4739,7 +4859,7 @@
         </div>
         <div class="ally-call-info">
           <span class="ally-call-name">${ally.racer.shortName}</span>
-          <span class="ally-call-status">🤝클릭 출격!</span>
+          <span class="ally-call-status">🤝선택 출격</span>
         </div>
       `;
       btn.addEventListener('touchstart', (e) => {
@@ -4754,12 +4874,15 @@
       });
       allyBtnListEl.appendChild(btn);
     });
+    updateAllySupportUI();
   }
 
   // ==================== 레이스 시작 초기화 ====================
   function startRace() {
+    sfx.appPaused = false;
     sfx.init();
     sfx.playEngineStart();
+    sfx.startContinuousEngine();
     buildTrack(state.selectedTrack);
     syncSpeedButtonLabel();
 
@@ -5783,14 +5906,11 @@
             updateBoostUI();
             showDrivingFeedback('🎁 [보급 캡슐 획득!] 🧲 코인 +15개 잭팟 & 슈퍼 부스터 충전 완료!', '#ffea00', 1.25);
           } else {
-            state.shieldTimer = Math.max(state.shieldTimer || 0, 5.5);
-            state.boostTimer = Math.max(state.boostTimer, 0.90);
-            if (state.allies && state.allies.length > 0) {
-              const idleIdx = state.allies.findIndex(a => !a.active || a.supportTimer <= 0);
-              const pickIdx = idleIdx >= 0 ? idleIdx : Math.floor(Math.random() * state.allies.length);
-              summonAllyRacer(pickIdx, true);
-              showDrivingFeedback(`🎁 [보급 캡슐 획득!] 🛡️ 에너지 보호막 + 🤝 동료 [${state.allies[pickIdx].racer.shortName}] 긴급 지원 출격!`, '#e040fb', 1.25);
-            }
+            state.shieldTimer = Math.max(state.shieldTimer || 0, 6.5);
+            state.n2oGauge = 100;
+            state.boostTimer = Math.max(state.boostTimer, 1.10);
+            updateBoostUI();
+            showDrivingFeedback('🎁 [보급 캡슐 획득!] 🛡️ 슈퍼 에너지 보호막 6.5초 + 🔥 풀부스트 가동!', '#e040fb', 1.25);
           }
           state.lootDrops.splice(lIdx, 1);
           continue;
