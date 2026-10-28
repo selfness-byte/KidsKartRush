@@ -223,6 +223,13 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
         }
 
         @JavascriptInterface
+        fun checkAutoUpdate() {
+            runOnUiThread {
+                AppUpdater.checkOnStartup(this@MainActivity)
+            }
+        }
+
+        @JavascriptInterface
         fun getAppVersion(): String {
             return AppUpdater.installedVersionName(this@MainActivity)
         }
@@ -292,6 +299,7 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener, SensorEventListene
                 } catch (_: Exception) {
                 }
             }
+            AppUpdater.checkOnStartup(this)
         }
     }
 

@@ -1072,7 +1072,7 @@
 <div id="lobbyScreen">
   <div class="lobby-header">
     <div class="lobby-title">
-      <span class="lobby-badge" id="verBadge">v2.0.0</span>
+      <span class="lobby-badge" id="verBadge">v2.0.1</span>
       <h1>🌅 에어로 카트 3-STAGE 그랑프리</h1>
     </div>
     <div class="assist-pills">
@@ -1372,7 +1372,7 @@
     return 0;
   }
 
-  // 앱 버전 표시 및 수동 업데이트 버튼 연결
+  // 앱 버전 표시 및 수동·자동 업데이트 연결
   try {
     if (window.AndroidBridge && typeof window.AndroidBridge.getAppVersion === 'function') {
       const v = window.AndroidBridge.getAppVersion();
@@ -1380,7 +1380,12 @@
     }
   } catch (_) {}
 
-  document.getElementById('checkUpdateBtn').addEventListener('click', () => {
+  let lastManualUpdateTap = 0;
+  function triggerManualUpdate(e) {
+    if (e && e.cancelable) e.preventDefault();
+    const now = Date.now();
+    if (now - lastManualUpdateTap < 900) return;
+    lastManualUpdateTap = now;
     try {
       if (window.AndroidBridge && typeof window.AndroidBridge.checkUpdate === 'function') {
         window.AndroidBridge.checkUpdate();
@@ -1388,7 +1393,27 @@
         window.open('https://inanimals-1977.web.app/kidskart/', '_blank');
       }
     } catch (_) {}
-  });
+  }
+  const checkUpdateBtnEl = document.getElementById('checkUpdateBtn');
+  if (checkUpdateBtnEl) {
+    checkUpdateBtnEl.addEventListener('touchstart', triggerManualUpdate, { passive: false });
+    checkUpdateBtnEl.addEventListener('click', triggerManualUpdate);
+  }
+
+  // 화면이 계속 켜져 있는 태블릿(FLAG_KEEP_SCREEN_ON)에서도 로비 대기 중 새 업데이트를 자동 감지!
+  function requestSilentAutoUpdateCheck() {
+    try {
+      if (window.AndroidBridge && typeof window.AndroidBridge.checkAutoUpdate === 'function') {
+        window.AndroidBridge.checkAutoUpdate();
+      }
+    } catch (_) {}
+  }
+  setTimeout(requestSilentAutoUpdateCheck, 2500);
+  setInterval(() => {
+    if (typeof state !== 'undefined' && state && state.mode === 'lobby') {
+      requestSilentAutoUpdateCheck();
+    }
+  }, 20000);
 
   // ==================== 리얼 자동차 & 슈퍼마리오 카트 사운드 합성 엔진 (CarSoundEngine) ====================
   class CarSoundEngine {
@@ -4691,6 +4716,7 @@
     hudLayer.style.display = 'none';
     finishModal.style.display = 'none';
     lobbyScreen.style.display = 'flex';
+    requestSilentAutoUpdateCheck();
   }
 
   // ==================== 스테이지별 적 군단(🚁헬기 · 🚜탱크 · 🏍️바이커 · 👾드론 · 🛡️메카) & 스테이지당 단 1회 보스전 헬퍼 ====================

@@ -48,6 +48,15 @@ object AppUpdater {
     private var lastCheckTimeMs = 0L
 
     @Volatile
+    private var retryCount = 0
+
+    @Volatile
+    private var isDownloading = false
+
+    @Volatile
+    private var autoTriggeredVersionCode = 0
+
+    @Volatile
     private var pendingInstallFile: File? = null
 
     fun installedVersionCode(context: Context): Int = runCatching {
@@ -75,23 +84,43 @@ object AppUpdater {
                 return
             }
         }
-        // 앱이 백그라운드에서 다시 포그라운드로 돌아올 때도 자동 업데이트 확인 (최소 15초 간격)
+        // 앱이 백그라운드에서 다시 포그라운드로 돌아올 때도 자동 업데이트 확인 (최소 10초 간격)
         checkOnStartup(activity)
     }
 
-    /** 앱 시작 및 포그라운드 복귀 시 백그라운드 자동 업데이트 확인 */
-    fun checkOnStartup(activity: Activity) {
+    /** 앱 시작·포그라운드 복귀·대기실 진입 시 백그라운드 자동 업데이트 확인 및 즉시 다운로드 실행 */
+    fun checkOnStartup(activity: Activity, isRetry: Boolean = false) {
+        if (isDownloading) return
         val now = System.currentTimeMillis()
-        if (now - lastCheckTimeMs < 15_000L) return
-        lastCheckTimeMs = now
+        if (!isRetry && now - lastCheckTimeMs < 10_000L) return
         executor.execute {
             cleanOldApks(activity.applicationContext)
-            val info = fetchLatestUpdate(activity) ?: return@execute
+            val info = fetchLatestUpdate(activity)
+            if (info == null) {
+                // 태블릿 화면 켜짐 직후 Wi-Fi 재연결 지연 대비 자동 재시도 (최대 4회, 3초 간격)
+                if (retryCount < 4) {
+                    retryCount++
+                    mainHandler.postDelayed({
+                        if (!activity.isFinishing && !activity.isDestroyed) {
+                            checkOnStartup(activity, isRetry = true)
+                        }
+                    }, 3000L)
+                }
+                return@execute
+            }
+            retryCount = 0
+            lastCheckTimeMs = System.currentTimeMillis()
             val curCode = installedVersionCode(activity)
-            if (info.versionCode > curCode) {
+            if (info.versionCode > curCode && !isDownloading && autoTriggeredVersionCode != info.versionCode) {
+                autoTriggeredVersionCode = info.versionCode
                 mainHandler.post {
                     if (!activity.isFinishing && !activity.isDestroyed) {
-                        showUpdateDialog(activity, info, forceOffer = false)
+                        Toast.makeText(
+                            activity,
+                            "🚀 새 버전(v${info.versionName}) 발견! 자동 업데이트를 시작합니다…",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        downloadAndInstall(activity, info)
                     }
                 }
             }
@@ -185,6 +214,8 @@ object AppUpdater {
     }
 
     private fun downloadAndInstall(activity: Activity, info: UpdateInfo) {
+        if (isDownloading) return
+        isDownloading = true
         val density = activity.resources.displayMetrics.density
         val pad = (20 * density).toInt()
         val box = LinearLayout(activity).apply {
@@ -210,6 +241,7 @@ object AppUpdater {
             .setCancelable(false)
             .setNegativeButton("취소") { d, _ ->
                 cancelled.set(true)
+                isDownloading = false
                 d.dismiss()
             }
             .create()
@@ -223,6 +255,7 @@ object AppUpdater {
             // 이미 유효한 동일 버전 APK가 받아져 있다면 재다운로드 없이 즉시 재사용
             if (target.exists() && isValidApkFile(target)) {
                 mainHandler.post {
+                    isDownloading = false
                     if (dlg.isShowing) dlg.dismiss()
                     if (!cancelled.get() && !activity.isFinishing && !activity.isDestroyed) {
                         proceedToInstall(activity, target)
@@ -232,9 +265,9 @@ object AppUpdater {
             }
 
             val candidateUrls = linkedSetOf(
-                info.apkUrl,
                 "https://inanimals-1977.web.app/kidskart/KidsKartRush-${info.versionName}.apk",
                 "https://www.inanimals.co.kr/kidskart/KidsKartRush-${info.versionName}.apk",
+                info.apkUrl,
                 "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-${info.versionName}.apk",
             ).filter { it.startsWith("https://") }
 
@@ -292,6 +325,7 @@ object AppUpdater {
             }
 
             mainHandler.post {
+                isDownloading = false
                 if (dlg.isShowing) dlg.dismiss()
                 if (cancelled.get() || activity.isFinishing || activity.isDestroyed) return@post
 
