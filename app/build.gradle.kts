@@ -12,8 +12,8 @@ android {
         applicationId = "com.mj.kidskart"
         minSdk = 24
         targetSdk = 35
-        versionCode = 27
-        versionName = "1.9.9"
+        versionCode = 28
+        versionName = "2.0.0"
     }
 
     buildTypes {
