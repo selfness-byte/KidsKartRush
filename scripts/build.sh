@@ -13,12 +13,15 @@ mkdir -p "$PROJECT/dist"
 mkdir -p /Volumes/M/firebase-app-update-server/public/kidskart
 mkdir -p /Volumes/M/inanimals-corp-website/public/kidskart
 
+rm -f /Volumes/M/firebase-app-update-server/public/kidskart/*.apk
+rm -f /Volumes/M/inanimals-corp-website/public/kidskart/*.apk
+
 cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-debug.apk"
 cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" "$PROJECT/dist/KidsKartRush-2.0.1.apk"
-cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/firebase-app-update-server/public/kidskart/KidsKartRush-2.0.1.apk
-cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/inanimals-corp-website/public/kidskart/KidsKartRush-2.0.1.apk
-cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/firebase-app-update-server/public/kidskart/KidsKartRush-2.0.0.apk
-cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/inanimals-corp-website/public/kidskart/KidsKartRush-2.0.0.apk
+cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/firebase-app-update-server/public/kidskart/KidsKartRush-2.0.1.zip
+cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/inanimals-corp-website/public/kidskart/KidsKartRush-2.0.1.zip
+cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/firebase-app-update-server/public/kidskart/KidsKartRush-2.0.0.zip
+cp "$NRM_BUILD_ROOT/KidsKartRush/app/outputs/apk/debug/app-debug.apk" /Volumes/M/inanimals-corp-website/public/kidskart/KidsKartRush-2.0.0.zip
 
 cp "$PROJECT/app/src/main/assets/index.html" "$PROJECT/dist/index.html"
 cp "$PROJECT/app/src/main/assets/index.html" "$PROJECT/dist/index_v2.0.1.html"

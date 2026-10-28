@@ -127,9 +127,10 @@ object AppUpdater {
         }
     }
 
-    /** 대기실 상단 [🔄 업데이트] 버튼 클릭 시 수동 확인 및 강제 재설치/업데이트 지원 */
+    /** 대기실 상단 [🔄 업데이트] 버튼 클릭 시 수동 확인 및 즉시 업데이트/재설치 지원 */
     fun checkManual(activity: Activity) {
         val curName = installedVersionName(activity)
+        val curCode = installedVersionCode(activity)
         Toast.makeText(activity, "최신 업데이트 확인 중… (현재 v$curName)", Toast.LENGTH_SHORT).show()
         executor.execute {
             val info = fetchLatestUpdate(activity)
@@ -139,7 +140,16 @@ object AppUpdater {
                     Toast.makeText(activity, "현재 v$curName · 업데이트 서버에 연결할 수 없습니다.", Toast.LENGTH_SHORT).show()
                     return@post
                 }
-                showUpdateDialog(activity, info, forceOffer = true)
+                if (info.versionCode > curCode) {
+                    Toast.makeText(
+                        activity,
+                        "🚀 새 버전(v${info.versionName}) 다운로드 및 설치를 시작합니다…",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    downloadAndInstall(activity, info)
+                } else {
+                    showUpdateDialog(activity, info, forceOffer = true)
+                }
             }
         }
     }
@@ -169,7 +179,8 @@ object AppUpdater {
         return try {
             if (conn.responseCode !in 200..299) return null
             val body = conn.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-            val o = JSONObject(body)
+            val root = JSONObject(body)
+            val o = root.optJSONObject("apps")?.optJSONObject("com.mj.kidskart") ?: root
             UpdateInfo(
                 versionCode = o.optInt("versionCode", o.optInt("version_code", 0)),
                 versionName = o.optString("versionName", o.optString("latest_version", "")),
@@ -266,7 +277,9 @@ object AppUpdater {
 
             val candidateUrls = linkedSetOf(
                 "https://inanimals-1977.web.app/kidskart/KidsKartRush-${info.versionName}.apk",
+                "https://inanimals-1977.web.app/kidskart/KidsKartRush-${info.versionName}.zip",
                 "https://www.inanimals.co.kr/kidskart/KidsKartRush-${info.versionName}.apk",
+                "https://www.inanimals.co.kr/kidskart/KidsKartRush-${info.versionName}.zip",
                 info.apkUrl,
                 "https://raw.githubusercontent.com/selfness-byte/KidsKartRush/main/dist/KidsKartRush-${info.versionName}.apk",
             ).filter { it.startsWith("https://") }
